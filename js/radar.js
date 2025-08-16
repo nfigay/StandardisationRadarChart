@@ -1,16 +1,12 @@
 const validRings = ["Adopted", "Candidate", "Track"];
 const validQuadrants = ["", "Available", "Monitored", "Participated", "Developed"];
-var allowZoneChanges=false
-var backToInitialPosition
+var allowZoneChanges = false;
+var backToInitialPosition;
 
 function drawSelectedWorkgroup(workgroup) {
-
-  // Filter based on selected working group
-
   let RadarInputs = ASD_SSG_Blips.filter(blip => blip.working_group === workgroup);
   let filteredBlips = RadarInputs.filter(d => validRings.includes(d.ring) && validQuadrants.includes(d.quadrant));
 
-  // Call the visualization function
   plotData(filteredBlips);
 }
 
@@ -18,7 +14,7 @@ function generateFormFromCytoscapeElement(ele) {
   if (!ele || !ele.isNode()) return;
 
   let data = ele.data();
-  let position = ele.position(); // Get position separately
+  let position = ele.position();
   let formFields = {};
 
   // === BLIP TAB ===
@@ -34,19 +30,18 @@ function generateFormFromCytoscapeElement(ele) {
             type: 'list', label: 'Ring',
             options: { items: validRings },
             value: data.ring || '',
-            disabled:true
+            disabled: true
           },
           "quadrant": {
             type: 'list', label: 'Quadrant',
             options: { items: validQuadrants },
             value: data.quadrant || '',
-            disabled:true
+            disabled: true
           }
         }
       }
     }
   };
-
 
   // === CONTEXT TAB ===
   formFields["Context"] = {
@@ -105,108 +100,103 @@ function generateFormFromCytoscapeElement(ele) {
   let formConfig = {
     name: 'blipForm',
     fields: formFields,
-    record: data,  // Ensures form fields get values from node data
+    record: data,
     actions: {
       Save() {
-          let updatedData = this.record; // Use this.record instead of this.getValues()
-  
-          Object.keys(updatedData).forEach(key => {
-              if (!key.startsWith("position.")) {
-                  let value = updatedData[key]; // Extract value
-  
-                  // Extract selected value for list fields
-                  if (key === 'ring' || key === 'quadrant') {
-                      value = value?.id || value; // Get `id` if it's an object, otherwise keep value
-                  }
-  
-                  ele.data(key, value); // Update node data with extracted value  
-              }
-          });
-  
-          ele.cy().style().update(); // Force Cytoscape.js to refresh styles
-          w2ui['blipForm'].refresh(); // Ensure the form updates
+        let updatedData = this.record;
+        Object.keys(updatedData).forEach(key => {
+          if (!key.startsWith("position.")) {
+            let value = updatedData[key];
+            if (key === 'ring' || key === 'quadrant') {
+              value = value?.id || value;
+            }
+            ele.data(key, value);
+          }
+        });
+        ele.cy().style().update();
+        w2ui['blipForm'].refresh();
       },
       Cancel() { w2ui['blipForm'].clear(); }
-  }
+    }
   };
 
   return new w2form(formConfig);
 }
 
-
-// Function to initialize the toolbar in the left panel
 function initializeToolbar2() {
   alert("initializetoolbar2")
 }
 
-// Function to get the working groups from your filtered blips
 function getWorkingGroups() {
   const workingGroups = [...new Set(ASD_SSG_Blips.map(d => d.working_group))];
   return workingGroups.map(group => ({ id: group, text: group }));
 }
 
 function getWorkingGroupsWithCount() {
-  // Count occurrences of each working group
   const counts = ASD_SSG_Blips.reduce((acc, d) => {
     acc[d.working_group] = (acc[d.working_group] || 0) + 1;
     return acc;
   }, {});
 
-  // Convert to menu format
   return Object.entries(counts).map(([group, count]) => ({
     text: group,
     count: count
   }));
 }
 
-// Function to filter and display blips based on the selected working group
 function filterBlipsByWorkingGroup(selectedGroup) {
   const filtered = ASD_SSG_Blips.filter(d => d.working_group === selectedGroup);
   console.log("Filtered Blips for Working Group:", selectedGroup, filtered);
-
-  // Call your plotting function to update the graph
-  plotData(filtered); // You already have plotData function defined
+  plotData(filtered);
 }
 
-
-let originalZones = new Map(); // Store original zone and quadrant information
-// Zone and Quarter Definitions
+let originalZones = new Map();
 const zoneRingMapping = {
-  2: "Track",      // Zone 0 (outer zone)
-  1: "Candidate",   // Zone 1 (middle zone)
-  0: "Adopted"        // Zone 2 (inner zone)
+  2: "Track",
+  1: "Candidate",
+  0: "Adopted"
 };
 
 const quadrantMapping = {
-  1: "Monitored",     // Quadrant 0 (0-90 degrees)
-  0: "Available",     // Quadrant 1 (90-180 degrees)
-  2: "Participated",  // Quadrant 2 (180-270 degrees)
-  3: "Developed"      // Quadrant 3 (270-360 degrees)
+  1: "Monitored",
+  0: "Available",
+  2: "Participated",
+  3: "Developed"
 };
 
-// Définition du centre et des rayons des cercles
-const chartCenter = { x: 400, y: 400 }; // Centre du radar chart (dans un espace 800x800)
-const radii = [150, 250, 350]; // Rayons des cercles concentriques (modifiable)
+const chartCenter = { x: 400, y: 400 };
+const radii = [150, 250, 350];
 
-// Fonction pour déterminer la zone d'un nœud
 function getZone(x, y, radii) {
   let relX = x - chartCenter.x;
   let relY = y - chartCenter.y;
-  let r = Math.sqrt(relX ** 2 + relY ** 2);  // Calcul de la distance au centre
-  let theta = Math.atan2(relY, relX); // Angle en radians (-π à π)
-  let angleDeg = (theta * 180) / Math.PI; // Conversion en degrés
-
-  // Si la distance est supérieure au rayon du cercle le plus grand, on renvoie undefined pour zone et quadrant
+  let r = Math.sqrt(relX ** 2 + relY ** 2);
+  
   if (r > radii[radii.length - 1]) {
     return { zone: undefined, quadrant: undefined };
   }
 
-  let circleIndex = radii.findIndex(radius => r < radius);
-  if (circleIndex === -1) circleIndex = radii.length - 1; // Évite un index hors limites
+  let ringIndex = radii.findIndex(radius => r < radius);
+  if (ringIndex === -1) ringIndex = radii.length - 1;
 
-  let sectorIndex = Math.floor(((theta + Math.PI) / (2 * Math.PI)) * 4) % 4;
+  let theta = Math.atan2(relY, relX);
+  let angleDeg = (theta * 180) / Math.PI;
+  if (angleDeg < 0) {
+    angleDeg += 360;
+  }
 
-  return { zone: circleIndex, quadrant: sectorIndex }; // 🔥 Correction : Associer aux bonnes variables
+  let quadrantIndex;
+  if (angleDeg >= 0 && angleDeg < 90) {
+    quadrantIndex = 0;
+  } else if (angleDeg >= 90 && angleDeg < 180) {
+    quadrantIndex = 1;
+  } else if (angleDeg >= 180 && angleDeg < 270) {
+    quadrantIndex = 2;
+  } else {
+    quadrantIndex = 3;
+  }
+
+  return { zone: ringIndex, quadrant: quadrantIndex };
 }
 
 function enableNodeGrabbing() {
@@ -220,17 +210,16 @@ function disableNodeGrabbing() {
 function openCSV(file) {
   if (file) {
     Papa.parse(file, {
-      header: true, // Treat first row as header
+      header: true,
       skipEmptyLines: true,
       complete: function (results) {
         myBlips = processCSVData(results.data);
-        displayBlips(myBlips);  // Optionally display all data
+        displayBlips(myBlips);
       }
     });
-    // createRadarWithCytoscape({ workingGroup: "PLM", containerId: "container" });
   }
 }
-// Function to process CSV data and convert it to JSON format
+
 function processCSVData(csvData) {
   return csvData.map(row => ({
     id: row.id,
@@ -242,36 +231,30 @@ function processCSVData(csvData) {
     in_tli_radar: row.in_tli_radar,
     in_supply_chain_radar: row.in_supply_chain_radar,
     label: row.label,
-    ring: row.ring,  // ring corresponds to zone
-    quadrant: row.quadrant,  // quadrant corresponds to quarter
+    ring: row.ring,
+    quadrant: row.quadrant,
     name: row.name,
     hasBlip: row.hasBlip,
     description: row.description,
     standard_type1: row.standard_type1,
-    // Additional fields can go here
   }));
 }
 
-// Function to display all blips (optional)
 function displayBlips(blips) {
   document.getElementById('output').textContent = JSON.stringify(blips, null, 2);
 }
 
-
-// Function to filter blips based on selected radar type
 function filterBlipsByRadarType(radarType) {
   return myBlips.filter(blip => {
-    return blip[`in_${radarType}_radar`] === 'Y';  // Filter based on 'Y' value
+    return blip[`in_${radarType}_radar`] === 'Y';
   });
 }
 
-//createRadarSVG("PLM",800,800)
 function drawSVG() {
-  // Définition des tailles et couleurs des cercles
   ringSizes = [
-    { ringSize: 350, ringColor: "white" },  // Cercle extérieur
-    { ringSize: 250, ringColor: "white" },  // Cercle intermédiaire
-    { ringSize: 150, ringColor: "white" }   // Cercle intérieur
+    { ringSize: 350, ringColor: "white", text: "Track" },
+    { ringSize: 250, ringColor: "white", text: "Candidate" },
+    { ringSize: 150, ringColor: "white", text: "Adopted" }
   ];
   
   let container = d3.select("#svg-container");
@@ -297,97 +280,70 @@ function drawSVG() {
     .attr("height", height)
     .attr("viewBox", [-width / 2, -height / 2, width, height]);
 
-  // ---------------------------//
-  //          TITLE             //
-  // ---------------------------//
+  // TITLE
   svg
     .append("text")
-    .attr("id", "svgTitle") // ✅ ID ajouté pour modification dynamique
+    .attr("id", "svgTitle")
     .style("font-size", "25px")
     .text(`Standards Radar Chart ` + new Date().toLocaleDateString())
     .attr("x", -200)
     .attr("y", -370)
     .attr("fill", "black");
 
-  // ---------------------------//
-  //       RINGS (CERCLES)      //
-  // ---------------------------//
+  // RINGS
   ringSizes.forEach((ring) => {
     svg.append("circle")
       .attr("cx", 0)
       .attr("cy", 0)
       .attr("r", ring.ringSize)
-      .attr("fill", ring.ringColor) // Fond des cercles en blanc
+      .attr("fill", ring.ringColor)
       .attr("stroke", "black")
       .attr("stroke-width", 2);
   });
 
-  // ---------------------------//
-  //     AXES (Limités au plus grand cercle) //
-  // ---------------------------//
-  const maxRadius = ringSizes[0].ringSize; // Limite des axes au rayon 350
-  const axisThickness = 20; // Hauteur de l'axe égale à la hauteur du texte des labels + quelques points
-
-  // Couleur gris clair transparent
-  const axisColor = "rgba(169, 169, 169, 0.2)"; // Gris clair avec transparence de 50%
+  // AXES
+  const maxRadius = ringSizes[0].ringSize;
+  const axisThickness = 20;
+  const axisColor = "rgba(169, 169, 169, 0.2)";
 
   svg.append("line")
-    .attr("x1", -maxRadius+10)
+    .attr("x1", -maxRadius + 10)
     .attr("y1", 0)
-    .attr("x2", maxRadius-10)
+    .attr("x2", maxRadius - 10)
     .attr("y2", 0)
     .attr("stroke", axisColor)
     .attr("stroke-width", axisThickness)
-    .attr("stroke-linecap", "round"); // Arrondir l'extrémité
+    .attr("stroke-linecap", "round");
 
   svg.append("line")
     .attr("x1", 0)
-    .attr("y1", -maxRadius+10)
+    .attr("y1", -maxRadius + 10)
     .attr("x2", 0)
-    .attr("y2", maxRadius-10)
+    .attr("y2", maxRadius - 10)
     .attr("stroke", axisColor)
     .attr("stroke-width", axisThickness)
-    .attr("stroke-linecap", "round"); // Arrondir l'extrémité
+    .attr("stroke-linecap", "round");
 
-  // ---------------------------//
-  //     LABELS DES RINGS      //
-  // ---------------------------//
-
-  function createRingLabel(text, ringIndex) {
-    // Calcul de la position du label à l'extérieur du ring
-    let xCenter=0;
-    if (ringIndex == 0){
-      xCenter=-75;//milieu du rayon du cercle central, soit 150/2, vers la gauche
-    }
-    else{
-     xCenter = - (ringSizes[ringIndex].ringSize + (ringIndex > 0 ? ringSizes[ringIndex - 1].ringSize : 0)) / 2;
-    }
-     let label = svg.append("text")
+  // RING LABELS
+  function createRingLabel(text, radius) {
+    svg.append("text")
       .attr("font-size", "15px")
       .attr("fill", "black")
-      .attr("text-anchor", "start") // Position initiale arbitraire
+      .attr("text-anchor", "middle")
       .text(text)
-      .attr("x", xCenter)
-      .attr("y", 5);
-
-    // Ajustement de la position pour centrer le texte sur le segment
-    let textWidth = label.node().getBBox().width;
-    label.attr("x", xCenter - textWidth / 2);
+      .attr("x", 0)
+      .attr("y", -radius + 20);
   }
 
-  // Labels des rings
-  createRingLabel("Track", 1);  // Premier ring
-  createRingLabel("Adopted", 0); // Deuxième ring
-  createRingLabel("Candidate", 2);  // Troisième ring
+  createRingLabel("Adopted", 150);
+  createRingLabel("Candidate", 250);
+  createRingLabel("Track", 350);
 
-  // ---------------------------//
-  //       QUARTER LABELS       //
-  // ---------------------------//
-
+  // QUARTER LABELS
   function createQuarterLabel(id, x, y, text) {
     let block = svg
       .append("foreignObject")
-      .attr("id", id) // ID pour modification dynamique
+      .attr("id", id)
       .attr("x", x)
       .attr("y", y)
       .attr("width", 200)
@@ -408,13 +364,11 @@ function drawSVG() {
       .html(text);
   }
 
-  // Labels des quarters
-  createQuarterLabel("quarter1", -330, -310, "Available External<br> Standards");
-  createQuarterLabel("quarter2", 180, -310, "Monitored External Development");
-  createQuarterLabel("quarter3", -320, 250, "ASD<br>Development");
-  createQuarterLabel("quarter4", 250, 230, "Participate<br>in External<br>Development");
+  createQuarterLabel("quarter1", -330, -310, "Monitored External Development");
+  createQuarterLabel("quarter2", 180, -310, "Available External<br> Standards");
+  createQuarterLabel("quarter3", 180, 250, "Participate<br>in External<br>Development");
+  createQuarterLabel("quarter4", -320, 230, "ASD<br>Development");
 }
-
 
 function plotData(RadarInputs) {
   cy.elements().remove();
@@ -427,44 +381,45 @@ function plotData(RadarInputs) {
   );
 
   filteredBlips.forEach(d => {
-    // Assign radius based on ring category
-    if (d.ring === "Adopted") d.radius = d3.randomUniform(30, 130)();
-    if (d.ring === "Candidate") d.radius = d3.randomUniform(180, 230)();
-    if (d.ring === "Track") d.radius = d3.randomUniform(280, 320)();
+    let radiusRange;
+    if (d.ring === "Adopted") radiusRange = [30, 130];
+    else if (d.ring === "Candidate") radiusRange = [180, 230];
+    else if (d.ring === "Track") radiusRange = [280, 320];
 
-    let newPoints;
-    if (d.quadrant === "Available") {
-      newPoints = d3.pointRadial(Math.random() * (6.2 - 4.8) + 4.8, d.radius);
-    } else if (d.quadrant === "Monitored") {
-      newPoints = d3.pointRadial(Math.random() * (7.7 - 6.4) + 6.4, d.radius);
-    } else if (d.quadrant === "Participated") {
-      newPoints = d3.pointRadial(Math.random() * (9.3 - 8) + 8, d.radius);
+    d.radius = d3.randomUniform(radiusRange[0], radiusRange[1])();
+
+    let angleRange;
+    if (d.quadrant === "Monitored") {
+      angleRange = [0, Math.PI / 2];
+    } else if (d.quadrant === "Available") {
+      angleRange = [Math.PI / 2, Math.PI];
     } else if (d.quadrant === "Developed") {
-      newPoints = d3.pointRadial(Math.random() * (10.9 - 9.6) + 9.6, d.radius);
+      angleRange = [Math.PI, 3 * Math.PI / 2];
+    } else if (d.quadrant === "Participated") {
+      angleRange = [3 * Math.PI / 2, 2 * Math.PI];
     }
+    
+    let newPoints = d3.pointRadial(
+      d3.randomUniform(angleRange[0], angleRange[1])(),
+      d.radius
+    );
 
-    // Convert polar to Cartesian and translate to center (400, 400)
     d.x = newPoints[0] + 400;
     d.y = newPoints[1] + 400;
   });
 
-  // Convert the computed blips into Cytoscape elements
   const elements = filteredBlips.map(blip => ({
     data: { id: blip.label, ...blip },
     position: { x: blip.x, y: blip.y }
   }));
 
-  // Add elements to Cytoscape
   cy.add(elements);
   cy.nodes().ungrabify();
-  allowZoneChanges=false
-  // Update toolbar selection to 'Locked'
-  let toolbarItem = w2ui.toolbar.get('item4'); // Access the toolbar item
+  allowZoneChanges = false;
+  
+  let toolbarItem = w2ui.toolbar.get('item4');
   if (toolbarItem) {
-      // Set selected state to 'locked' for item4
       toolbarItem.selected = 'locked';
-      
-      // Refresh the toolbar to reflect the new selected state
       w2ui.toolbar.refresh('item4'); 
   }
  
@@ -472,23 +427,14 @@ function plotData(RadarInputs) {
 }
 
 function downloadCompleteRadarData() {
-  cy.nodes().ungrabify();  // Correct function to disable grabbing
-  // Get the full graph data including nodes, edges, styles, and positions
+  cy.nodes().ungrabify();
   const jsonData = cy.json();
-
-  // Create a Blob from the JSON data
   const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
-
-  // Create a link to download the data
   const url = URL.createObjectURL(blob);
-
-  // Create an anchor element to simulate the download action
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'radar.json'; // Set the filename for the downloaded file
+  a.download = 'radar.json';
   a.click();
-
-  // Clean up the created URL object after the download
   URL.revokeObjectURL(url);
 }
 
@@ -500,16 +446,9 @@ function loadRadarData(event) {
   reader.onload = function (e) {
     try {
       const jsonData = JSON.parse(e.target.result);
-
-      // Clear existing graph
       cy.elements().remove();
-
-      // Load new graph from the JSON
       cy.json(jsonData);
-
-      // Reapply `ungrabify()` to keep nodes non-grabbable
       cy.nodes().ungrabify();
-
       console.log("Radar data successfully loaded.");
     } catch (error) {
       console.error("Error loading radar data:", error);
@@ -517,17 +456,19 @@ function loadRadarData(event) {
     }
   };
 }
-const proxy = 'https://api.allorigins.win/get?url=';
 
-/**
- * Check if the proxy is active; if not, open activation page.
- */
+// Corrected remote fetching functions
+const proxy = 'https://cors-anywhere.herokuapp.com/';
+
 async function checkProxyActive() {
     try {
         const testUrl = proxy + 'https://example.com/';
-        const res = await fetch(testUrl);
+        const res = await fetch(testUrl, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
         if (res.status === 403) {
-            // Proxy not activated yet
             window.open('https://cors-anywhere.herokuapp.com/corsdemo', '_blank');
             return false;
         }
@@ -538,17 +479,11 @@ async function checkProxyActive() {
     }
 }
 
-/**
- * Helper: safely extract trimmed text from first matching selector
- */
 function getText(doc, selector) {
     const el = doc.querySelector(selector);
-    return el ? el.textContent.trim() : '';
+    return el ? el.textContent.trim() : 'N/A';
 }
 
-/**
- * Helper: find first element by tag name containing specific text, return its trimmed textContent
- */
 function findByText(doc, tagName, containsText) {
     const elements = doc.getElementsByTagName(tagName);
     for (const el of elements) {
@@ -559,92 +494,62 @@ function findByText(doc, tagName, containsText) {
     return '';
 }
 
-// Use a reliable proxy
-const proxy = 'https://api.allorigins.win/get?url=';
-
-// Define ALL functions using function declarations (hoisted - can be called in any order)
-
-/**
- * Extracts relevant ISO standard metadata from an HTMLDocument.
- */
 function extractISOData(doc) {
-    console.log('extractISOData called'); // Debug log
-    
-    // Get the full HTML of the page
-    const fullHtml = doc.documentElement.outerHTML;
-
-    // Show alert with first 5000 characters
-    alert(fullHtml.slice(0, 5000) + (fullHtml.length > 5000 ? '\n\n[...truncated]' : ''));
-
-    // Return minimal object for compatibility
-    return { rawHtmlShownInAlert: true };
+    const data = {};
+    data.title = getText(doc, 'h1.title');
+    data.status = getText(doc, '.publication-details span.status-value');
+    data.committee = getText(doc, '.technical-committee span.field-value');
+    data.abstract = getText(doc, '.abstract-text');
+    return data;
 }
 
-/**
- * Fetch the ISO page and return parsed data.
- */
 async function fetchISO(url) {
-    console.log('fetchISO called with URL:', url); // Debug log
-    
+    const isProxyActive = await checkProxyActive();
+    if (!isProxyActive) {
+        throw new Error('Please activate the proxy and try again.');
+    }
+
     try {
-        // Using allorigins proxy
-        const response = await fetch(proxy + encodeURIComponent(url));
-        
+        const response = await fetch(proxy + url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        
-        const data = await response.json();
-        
-        if (!data.contents) {
-            throw new Error('No content received from proxy');
-        }
-        
-        console.log('Content received, parsing HTML...'); // Debug log
-        const doc = new DOMParser().parseFromString(data.contents, 'text/html');
 
-        // Try to find <script type="application/ld+json"> first
+        const text = await response.text();
+        const doc = new DOMParser().parseFromString(text, 'text/html');
+
         const scripts = doc.querySelectorAll('script[type="application/ld+json"]');
-        console.log('Found JSON-LD scripts:', scripts.length); // Debug log
-        
         for (const script of scripts) {
             try {
                 const jsonData = JSON.parse(script.textContent);
-                // Check if it contains useful info, e.g. @type: "Product" or "CreativeWork"
-                if (jsonData['@type']) {
-                    console.log('Found JSON-LD data, returning...'); // Debug log
-                    return jsonData; // Return raw JSON data found
+                if (jsonData['@type'] && (jsonData['@type'].includes('Product') || jsonData['@type'].includes('CreativeWork'))) {
+                    return jsonData;
                 }
             } catch (e) {
-                console.log('JSON-LD parse error:', e);
+                console.warn('JSON-LD parse error:', e);
             }
         }
 
-        // Fallback if no JSON-LD found
-        console.log('No JSON-LD found, calling extractISOData...'); // Debug log
         return extractISOData(doc);
-        
     } catch (error) {
         console.error('Fetch error:', error);
         throw new Error(`Failed to fetch ISO page: ${error.message}`);
     }
 }
 
-/**
- * Handle the ISO fetch button click with basic prompt
- */
 async function handleFetchISO() {
-    console.log('handleFetchISO called'); // Debug log
-    
+    console.log('handleFetchISO called');
     const output = document.getElementById('output');
     if (!output) {
         alert('Error: No output element found with id="output"');
         return;
     }
-    
-    output.textContent = 'Ready to fetch...';
 
-    // Use basic prompt
     const url = prompt('Enter ISO standard URL:', 'https://www.iso.org/standard/36173.html');
     
     if (!url) {
@@ -664,30 +569,31 @@ async function handleFetchISO() {
     }
 }
 
-/**
- * Alternative version with w2prompt (if available)
- */
 async function handleFetchISOWithW2Prompt() {
-    console.log('handleFetchISOWithW2Prompt called'); // Debug log
-    
+    console.log('handleFetchISOWithW2Prompt called');
     const output = document.getElementById('output');
     if (!output) {
         alert('Error: No output element found with id="output"');
         return;
     }
-    
-    // Check if w2prompt is available
+
     if (typeof w2prompt === 'undefined') {
         console.error('w2prompt is not defined, falling back to basic prompt');
         return handleFetchISO();
     }
     
-    w2prompt('Enter ISO standard URL:', 'https://www.iso.org/standard/36173.html', async (url) => {
+    w2prompt({
+        label: 'Enter ISO standard URL:',
+        value: 'https://www.iso.org/standard/36173.html',
+        title: 'Fetch ISO Data',
+        width: 500,
+        ok_label: 'Fetch'
+    }).then(async (url) => {
         if (!url) {
             output.textContent = 'Cancelled by user';
             return;
         }
-        
+
         output.textContent = 'Fetching ISO data...';
 
         try {
@@ -698,10 +604,11 @@ async function handleFetchISOWithW2Prompt() {
             output.textContent = errorMsg;
             console.error('Full error:', err);
         }
+    }).catch(() => {
+        output.textContent = 'Cancelled by user';
     });
 }
 
-// Test function to verify everything is loaded
 function testFunctions() {
     console.log('Testing function availability:');
     console.log('extractISOData:', typeof extractISOData);
@@ -709,6 +616,5 @@ function testFunctions() {
     console.log('handleFetchISO:', typeof handleFetchISO);
 }
 
-// Call test function when script loads
 console.log('ISO fetcher script loaded');
 testFunctions();
