@@ -517,7 +517,7 @@ function loadRadarData(event) {
     }
   };
 }
-const proxy = 'https://cors-anywhere.herokuapp.com/';
+const proxy = 'https://api.allorigins.win/get?url=';
 
 /**
  * Check if the proxy is active; if not, open activation page.
@@ -576,15 +576,7 @@ async function fetchISO(url) {
 
 async function handleFetchISO() {
   const output = document.getElementById('output');
-  output.textContent = 'Checking proxy...';
-
-  const proxyActive = await checkProxyActive();
-  if (!proxyActive) {
-    output.textContent =
-      'Proxy not active. Please activate it in the opened page, then click the button again.';
-    window.open('https://cors-anywhere.herokuapp.com/corsdemo', '_blank');
-    return;
-  }
+ 
 
   w2prompt('Enter ISO standard URL:', 'https://www.iso.org/standard/36173.html', async (url) => {
     if (!url) return;
