@@ -560,10 +560,10 @@ function findByText(doc, tagName, containsText) {
 }
 
 // Use a reliable proxy
-const proxy = 'https://api.allorigins.win/get?url=';
 
 /**
  * Extracts relevant ISO standard metadata from an HTMLDocument.
+ * MUST be defined before fetchISO function that calls it
  */
 function extractISOData(doc) {
     // Get the full HTML of the page
