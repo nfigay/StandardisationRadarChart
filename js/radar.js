@@ -524,11 +524,11 @@ const proxy = 'https://api.allorigins.win/get?url=';
  */
 async function checkProxyActive() {
     try {
-        const testUrl = proxy + 'https://example.com/';
+        const testUrl = proxy + 'https://api.allorigins.win/get?url=';
         const res = await fetch(testUrl);
         if (res.status === 403) {
             // Proxy not activated yet
-            window.open('https://cors-anywhere.herokuapp.com/corsdemo', '_blank');
+            window.open('ttps://api.allorigins.win/get?url=https://www.omg/org', '_blank');
             return false;
         }
         return true;
@@ -559,101 +559,75 @@ function findByText(doc, tagName, containsText) {
     return '';
 }
 
-// Use a reliable proxy
-const proxy = 'https://api.allorigins.win/get?url=';
-
 /**
  * Extracts relevant ISO standard metadata from an HTMLDocument.
- * MUST be defined before fetchISO function that calls it
  */
-function extractISOData(doc) {
-    // Get the full HTML of the page
-    const fullHtml = doc.documentElement.outerHTML;
+async function fetchISO(url) {
+    const response = await fetch(proxy + url);
+    const html = await response.text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
 
-    // Show alert with first 5000 characters
-    alert(fullHtml.slice(0, 5000) + (fullHtml.length > 5000 ? '\n\n[...truncated]' : ''));
+    // Try to find <script type="application/ld+json">
+    const scripts = doc.querySelectorAll('script[type="application/ld+json"]');
+    for (const script of scripts) {
+        try {
+            const jsonData = JSON.parse(script.textContent);
+            // Check if it contains useful info, e.g. @type: "Product" or "CreativeWork"
+            if (jsonData['@type']) {
+                return jsonData; // Return raw JSON data found
+            }
+        } catch (e) {
+            // ignore JSON parse errors
+        }
+    }
 
-    // Return minimal object for compatibility
-    return { rawHtmlShownInAlert: true };
+    // fallback if no JSON-LD found:
+    return extractISOData(doc);
 }
+function extractISOData(doc) {
+  // Récupère tout le HTML de la page (documentElement.outerHTML)
+  const fullHtml = doc.documentElement.outerHTML;
+
+  // Affiche une alerte avec les 5000 premiers caractères
+  alert(fullHtml.slice(0, 5000) + (fullHtml.length > 5000 ? '\n\n[...truncated]' : ''));
+
+  // Retourne un objet minimal pour garder la compatibilité
+  return { rawHtmlShownInAlert: true };
+}
+
+
 
 /**
  * Fetch the ISO page and return parsed data.
  */
-async function fetchISO(url) {
-    try {
-        // Using allorigins proxy
-        const response = await fetch(proxy + encodeURIComponent(url));
-        const data = await response.json();
-        
-        if (!data.contents) {
-            throw new Error('No content received from proxy');
-        }
-        
-        const doc = new DOMParser().parseFromString(data.contents, 'text/html');
-
-        // Try to find <script type="application/ld+json"> first
-        const scripts = doc.querySelectorAll('script[type="application/ld+json"]');
-        for (const script of scripts) {
-            try {
-                const jsonData = JSON.parse(script.textContent);
-                // Check if it contains useful info, e.g. @type: "Product" or "CreativeWork"
-                if (jsonData['@type']) {
-                    return jsonData; // Return raw JSON data found
-                }
-            } catch (e) {
-                // ignore JSON parse errors
-                console.log('JSON-LD parse error:', e);
-            }
-        }
-
-        // Fallback if no JSON-LD found
-        return extractISOData(doc);
-        
-    } catch (error) {
-        console.error('Fetch error:', error);
-        throw new Error(`Failed to fetch ISO page: ${error.message}`);
-    }
+async function fetchISO2(url) {
+    const html = await fetch(proxy + url).then(r => r.text());
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return extractISOData(doc);
 }
 
-/**
- * Handle the ISO fetch button click
- */
 async function handleFetchISO() {
-    const output = document.getElementById('output');
-    output.textContent = 'Ready to fetch...';
+  const output = document.getElementById('output');
+  output.textContent = 'Checking proxy...';
 
-    // Use a simple prompt function or replace with your w2prompt
-    const url = prompt('Enter ISO standard URL:', 'https://www.iso.org/standard/36173.html');
-    
+  const proxyActive = await checkProxyActive();
+  if (!proxyActive) {
+    output.textContent =
+      'Proxy not active. Please activate it in the opened page, then click the button again.';
+    window.open('ttps://api.allorigins.win/get?url=https://www.omg.org', '_blank');
+    return;
+  }
+
+  w2prompt('Enter ISO standard URL:', 'https://www.iso.org/standard/36173.html', async (url) => {
     if (!url) return;
-    
     output.textContent = 'Fetching ISO data...';
 
     try {
-        const data = await fetchISO(url.trim());
-        output.textContent = JSON.stringify(data, null, 2);
+      const data = await fetchISO2(url.trim());
+      output.textContent = JSON.stringify(data, null, 2);
     } catch (err) {
-        output.textContent = 'Error: ' + (err.message || err);
-        console.error('Full error:', err);
+      output.textContent = 'Error: ' + (err.message || err);
     }
+  });
 }
 
-// Alternative version if you want to keep w2prompt
-async function handleFetchISOWithW2Prompt() {
-    const output = document.getElementById('output');
-    
-    // Assuming w2prompt is available
-    w2prompt('Enter ISO standard URL:', 'https://www.iso.org/standard/36173.html', async (url) => {
-        if (!url) return;
-        output.textContent = 'Fetching ISO data...';
-
-        try {
-            const data = await fetchISO(url.trim());
-            output.textContent = JSON.stringify(data, null, 2);
-        } catch (err) {
-            output.textContent = 'Error: ' + (err.message || err);
-            console.error('Full error:', err);
-        }
-    });
-}
