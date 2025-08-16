@@ -562,38 +562,6 @@ function findByText(doc, tagName, containsText) {
 /**
  * Extracts relevant ISO standard metadata from an HTMLDocument.
  */
-async function fetchISO(url) {
-    const response = await fetch(proxy + url);
-    const html = await response.text();
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-
-    // Try to find <script type="application/ld+json">
-    const scripts = doc.querySelectorAll('script[type="application/ld+json"]');
-    for (const script of scripts) {
-        try {
-            const jsonData = JSON.parse(script.textContent);
-            // Check if it contains useful info, e.g. @type: "Product" or "CreativeWork"
-            if (jsonData['@type']) {
-                return jsonData; // Return raw JSON data found
-            }
-        } catch (e) {
-            // ignore JSON parse errors
-        }
-    }
-
-    // fallback if no JSON-LD found:
-    return extractISOData(doc);
-}
-function extractISOData(doc) {
-  // Récupère tout le HTML de la page (documentElement.outerHTML)
-  const fullHtml = doc.documentElement.outerHTML;
-
-  // Affiche une alerte avec les 5000 premiers caractères
-  alert(fullHtml.slice(0, 5000) + (fullHtml.length > 5000 ? '\n\n[...truncated]' : ''));
-
-  // Retourne un objet minimal pour garder la compatibilité
-  return { rawHtmlShownInAlert: true };
-}
 
 
 
