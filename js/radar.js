@@ -560,12 +560,16 @@ function findByText(doc, tagName, containsText) {
 }
 
 // Use a reliable proxy
+const proxy = 'https://api.allorigins.win/get?url=';
+
+// Define ALL functions using function declarations (hoisted - can be called in any order)
 
 /**
  * Extracts relevant ISO standard metadata from an HTMLDocument.
- * MUST be defined before fetchISO function that calls it
  */
 function extractISOData(doc) {
+    console.log('extractISOData called'); // Debug log
+    
     // Get the full HTML of the page
     const fullHtml = doc.documentElement.outerHTML;
 
@@ -580,33 +584,44 @@ function extractISOData(doc) {
  * Fetch the ISO page and return parsed data.
  */
 async function fetchISO(url) {
+    console.log('fetchISO called with URL:', url); // Debug log
+    
     try {
         // Using allorigins proxy
         const response = await fetch(proxy + encodeURIComponent(url));
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
         const data = await response.json();
         
         if (!data.contents) {
             throw new Error('No content received from proxy');
         }
         
+        console.log('Content received, parsing HTML...'); // Debug log
         const doc = new DOMParser().parseFromString(data.contents, 'text/html');
 
         // Try to find <script type="application/ld+json"> first
         const scripts = doc.querySelectorAll('script[type="application/ld+json"]');
+        console.log('Found JSON-LD scripts:', scripts.length); // Debug log
+        
         for (const script of scripts) {
             try {
                 const jsonData = JSON.parse(script.textContent);
                 // Check if it contains useful info, e.g. @type: "Product" or "CreativeWork"
                 if (jsonData['@type']) {
+                    console.log('Found JSON-LD data, returning...'); // Debug log
                     return jsonData; // Return raw JSON data found
                 }
             } catch (e) {
-                // ignore JSON parse errors
                 console.log('JSON-LD parse error:', e);
             }
         }
 
         // Fallback if no JSON-LD found
+        console.log('No JSON-LD found, calling extractISOData...'); // Debug log
         return extractISOData(doc);
         
     } catch (error) {
@@ -616,16 +631,26 @@ async function fetchISO(url) {
 }
 
 /**
- * Handle the ISO fetch button click
+ * Handle the ISO fetch button click with basic prompt
  */
 async function handleFetchISO() {
+    console.log('handleFetchISO called'); // Debug log
+    
     const output = document.getElementById('output');
+    if (!output) {
+        alert('Error: No output element found with id="output"');
+        return;
+    }
+    
     output.textContent = 'Ready to fetch...';
 
-    // Use a simple prompt function or replace with your w2prompt
+    // Use basic prompt
     const url = prompt('Enter ISO standard URL:', 'https://www.iso.org/standard/36173.html');
     
-    if (!url) return;
+    if (!url) {
+        output.textContent = 'Cancelled by user';
+        return;
+    }
     
     output.textContent = 'Fetching ISO data...';
 
@@ -633,26 +658,57 @@ async function handleFetchISO() {
         const data = await fetchISO(url.trim());
         output.textContent = JSON.stringify(data, null, 2);
     } catch (err) {
-        output.textContent = 'Error: ' + (err.message || err);
+        const errorMsg = 'Error: ' + (err.message || err);
+        output.textContent = errorMsg;
         console.error('Full error:', err);
     }
 }
 
-// Alternative version if you want to keep w2prompt
+/**
+ * Alternative version with w2prompt (if available)
+ */
 async function handleFetchISOWithW2Prompt() {
-    const output = document.getElementById('output');
+    console.log('handleFetchISOWithW2Prompt called'); // Debug log
     
-    // Assuming w2prompt is available
+    const output = document.getElementById('output');
+    if (!output) {
+        alert('Error: No output element found with id="output"');
+        return;
+    }
+    
+    // Check if w2prompt is available
+    if (typeof w2prompt === 'undefined') {
+        console.error('w2prompt is not defined, falling back to basic prompt');
+        return handleFetchISO();
+    }
+    
     w2prompt('Enter ISO standard URL:', 'https://www.iso.org/standard/36173.html', async (url) => {
-        if (!url) return;
+        if (!url) {
+            output.textContent = 'Cancelled by user';
+            return;
+        }
+        
         output.textContent = 'Fetching ISO data...';
 
         try {
             const data = await fetchISO(url.trim());
             output.textContent = JSON.stringify(data, null, 2);
         } catch (err) {
-            output.textContent = 'Error: ' + (err.message || err);
+            const errorMsg = 'Error: ' + (err.message || err);
+            output.textContent = errorMsg;
             console.error('Full error:', err);
         }
     });
 }
+
+// Test function to verify everything is loaded
+function testFunctions() {
+    console.log('Testing function availability:');
+    console.log('extractISOData:', typeof extractISOData);
+    console.log('fetchISO:', typeof fetchISO);
+    console.log('handleFetchISO:', typeof handleFetchISO);
+}
+
+// Call test function when script loads
+console.log('ISO fetcher script loaded');
+testFunctions();
