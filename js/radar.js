@@ -608,9 +608,6 @@ async function fetchISO2(url) {
     return extractISOData(doc);
 }
 
-async function handleFetchISO(event) {
-  alert("toto")
-  
-}
+
 
 
