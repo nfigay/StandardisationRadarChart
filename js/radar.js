@@ -609,63 +609,8 @@ async function fetchISO2(url) {
 }
 
 async function handleFetchISO(event) {
-  const output = document.getElementById('output');
-  if (!output) {
-    alert('Error: No output element found with id="output"');
-    return;
-  }
-
-  output.textContent = 'Checking proxy...';
-
-  // Check if proxy is active
-  const proxyActive = await checkProxyActive();
-  if (!proxyActive) {
-    output.textContent =
-      'Proxy not active. Please activate it in the opened page, then click the button again.';
-    window.open(
-      'https://api.allorigins.win/get?url=https://www.omg.org',
-      '_blank'
-    );
-    return;
-  }
-
-  // Ensure this is triggered by the right menu action
-  if (!event || event.item.id !== 'fetchISO') {
-    return; // do nothing if event is not correct
-  }
-
-  if (typeof w2prompt === 'undefined') {
-    alert('w2prompt is not defined. Please check your w2ui library.');
-    return;
-  }
-
-  // Open prompt
-  w2prompt({
-    label: 'Enter ISO standard URL:',
-    value: 'https://www.iso.org/standard/36173.html',
-    title: 'Fetch ISO Data',
-    width: 500,
-    ok_label: 'Fetch'
-  })
-    .then(async (url) => {
-      if (!url) {
-        output.textContent = 'Cancelled by user';
-        return;
-      }
-
-      output.textContent = 'Fetching ISO data...';
-
-      try {
-        const data = await fetchISO(url.trim());
-        output.textContent = JSON.stringify(data, null, 2);
-      } catch (err) {
-        output.textContent = 'Error: ' + (err.message || err);
-        console.error('Full error:', err);
-      }
-    })
-    .catch(() => {
-      output.textContent = 'Cancelled by user';
-    });
+  alert("toto")
+  
 }
 
 
