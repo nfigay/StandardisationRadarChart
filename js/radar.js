@@ -5,7 +5,7 @@ var backToInitialPosition
 
 async function functionForTest(message) {
  
-   etchCORS().then(() => console.log("Done!"));
+   fetchRemote().then(() => console.log("Done!"));
 }
 
 
