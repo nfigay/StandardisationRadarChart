@@ -1612,6 +1612,7 @@
 
         //// Loading files
         document.getElementById('load-from-inp').addEventListener('change', function () {
+            alert("toto")
             readTxtFile(this.files[0], function (txt) {
                 w2confirm('Do you want to replace? If yes, current graph will be removed, if no, it will be fusionned with the import)')
                     .yes(() => {
