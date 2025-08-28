@@ -4,7 +4,6 @@ var allowZoneChanges=false
 var backToInitialPosition
 
 async function functionForTest(message) {
- 
    fetchRemote().then(() => console.log("Done!"));
 }
 
