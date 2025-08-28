@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>CORS Proxy Test</title>
+</head>
+<body>
+  <h2>Remote Page Fetch via CORS Proxy</h2>
+  <input type="text" id="urlInput" size="50" placeholder="Enter URL (e.g. https://example.com)">
+  <button onclick="fetchRemote()">Fetch</button>
+  <pre id="output" style="border:1px solid #ccc; padding:1em; white-space:pre-wrap;"></pre>
+
+  <script>
+    async function fetchRemote() {
+      const url = document.getElementById('urlInput').value.trim();
+      const proxy = "https://cors-anywhere.herokuapp.com/"; // demo proxy
+      const output = document.getElementById('output');
+      output.textContent = "Fetching...";
+
+      try {
+        const res = await fetch(proxy + url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        if (!res.ok) throw new Error("HTTP error " + res.status);
+        const text = await res.text();
+        output.textContent = text;
+      } catch (err) {
+        output.textContent = "Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
