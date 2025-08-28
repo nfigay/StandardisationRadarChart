@@ -610,7 +610,7 @@ async function fetchISO2(url) {
 
 function functionForTest(message) {
  
-    alert(message)
+    alert("tutu")
 }
 
 
