@@ -600,42 +600,58 @@ async function fetchRemote() {
 function extractIsoStandardInfo(doc) {
   const data = {};
 
-  // Title and reference
+  // Petite fonction utilitaire pour nettoyer le texte
+  const clean = str =>
+    str ? str.replace(/\s+/g, " ").trim() : "";
+
+  // Title
   const titleElem = doc.querySelector("h1.stdTitle");
-  if (titleElem) data["Standard Title"] = titleElem.textContent.trim();
+  if (titleElem) data["Standard Title"] = clean(titleElem.textContent);
 
+  // Reference
   const refElem = doc.querySelector(".standard-reference");
-  if (refElem) {
-    data["Reference number"] = refElem.textContent
-      .replace("Reference number", "")
-      .trim();
-  }
+  if (refElem)
+    data["Reference number"] = clean(
+      refElem.textContent.replace("Reference number", "")
+    );
 
+  // Number
   const numberElem = doc.querySelector(".standard-number");
-  if (numberElem) data["Number"] = numberElem.textContent.trim();
+  if (numberElem) data["Number"] = clean(numberElem.textContent);
 
   // Edition
   const editionElem = doc.querySelector(".standard-edition");
-  if (editionElem) data["Edition"] = editionElem.textContent.replace("Edition", "").trim();
+  if (editionElem)
+    data["Edition"] = clean(
+      editionElem.textContent.replace("Edition", "")
+    );
 
-  // Current status
+  // Status
   const statusElem = doc.querySelector("#publicationStatus span");
-  if (statusElem) data["Current Status"] = statusElem.textContent.trim();
+  if (statusElem) data["Current Status"] = clean(statusElem.textContent);
 
   // Stage
   const stageElem = doc.querySelector("#stageId");
-  if (stageElem) data["Stage"] = stageElem.textContent.replace("Stade", "").trim();
+  if (stageElem)
+    data["Stage"] = clean(
+      stageElem.textContent.replace("Stade", "")
+    );
 
   // Committee
-  const committeeElem = doc.querySelector('#product-details a[href*="committee"]');
-  if (committeeElem) data["Technical Committee"] = committeeElem.textContent.trim();
+  const committeeElem = doc.querySelector(
+    '#product-details a[href*="committee"]'
+  );
+  if (committeeElem)
+    data["Technical Committee"] = clean(committeeElem.textContent);
 
   // ICS
   const icsElem = doc.querySelector('#product-details a[href*="/ics/"]');
-  if (icsElem) data["ICS"] = icsElem.textContent.trim();
+  if (icsElem) data["ICS"] = clean(icsElem.textContent);
 
-  // ✅ Summary (full text with bullets and paragraphs)
-  const summaryElem = doc.querySelector('#product-details [itemprop="description"]');
+  // ✅ Summary (texte complet nettoyé, avec puces)
+  const summaryElem = doc.querySelector(
+    '#product-details [itemprop="description"]'
+  );
   if (summaryElem) {
     let summaryTxt = summaryElem.innerHTML
       .replace(/<li>/g, "\n- ")
@@ -643,22 +659,24 @@ function extractIsoStandardInfo(doc) {
       .replace(/<br\s*\/?>/gi, "\n")
       .replace(/<p[^>]*>/g, "\n")
       .replace(/<\/p>/g, "\n")
-      .replace(/<[^>]+>/g, ""); // strip HTML
-    data["Summary"] = summaryTxt.replace(/\n\s*\n/g, "\n").trim();
+      .replace(/<[^>]+>/g, "");
+    data["Summary"] = clean(summaryTxt.replace(/\n\s*\n/g, "\n"));
   }
 
-  // ✅ Lifecycle dates
+  // ✅ Cycle de vie (seulement avec DATE + titres nettoyés)
   const lifecycleStages = [];
   doc.querySelectorAll("#lifecycle ul.stages li a").forEach(a => {
-    lifecycleStages.push({
-      code: a.querySelector(".stage-code")?.textContent || "",
-      title: a.querySelector(".stage-title")?.textContent || "",
-      date: a.querySelector(".stage-date")?.textContent || "",
-    });
+    const date = clean(a.querySelector(".stage-date")?.textContent || "");
+    if (!date) return; // on ignore les étapes sans date
+
+    const code = clean(a.querySelector(".stage-code")?.textContent || "");
+    const title = clean(a.querySelector(".stage-title")?.textContent || "");
+    lifecycleStages.push({ code, title, date });
   });
   if (lifecycleStages.length) data["Lifecycle Stages"] = lifecycleStages;
 
   return data;
 }
+
 
 
