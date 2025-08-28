@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>CORS & Proxy Test</title>
+</head>
+<body>
+  <h2>1️⃣ Fetch from CORS-enabled API (direct)</h2>
+  <button onclick="fetchCORS()">Fetch API</button>
+  <pre id="corsOutput" style="border:1px solid #ccc; padding:1em;"></pre>
+
+  <h2>2️⃣ Fetch any URL via Proxy</h2>
+  <input type="text" id="urlInput" size="50" placeholder="Enter URL">
+  <button onclick="fetchProxy()">Fetch via Proxy</button>
+  <pre id="proxyOutput" style="border:1px solid #ccc; padding:1em;"></pre>
+
+  <script>
+    // 1️⃣ CORS-enabled API example
+    async function fetchCORS() {
+      const output = document.getElementById('corsOutput');
+      output.textContent = 'Fetching...';
+      try {
+        // Public API that allows CORS
+        const res = await fetch('https://api.coindesk.com/v1/bpi/currentprice.json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        output.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        output.textContent = 'Error: ' + err.message;
+      }
+    }
+
+    // 2️⃣ Proxy fetch
+    async function fetchProxy() {
+      const url = document.getElementById('urlInput').value.trim();
+      const output = document.getElementById('proxyOutput');
+      output.textContent = 'Fetching...';
+
+      // Public demo proxy (temporary, may require activation)
+      const proxy = 'https://cors-anywhere.herokuapp.com/';
+
+      try {
+        const res = await fetch(proxy + url, {
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const text = await res.text();
+        output.textContent = text.substring(0, 1000) + '\n…'; // limit output
+      } catch (err) {
+        output.textContent = 'Error: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
