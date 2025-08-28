@@ -568,18 +568,101 @@ function findByText(doc, tagName, containsText) {
  * Extracts relevant ISO standard metadata from an HTMLDocument.
  */
 
- async function fetchRemote() {
-      const url = "https://www.iso.org/fr/standard/89538.html";
-      const proxy = "https://cors-anywhere.herokuapp.com/"; // demo proxy
-      try {
-        const res = await fetch(proxy + url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-        if (!res.ok) throw new Error("HTTP error " + res.status);
-        const text = await res.text();
-        console.log(text)
-      } catch (err) {
-        console.log = "Error: " + err.message;
-      }
-    }
+async function fetchRemote() {
+  const url = "https://www.iso.org/fr/standard/89538.html";
+
+  // 🔧 Use a public proxy for demo, because iso.org blocks CORS requests
+  const proxy = "https://cors-anywhere.herokuapp.com/";
+
+  try {
+    const res = await fetch(proxy + url, {
+      headers: { "X-Requested-With": "XMLHttpRequest" }
+    });
+    if (!res.ok) throw new Error("HTTP error " + res.status);
+
+    const text = await res.text();
+
+    // Parse into DOM
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, "text/html");
+
+    // Extract info
+    const data = extractIsoStandardInfo(doc);
+
+    // Output structured info
+    console.log("✅ Extracted result:", data);
+    document.body.innerHTML =
+      "<pre style='text-align:left;white-space:pre-wrap'>" +
+      JSON.stringify(data, null, 2) +
+      "</pre>";
+  } catch (err) {
+    console.error("Error:", err.message);
+  }
+}
+
+function extractIsoStandardInfo(doc) {
+  const data = {};
+
+  // Title and reference
+  const titleElem = doc.querySelector("h1.stdTitle");
+  if (titleElem) data["Standard Title"] = titleElem.textContent.trim();
+
+  const refElem = doc.querySelector(".standard-reference");
+  if (refElem) {
+    data["Reference number"] = refElem.textContent
+      .replace("Reference number", "")
+      .trim();
+  }
+
+  const numberElem = doc.querySelector(".standard-number");
+  if (numberElem) data["Number"] = numberElem.textContent.trim();
+
+  // Edition
+  const editionElem = doc.querySelector(".standard-edition");
+  if (editionElem) data["Edition"] = editionElem.textContent.replace("Edition", "").trim();
+
+  // Current status
+  const statusElem = doc.querySelector("#publicationStatus span");
+  if (statusElem) data["Current Status"] = statusElem.textContent.trim();
+
+  // Stage
+  const stageElem = doc.querySelector("#stageId");
+  if (stageElem) data["Stage"] = stageElem.textContent.replace("Stade", "").trim();
+
+  // Committee
+  const committeeElem = doc.querySelector('#product-details a[href*="committee"]');
+  if (committeeElem) data["Technical Committee"] = committeeElem.textContent.trim();
+
+  // ICS
+  const icsElem = doc.querySelector('#product-details a[href*="/ics/"]');
+  if (icsElem) data["ICS"] = icsElem.textContent.trim();
+
+  // ✅ Summary (full text with bullets and paragraphs)
+  const summaryElem = doc.querySelector('#product-details [itemprop="description"]');
+  if (summaryElem) {
+    let summaryTxt = summaryElem.innerHTML
+      .replace(/<li>/g, "\n- ")
+      .replace(/<\/li>/g, "")
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<p[^>]*>/g, "\n")
+      .replace(/<\/p>/g, "\n")
+      .replace(/<[^>]+>/g, ""); // strip HTML
+    data["Summary"] = summaryTxt.replace(/\n\s*\n/g, "\n").trim();
+  }
+
+  // ✅ Lifecycle dates
+  const lifecycleStages = [];
+  doc.querySelectorAll("#lifecycle ul.stages li a").forEach(a => {
+    lifecycleStages.push({
+      code: a.querySelector(".stage-code")?.textContent || "",
+      title: a.querySelector(".stage-title")?.textContent || "",
+      date: a.querySelector(".stage-date")?.textContent || "",
+    });
+  });
+  if (lifecycleStages.length) data["Lifecycle Stages"] = lifecycleStages;
+
+  return data;
+}
 
 
 
