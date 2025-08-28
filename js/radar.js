@@ -591,10 +591,7 @@ async function fetchRemote() {
 
     // Output structured info
     console.log("✅ Extracted result:", data);
-    document.body.innerHTML =
-      "<pre style='text-align:left;white-space:pre-wrap'>" +
-      JSON.stringify(data, null, 2) +
-      "</pre>";
+
   } catch (err) {
     console.error("Error:", err.message);
   }
