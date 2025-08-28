@@ -608,6 +608,11 @@ async function fetchISO2(url) {
     return extractISOData(doc);
 }
 
+async function functionForTest(message) {
+ 
+    alert(message)
+}
+
 
 
 
