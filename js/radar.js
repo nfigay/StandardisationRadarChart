@@ -662,8 +662,3 @@ function extractIsoStandardInfo(doc) {
 }
 
 
-
-
-
-
-
