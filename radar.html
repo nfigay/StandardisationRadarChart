@@ -29,6 +29,10 @@
     <script src="./js/radar-iso-full-grid.js"></script>
     <script src="./js/radar-iso-tree-index.js"></script>
     <script src="./js/radar-iso-sidebar-index.js"></script>
+    <!-- ISO streaming engine: available before application initialization -->
+    <script src="js/radar-iso-stream-core.js"></script>
+    <script src="js/radar-iso-windowed-db.js"></script>
+    <script src="js/radar-iso-stream-distribution.js"></script>
     <script src="./js/radar-standards-panel.js"></script>
     <script src="./js/radar-iso-toolbar.js"></script>
     <script src="./js/radar-workspace-explorer.js"></script>
@@ -2229,10 +2233,7 @@
       window.__radarViewportSync();
     </script>
 
-<!-- S14-M streaming ISO pilot; historical cache unchanged -->
-<script src="js/radar-iso-stream-core.js"></script>
-<script src="js/radar-iso-windowed-db.js"></script>
-<script src="js/radar-iso-stream-distribution.js"></script>
+<!-- ISO streaming engine loaded before panel initialization -->
   <!-- S14-Z ISO sources -->
   <script src="./js/radar-s14-z-sources.js"></script>
 </body>

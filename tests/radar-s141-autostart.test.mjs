@@ -14,16 +14,16 @@ const workflow=readFileSync(
 
 test('S14.1 initialisation vérifie le catalogue actif',()=>{
   assert.match(panel,/loadIsoCache\(\)\.then\(async\(\)=>/);
-  assert.match(panel,/if\(windowedActive\)return/);
+  assert.match(panel,/if\(windowedActive\)\s*\{\s*root\.__radarIsoStartup=\{status:'existing'\};\s*return;/);
   assert.match(panel,/__radarIsoWindowed\?\.current\?\.\(\)/);
-  assert.match(panel,/if\(active\)return/);
+  assert.match(panel,/if\(active\)\s*\{\s*root\.__radarIsoStartup=\{status:'existing'\};\s*return;/);
 });
 
 test('S14.1 catalogue absent : synchronisation distribuée',()=>{
-  assert.match(panel,/remote\.click\(\)/);
+  assert.match(panel,/synchronizeDistributedIso\('startup'\)/);
   assert.match(
     panel,
-    /remote\.addEventListener\('click',async\(\)=>/
+    /remote\.addEventListener\('click',\(\)=>/
   );
   assert.match(panel,/__radarIsoCatalogClient\.sync/);
   assert.match(panel,/await loadIsoCache\(\)/);

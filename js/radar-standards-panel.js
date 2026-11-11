@@ -828,19 +828,69 @@
    const reload=d.createElement('button');reload.type='button';reload.textContent=tr('refresh');reload.dataset.isoTranslation='refresh';bar.appendChild(reload);
    const syncButton=d.createElement('button');syncButton.type='button';syncButton.textContent=tr('sync');syncButton.dataset.isoTranslation='sync';syncButton.title='Charger les fichiers ISO téléchargés localement dans IndexedDB';syncButton.addEventListener('click',()=>syncLocalIso());bar.appendChild(syncButton);
    const remote=d.createElement('button');remote.type='button';remote.dataset.catalogDistribution='true';remote.dataset.isoTranslation='distributedSync';remote.textContent=tr('distributedSync');remote.title=tr('distributedSync');
-   remote.addEventListener('click',async()=>{
-     remote.disabled=true;
-     try{
-       await import('./radar-iso-ics-extension.js');
-       await import('./radar-iso-catalog-client.js');
-       const result=await root.__radarIsoCatalogClient.sync({onProgress:p=>{
-         if(status)status.textContent='ISO '+(p.dataset||'')+' : '+(p.count||0)+' enregistrements';
-       }});
-       await loadIsoCache();await loadIcs(true);refresh();
-       if(status)status.textContent='Catalogue '+result.release+' : ISO '+result.iso.status+', ICS '+result.ics.status+(result.warnings.length?' · '+result.warnings.join('; '):'');
-       root.__radarLastCatalogSync=result;
-     }catch(error){root.__radarLastCatalogSync={operation:'S14-S-CATALOG-SYNC',status:'error',message:String(error?.message||error)};if(status)status.textContent=tr('distributedError')+' : '+String(error?.message||error);}
-     finally{remote.disabled=false;}
+   // S14.1-B1: one awaited operation for startup and manual refresh.
+   let distributedSyncPromise=null;
+   async function synchronizeDistributedIso(origin){
+     if(distributedSyncPromise)return distributedSyncPromise;
+
+     distributedSyncPromise=(async()=>{
+       remote.disabled=true;
+       if(origin==='startup'){
+         root.__radarIsoStartup={status:'running'};
+       }
+       try{
+         await import('./radar-iso-ics-extension.js');
+         await import('./radar-iso-catalog-client.js');
+
+         const result=await root.__radarIsoCatalogClient.sync({
+           onProgress:p=>{
+             if(status)status.textContent='ISO '+
+               (p.dataset||'')+' : '+(p.count||0)+' enregistrements';
+           }
+         });
+
+         await loadIsoCache();
+         await loadIcs(true);
+         refresh();
+
+         root.__radarLastCatalogSync=result;
+         if(origin==='startup'){
+           root.__radarIsoStartup={
+             status:'ready',
+             release:result.release
+           };
+         }
+         if(status)status.textContent='Catalogue '+result.release+
+           ' : ISO '+result.iso.status+', ICS '+result.ics.status+
+           (result.warnings.length?' · '+result.warnings.join('; '):'');
+         return result;
+       }catch(error){
+         const message=String(error?.message||error);
+         root.__radarLastCatalogSync={
+           operation:'S14-S-CATALOG-SYNC',
+           status:'error',
+           message
+         };
+         if(origin==='startup'){
+           root.__radarIsoStartup={
+             status:'failed',
+             message
+           };
+         }
+         if(status)status.textContent=
+           tr('distributedError')+' : '+message;
+         throw error;
+       }finally{
+         remote.disabled=false;
+       }
+     })();
+
+     try{return await distributedSyncPromise;}
+     finally{distributedSyncPromise=null;}
+   }
+
+   remote.addEventListener('click',()=>{
+     void synchronizeDistributedIso('manual').catch(()=>{});
    });bar.appendChild(remote);
    const changesReload=d.createElement('button');changesReload.type='button';changesReload.dataset.isoTranslation='changesLoad';changesReload.textContent=tr('changesLoad');changesReload.addEventListener('click',()=>loadChanges());bar.appendChild(changesReload);
    const rssReload=d.createElement('button');rssReload.type='button';rssReload.textContent=tr('rssSync');rssReload.dataset.isoTranslation='rssSync';rssReload.addEventListener('click',()=>loadRssCache(true));bar.appendChild(rssReload);
@@ -906,19 +956,36 @@
      try{root.__radarCatalogCreateForm.open(graphProvider?.(),'existing',selected);}
      catch(e){status.textContent=e.message;}
    });
-   bindLocale();updateStaticLabels();refresh();loadIcs();loadIsoCache().then(async()=>{
-      if(windowedActive)return;
-      // S14.1: ISO IndexedDB belongs to this browser origin.
-      // On first visit, install the published catalogue automatically.
-      const active=await root.__radarIsoWindowed?.current?.();
-      if(active)return;
-      if(status)status.textContent='Installation initiale du catalogue ISO…';
-      remote.click();
-    }).catch(error=>{
-      if(status)status.textContent=
-        'Initialisation du catalogue ISO : '+
-        String(error?.message||error);
-    });loadRssCache();loadChanges();return true;
+   bindLocale();updateStaticLabels();refresh();
+   void loadIcs();
+   void loadIsoCache().then(async()=>{
+     if(windowedActive){
+       root.__radarIsoStartup={status:'existing'};
+       return;
+     }
+
+     const active=await root.__radarIsoWindowed?.current?.();
+     if(active){
+       root.__radarIsoStartup={status:'existing'};
+       return;
+     }
+
+     if(status)status.textContent=
+       'Installation initiale du catalogue ISO…';
+
+     await synchronizeDistributedIso('startup');
+   }).catch(error=>{
+     const message=String(error?.message||error);
+     if(root.__radarIsoStartup?.status!=='failed'){
+       root.__radarIsoStartup={status:'failed',message};
+     }
+     if(status)status.textContent=
+       'Initialisation du catalogue ISO : '+message;
+   });
+
+   void loadRssCache();
+   void loadChanges();
+   return true;
  }
  function open(){if(!mount)initialize(root.document?.getElementById('standard-references-panel'));const layout=root.w2ui?.mainLayout;if(layout?.show)layout.show('bottom');if(layout?.sizeTo)layout.sizeTo('bottom',240);refresh();search?.focus();}
  root.__radarStandardsPanel=Object.freeze({initialize,refresh,open,icsTree,enrichedIcsTree});

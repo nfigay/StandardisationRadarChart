@@ -19,8 +19,8 @@ test('synchronisation automatique seulement si empreinte non déjà chargée',()
   assert.match(panel,/installed\?\.filename===marker/);
   assert.match(panel,/loadIsoCache\(\)\.then\(async\(\)=>/);
   assert.match(panel,/__radarIsoWindowed\?\.current\?\.\(\)/);
-  assert.match(panel,/if\(active\)return/);
-  assert.match(panel,/remote\.click\(\)/);
+  assert.match(panel,/if\(active\)\s*\{\s*root\.__radarIsoStartup=\{status:'existing'\};\s*return;/);
+  assert.match(panel,/synchronizeDistributedIso\('startup'\)/);
 });
 test('l’import existant et les trois vues restent disponibles',()=>{
  assert.match(panel,/Importer JSONL/);
