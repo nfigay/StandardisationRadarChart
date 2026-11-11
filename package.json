@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "node scripts/build-safe.mjs local",
-    "build:pages": "node scripts/build-safe.mjs pages",
+    "build:pages": "node scripts/build-pages-complete.mjs",
     "verify:source": "node scripts/verify-source.mjs",
     "verify:build": "node scripts/verify-build.mjs local",
     "verify:pages": "node scripts/verify-build.mjs pages",

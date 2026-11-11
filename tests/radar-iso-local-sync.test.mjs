@@ -16,8 +16,11 @@ test('serveur même origine, sans proxy CORS public',()=>{
  assert.doesNotMatch(downloader,/corsproxy\.io|allorigins/);
 });
 test('synchronisation automatique seulement si empreinte non déjà chargée',()=>{
- assert.match(panel,/installed\?\.filename===marker/);
- assert.match(panel,/loadIsoCache\(\)\.then\(\(\)=>\{if\(!windowedActive\)return syncLocalIso\(\);\}\)/);
+  assert.match(panel,/installed\?\.filename===marker/);
+  assert.match(panel,/loadIsoCache\(\)\.then\(async\(\)=>/);
+  assert.match(panel,/__radarIsoWindowed\?\.current\?\.\(\)/);
+  assert.match(panel,/if\(active\)return/);
+  assert.match(panel,/remote\.click\(\)/);
 });
 test('l’import existant et les trois vues restent disponibles',()=>{
  assert.match(panel,/Importer JSONL/);

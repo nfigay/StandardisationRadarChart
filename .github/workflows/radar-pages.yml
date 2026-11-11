@@ -1,5 +1,7 @@
 name: Standardization Radar Chart — GitHub Pages
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
@@ -36,8 +38,7 @@ jobs:
           test -f radar-catalog-config.json
           test -f catalog-distribution/manifest.json
 
-          cp radar-catalog-config.json .radarchart-build/pages/radar-catalog-config.json
-          cp -R catalog-distribution .radarchart-build/pages/catalog-distribution
+          # The complete Vite build already includes ISO distribution.
 
           test -f .radarchart-build/pages/catalog-distribution/manifest.json
           cat > .radarchart-build/pages/index.html <<'HTML'

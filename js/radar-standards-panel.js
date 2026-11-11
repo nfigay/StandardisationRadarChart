@@ -906,7 +906,19 @@
      try{root.__radarCatalogCreateForm.open(graphProvider?.(),'existing',selected);}
      catch(e){status.textContent=e.message;}
    });
-   bindLocale();updateStaticLabels();refresh();loadIcs();loadIsoCache().then(()=>{if(!windowedActive)return syncLocalIso();});loadRssCache();loadChanges();return true;
+   bindLocale();updateStaticLabels();refresh();loadIcs();loadIsoCache().then(async()=>{
+      if(windowedActive)return;
+      // S14.1: ISO IndexedDB belongs to this browser origin.
+      // On first visit, install the published catalogue automatically.
+      const active=await root.__radarIsoWindowed?.current?.();
+      if(active)return;
+      if(status)status.textContent='Installation initiale du catalogue ISO…';
+      remote.click();
+    }).catch(error=>{
+      if(status)status.textContent=
+        'Initialisation du catalogue ISO : '+
+        String(error?.message||error);
+    });loadRssCache();loadChanges();return true;
  }
  function open(){if(!mount)initialize(root.document?.getElementById('standard-references-panel'));const layout=root.w2ui?.mainLayout;if(layout?.show)layout.show('bottom');if(layout?.sizeTo)layout.sizeTo('bottom',240);refresh();search?.focus();}
  root.__radarStandardsPanel=Object.freeze({initialize,refresh,open,icsTree,enrichedIcsTree});
