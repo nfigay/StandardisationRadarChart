@@ -72,6 +72,22 @@
      case 'addGroup':
        if(!Array.isArray(node.children))throw Error('Target must be a group');
        node.children.push(makeGroup());break;
+     case 'addSiblingCondition':
+       if(!parent)throw Error('Root cannot have a sibling');
+       parent.children.splice(parent.children.indexOf(node)+1,
+         0,makeCondition());
+       break;
+     case 'moveUp':
+     case 'moveDown':{
+       if(!parent)throw Error('Root cannot be moved');
+       const index=parent.children.indexOf(node);
+       const target=index+(action.type==='moveUp'?-1:1);
+       if(target<0||target>=parent.children.length)
+         throw Error('Query node already at boundary');
+       parent.children.splice(index,1);
+       parent.children.splice(target,0,node);
+       break;
+     }
      case 'addSiblingGroup':
        if(!parent)throw Error('Root cannot have a sibling');
        parent.children.splice(parent.children.indexOf(node)+1,0,makeGroup());break;

@@ -140,11 +140,28 @@
            const top=doc.createElement('div');top.append('Combiner avec ',select([['AND','ET'],['OR','OU']],node.operator,v=>{node.operator=v;}));
            const neg=doc.createElement('label'),check=doc.createElement('input');check.type='checkbox';check.checked=node.negated;check.addEventListener('change',()=>{node.negated=check.checked;});neg.append(check,' NON (inverser le groupe)');top.appendChild(neg);box.appendChild(top);
            const bar=doc.createElement('div');bar.style.cssText='display:flex;flex-wrap:wrap;gap:3px';
-           bar.append(button('+ Ajouter un critère ici',()=>structural('addCondition',node,1)),button('+ Ajouter un sous-groupe ici',()=>structural('addGroup',node,2)));
+           bar.append(
+             button('+ Critère',()=>structural('addCondition',node,1)),
+             button('+ Sous-groupe',()=>structural('addGroup',node,2))
+           );
            if(parent){
-             bar.append(button('+ Groupe au même niveau',()=>structural('addSiblingGroup',node,2)));
-             bar.append(button('Dissoudre ce groupe (garder les critères)',()=>structural('unwrap',node)));
-             bar.append(button('Supprimer ce groupe et ses critères',()=>structural('remove',node)));
+             const position=parent.children.indexOf(node);
+             const up=button('↑',()=>structural('moveUp',node));
+             up.title='Déplacer ce groupe vers le haut';
+             up.disabled=position===0;
+             const down=button('↓',()=>structural('moveDown',node));
+             down.title='Déplacer ce groupe vers le bas';
+             down.disabled=position===parent.children.length-1;
+             bar.append(up,down,
+               button('+ Groupe au même niveau',
+                 ()=>structural('addSiblingGroup',node,2))
+             );
+             bar.append(button('Dissoudre ce groupe (garder les critères)',
+               ()=>structural('unwrap',node)));
+             const removeGroup=button('Supprimer ce groupe et ses critères',
+               ()=>structural('remove',node));
+             removeGroup.disabled=parent.children.length===1;
+             bar.append(removeGroup);
            }
            box.appendChild(bar);
            for(const child of node.children)draw(child,node,depth+1,box);
@@ -152,7 +169,25 @@
            box.append(select(fields,node.field,v=>{node.field=v;}),select([['contains','Contient'],['equals','Est égal à'],['prefix','Commence par']],node.comparison,v=>{node.comparison=v;}));
            const input=doc.createElement('input');input.type='text';input.value=node.value;input.placeholder='Terme';input.style.cssText='height:30px;min-width:120px;max-width:45%;box-sizing:border-box';input.addEventListener('input',()=>{node.value=input.value;});box.appendChild(input);
            const actions=doc.createElement('div');actions.style.cssText='display:flex;flex-wrap:wrap;gap:3px';
-           actions.append(button('Regrouper cette condition (…)',()=>structural('wrap',node,1)),button('+ Groupe au même niveau',()=>structural('addSiblingGroup',node,2)),button('Supprimer cette condition',()=>structural('remove',node)));box.appendChild(actions);
+           const position=parent.children.indexOf(node);
+           const up=button('↑',()=>structural('moveUp',node));
+           up.title='Déplacer cette condition vers le haut';
+           up.disabled=position===0;
+           const down=button('↓',()=>structural('moveDown',node));
+           down.title='Déplacer cette condition vers le bas';
+           down.disabled=position===parent.children.length-1;
+           actions.append(up,down,
+             button('+ Critère voisin',
+               ()=>structural('addSiblingCondition',node,1)),
+             button('Regrouper cette condition (…)',()=>structural('wrap',node,1)),
+             button('+ Groupe au même niveau',
+               ()=>structural('addSiblingGroup',node,2))
+           );
+           const removeCondition=button('Supprimer',
+             ()=>structural('remove',node));
+           removeCondition.disabled=parent.children.length===1;
+           actions.append(removeCondition);
+           box.appendChild(actions);
          }
          host.appendChild(box);
        }
@@ -849,6 +884,26 @@
    }
    icsFacet=facet('filterIcs','07 / 01.040');
    committeeFacet=facet('filterCommittee','ISO/TC 121');
+
+   const filterDetails=d.createElement('details');
+   filterDetails.dataset.isoMoreFilters='true';
+   filterDetails.style.cssText=
+     'border:1px solid #ccc;border-radius:5px;padding:4px 7px;max-width:100%';
+
+   const filterSummary=d.createElement('summary');
+   filterSummary.textContent='Filtres et tri';
+   filterSummary.style.cssText='cursor:pointer;font-weight:600';
+   filterDetails.appendChild(filterSummary);
+
+   const filterContent=d.createElement('div');
+   filterContent.style.cssText=
+     'display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0 3px';
+   filterDetails.appendChild(filterContent);
+
+   bar.insertBefore(filterDetails,sortLabel);
+   filterContent.appendChild(sortLabel);
+   filterContent.appendChild(icsFacet.parentElement);
+   filterContent.appendChild(committeeFacet.parentElement);
    const reload=d.createElement('button');reload.type='button';reload.textContent=tr('refresh');reload.dataset.isoTranslation='refresh';bar.appendChild(reload);
    const syncButton=d.createElement('button');syncButton.type='button';syncButton.textContent=tr('sync');syncButton.dataset.isoTranslation='sync';syncButton.title='Charger les fichiers ISO téléchargés localement dans IndexedDB';syncButton.addEventListener('click',()=>syncLocalIso());bar.appendChild(syncButton);
    const remote=d.createElement('button');remote.type='button';remote.dataset.catalogDistribution='true';remote.dataset.isoTranslation='distributedSync';remote.textContent=tr('distributedSync');remote.title=tr('distributedSync');

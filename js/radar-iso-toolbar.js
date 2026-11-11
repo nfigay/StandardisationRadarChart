@@ -17,6 +17,23 @@
   function disconnect(){state.observer?.disconnect();state.observer=null;state.log=null;state.snapshot=null;}
   function setLog(text){if(state.log){state.log.textContent=text;state.log.setAttribute('data-iso-operation-status',text);}}
   function statusText(){return String(state.status?.textContent||'').trim();}
+  function sourceStatus(){
+    const startup=root.__radarIsoStartup;
+    const count=Number(root.__radarIsoWindowedCount||0);
+    const labels={
+      ready:'Catalogue installé',
+      existing:'Catalogue conservé',
+      running:'Installation en cours',
+      failed:'Installation échouée'
+    };
+    const label=labels[startup?.status]||'État à vérifier';
+    return label+
+      (startup?.release?' · '+startup.release:'')+
+      (count>0?' · '+count.toLocaleString('fr-FR')+
+        ' notices ISO':'')+
+      (startup?.status==='failed'&&startup.message
+        ?' · '+startup.message:'');
+  }
   function watchStatus(initial){
     state.snapshot=initial;
     if(typeof root.MutationObserver!=='function'||!state.status)return;
@@ -61,7 +78,19 @@
         state.log=d.getElementById('iso-source-manager-activity');
         if(!container||!actions||!state.log)return;
         help.textContent=tr('help');label.textContent=tr('activity');setLog(tr('ready'));
-        const form=new root.w2form({name:'isoSourceManagerForm',focus:-1,fields:[{field:'catalogueStatus',type:'textarea',html:{label:tr('state'),span:12,attr:'readonly style="width:96%;height:54px;white-space:pre-wrap"'}}],record:{catalogueStatus:statusText()},actions:{}});
+        const form=new root.w2form({
+          name:'isoSourceManagerForm',
+          focus:-1,
+          fields:[{
+            field:'catalogueStatus',type:'textarea',
+            html:{
+              label:tr('state'),span:12,
+              attr:'readonly style="width:96%;height:54px;white-space:pre-wrap"'
+            }
+          }],
+          record:{catalogueStatus:sourceStatus()},
+          actions:{}
+        });
         form.render(container);
         watchStatus(statusText());
         for(const op of existing){
