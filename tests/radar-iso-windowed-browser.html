@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8"><title>RUNNING</title>
+<script src="../js/radar-iso-stream-core.js"></script>
+<script src="../js/radar-iso-windowed-db.js"></script>
+<script>
+(async()=>{
+ try{
+  const data=Array.from({length:201},(_,i)=>({id:String(i),reference:'ISO '+String(i).padStart(3,'0'),title:'Example '+i,icsCodes:['35.020'],ownerCommittee:'TC1'}));
+  const enc=new TextEncoder(),buffer=enc.encode(data.map(x=>JSON.stringify(x)).join('\n')+'\n');
+  const digest=await crypto.subtle.digest('SHA-256',buffer);const sha=Array.from(new Uint8Array(digest),x=>x.toString(16).padStart(2,'0')).join('');
+  const entry={id:'deliverables',uncompressedBytes:buffer.length,uncompressedSha256:sha,records:201};
+  const openStream=()=>new Blob([buffer]).stream();
+  const manifest=[{type:'deliverables',entry,openStream},{type:'committees',entry:{...entry,id:'committees'},openStream}];
+  const db=window.__radarIsoWindowed; const initial=await db.importRelease({datasets:manifest,release:'test-1',normalize:(_,raw)=>raw});
+  const p1=await db.page({limit:100}),p2=await db.page({limit:100,after:p1.next}),p3=await db.page({limit:100,after:p2.next}),filter=await db.page({limit:20,dimension:'ics',value:'35.020'});
+  let failure=false;try{await db.importRelease({datasets:[{type:'deliverables',entry:{...entry,uncompressedSha256:'f'.repeat(64)},openStream},manifest[1]],release:'test-bad',normalize:(_,raw)=>raw});}catch(e){failure=true;}
+  const after=await db.current();
+  if(p1.records.length!==100||p2.records.length!==100||p3.records.length!==1||filter.records.length!==20||!failure||after.generation!==initial.generation)throw Error('Unexpected pagination/atomicity');
+  document.title='PASS '+[p1.records.length,p2.records.length,p3.records.length,filter.records.length,failure].join(',');
+ }catch(e){document.title='FAIL '+e.stack;}
+})();
+</script>

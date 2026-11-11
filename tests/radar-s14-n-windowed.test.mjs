@@ -1,0 +1,17 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {join,dirname} from 'node:path';
+import {existsSync} from 'node:fs';
+import {pathToFileURL} from 'node:url';
+import {fileURLToPath} from 'node:url';
+const p=dirname(fileURLToPath(import.meta.url));
+const packageInstaller=join(p,'../../install-s14-n.mjs');
+const installedInstaller=join(p,'../tools/install-s14-n.mjs');
+const {patchPanel,patchDatabase}=await import(pathToFileURL(existsSync(packageInstaller)?packageInstaller:installedInstaller).href);
+const panel=readFileSync(join(p,'fixtures/s14-n-panel.js'),'utf8');
+const database=readFileSync(join(p,'fixtures/s14-n-db.js'),'utf8');
+test('panel exposes page navigation without global read in iso-list branch',()=>{const result=patchPanel(panel);assert.match(result,/windowPage\('reset'\)/);assert.match(result,/limit:100/);assert.match(result,/windowToken/);assert.doesNotMatch(result,/fullGrid.project\(isoDeliverables,term\)/);});
+test('patch is idempotent',()=>{const first=patchPanel(panel);assert.equal(patchPanel(first),first);const db=patchDatabase(database);assert.equal(patchDatabase(db),db);});
+test('lookup is generation-specific',()=>{const result=patchDatabase(database);assert.match(result,/\[active.generation,type,String\(id\)\]/);});
+test('rejects unknown baseline',()=>{assert.throws(()=>patchPanel('unrecognized source'),/panel required/);});

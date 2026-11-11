@@ -1,0 +1,50 @@
+requirement_id,domain,requirement_short,analysis_ref,decision_ref,implementation_scope,verification_id,approval,implementation,verification,evidence_commit,as_is_evidence,gap_status
+REQ-BASE-01,NFR,Browser/offline-first without mandatory backend,A1/A4,DEC-004,Build and offline smoke,VER-BUILD-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-BASE-02,Architecture,W2UI owns layout lifecycle,A4,DEC-001,W2UI integration,VER-VP-03,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-BASE-03,Integrity,Preserve legacy interchanges and published revisions,A5,DEC-003,Migration and export,VER-BLP-02,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-BASE-04,UX,I18n and decoupled labels,A2,OPEN,UI and schema,VER-ISO-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-UI-01,UX,Main Radar Standards Analyses views,A2/A7,DEC-012,W2UI workspace,E2E-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-UI-02,UX,"ISO w2grid in main, separate explorer",A4/A7,DEC-007,Main w2grid,E2E-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-UI-03,UX,Multiple contextual sheets,A2/A7,DEC-008,Right panel sheets,E2E-02,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-UI-04,UX,Preserve filters and selection across views,A2,OPEN,View state,E2E-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-UI-05,UX,Responsive panel behavior W2UI-driven,A4/A6,DEC-001,Panel layout,VER-VP-03,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-UI-06,Governance,Guard edits by revision state,A5,DEC-003,Editor guards,VER-BLP-02,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-ISO-01,ISO,Explicit versioned ISO source and provenance,A3/A7,DEC-009,ISO loader,VER-ISO-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-ISO-02,ISO,w2grid multifilter/search/multiselect,A2/A7,DEC-007,ISO search,E2E-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-ISO-03,ISO,Edition and replacement relations,A7,DEC-009,ISO parser/index,VER-ISO-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-ISO-04,ISO,Persistent selection basket,A2,DEC-007,Standards basket,E2E-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-ISO-05,ISO,Honest loading/error/unknown states,A7,OPEN,ISO UI,E2E-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-ISO-06,Performance,"Index/filter, no unbounded DOM rows",A3/A7,DEC-011,Index and grid,VER-ISO-02,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-MOD-01,Model,Separate identity edition context assessment radar blip,A1/A5,DEC-002,Domain schema,E2E-03,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-MOD-02,Model,Stable blip->standard/assessment links,A5,DEC-010,Catalog + adapter,VER-BLP-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-MOD-03,Model,Contextual independence,A1/A2,DEC-002,Assessment model,E2E-03,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-MOD-04,Model,Edition-stable ISO ID,A3/A7,DEC-009,ISO ID resolver,VER-ISO-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-MOD-05,Model,Ambiguous/unresolved semantics,A7,DEC-015,Reconciliation,VER-MIG-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-BLP-01,Blip,Create blips in draft from ISO multiselection,A2/A5,DEC-010,Create workflow,VER-BLP-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-BLP-02,Blip,Explicit ring quadrant assessment,A1/A5,DEC-002,Editor,VER-BLP-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-BLP-03,Blip,"Stable coordinates, no random redraw",A4/A6,DEC-005,Placement service,VER-VP-03,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-BLP-04,Blip,Draft derivation for published changes,A5,DEC-003,Revision lifecycle,VER-BLP-02,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-BLP-05,Blip,Delete blip without deleting ISO identity,A1,DEC-002,Referential guard,VER-BLP-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-VP-01,Viewport,Shared coordinate system and origins,A4/A6,DEC-005,Viewport module,VER-VP-02,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-VP-02,Viewport,Uniform scale/pan calculation,A6,DEC-005,Pure math,VER-VP-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-VP-03,Viewport,W2UI resize without data mutations,A4/A6,DEC-001,W2UI adapter,VER-VP-03,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-VP-04,Viewport,"Programmatic camera, user lock, handle fit",A4/A6,DEC-006,Cy camera adapter,VER-VP-04,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-VP-05,Viewport,Alignment <1px target,A6,DEC-005,Browser geometry,VER-VP-02,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-EXP-01,Export,Complete independent radar infographic,A7,DEC-013,SVG composition,VER-EXP-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-EXP-02,Export,Portable output formats and foreignObject audit,A7,DEC-013,Export adapters,VER-EXP-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-CTX-01,Context,Standard and edition sheet,A2/A7,DEC-008,Right sheets,E2E-02,proposed,not_started,not_run,,DOC-P6-A,not_assessed
+REQ-CTX-02,Context,Blip sheet,A2/A7,DEC-008,Right sheets,E2E-02,proposed,not_started,not_run,,DOC-P6-A,not_assessed
+REQ-CTX-03,Context,Assessment sheet,A2/A7,DEC-008,Right sheets,E2E-03,proposed,not_started,not_run,,DOC-P6-A,not_assessed
+REQ-ANA-01,Analytics,Compare revisions using standards IDs,A2/A7,OPEN,Analysis view,VER-ANA-01,proposed,not_started,not_run,,DOC-P6-A,not_assessed
+REQ-ANA-02,Analytics,Metrics with scopes denominators and export,A2/A7,OPEN,Analysis view,VER-ANA-01,proposed,not_started,not_run,,DOC-P6-A,not_assessed
+REQ-EA-01,EA,Typed references to EA sources,A1/A7,DEC-014,EA adapter,VER-EA-01,proposed,not_started,not_run,,DOC-P6-A,not_assessed
+REQ-EA-02,EA,Separate adoption evidence and recommendation,A1/A2,DEC-002,EA evidence,E2E-08,proposed,not_started,not_run,,DOC-P6-A,not_assessed
+REQ-DATA-01,Data,Schema validations extensions and explicit migration,A5,DEC-010,Catalog persistence,VER-BLP-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-DATA-02,Data,Integrity lineage and immutable releases,A5,DEC-003,Integrity,VER-BLP-02,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-DATA-03,Data,Interchange matrix and compatibility,A5/A7,OPEN,Import/export,VER-BUILD-01,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-DATA-04,Data,Do not duplicate whole ISO corpus in radars,A1/A7,DEC-009,Reference model,E2E-02,proposed,not_started,not_run,,DOC-P6-A/B/C,not_assessed
+REQ-MIG-01,Migration,Reviewed legacy blip mapping,A5/A7,DEC-015,Migration mapping,VER-MIG-01,proposed,not_started,not_run,,DOC-P6-A,not_assessed
+REQ-MIG-02,Migration,Preserve original artifacts rollback,A5,DEC-015,Migration plan,VER-MIG-01,proposed,not_started,not_run,,DOC-P6-A,not_assessed
+REQ-ARCH-01,Architecture,Pure domain and UI adapters,A4,DEC-004,Modularization,VER-BUILD-01,proposed,not_started,not_run,,DOC-P6-A,not_assessed
+REQ-ARCH-02,Architecture,Incremental legacy-safe integration,A4/A5,DEC-004,Bootstrap/adapters,VER-BUILD-01,proposed,not_started,not_run,,DOC-P6-A,not_assessed
+REQ-ARCH-03,Governance,Review baseline before code changes,A3,OPEN,Development process,VER-BUILD-01,proposed,not_started,not_run,,DOC-P6-A,not_assessed

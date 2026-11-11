@@ -1,0 +1,19 @@
+{
+  "baseline": "SRC-DOC-0.1",
+  "package": "DOC-P1-Node-Bash-v0.2",
+  "created": "2026-11-06",
+  "files": {
+    "docs/architecture/01-ANALYSE-EXISTANT.md": "8531eeb5998d411231fd8022a595adce5e2a3e23eaed0b2f96814e703adc9756",
+    "docs/architecture/02-SPECIFICATION-CIBLE.md": "f297f6a944799a01c89c2ec651b4802a126b300c3f805252dfc369a85a86f6b9",
+    "docs/evidence/01-SOURCES-ET-CONFIANCE.md": "ba06283f6d08c21f7f4f548755f147509cd740c17f9751c8c27737c68c09b216",
+    "docs/evidence/02-DOC-P0-REPO-AUDIT.md": "1ab9eb2d927ec61a95ebb4e3b44a21eaa54442f5a923c7ddf7cb48d0cd8b5de4",
+    "docs/governance/00-START-HERE.md": "80a83ca6422493c8737087880ef7349d94e2d357c91d8329fc5a661341737272",
+    "docs/governance/01-DECISIONS.md": "12f2e4027342b49f60d97ffe4f9ec7364bfc14191b1c68fe4a586b3cb1ae59a5",
+    "docs/governance/02-REVIEW-CHECKLIST.md": "c3a533ad208d35e1222cf4cc269ac14cea21b0ab2f1e928b7d8732f0a0a563cc",
+    "docs/quality/01-VALIDATION-MIGRATION.md": "d5741f73b03e71982a989c0c555b0b42b4bc681b19efda99246ff2cc0a9768cf",
+    "docs/requirements/README.md": "17f2f0f3dfd83d22953c7d2bb00c924e6ab64cb0638cd0eb257a9de406195f6e",
+    "docs/requirements/requirements.csv": "6a98c4c40d4eec163927bc0332afa15eb2823ab377b4272271d3812be066e231",
+    "DOCS-BASELINE-README.md": "c310b82be6fd224f6fc3c7830207849aafb44c92dad1279d849c8e98ee0e95d2",
+    "README-DOC-BASELINE.md": "870df96f826516828a5fb3d85a3181aeb6ce4306c910fe259606d2fc7190d402"
+  }
+}

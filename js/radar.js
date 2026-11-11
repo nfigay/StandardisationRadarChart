@@ -9,14 +9,21 @@ async function functionForTest(message) {
 
 
 function drawSelectedWorkgroup(workgroup) {
-
-  // Filter based on selected working group
-
-  let RadarInputs = ASD_SSG_Blips.filter(blip => blip.working_group === workgroup);
-  let filteredBlips = RadarInputs.filter(d => validRings.includes(d.ring) && validQuadrants.includes(d.quadrant));
-
-  // Call the visualization function
-  plotData(filteredBlips);
+  window.__radarRevisionSession.select(cy, workgroup, function (group) {
+    // Phase 10A: explicit catalog revisions opt in synchronously; legacy remains default.
+    if (window.__radarCatalogAdapter && window.__radarCatalogAdapter.has(group)) {
+      const projected = window.__radarCatalogAdapter.project(group);
+      cy.elements().remove();
+      cy.add(projected.nodes.concat(projected.edges));
+      window.__radarViewportSync?.();
+      return;
+    }
+    // Clone legacy records: plotData mutates x/y/radius during initial plotting.
+    const RadarInputs = ASD_SSG_Blips.filter(blip => blip.working_group === group);
+    const filteredBlips = RadarInputs.filter(d => validRings.includes(d.ring) && validQuadrants.includes(d.quadrant));
+    plotData(JSON.parse(JSON.stringify(filteredBlips)));
+  });
+  window.__radarCatalogUI?.afterSelect(workgroup,cy);
 }
 
 function generateFormFromCytoscapeElement(ele) {
@@ -113,6 +120,10 @@ function generateFormFromCytoscapeElement(ele) {
     record: data,  // Ensures form fields get values from node data
     actions: {
       Save() {
+          if (window.__radarCatalogUI?.isReadOnly()) {
+            window.w2alert?.('Published and archived revisions are read-only. Create or open a draft.');
+            return;
+          }
           let updatedData = this.record; // Use this.record instead of this.getValues()
   
           Object.keys(updatedData).forEach(key => {
@@ -146,22 +157,11 @@ function initializeToolbar2() {
 
 // Function to get the working groups from your filtered blips
 function getWorkingGroups() {
-  const workingGroups = [...new Set(ASD_SSG_Blips.map(d => d.working_group))];
-  return workingGroups.map(group => ({ id: group, text: group }));
+  return window.__radarWorkingGroups.getWorkingGroups(ASD_SSG_Blips);
 }
 
 function getWorkingGroupsWithCount() {
-  // Count occurrences of each working group
-  const counts = ASD_SSG_Blips.reduce((acc, d) => {
-    acc[d.working_group] = (acc[d.working_group] || 0) + 1;
-    return acc;
-  }, {});
-
-  // Convert to menu format
-  return Object.entries(counts).map(([group, count]) => ({
-    text: group,
-    count: count
-  }));
+  return window.__radarWorkingGroups.getWorkingGroupsWithCount(ASD_SSG_Blips);
 }
 
 // Function to filter and display blips based on the selected working group
@@ -170,7 +170,7 @@ function filterBlipsByWorkingGroup(selectedGroup) {
   console.log("Filtered Blips for Working Group:", selectedGroup, filtered);
 
   // Call your plotting function to update the graph
-  plotData(filtered); // You already have plotData function defined
+  drawSelectedWorkgroup(selectedGroup); // Use the same editable revision source
 }
 
 
@@ -195,23 +195,10 @@ const radii = [150, 250, 350]; // Rayons des cercles concentriques (modifiable)
 
 // Fonction pour déterminer la zone d'un nœud
 function getZone(x, y, radii) {
-  let relX = x - chartCenter.x;
-  let relY = y - chartCenter.y;
-  let r = Math.sqrt(relX ** 2 + relY ** 2);  // Calcul de la distance au centre
-  let theta = Math.atan2(relY, relX); // Angle en radians (-π à π)
-  let angleDeg = (theta * 180) / Math.PI; // Conversion en degrés
-
-  // Si la distance est supérieure au rayon du cercle le plus grand, on renvoie undefined pour zone et quadrant
-  if (r > radii[radii.length - 1]) {
-    return { zone: undefined, quadrant: undefined };
+  if (typeof window.__radarGetZone !== 'function') {
+    throw new Error('Radar zone ES module has not initialized');
   }
-
-  let circleIndex = radii.findIndex(radius => r < radius);
-  if (circleIndex === -1) circleIndex = radii.length - 1; // Évite un index hors limites
-
-  let sectorIndex = Math.floor(((theta + Math.PI) / (2 * Math.PI)) * 4) % 4;
-
-  return { zone: circleIndex, quadrant: sectorIndex }; // 🔥 Correction : Associer aux bonnes variables
+  return window.__radarGetZone(x, y, radii);
 }
 
 function enableNodeGrabbing() {
@@ -237,24 +224,10 @@ function openCSV(file) {
 }
 // Function to process CSV data and convert it to JSON format
 function processCSVData(csvData) {
-  return csvData.map(row => ({
-    id: row.id,
-    working_group: row.working_group,
-    in_pda_radar: row.in_pda_radar,
-    in_se_radar: row.in_se_radar,
-    in_ils_radar: row.in_ils_radar,
-    in_manuf_radar: row.in_manuf_radar,
-    in_tli_radar: row.in_tli_radar,
-    in_supply_chain_radar: row.in_supply_chain_radar,
-    label: row.label,
-    ring: row.ring,  // ring corresponds to zone
-    quadrant: row.quadrant,  // quadrant corresponds to quarter
-    name: row.name,
-    hasBlip: row.hasBlip,
-    description: row.description,
-    standard_type1: row.standard_type1,
-    // Additional fields can go here
-  }));
+  if (typeof window.__radarProcessCSVData !== 'function') {
+    throw new Error('Radar CSV ES6 module has not initialized');
+  }
+  return window.__radarProcessCSVData(csvData);
 }
 
 // Function to display all blips (optional)
@@ -300,13 +273,16 @@ function drawSVG() {
   let svg = container.append("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("viewBox", [-width / 2, -height / 2, width, height]);
+    .attr("viewBox", "0 0 800 800")
+    .attr("preserveAspectRatio", "xMidYMid meet");
+
+  const radarDrawing = svg.append("g")
+    .attr("transform", "translate(400,400)");
 
   // ---------------------------//
   //          TITLE             //
   // ---------------------------//
-  svg
-    .append("text")
+  radarDrawing.append("text")
     .attr("id", "svgTitle") // ✅ ID ajouté pour modification dynamique
     .style("font-size", "25px")
     .text(`Standards Radar Chart ` + new Date().toLocaleDateString())
@@ -318,7 +294,7 @@ function drawSVG() {
   //       RINGS (CERCLES)      //
   // ---------------------------//
   ringSizes.forEach((ring) => {
-    svg.append("circle")
+    radarDrawing.append("circle")
       .attr("cx", 0)
       .attr("cy", 0)
       .attr("r", ring.ringSize)
@@ -336,7 +312,7 @@ function drawSVG() {
   // Couleur gris clair transparent
   const axisColor = "rgba(169, 169, 169, 0.2)"; // Gris clair avec transparence de 50%
 
-  svg.append("line")
+  radarDrawing.append("line")
     .attr("x1", -maxRadius+10)
     .attr("y1", 0)
     .attr("x2", maxRadius-10)
@@ -345,7 +321,7 @@ function drawSVG() {
     .attr("stroke-width", axisThickness)
     .attr("stroke-linecap", "round"); // Arrondir l'extrémité
 
-  svg.append("line")
+  radarDrawing.append("line")
     .attr("x1", 0)
     .attr("y1", -maxRadius+10)
     .attr("x2", 0)
@@ -367,7 +343,7 @@ function drawSVG() {
     else{
      xCenter = - (ringSizes[ringIndex].ringSize + (ringIndex > 0 ? ringSizes[ringIndex - 1].ringSize : 0)) / 2;
     }
-     let label = svg.append("text")
+     let label = radarDrawing.append("text")
       .attr("font-size", "15px")
       .attr("fill", "black")
       .attr("text-anchor", "start") // Position initiale arbitraire
@@ -390,8 +366,7 @@ function drawSVG() {
   // ---------------------------//
 
   function createQuarterLabel(id, x, y, text) {
-    let block = svg
-      .append("foreignObject")
+    let block = radarDrawing.append("foreignObject")
       .attr("id", id) // ID pour modification dynamique
       .attr("x", x)
       .attr("y", y)
@@ -473,7 +448,7 @@ function plotData(RadarInputs) {
       w2ui.toolbar.refresh('item4'); 
   }
  
-  cy.fit();
+  window.__radarViewportSync?.();
 }
 
 function downloadCompleteRadarData() {

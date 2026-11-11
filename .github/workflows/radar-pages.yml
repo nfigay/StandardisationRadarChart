@@ -1,0 +1,55 @@
+name: Standardization Radar Chart — GitHub Pages
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: radar-github-pages
+  cancel-in-progress: false
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Test S14-Z
+        run: node --test tests/radar-s14-z.test.mjs
+      - name: Build GitHub Pages
+        run: |
+          rm -rf .radarchart-build/pages
+          npm run build:pages
+          npm run verify:pages
+      - name: Prepare Pages output
+        run: |
+          touch .radarchart-build/pages/.nojekyll
+          test -f radar-catalog-config.json
+          test -f catalog-distribution/manifest.json
+
+          cp radar-catalog-config.json .radarchart-build/pages/radar-catalog-config.json
+          cp -R catalog-distribution .radarchart-build/pages/catalog-distribution
+
+          test -f .radarchart-build/pages/catalog-distribution/manifest.json
+          cat > .radarchart-build/pages/index.html <<'HTML'
+          <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=./radar.html"><title>Standardization Radar Chart</title></head><body><a href="./radar.html">Ouvrir le radar</a></body></html>
+          HTML
+          node tools/check-pages-readiness.mjs --repo . --out .radarchart-build/pages --strict
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .radarchart-build/pages
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

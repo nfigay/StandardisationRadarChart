@@ -9,7 +9,31 @@
     <link rel="stylesheet" href="css/backdrop.css">
     <link rel="stylesheet" href="css/all.min.css" />
     <script src="./js/blips.js"></script>
+    <script src="./js/working-groups-classic.js"></script>
+    <script src="./js/radar-revision-session.js"></script>
+    <script src="./js/radar-catalog-adapter.js"></script>
+    <script src="./js/radar-artifact-integrity.js"></script>
+    <script src="./js/radar-catalog-persistence.js"></script>
+    <script src="./js/radar-catalog-creation.js"></script>
+    <script src="./js/radar-catalog-create-form.js"></script>
+    <script src="./js/radar-revision-dialogs.js"></script>
+    <script src="./js/radar-radar-admin.js"></script>
+    <script src="./js/radar-catalog-ui.js"></script>
+    <script src="./js/radar-standard-registry.js"></script>
+    <script src="./js/radar-iso-open-data.js"></script>
+    <script src="./js/radar-iso-rss.js"></script>
+    <script src="./js/radar-catalog-atomic.js"></script>
+    <script src="./js/radar-catalog-followed.js"></script>
+    <script src="./js/radar-catalog-distribution.js"></script>
+    <script src="./js/radar-catalog-changes.js"></script>
+    <script src="./js/radar-iso-full-grid.js"></script>
+    <script src="./js/radar-iso-tree-index.js"></script>
+    <script src="./js/radar-iso-sidebar-index.js"></script>
+    <script src="./js/radar-standards-panel.js"></script>
+    <script src="./js/radar-iso-toolbar.js"></script>
+    <script src="./js/radar-workspace-explorer.js"></script>
     <script src="./js/radar.js"></script>
+    <script type="module" src="./src/bootstrap/radar-zone-entry.mjs"></script>
     <script src="./js/cytoscape/RadarStyle.js"></script>
     <script src="./js/cytoscape/RadarStyle.js"></script>
     <script src="lib/d3.min.js"></script>
@@ -54,24 +78,17 @@
 
         #radar-container {
             position: relative;
-            width: 800px;
-            /* S'ajuste à la taille du parent, mais sans dépasser 800px */
-            height: 800px;
-            overflow: auto;
-            /* Active les barres de défilement si besoin */
-            margin-left: 40px;
-            margin-top: 5px;
-            /* Centre le div dans le panneau principal */
-            border: 0px solid #ccc;
-            /* Bordure pour voir les limites */
-            transform: scale(0.75);
-            /* Scale the container by 90% (reducing by 10%) */
-            transform-origin: top left;
-            /* Ensure scaling happens from the top-left corner */
+            flex: 1 1 800px;
+            min-width: 0;
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            border: 0;
         }
 
         #svg-container,
-        #cy-container {
+        #cy-container,
+        #cy2-container {
             position: absolute;
             top: 0;
             left: 0;
@@ -85,8 +102,13 @@
 
         #svg-container {
             background-color: white;
-            overflow: auto;
-            /* Pour éviter d'interagir avec Cytoscape en arrière-plan */
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Inactive compatibility layer: never intercept Cytoscape input. */
+        #cy2-container {
+            pointer-events: none;
         }
     </style>
     <script>
@@ -143,10 +165,32 @@
                         fr: "🇫🇷 French",
                         en: "🇬🇧 English",
                         files: "Files",
-                        savecsvssr: "Save",
-                        loadcsvssr: "Load",
-                        loadgraphssr: "Load",
-                        savegraphssr: "Save",
+                        newcatalog: "New catalog and working radar",
+                        loadcatalogjson: "Open JSON catalog",
+                        savecatalogjson: "Save JSON catalog",
+                        createdraft: "Create / Open Working Radar",
+                        asd2019: "ASD SSG 2019",
+                        loadasd: "Load historical radars",
+                        asdUnassigned: "Unassigned historical records",
+                        radartools: "Radar tools",
+                        publishcatalogrevision: "Publish draft revision",
+                        archivecatalogrevision: "Archive published revision",
+                        selectcatalogrevision: "Select revision",
+                        renameradar: "Rename radar",
+                        renamerevision: "Name revision",
+                        standardregistry: "Standard references",
+                        createcatalogblip: "Add blip",
+                        createstandardblip: "Quick local creation (unverified) and blip",
+                        modeLocked: "Locked",
+                        modeGrab: "Grab On",
+                        modeChange: "Change On",
+                        showEditor: "Show editor tools",
+                        removeWorkspace: "Remove from workspace",
+                        removeConfirm: "Delete selected content from the active workspace?",
+                        savecsvssr: "Export blips CSV",
+                        loadcsvssr: "Import blips CSV",
+                        loadgraphssr: "Open SSR graph",
+                        savegraphssr: "Save SSR graph",
                         switch: "Switch",
                         radars: "Legacy radars",
                         mbse: "SE and MBSE Radar",
@@ -251,10 +295,32 @@
                         fr: "🇫🇷 Français",
                         en: "🇬🇧 English",
                         files: "Fichiers",
-                        loadcsvssr: "Ouvrir",
-                        savecsvssr: "Sauver",
-                        loadgraphssr: "Ouvrir",
-                        savegraphssr: "Sauver",
+                        newcatalog: "Nouveau catalogue et radar de travail",
+                        loadcatalogjson: "Ouvrir un catalogue JSON",
+                        savecatalogjson: "Sauvegarder le catalogue JSON",
+                        createdraft: "Créer / ouvrir un radar de travail",
+                        asd2019: "ASD SSG 2019",
+                        loadasd: "Charger les radars historiques",
+                        asdUnassigned: "Enregistrements historiques non affectés",
+                        radartools: "Outils du radar",
+                        publishcatalogrevision: "Publier la révision de travail",
+                        archivecatalogrevision: "Archiver la révision publiée",
+                        selectcatalogrevision: "Sélectionner une révision",
+                        renameradar: "Renommer le radar",
+                        renamerevision: "Nommer la révision",
+                        standardregistry: "Références normatives",
+                        createcatalogblip: "Ajouter un blip",
+                        createstandardblip: "Création rapide locale (non vérifiée) et ajout d’un blip",
+                        modeLocked: "Verrouillé",
+                        modeGrab: "Déplacement",
+                        modeChange: "Déplacement et zones",
+                        showEditor: "Afficher les outils d’édition",
+                        removeWorkspace: "Retirer de l’espace de travail",
+                        removeConfirm: "Supprimer le contenu sélectionné de l’espace de travail actif ?",
+                        loadcsvssr: "Importer des blips CSV",
+                        savecsvssr: "Exporter des blips CSV",
+                        loadgraphssr: "Ouvrir un graphe SSR",
+                        savegraphssr: "Sauvegarder le graphe SSR",
                         switch: "Inverser",
                         semanticlandscape: "Standardization Landscape",
                         semanticlandscape: "Paysage de la standadisation",
@@ -429,6 +495,14 @@
         function changeLanguage(lang) {
             i18next.changeLanguage(lang, () => {
                 updateToolbarTranslations();
+                // S14-K-R4: reproject statuses and revision labels on language switch.
+                window.__radarWorkspaceExplorer?.refresh?.();
+                window.__radarCatalogUI?.refreshRadarLabels?.();
+                const draftButton = w2ui.toolbar?.get('createdraft');
+                if (draftButton) {
+                    draftButton.text = '✏️ ' + i18next.t('menu.createdraft');
+                    w2ui.toolbar.refresh('createdraft');
+                }
                 //   w2ui.blipForm.header = i18next.t("forms.blipForm");
                 //   w2ui.blipForm.refresh();
 
@@ -602,12 +676,39 @@
                 {
                     type: "menu", id: "files", text: i18next.t("menu.files"),
                     items: [
-                        { id: "loadcsvssr", text: i18next.t("menu.loadcsvssr") },
-                        { id: "savecsvssr", text: i18next.t("menu.savecsvssr") },
+                        { id: "newcatalog", text: i18next.t("menu.newcatalog") },
+                        { id: "loadcatalogjson", text: i18next.t("menu.loadcatalogjson") },
+                        { id: "savecatalogjson", text: i18next.t("menu.savecatalogjson") },
                         { type: "break" },
                         { id: "loadgraphssr", text: i18next.t("menu.loadgraphssr") },
                         { id: "savegraphssr", text: i18next.t("menu.savegraphssr") },
-
+                        { type: "break" },
+                        { id: "loadcsvssr", text: i18next.t("menu.loadcsvssr") },
+                        { id: "savecsvssr", text: i18next.t("menu.savecsvssr") },
+                    ]
+                },
+                {
+                    type:'menu',id:'asd2019',text:i18next.t('menu.asd2019'),
+                    items:[{id:'loadasd',text:i18next.t('menu.loadasd')}]
+                },
+                {
+                    type:'menu',id:'radartools',text:i18next.t('menu.radartools'),
+                    items:[
+                        {id:'createdraft',text:i18next.t('menu.createdraft')},
+                        {id:'publishcatalogrevision',text:i18next.t('menu.publishcatalogrevision')},
+                        {id:'archivecatalogrevision',text:i18next.t('menu.archivecatalogrevision')},
+                        {id:'selectcatalogrevision',text:i18next.t('menu.selectcatalogrevision')},
+                        {id:'renameradar',text:i18next.t('menu.renameradar')},
+                        {id:'renamerevision',text:i18next.t('menu.renamerevision')},
+                        {id:'standardregistry',text:i18next.t('menu.standardregistry')},
+                        {id:'createcatalogblip',text:i18next.t('menu.createcatalogblip')},
+                        {id:'createstandardblip',text:i18next.t('menu.createstandardblip')},
+                        {type:'break'},
+                        {id:'modeLocked',text:i18next.t('menu.modeLocked')},
+                        {id:'modeGrab',text:i18next.t('menu.modeGrab')},
+                        {id:'modeChange',text:i18next.t('menu.modeChange')},
+                        {type:'break'},
+                        {id:'showEditor',text:i18next.t('menu.showEditor')}
                     ]
                 },
                 {
@@ -747,22 +848,6 @@
 
                 },
                 { type: 'spacer' },
-                {
-                    type: "menu", id: "iso", text: i18next.t("menu.iso"), icon: "fa fa-eye",
-                    items: [
-                        {
-                            id: 'tc', text: i18next.t("menu.tc"), icon: 'fa fa-star', expanded: true,
-                            items: [
-                                { id: "loadtc", text: i18next.t("menu.loadtc") },
-                                { id: "savetc", text: i18next.t("menu.savetc") },
-                            ]
-                        },
-                        {
-                            id: 'fetchstandard', text: i18next.t("menu.fetchstandard"), icon: 'fa fa-star'
-
-                        }
-                    ]
-                },
             ];
         }
         function initializeMainMenu() {
@@ -779,89 +864,60 @@
         }
 
 
-        function initializeISCSidebar() {
-            Papa.parse("https://nfigay.github.io/ArchiCG/opendata/iso/ICS.csv", {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-                complete: function (results) {
-                    const data = results.data;
-
-                    const nodeMap = {};   // identifier -> node
-                    const rootNodes = []; // top-level nodes
-
-                    data.forEach((row, index) => {
-                        if (!row.identifier || !row.titleEn) {
-                            console.warn(`Ignoring row ${index} because of missing identifier or titleEn:`, row);
-                            return; // saute cette ligne
-                        }
-
-                        const node = {
-                            id: row.identifier,
-                            text: row.identifier + " - " + row.titleEn, // titleFr si en mode francais, avec néanmoins l'anglais si pas de titre francais
-                            nodes: []
-                        };
-                        nodeMap[row.identifier] = node;
-
-                        if (row.parent && nodeMap[row.parent]) {
-                            // Si le parent existe, ajoute ce nœud comme enfant
-                            nodeMap[row.parent].nodes.push(node);
-                        } else {
-                            // Sinon, c'est un nœud racine
-                            rootNodes.push(node);
-                        }
-                    });
-
-                    console.log("Arbre final :", rootNodes);
-
-                    // Injecte ensuite dans le sidebar
-                    sb = new w2sidebar({
-                        box: '#sidebar',
-                        name: 'sidebar',
-                        topHTML: `
-        <div style="height: 36px; padding: 3px 2px; border-bottom: 1px solid silver">
-            <input id="search" style="width: 100%" class="w2ui-input" placeholder="Search ICS..."
-                onchange="search(this.value)">
-        </div>
-    `,
-                        nodes: rootNodes,
-                        onClick(event) {
-                            console.log('click', event.detail)
-                        },
-                        async onRefresh(event) {
-                            await event.complete
-                            if (event.detail.fullRefresh) {
-                                if (query('#search').length > 0) {
-                                    query('#search').val(sb.last_search ?? '').get(0).focus()
-                                }
-                            }
-                        }
-                    })
-                    return sb;
-                },
-                error: function (err) {
-                    console.error('Error loading or parsing CSV:', err);
-                }
-            });
+        // CSV SSR tabular v0: preserve visible Cytoscape node properties, not full graph layout.
+        function exportVisibleRadarCSV(cytoscapeGraph, papa) {
+            const nodes = cytoscapeGraph.nodes(':visible').toArray();
+            const rows = nodes.map(node => ({ ...node.data() }));
+            const fields = [...new Set(rows.flatMap(row => Object.keys(row)))];
+            if (rows.length === 0 || fields.length === 0) return '';
+            const data = rows.map(row => fields.map(field => {
+                const value = row[field];
+                if (value == null) return '';
+                const text = typeof value === 'object' ? JSON.stringify(value) : String(value);
+                // Prevent CSV formula execution when opening exported data in spreadsheets.
+                return /^[=+\-@\t\r]/.test(text) ? "'" + text : text;
+            }));
+            return papa.unparse({ fields, data }, { quotes: true });
         }
 
-
-        window.search = function (value) {
-            sb.last_search = value
-            let count = sb.search(value)
-            sb.expandAll()
-            query(sb.box).find('#empty-search').remove()
-            if (count == 0) {
-                query(sb.box)
-                    .append('<div id="empty-search" style="font-size: 13px; color: #666; z-index: 1400; top: 45%; left: 50%; transform: translateX(-50%); width: 100%!important; text-align: center">No nodes found</div>')
-                w2utils.marker(sb.box)
-            } else {
-                let words = []
-                if (value !== '') words.push(value)
-                w2utils.marker(sb.box, words)
+        // A single direct W2UI item callback owns draft creation.
+        // The toolbar-wide click switch deliberately does not invoke it again.
+        function handleCreateOrOpenDraft() {
+            try {
+                const result = window.__radarCatalogUI.createOrOpenDraft(w2ui.toolbar, cy, drawSelectedWorkgroup);
+                console.log('Draft:', result);
+                w2alert(window.__radarRevisionDialogs.t(result.action==='created' ? 'draftCreated' : 'draftOpened'));
+            } catch (error) {
+                console.error('Draft creation rejected:', error);
+                w2alert(window.__radarRevisionDialogs.t('draftFailure')+': '+error.message);
             }
         }
 
+        // C1 deliberately creates a catalog with its first empty draft in one transaction.
+        // Canceling any prompt leaves the workspace unchanged.
+        function handleNewCatalog() {
+            const labels = i18next.language?.startsWith('fr')
+                ? ['Nom du catalogue', "Nom de l'organisation", 'Nom du portefeuille', 'Nom du premier radar']
+                : ['Catalog name', 'Organization name', 'Portfolio name', 'First radar name'];
+            const values = [];
+            for (const label of labels) {
+                const value = window.prompt(label);
+                if (value === null) return;
+                if (!value.trim()) { w2alert(label + ' : valeur obligatoire'); return; }
+                values.push(value);
+            }
+            try {
+                const result = window.__radarCatalogUI.createNewCatalog({
+                    catalogTitle: values[0], organizationName: values[1],
+                    portfolioName: values[2], radarTitle: values[3]
+                }, w2ui.toolbar, cy, drawSelectedWorkgroup);
+                console.log('New catalog:', result);
+                w2alert('Catalog created in memory: ' + result.catalogTitle + '. Use Files → Save JSON catalog to download it.');
+            } catch (error) {
+                console.error('New catalog rejected:', error);
+                w2alert('New catalog rejected: ' + error.message);
+            }
+        }
 
         function initializeToolbar() {
             const workingGroupMenuItems = getWorkingGroupsWithCount().map(group => ({
@@ -871,7 +927,7 @@
             }));
 
             // Set the title separately by updating the panel's `toolbar` or using custom HTML
-            document.getElementById('toolbar-title').innerHTML = 'Strategic Standardization Radars';
+            // The legacy title element was removed when the W2UI explorer replaced the sidebar.
             return new w2toolbar({
                 box: '#toolbar-container',
                 name: 'toolbar',
@@ -900,7 +956,7 @@
                                 return 'Select Group'; // Default text if no selection
                             }
                         },
-                        selected: workingGroupMenuItems.length > 0 ? workingGroupMenuItems[0].id : null, // Default to first item
+                        selected: null, // Active workspace starts empty; ASD is explicit-load only. // Default to first item
                         items: workingGroupMenuItems
                     },
                     { type: 'new-line' },
@@ -960,27 +1016,9 @@
                             style: 'width: 60px'
                         }
                     },
-                    { type: 'new-line' },
-                    {
-                        type: 'label', id: 'item5', text: 'CSV SSR',
-                        tooltip: 'SSR CSV with dedicated worksheet structure ',
-                    },
-                    { type: 'new-line' },
-                    { type: 'button', id: 'loadcsvssr', text: '📂' + i18next.t("menu.loadcsvssr") },
-                    { type: 'break' },
-                    { type: 'button', id: 'savecsvssr', text: '💾' + i18next.t("menu.savecsvssr") },
 
-                    { type: 'new-line' },
-                    {
-                        type: 'label',
-                        id: 'item9',
-                        text: 'Graph SSR',
-                        tooltip: 'SSR Graph with dedicated graph structure',
-                    },
-                    { type: 'new-line' },
-                    { type: 'button', id: 'loadgraphssr', text: '📂' + i18next.t("menu.loadgraphssr") },
-                    { type: 'break' },
-                    { type: 'button', id: 'savegraphssr', text: '💾' + i18next.t("menu.savegraphssr") },
+                    { type: 'button', id: 'createdraft', text: '✏️ ' + i18next.t('menu.createdraft'),
+                      onClick: () => handleCreateOrOpenDraft() },
                     { type: 'new-line', hidden: true },
                     { type: 'new-line', hidden: true },
                     { type: 'button', id: 'switch', text: '🔄' + i18next.t("menu.switch"), hidden: true },
@@ -1008,10 +1046,19 @@
                 onClick(event) {
                     const target = event.target.split(':')[0]; // Get the part before the colon
                     const subTarget = event.target.split(':')[1];
+                    // Protect published/archived revisions at the existing W2UI action boundary.
+                    const readonlyToolbarAllowed = ['item2', 'createdraft', 'newcatalog', 'loadcatalogjson',
+                        'savecatalogjson', 'savegraphssr', 'savecsvssr'];
+                    const safeLockedMode = target === 'item4' && subTarget === 'locked';
+                    if (window.__radarCatalogUI?.isReadOnly() &&
+                        !readonlyToolbarAllowed.includes(target) && !safeLockedMode) {
+                        offerDraftForReadOnlyAction();
+                        return;
+                    }
                     switch (target) {
                         case 'item2': // Handle workgroup selection
                             if (subTarget) {
-                                drawSelectedWorkgroup(subTarget)
+                                drawSelectedWorkgroup(window.__radarCatalogUI?.resolve(subTarget) || subTarget)
                             }
                             break;
                         case 'item4': // Handle workgroup selection
@@ -1033,6 +1080,117 @@
                             }
                             break;
 
+                        case 'createdraft':
+                            // Handled once by the item's onClick, never twice here.
+                            break;
+                        case 'newcatalog':
+                            handleNewCatalog();
+                            break;
+                        case 'loadcatalogjson':
+                            window.__radarCatalogUI.openFile();
+                            break;
+                        case 'savecatalogjson':
+                            try {
+                                if(window.__radarWorkspaceExplorer?.status?.().sources.some(s=>s.kind==='asd'))
+                                    throw Error('ASD workspace conversion to catalog JSON is not supported yet; export refused to avoid dropping ASD radars.');
+                                Promise.resolve(window.__radarCatalogPersistence.download(cy)).catch(error => {
+                                    console.error('Catalog export rejected:', error);
+                                    w2alert('Catalog export rejected: ' + error.message);
+                                });
+                            } catch (error) {
+                                console.error('Catalog export rejected:', error);
+                                w2alert('Catalog export rejected: ' + error.message);
+                            }
+                            break;
+                        case 'loadcsvssr': {
+                            // Dedicated one-shot picker: do not reuse #inputfile (its existing handler can clear the graph).
+                            if (typeof Papa === 'undefined' || typeof Papa.parse !== 'function' ||
+                                !window.__radarCSVSSR || typeof cy === 'undefined' || !cy) {
+                                w2alert('CSV SSR importer is not ready.');
+                                break;
+                            }
+                            const picker = document.createElement('input');
+                            picker.type = 'file';
+                            picker.accept = '.csv,text/csv';
+                            picker.style.display = 'none';
+                            document.body.appendChild(picker);
+                            picker.onchange = () => {
+                                const file = picker.files?.[0];
+                                picker.remove();
+                                if (!file) return;
+                                if (file.size > 10 * 1024 * 1024) {
+                                    w2alert('CSV SSR file exceeds the 10 MB limit.');
+                                    return;
+                                }
+                                Papa.parse(file, {
+                                    header: true,
+                                    beforeFirstChunk: chunk => chunk.replace(/^\uFEFF/, ''),
+                                    skipEmptyLines: 'greedy',
+                                    complete: (result) => {
+                                        try {
+                                            const existing = cy.nodes().map(n => ({ ...n.data() }));
+                                            const plan = window.__radarCSVSSR.prepareCSVSSRImport(result, existing);
+                                            // No silent replacement: ask before any live graph mutation.
+                                            const summary = `CSV SSR: ${plan.total} rows, ${plan.additions.length} additions, ` +
+                                                `${plan.updates.length} updates, ${plan.unchanged.length} unchanged. ` +
+                                                `Merge into the current graph? No nodes or edges will be deleted.`;
+                                            w2confirm(summary).yes(() => {
+                                                try {
+                                                    const fresh = window.__radarCSVSSR.prepareCSVSSRImport(
+                                                        result, cy.nodes().map(n => ({ ...n.data() })));
+                                                    if (fresh.additions.length !== plan.additions.length ||
+                                                        fresh.updates.length !== plan.updates.length) {
+                                                        w2alert('Graph changed during confirmation; please retry import.');
+                                                        return;
+                                                    }
+                                                    for (const item of fresh.additions) {
+                                                        if (!Number.isFinite(item.data.x) || !Number.isFinite(item.data.y)) {
+                                                            w2alert('New CSV SSR nodes require numeric x and y coordinates.');
+                                                            return;
+                                                        }
+                                                    }
+                                                    const applied = window.__radarCSVSSR.applyCSVSSRImport(fresh, cy);
+                                                    w2alert(`CSV SSR merge complete: ${applied.added} added, ${applied.updated} updated, ${applied.unchanged} unchanged.`);
+                                                } catch (error) {
+                                                    console.error('CSV SSR merge failed:', error);
+                                                    w2alert(`CSV SSR merge failed: ${error.message}`);
+                                                }
+                                            });
+                                        } catch (error) {
+                                            console.error('CSV SSR validation failed:', error);
+                                            w2alert(`CSV SSR rejected: ${error.message}`);
+                                        }
+                                    },
+                                    error: (error) => {
+                                        console.error('CSV SSR parse failed:', error);
+                                        w2alert('CSV SSR file could not be read.');
+                                    }
+                                });
+                            };
+                            picker.click();
+                            break;
+                        }
+                        case 'savecsvssr': {
+                            if (typeof cy === 'undefined' || !cy || typeof Papa === 'undefined' || typeof Papa.unparse !== 'function') {
+                                w2alert('Radar or CSV library unavailable.');
+                                break;
+                            }
+                            const csv = exportVisibleRadarCSV(cy, Papa);
+                            if (!csv) {
+                                w2alert('No visible radar nodes to export.');
+                                break;
+                            }
+                            const blob = new Blob(['\uFEFF', csv], { type: 'text/csv;charset=utf-8' });
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = 'radar-blips.csv';
+                            document.body.appendChild(link);
+                            link.click();
+                            link.remove();
+                            setTimeout(() => URL.revokeObjectURL(url), 1000);
+                            break;
+                        }
                         case 'savegraphssr':
                             // downloadCompleteRadarData()
                             if (typeof cy === 'undefined' || !cy) {
@@ -1066,8 +1224,133 @@
 
 
 
+        // Read-only is not a dead end: explicitly offer to derive a new working revision.
+        // This NEVER edits a published/archived snapshot and requires user confirmation.
+        function offerDraftForReadOnlyAction() {
+            const group = window.__radarRevisionSession?.status?.().activeGroup;
+            const revision = window.__radarCatalogAdapter?.getRevision?.(group);
+            if (!revision || revision.status === 'draft') {
+                w2alert('Cette action nécessite une révision de travail (draft).');
+                return;
+            }
+            if (typeof window.confirm !== 'function') {
+                w2alert('Cette révision est en lecture seule. Outils du radar → Créer / ouvrir un radar de travail.');
+                return;
+            }
+            if (window.confirm('Révision ' + revision.status + ' : son contenu est protégé.\n' +
+                'Créer ou ouvrir une NOUVELLE révision draft pour poursuivre le travail ?\n' +
+                'La publication actuelle restera inchangée.')) {
+                handleCreateOrOpenDraft();
+            }
+        }
+
         function handleMenuAction(event) {
+            // The main Files menu is the sole visible entry point for file actions.
+            // Reuse the existing toolbar action handler without duplicating IO code.
+            // The toolbar guard protects graph mutations. Exporting catalog JSON is read-only
+            // and must remain available after publishing or archiving a revision.
+            const fileActions = ['newcatalog', 'loadcatalogjson', 'savecatalogjson',
+                'loadgraphssr', 'savegraphssr', 'loadcsvssr', 'savecsvssr'];
+            if (typeof event.target === 'string' && event.target.startsWith('files:')) {
+                const fileAction = event.target.slice('files:'.length);
+                if (fileActions.includes(fileAction)) {
+                    // Check BEFORE delegation: the Files submenu otherwise bypasses
+                    // the top-level read-only policy entirely.
+                    if (window.__radarCatalogUI?.isReadOnly() &&
+                        !['savecatalogjson', 'newcatalog'].includes(fileAction)) {
+                        offerDraftForReadOnlyAction();
+                        return;
+                    }
+                    if (!w2ui.toolbar || typeof w2ui.toolbar.onClick !== 'function') {
+                        w2alert(i18next.t('menu.files') + ': toolbar unavailable');
+                        return;
+                    }
+                    w2ui.toolbar.onClick({ target: fileAction });
+                }
+                return;
+            }
+            // Top-level menu activation is navigation, not a graph mutation.
+            // Never intercept a parent menu before the user can select permitted actions.
+            if (typeof event.target === 'string' && !event.target.includes(':')) return;
+            // Consultation remains usable for published revisions. These cases
+            // have no graph-data mutations; layout/import/graph editing stay blocked.
+            const readonlyMenuAllowed = ['asd2019:loadasd', 'files:newcatalog', 'files:savecatalogjson', 'radartools:createdraft',
+                'radartools:modeLocked', 'radartools:showEditor', 'radartools:publishcatalogrevision', 'radartools:archivecatalogrevision', 'radartools:selectcatalogrevision', 'radartools:renameradar', 'radartools:renamerevision', 'radartools:standardregistry', 'view:nodeRendering', 'view.edgeRendering',
+                'language:fr', 'language:en', 'owl:exportjson', 'owl:savegraph'];
+            if (window.__radarCatalogUI?.isReadOnly() &&
+                !readonlyMenuAllowed.includes(event.target)) {
+                offerDraftForReadOnlyAction();
+                return;
+            }
             switch (event.target) {
+                case 'asd2019:loadasd':
+                    try {
+                        window.__radarWorkspaceExplorer.loadASD(getWorkingGroupsWithCount());
+                    } catch(e) {w2alert(e.message);}
+                    break;
+                case 'radartools:selectcatalogrevision':
+                    try { window.__radarCatalogUI.openRevisionPicker(); }
+                    catch(error) { console.error('Revision selection rejected:',error); w2alert(error.message); }
+                    break;
+                case 'radartools:renameradar':
+                case 'radartools:renamerevision':
+                    try { window.__radarRadarAdmin.open(event.target.endsWith('renamerevision')?'revision':'radar'); }
+                    catch(error) { console.error('Radar administrative edit rejected:',error); w2alert(error.message); }
+                    break;
+                case 'radartools:standardregistry':
+                    try { window.__radarStandardsPanel.open(); }
+                    catch(error) { console.error('Standard registry rejected:',error); w2alert(error.message); }
+                    break;
+                case 'radartools:createdraft':
+                    handleCreateOrOpenDraft();
+                    break;
+                case 'radartools:publishcatalogrevision':
+                case 'radartools:archivecatalogrevision': {
+                    const action=event.target.endsWith('publishcatalogrevision')?'publish':'archive';
+                    const selectedGroup=window.__radarRevisionSession?.status?.().activeGroup;
+                    const activeRevision=window.__radarCatalogAdapter?.getRevision?.(selectedGroup);
+                    const required=action==='publish'?'draft':'published';
+                    if (!activeRevision) {
+                        w2alert(window.__radarRevisionDialogs.t('noRevision'));
+                        break;
+                    }
+                    if (activeRevision.status!==required) {
+                        w2alert(window.__radarRevisionDialogs.t(action==='publish' ? 'onlyDraft' : 'onlyPublished'));
+                        break;
+                    }
+                    window.__radarRevisionDialogs.confirmLifecycle(action, () => {
+                        try {
+                            const result=window.__radarCatalogUI.transitionActiveRevision(action,w2ui.toolbar,cy);
+                            w2alert(window.__radarRevisionDialogs.t('remember'));
+                        } catch(error) {
+                            console.error('Revision lifecycle rejected:',error);
+                            w2alert(window.__radarRevisionDialogs.t('failed')+': '+error.message);
+                        }
+                    });
+                    break;
+                }
+
+                case 'radartools:createcatalogblip':
+                case 'radartools:createstandardblip':
+                    try {
+                        window.__radarCatalogCreateForm.open(cy, event.target.endsWith('createstandardblip') ? 'new' : 'existing');
+                    } catch (error) {
+                        console.error('Catalog creation form rejected:', error);
+                        w2alert(error.message);
+                    }
+                    break;
+                case 'radartools:modeLocked':
+                case 'radartools:modeGrab':
+                case 'radartools:modeChange': {
+                    const mapped={modeLocked:'locked',modeGrab:'grabon',modeChange:'changeon'}[event.target.split(':')[1]];
+                    w2ui.toolbar.onClick({target:'item4:'+mapped});
+                    break;
+                }
+                case 'radartools:showEditor': {
+                    const editor=document.getElementById('toolbar-container');
+                    if(editor) editor.hidden=!editor.hidden;
+                    break;
+                }
                 case 'radars:plm':
                     // loading ASD SSG Blips filtered by"working_group": "PLM",
                     var workingGroup = "PLM"
@@ -1080,7 +1363,7 @@
                     })
                     var filteredBlips = RadarInputs.filter(d =>
                         validRings.includes(d.ring) && validQuadrants.includes(d.quadrant));
-                    plotData(RadarInputs)
+                    drawSelectedWorkgroup(workingGroup)
                     break;
                 case 'view:nodeRendering':
                     break;
@@ -1322,15 +1605,6 @@
                 case 'showhidegrabifydelete:restore':
                     removed.restore();
                     break;
-                case 'iso:loadtc':
-                    document.getElementById('jsonl-hidden-input').click();
-                    break;
-                case 'iso:savetc':
-                    break;
-                case 'iso:fetchstandard':
-                    alert("titi")
-                    functionForTest("toto");
-                    break;    
                 default:
                     // alert(event.target)
                     break;
@@ -1344,10 +1618,8 @@
                 { type: 'top', size: 50, style: 'border-bottom: 1px solid #ccc;' },
                 {
                     type: 'left', resizable: true, size: 250, style: 'border-right: 1px solid #ccc;',
-                    html: `<div id="toolbar-title" style="padding: 5px; font-weight: bold; background: #f1f1f1; border-bottom: 1px solid #ddd;">
-                             My Custom Title
-                          </div>
-                          <div id="toolbar-container"></div>`
+                    html: `<div id="workspace-explorer" style="width:100%;height:100%"></div>
+                           <div id="toolbar-container" hidden style="position:absolute;top:55px;left:0;z-index:20;background:white;max-height:80vh;overflow:auto"></div>`
                 },
                 {
                     type: 'main', resizable: true, style: 'background: #f8f9fa;',
@@ -1358,23 +1630,21 @@
                              <div id="cy-container"></div>
                              <div id="cy2-container"></div>
                         </div>
-                    <div id="sidebar" style="display: flex; flex-direction: column; justify-content: flex-start; height: 100%; width: calc(100% - 800px); overflow: hidden;">
-                <!-- Contenu de la grille -->
-                     </div>
                 </div>` },
                 {
                     type: 'right', resizable: true, size: 300, style: 'border-left: 1px solid #ccc;',
                     html: ``
                 },
-                { type: 'bottom', resizable: true, size: 50, style: 'border-top: 1px solid #ccc;', html: `Bottom Panel` }
+                { type: 'bottom', resizable: true, size: 240, style: 'border-top: 1px solid #ccc;', html: `<div id="standard-references-panel" style="height:100%;width:100%"></div>` }
             ]
         })
         myLayout.render('#mainLayout'); // Render the layout in the container      
         w2ui.mainLayout.html('top', initializeMainMenu());
         //w2ui.mainLayout.html('left', initializeToolbar());//initializeToolbar2());
         initializeToolbar().render("#toolbar-container")
-        initializeISCSidebar()
-        w2ui.mainLayout.html('bottom', "");
+        window.__radarWorkspaceExplorer.initialize({mount:document.getElementById('workspace-explorer'),
+            graph:function(){return cy;},select:function(group){drawSelectedWorkgroup(group);}});
+        window.__radarStandardsPanel?.initialize(document.getElementById('standard-references-panel'), function(){return cy;});
 
 
 
@@ -1599,26 +1869,23 @@
         }
 
         myLayout.on('resize', function (event) {
-            setTimeout(() => {
-                let container = document.getElementById('svg-container');
-                let svg = d3.select("#svg-container svg");
-
-                // Resize SVG dynamically
-                svg.attr("width", container.clientWidth)
-                    .attr("height", container.clientHeight);
-            }, 100);
+            setTimeout(() => window.__radarViewportSync?.(), 100);
         });
 
 
 
         //// Loading files
         document.getElementById('load-from-inp').addEventListener('change', function () {
+            if (window.__radarCatalogUI?.isReadOnly()) { w2alert('Published revision is read-only.'); this.value=''; return; }
            
             readTxtFile(this.files[0], function (txt) {
                 w2confirm('Do you want to replace? If yes, current graph will be removed, if no, it will be fusionned with the import)')
                     .yes(() => {
+                        if (window.__radarCatalogUI?.isReadOnly()) { w2alert('Published revision is read-only.'); return; }
+                        window.__radarRevisionSession.beforeExternalReplace(cy);
                         cy.$().remove();
                         api.loadJson(txt);
+                        window.__radarRevisionSession.adoptLoaded(cy);
 
                     })
                     .no(() => {
@@ -1631,6 +1898,7 @@
 
         //// Loading files
         document.getElementById('inputfile').addEventListener('change', function (event) {
+            if (window.__radarCatalogUI?.isReadOnly()) { w2alert('Published revision is read-only.'); this.value=''; return; }
             const file = event.target.files[0];
             if (!file) {
                 alert("No file selected!");
@@ -1638,16 +1906,19 @@
             }
             w2confirm(i18next.t(`confirm.replacegraph`))
                 .yes(() => {
+                    if (window.__radarCatalogUI?.isReadOnly()) { w2alert('Published revision is read-only.'); return; }
                     cy.$().remove();
                     openCSV(file); // Pass file object
                 })
                 .no(() => {
+                    if (window.__radarCatalogUI?.isReadOnly()) { w2alert('Published revision is read-only.'); return; }
                     openCSV(file); // Pass file object
                 });
         });
 
 
         document.getElementById('jsonl-hidden-input').addEventListener('change', function (e) {
+            if (window.__radarCatalogUI?.isReadOnly()) { w2alert('Published revision is read-only.'); this.value=''; return; }
             const file = e.target.files[0];
             if (!file) return;
 
@@ -1804,10 +2075,10 @@
             container: document.getElementById("cy-container"),
             elements: elements,
             style: RadarStyle,
-            zoomingEnabled: false,         // Disable zooming
+            zoomingEnabled: true,         // Allow programmatic viewport zoom
             userZoomingEnabled: false,     // Disable user-initiated zooming
             userPanningEnabled: false,     // Disable user-initiated panning
-            panningEnabled: false,         // Disable panning
+            panningEnabled: true,         // Allow programmatic viewport pan
             autolock: false,                // Lock nodes in place (prevents accidental grabbing)
             autoungrabify: false,           // Prevents nodes from being grabbed and moved          
             layout: {
@@ -1849,6 +2120,7 @@
         });
 
         cy.on('free', 'node', function (evt) {
+            if (window.__radarCatalogUI?.isReadOnly()) return;
             let node = evt.target;
             let pos = node.position();
             backToInitialPosition = false
@@ -1928,6 +2200,41 @@
 
 
     </script>
+
+    <script type="module">
+      import { computeRadarViewport } from '/src/domain/radar-viewport.mjs';
+
+      // W2UI allocates the size. This is the sole viewport synchronizer.
+      window.__radarViewportSync = function () {
+        const container = document.getElementById('radar-container');
+        const graph = typeof cy !== 'undefined' ? cy : window.cy;
+        const svg = document.querySelector('#svg-container svg');
+        if (!container || !graph || !svg) return false;
+
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        if (width <= 0 || height <= 0) return false;
+
+        const camera = computeRadarViewport({ width, height });
+        svg.setAttribute('width', String(width));
+        svg.setAttribute('height', String(height));
+        svg.setAttribute('viewBox', '0 0 800 800');
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+        graph.resize();
+        graph.viewport(camera);
+        return true;
+      };
+
+      window.__radarViewportSync();
+    </script>
+
+<!-- S14-M streaming ISO pilot; historical cache unchanged -->
+<script src="js/radar-iso-stream-core.js"></script>
+<script src="js/radar-iso-windowed-db.js"></script>
+<script src="js/radar-iso-stream-distribution.js"></script>
+  <!-- S14-Z ISO sources -->
+  <script src="./js/radar-s14-z-sources.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,17 @@
+
+# Generated dependencies and build artifacts
+/node_modules/
+/.radarchart-build/
+/dist/
+
+# Local backups and diagnostics
+/.*-backups/
+/.s*-backup-*/
+/.lot*-backups/
+*.s14-*-backup
+
+# Operating system files
+.DS_Store
+
+# Temporary logs
+*.log
