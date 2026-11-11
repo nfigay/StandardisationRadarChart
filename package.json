@@ -12,7 +12,9 @@
     "preview": "vite preview --outDir .radarchart-build/local --host 127.0.0.1",
     "preview:pages": "vite preview --outDir .radarchart-build/pages --host 127.0.0.1",
     "build:client": "node scripts/build-client.mjs",
-    "verify:client": "node scripts/verify-client-build.mjs .radarchart-build/client"
+    "verify:client": "node scripts/verify-client-build.mjs .radarchart-build/client",
+    "assemble:products": "node scripts/assemble-products.mjs assemble .radarchart-build/products $(git rev-parse --short HEAD)",
+    "verify:products": "node scripts/assemble-products.mjs verify .radarchart-build/products"
   },
   "devDependencies": {
     "vite": "^7.3.0"
