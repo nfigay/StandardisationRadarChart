@@ -733,11 +733,35 @@
  }
  /* S14-H RSS grid */
  async function loadRssCache(force=false){
-   const api=root.__radarIsoRss;if(!api){rssMessage='Module RSS indisponible';refresh();return;}
-   rssMessage='Chargement des flux RSS locaux…';refresh();
-   try{const outcome=await api.syncLocal(force);rssRows=await api.readAll();rssMessage=outcome.reason==='not-configured'?tr('rssEmpty'):rssRows.length+' événements RSS en cache';}
-   catch(e){rssMessage='RSS : '+String(e.message||e);}
-   refresh();
+   const api=root.__radarIsoRss;
+   if(!api){
+     rssMessage='Module RSS indisponible';
+     refresh();
+     return;
+   }
+
+   rssMessage=force
+     ? 'Actualisation des flux RSS locaux…'
+     : 'Lecture des flux RSS enregistrés…';
+
+   if(mode==='rss')refresh();
+
+   try{
+     // No optional network request during application startup.
+     // Explicit source-manager refresh remains available.
+     const outcome=force?await api.syncLocal(true):null;
+     rssRows=await api.readAll();
+
+     rssMessage=outcome?.reason==='not-configured'
+       ? tr('rssEmpty')
+       : rssRows.length
+         ? rssRows.length+' événements RSS en cache'
+         : tr('rssEmpty');
+   }catch(error){
+     rssMessage='RSS : '+String(error?.message||error);
+   }
+
+   if(mode==='rss')refresh();
  }
  /* S14-J change journal */
  async function loadChanges(){
@@ -983,8 +1007,9 @@
        'Initialisation du catalogue ISO : '+message;
    });
 
+   // Read existing RSS cache without network access.
+   // Change journals are fetched only on explicit user request.
    void loadRssCache();
-   void loadChanges();
    return true;
  }
  function open(){if(!mount)initialize(root.document?.getElementById('standard-references-panel'));const layout=root.w2ui?.mainLayout;if(layout?.show)layout.show('bottom');if(layout?.sizeTo)layout.sizeTo('bottom',240);refresh();search?.focus();}
