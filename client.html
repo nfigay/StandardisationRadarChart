@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Roadmap publiée — Consultation</title>
+  <style>
+    :root {font-family:system-ui,sans-serif;color:#24364b;
+      background:#f3f6fa}
+    * {box-sizing:border-box}
+    body {margin:0}
+    header {background:#193653;color:white;padding:20px 24px}
+    header h1 {margin:0;font-size:1.5rem}
+    header p {margin:6px 0 0;color:#dce8f5}
+    main {max-width:1200px;margin:auto;padding:20px}
+    .panel {background:white;border:1px solid #ced9e5;
+      border-radius:12px;padding:16px;margin-bottom:16px}
+    .layout {display:grid;grid-template-columns:minmax(0,2fr)
+      minmax(260px,1fr);gap:16px}
+    #radar {width:100%;height:auto;background:#fafcff;
+      border:1px solid #dce4ef;border-radius:8px}
+    #items {padding:0;list-style:none;max-height:360px;
+      overflow:auto}
+    #items li {margin:5px 0}
+    #items button {display:block;width:100%;text-align:left;
+      padding:10px;border:1px solid #cbd8e7;border-radius:7px;
+      background:white;color:inherit;cursor:pointer}
+    #items button[aria-pressed=true] {background:#e2effd;
+      border-color:#346ea6}
+    #items button:focus-visible {outline:3px solid #346ea6;
+      outline-offset:2px}
+    #details {white-space:pre-wrap;overflow-wrap:anywhere}
+    .muted {color:#597085}
+    .error {color:#a02020}
+    label {font-weight:600}
+    input {display:block;margin:10px 0;max-width:100%}
+    .meta {font-size:.9rem;color:#51687d}
+    @media(max-width:760px){
+      .layout {grid-template-columns:1fr}
+      main {padding:12px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Roadmap publiée</h1>
+    <p>Client de consultation — aucune fonction d'édition</p>
+  </header>
+  <main>
+    <section class="panel" aria-label="Chargement de roadmap">
+      <label for="package-file">Ouvrir un paquet de roadmap publié</label>
+      <input id="package-file" type="file" accept=".json,application/json">
+      <p id="message" role="status" aria-live="polite">
+        Choisissez le fichier JSON d'une révision publiée.
+      </p>
+      <p class="meta">Le fichier est lu localement dans ce navigateur.
+        Aucun catalogue ISO global n'est téléchargé.</p>
+    </section>
+
+    <section class="panel" aria-label="Roadmap">
+      <h2 id="roadmap-title">Aucune roadmap chargée</h2>
+      <p id="roadmap-meta" class="meta"></p>
+      <div class="layout">
+        <div>
+          <svg id="radar" viewBox="0 0 600 600"
+            role="img" aria-label="Position des blips de la roadmap"></svg>
+          <p class="meta">Vue spatiale provisoire basée sur les positions
+            publiées. Les anneaux et secteurs du radar historique ne sont
+            pas encore reproduits à l'identique.</p>
+        </div>
+        <aside>
+          <h3>Éléments publiés</h3>
+          <ul id="items"></ul>
+          <h3>Détails</h3>
+          <div id="details" class="muted">Sélectionnez un élément.</div>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="./js/roadmap-client.mjs"></script>
+</body>
+</html>
