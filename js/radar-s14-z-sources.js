@@ -99,6 +99,189 @@
   function dismiss() {
     state.modal?.remove(); state.modal=null;
   }
+
+  // S14.2-B2 — Purely informational help for the main catalogue window.
+  const VISUAL_GUIDES={
+    fr:{
+      distributedSync:[
+        'Vérifier les mises à jour',
+        'Recherche une publication ISO plus récente et peut installer son catalogue dans ce navigateur.',
+        ['Distribution publiée','Vérification','Catalogue local'],
+        'Ne modifie ni les blips ni les révisions des radars.'
+      ],
+      sync:[
+        'Charger les fichiers ISO locaux',
+        'Utilise les fichiers locaux configurés dans ce déploiement.',
+        ['Fichiers locaux','Chargement','Catalogue ISO'],
+        'La présence de cette source est facultative.'
+      ],
+      import:[
+        'Importer un JSONL',
+        'Choisit un fichier fourni par l’utilisateur pour importer des notices ISO.',
+        ['Fichier JSONL','Import','Notices ISO'],
+        'Vérifiez toujours la provenance du fichier.'
+      ],
+      changesLoad:[
+        'Charger le journal des évolutions',
+        'Présente les changements disponibles entre publications ISO.',
+        ['Publications ISO','Journal','Évolutions'],
+        'Le journal est facultatif et distinct des normes.'
+      ],
+      rssSync:[
+        'Actualiser les actualités RSS',
+        'Consulte des actualités issues des flux locaux configurés.',
+        ['Flux RSS','Cache local','Actualités'],
+        'Les flux RSS ne remplacent pas le catalogue ISO.'
+      ],
+      refresh:[
+        'Reconstruire les vues',
+        'Rafraîchit les vues à partir des données disponibles.',
+        ['Données locales','Actualisation','Vues du radar'],
+        'Ne télécharge pas une nouvelle distribution ISO.'
+      ]
+    },
+    en:{
+      distributedSync:[
+        'Check for updates',
+        'Checks for a newer published ISO release and may install it in this browser.',
+        ['Published distribution','Check','Local catalogue'],
+        'Does not modify radar blips or revisions.'
+      ],
+      sync:[
+        'Load local ISO files',
+        'Uses configured local files from this deployment.',
+        ['Local files','Load','ISO catalogue'],
+        'This source is optional.'
+      ],
+      import:[
+        'Import JSONL',
+        'Selects a user-provided file containing ISO records.',
+        ['JSONL file','Import','ISO records'],
+        'Always check the file source.'
+      ],
+      changesLoad:[
+        'Load change journal',
+        'Shows available changes between published ISO releases.',
+        ['ISO releases','Journal','Changes'],
+        'The journal is optional and separate from standards.'
+      ],
+      rssSync:[
+        'Refresh RSS news',
+        'Reads news from locally configured RSS feeds.',
+        ['RSS feeds','Local cache','News'],
+        'RSS news does not replace the ISO catalogue.'
+      ],
+      refresh:[
+        'Rebuild views',
+        'Refreshes views using currently available data.',
+        ['Local data','Refresh','Radar views'],
+        'Does not download a new ISO distribution.'
+      ]
+    }
+  };
+
+  function visualDiagram(parent,steps){
+    const ns='http://www.w3.org/2000/svg';
+    if(typeof d.createElementNS!=='function'){
+      node('p',parent,steps.join(' → '));
+      return;
+    }
+    const svg=d.createElementNS(ns,'svg');
+    svg.setAttribute('viewBox','0 0 600 120');
+    svg.setAttribute('role','img');
+    svg.setAttribute('aria-label',steps.join(' → '));
+    svg.style.cssText='width:100%;height:auto;display:block';
+
+    const add=(tag,attributes,text)=>{
+      const child=d.createElementNS(ns,tag);
+      for(const [key,value] of Object.entries(attributes)){
+        child.setAttribute(key,String(value));
+      }
+      if(text!==undefined)child.textContent=text;
+      svg.appendChild(child);
+    };
+
+    steps.forEach((step,i)=>{
+      const x=4+202*i;
+      add('rect',{
+        x,y:20,width:178,height:80,rx:10,
+        fill:'#e7eff9',stroke:'#6887a6',
+        'stroke-width':1.5
+      });
+      const words=step.split(' ');
+      const half=Math.ceil(words.length/2);
+      const first=words.slice(0,half).join(' ');
+      const second=words.slice(half).join(' ');
+      add('text',{
+        x:x+89,y:second?53:65,
+        'text-anchor':'middle','font-size':13,
+        fill:'#203b58'
+      },first);
+      if(second)add('text',{
+        x:x+89,y:74,
+        'text-anchor':'middle','font-size':13,
+        fill:'#203b58'
+      },second);
+      if(i<2){
+        add('path',{
+          d:'M'+(x+182)+' 60 h15 m-5 -5 l5 5 -5 5',
+          fill:'none',stroke:'#467096','stroke-width':2
+        });
+      }
+    });
+    parent.appendChild(svg);
+  }
+
+  function renderVisualGuide(panel,operation){
+    if(!panel)return;
+    const entry=VISUAL_GUIDES[lang()][operation];
+    if(!entry)return;
+    const [title,description,steps,effect]=entry;
+
+    panel.textContent='';
+    node('strong',panel,title,'font-size:15px');
+    node('p',panel,description,
+      'line-height:1.5;margin:8px 0');
+    visualDiagram(panel,steps);
+    node('p',panel,effect,
+      'line-height:1.5;margin:8px 0 0;padding-left:10px;border-left:3px solid #6887a6');
+  }
+
+  function renderDataExplanation(dialog){
+    const details=node('details',dialog,undefined,
+      'margin-top:12px;border:1px solid #ccd5df;padding:10px;border-radius:7px');
+    node('summary',details,
+      lang()==='en'?'Understand the data':'Comprendre les données',
+      'cursor:pointer;font-weight:600');
+
+    const content=node('div',details,undefined,
+      'padding-top:10px;line-height:1.5');
+    visualDiagram(content,lang()==='en'?
+      ['Published files','Browser storage','ISO catalogue']:
+      ['Fichiers publiés','Stockage navigateur','Catalogue ISO']);
+
+    const entries=lang()==='en'?[
+      ['Source','Origin of the information.'],
+      ['Dataset','A coherent collection of data.'],
+      ['Distribution','Published files delivering a dataset.'],
+      ['Datastore','Storage used by an application.'],
+      ['Browser IndexedDB','Local storage of the ISO catalogue.'],
+      ['Radar data','Blips, groups and revisions, distinct from ISO reference data.']
+    ]:[
+      ['Source','Origine des informations.'],
+      ['Dataset','Ensemble cohérent de données.'],
+      ['Distribution','Fichiers publiés pour transférer un dataset.'],
+      ['Datastore','Espace de conservation des données.'],
+      ['IndexedDB','Stockage local du catalogue dans le navigateur.'],
+      ['Données du radar','Blips, groupes et révisions, distincts des données ISO.']
+    ];
+    for(const [name,description] of entries){
+      const p=node('p',content,undefined,'margin:5px 0');
+      node('strong',p,name+' : ');
+      node('span',p,description);
+    }
+  }
+
   function open() {
     dismiss();
     const shade=node('div',d.body,undefined,'position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box');
@@ -115,8 +298,20 @@
     const button=node('button',dialog,t('check'),'display:block;background:#215b8c;color:white;padding:10px 15px;border:0;border-radius:4px;cursor:pointer;margin:14px 0');
     button.type='button';
     const note=node('div',dialog,t('warning'),'padding:8px 0;color:#555;font-size:12px');
+    const visualPanel=node('section',dialog,undefined,
+      'margin:12px 0;padding:12px;background:#f7f9fc;color:#24364b;border:1px solid #bccbd9;border-radius:8px');
+    visualPanel.id='s142-catalogue-visual-guide';
+    visualPanel.setAttribute('role','region');
+    visualPanel.setAttribute('aria-label',
+      lang()==='en'?'Catalogue action guide':'Aide illustrée du catalogue');
+    renderVisualGuide(visualPanel,'distributedSync');
+
     const log=node('div',dialog,'','white-space:pre-wrap;padding:9px;border:1px solid #ddd;border-radius:4px;min-height:22px');
     log.setAttribute('role','status');log.setAttribute('aria-live','polite');
+    button.addEventListener('mouseenter',
+      ()=>renderVisualGuide(visualPanel,'distributedSync'));
+    button.addEventListener('focus',
+      ()=>renderVisualGuide(visualPanel,'distributedSync'));
     button.addEventListener('click',async()=>{
       if (!findCommand('distributedSync')) {log.textContent=t('noCommand');return;}
       button.disabled=true;
@@ -147,8 +342,13 @@
     for (const [op,key] of [['sync','local'],['import','import'],['changesLoad','journal'],['rssSync','feeds'],['refresh','refresh']]) {
       if (!findCommand(op)) continue;
       const b=node('button',details,t(key),'padding:6px 9px;margin:5px 7px 5px 0;cursor:pointer');b.type='button';
+      b.addEventListener('mouseenter',
+        ()=>renderVisualGuide(visualPanel,op));
+      b.addEventListener('focus',
+        ()=>renderVisualGuide(visualPanel,op));
       b.addEventListener('click',()=>{if (!activateCommand(op))log.textContent=t('unavailable');else log.textContent=t('technical')+': '+t(key);});
     }
+    renderDataExplanation(dialog);
     const onKey=e=>{if(e.key==='Escape'){dismiss();d.removeEventListener('keydown',onKey);}};
     d.addEventListener('keydown',onKey);
     close.focus();
