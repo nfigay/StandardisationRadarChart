@@ -178,6 +178,7 @@
                         asdUnassigned: "Unassigned historical records",
                         radartools: "Radar tools",
                         publishcatalogrevision: "Publish draft revision",
+                        exportclientroadmap: "Export published roadmap for client",
                         archivecatalogrevision: "Archive published revision",
                         selectcatalogrevision: "Select revision",
                         renameradar: "Rename radar",
@@ -308,6 +309,7 @@
                         asdUnassigned: "Enregistrements historiques non affectés",
                         radartools: "Outils du radar",
                         publishcatalogrevision: "Publier la révision de travail",
+                        exportclientroadmap: "Exporter la roadmap publiée pour le Client",
                         archivecatalogrevision: "Archiver la révision publiée",
                         selectcatalogrevision: "Sélectionner une révision",
                         renameradar: "Renommer le radar",
@@ -700,6 +702,7 @@
                     items:[
                         {id:'createdraft',text:i18next.t('menu.createdraft')},
                         {id:'publishcatalogrevision',text:i18next.t('menu.publishcatalogrevision')},
+                        {id:'exportclientroadmap',text:i18next.t('menu.exportclientroadmap')},
                         {id:'archivecatalogrevision',text:i18next.t('menu.archivecatalogrevision')},
                         {id:'selectcatalogrevision',text:i18next.t('menu.selectcatalogrevision')},
                         {id:'renameradar',text:i18next.t('menu.renameradar')},
@@ -1279,7 +1282,7 @@
             // Consultation remains usable for published revisions. These cases
             // have no graph-data mutations; layout/import/graph editing stay blocked.
             const readonlyMenuAllowed = ['asd2019:loadasd', 'files:newcatalog', 'files:savecatalogjson', 'radartools:createdraft',
-                'radartools:modeLocked', 'radartools:showEditor', 'radartools:publishcatalogrevision', 'radartools:archivecatalogrevision', 'radartools:selectcatalogrevision', 'radartools:renameradar', 'radartools:renamerevision', 'radartools:standardregistry', 'view:nodeRendering', 'view.edgeRendering',
+                'radartools:modeLocked', 'radartools:showEditor', 'radartools:publishcatalogrevision', 'radartools:exportclientroadmap', 'radartools:archivecatalogrevision', 'radartools:selectcatalogrevision', 'radartools:renameradar', 'radartools:renamerevision', 'radartools:standardregistry', 'view:nodeRendering', 'view.edgeRendering',
                 'language:fr', 'language:en', 'owl:exportjson', 'owl:savegraph'];
             if (window.__radarCatalogUI?.isReadOnly() &&
                 !readonlyMenuAllowed.includes(event.target)) {
@@ -1308,6 +1311,49 @@
                 case 'radartools:createdraft':
                     handleCreateOrOpenDraft();
                     break;
+                case 'radartools:exportclientroadmap': {
+                    // User-initiated export: published revision only.
+                    // Nothing is published to a server or stored in IndexedDB.
+                    Promise.resolve().then(async () => {
+                        const group=window.__radarRevisionSession?.status?.().activeGroup;
+                        const revision=window.__radarCatalogAdapter?.getRevision?.(group);
+                        if(!group || !revision || revision.status!=='published')
+                            throw Error('Sélectionner une révision publiée avant export.');
+                        const persistence=window.__radarCatalogPersistence;
+                        if(!persistence?.ownsRevision?.(group,revision.revisionId))
+                            throw Error('Révision absente du catalogue actif.');
+
+                        // Reuse the authoritative Creator catalogue.
+                        // The projection emits ONLY the selected revision,
+                        // its referenced standards and assessments.
+                        const source=persistence.build(cy);
+                        const {createPublishedRoadmapProjection}=await import(
+                            './src/domain/roadmap-published-projection.mjs'
+                        );
+                        const output=createPublishedRoadmapProjection(
+                            source,revision.revisionId
+                        );
+                        const blob=new Blob(
+                            [JSON.stringify(output,null,2)+'\\n'],
+                            {type:'application/json;charset=utf-8'}
+                        );
+                        const url=URL.createObjectURL(blob);
+                        try {
+                            const link=document.createElement('a');
+                            link.href=url;
+                            link.download='roadmap-client.json';
+                            document.body.appendChild(link);
+                            link.click();
+                            link.remove();
+                        } finally {
+                            setTimeout(()=>URL.revokeObjectURL(url),1000);
+                        }
+                    }).catch(error => {
+                        console.error('Client roadmap export rejected:',error);
+                        w2alert('Export Client refusé : '+error.message);
+                    });
+                    break;
+                }
                 case 'radartools:publishcatalogrevision':
                 case 'radartools:archivecatalogrevision': {
                     const action=event.target.endsWith('publishcatalogrevision')?'publish':'archive';

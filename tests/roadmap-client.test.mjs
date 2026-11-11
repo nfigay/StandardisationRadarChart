@@ -63,8 +63,8 @@ test('plot coordinates remain finite for one blip',()=>{
   const item=createClientView(pkg).items[0];
   assert.ok(Number.isFinite(item.x));
   assert.ok(Number.isFinite(item.y));
-  assert.equal(item.x,300);
-  assert.equal(item.y,300);
+  assert.equal(item.x,3);
+  assert.equal(item.y,5);
 });
 
 test('drafts cannot be exported',()=>{

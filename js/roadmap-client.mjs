@@ -14,26 +14,15 @@ export function createClientView(input) {
     pkg.assessments.map(a => [a.assessmentId, a])
   );
 
-  const positions = pkg.blips.map(b => b.position);
-  const xs = positions.map(p => p.x);
-  const ys = positions.map(p => p.y);
-  const minX = xs.length ? Math.min(...xs) : 0;
-  const maxX = xs.length ? Math.max(...xs) : 1;
-  const minY = ys.length ? Math.min(...ys) : 0;
-  const maxY = ys.length ? Math.max(...ys) : 1;
-  const width = Math.max(1, maxX - minX);
-  const height = Math.max(1, maxY - minY);
-  const span = Math.max(width, height);
-  const centerX = (minX + maxX) / 2;
-  const centerY = (minY + maxY) / 2;
-
+  // Creator coordinates are authoritative; never normalize to the
+  // bounding box of the blips selected for publication.
   const items = pkg.blips.map(b => ({
     id: b.blipId,
     label: b.label,
     ring: b.ring,
     quadrant: b.quadrant,
-    x: 300 + 490 * (b.position.x - centerX) / span,
-    y: 300 + 490 * (b.position.y - centerY) / span,
+    x: b.position.x,
+    y: b.position.y,
     standard: standards.get(b.standardId),
     assessment: b.assessmentId
       ? assessments.get(b.assessmentId)
@@ -94,21 +83,39 @@ export function mountClient(doc = document) {
     list.replaceChildren();
     details.textContent = 'Sélectionnez un élément.';
 
-    // Positional guide only; not a claim of semantic ring boundaries.
-    for (const radius of [85, 160, 245]) {
+    // Same chart geometry as the Creator: center (400,400),
+    // radii 150 / 250 / 350 in an 800x800 viewBox.
+    for (const radius of [350, 250, 150]) {
       svgElement(radar, 'circle', {
-        cx:300, cy:300, r:radius,
+        cx:400, cy:400, r:radius,
         fill:'none', stroke:'#d4dfeb',
         'stroke-width':1.5
       });
     }
     svgElement(radar, 'line', {
-      x1:55,y1:300,x2:545,y2:300,
+      x1:60,y1:400,x2:740,y2:400,
       stroke:'#d4dfeb'
     });
     svgElement(radar, 'line', {
-      x1:300,y1:55,x2:300,y2:545,
+      x1:400,y1:60,x2:400,y2:740,
       stroke:'#d4dfeb'
+    });
+
+    const guideLabels = [
+      {x:260,y:390,text:'Adopted'},
+      {x:200,y:390,text:'Candidate'},
+      {x:100,y:390,text:'Track'},
+      {x:80,y:75,text:'Available'},
+      {x:580,y:75,text:'Monitored'},
+      {x:70,y:715,text:'Developed'},
+      {x:570,y:715,text:'Participated'}
+    ];
+    guideLabels.forEach(entry => {
+      const label=svgElement(radar,'text',{
+        x:entry.x,y:entry.y,
+        'font-size':14,fill:'#38516d'
+      });
+      label.textContent=entry.text;
     });
 
     const buttons = new Map();
