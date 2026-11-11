@@ -232,21 +232,208 @@
     parent.appendChild(svg);
   }
 
+
+  // S14.2-B3: data flows explained by the selected command.
+  // Fields: title, description, origin, originPlace, processing,
+  // transfer, destination, destinationPlace, impact, condition.
+  const COMMAND_FLOWS={
+    fr:{
+      distributedSync:{
+        title:'Vérifier les mises à jour',
+        description:'Compare le catalogue installé avec la distribution publiée.',
+        origin:'GitHub Pages',
+        originPlace:'Serveur Internet — distribution ISO publiée',
+        processing:'Comparer / installer',
+        transfer:'Lecture HTTP ; téléchargement si une installation est nécessaire',
+        destination:'IndexedDB',
+        destinationPlace:'Stockage du navigateur — catalogue ISO',
+        impact:'Peut installer et activer une nouvelle génération ISO. Les blips et révisions du radar ne sont pas concernés.',
+        condition:'Une distribution accessible et la connexion réseau sont nécessaires pour une nouvelle installation.'
+      },
+      sync:{
+        title:'Charger des fichiers ISO locaux',
+        description:'Lit les fichiers ISO locaux configurés pour ce déploiement.',
+        origin:'Fichiers servis',
+        originPlace:'Fichiers du déploiement accessibles par HTTP',
+        processing:'Charger',
+        transfer:'Lecture de fichiers locaux au site, s’ils sont configurés',
+        destination:'Catalogue ISO',
+        destinationPlace:'Données ISO disponibles dans le navigateur',
+        impact:'Peut mettre à jour les données ISO locales utilisées pour la consultation.',
+        condition:'Ne choisit pas un fichier sur votre disque. La source doit être configurée.'
+      },
+      import:{
+        title:'Importer un JSONL',
+        description:'Utilise un fichier de notices ISO choisi sur votre ordinateur.',
+        origin:'Disque local',
+        originPlace:'Fichier JSONL sélectionné par l’utilisateur',
+        processing:'Lire / importer',
+        transfer:'Lecture d’un fichier fourni via le sélecteur du navigateur',
+        destination:'Données ISO',
+        destinationPlace:'Catalogue local de l’application',
+        impact:'Peut modifier les notices ISO locales importées, sans être une mise à jour GitHub Pages.',
+        condition:'Vérifiez la provenance et le format du fichier.'
+      },
+      changesLoad:{
+        title:'Charger le journal',
+        description:'Consulte les évolutions disponibles entre publications.',
+        origin:'Journal publié',
+        originPlace:'Fichier de changements, si présent sur le site',
+        processing:'Lire / afficher',
+        transfer:'Lecture de la ressource facultative',
+        destination:'Évolutions',
+        destinationPlace:'Affichage du journal dans l’application',
+        impact:'Affiche des changements documentés ; n’installe pas une génération ISO.',
+        condition:'Le journal peut être absent du déploiement.'
+      },
+      rssSync:{
+        title:'Actualiser les RSS locaux',
+        description:'Charge les actualités de sources RSS locales configurées.',
+        origin:'Cache RSS servi',
+        originPlace:'Fichiers RSS locaux du déploiement',
+        processing:'Lire / actualiser',
+        transfer:'Lecture des ressources facultatives',
+        destination:'Actualités RSS',
+        destinationPlace:'Cache et consultation des actualités dans le navigateur',
+        impact:'Actualise les actualités disponibles ; ne remplace pas les notices ISO.',
+        condition:'La source RSS doit être configurée et accessible.'
+      },
+      refresh:{
+        title:'Reconstruire les vues',
+        description:'Rafraîchit l’affichage à partir des données déjà disponibles.',
+        origin:'Données locales',
+        originPlace:'Données déjà disponibles dans l’application',
+        processing:'Rafraîchir',
+        transfer:'Traitement local — pas de téléchargement de distribution',
+        destination:'Vues affichées',
+        destinationPlace:'Interface de consultation du radar',
+        impact:'Actualise les vues et représentations ; ne télécharge pas le catalogue ISO.',
+        condition:'Nécessite uniquement les données déjà disponibles.'
+      }
+    },
+    en:{
+      distributedSync:{
+        title:'Check for updates',
+        description:'Compares the installed catalogue with the published distribution.',
+        origin:'GitHub Pages',
+        originPlace:'Internet server — published ISO distribution',
+        processing:'Compare / install',
+        transfer:'HTTP read; download if installation is needed',
+        destination:'IndexedDB',
+        destinationPlace:'Browser storage — ISO catalogue',
+        impact:'May install and activate a new ISO generation. Radar blips and revisions are not affected.',
+        condition:'An accessible distribution and network connection are needed for a new installation.'
+      },
+      sync:{
+        title:'Load local ISO files',
+        description:'Reads ISO files configured for this deployment.',
+        origin:'Served files',
+        originPlace:'Deployment files available over HTTP',
+        processing:'Load',
+        transfer:'Read site-local files if configured',
+        destination:'ISO catalogue',
+        destinationPlace:'ISO data available in the browser',
+        impact:'May update locally available ISO reference data.',
+        condition:'Does not select a file from your disk. The source must be configured.'
+      },
+      import:{
+        title:'Import JSONL',
+        description:'Uses an ISO records file selected on your computer.',
+        origin:'Local disk',
+        originPlace:'User-selected JSONL file',
+        processing:'Read / import',
+        transfer:'Read a file through the browser file picker',
+        destination:'ISO data',
+        destinationPlace:'Local application catalogue',
+        impact:'May change imported local ISO records, not the GitHub Pages distribution.',
+        condition:'Check the file format and provenance.'
+      },
+      changesLoad:{
+        title:'Load change journal',
+        description:'Reads available differences between releases.',
+        origin:'Published journal',
+        originPlace:'Optional change file served by the site',
+        processing:'Read / display',
+        transfer:'Read optional resource',
+        destination:'Changes',
+        destinationPlace:'Change journal view',
+        impact:'Displays documented changes; does not install an ISO generation.',
+        condition:'The journal might be absent.'
+      },
+      rssSync:{
+        title:'Refresh local RSS',
+        description:'Reads news from configured local RSS sources.',
+        origin:'Served RSS cache',
+        originPlace:'Site-local RSS files',
+        processing:'Read / refresh',
+        transfer:'Read optional resources',
+        destination:'RSS news',
+        destinationPlace:'Browser news cache and view',
+        impact:'Refreshes available news, not ISO standard records.',
+        condition:'The RSS source must be configured and accessible.'
+      },
+      refresh:{
+        title:'Rebuild views',
+        description:'Refreshes the display using existing information.',
+        origin:'Local data',
+        originPlace:'Data already available to the application',
+        processing:'Refresh',
+        transfer:'Local processing — no distribution download',
+        destination:'Displayed views',
+        destinationPlace:'Radar consultation interface',
+        impact:'Refreshes the views; does not download the ISO catalogue.',
+        condition:'Requires only already available data.'
+      }
+    }
+  };
+
   function renderVisualGuide(panel,operation){
     if(!panel)return;
-    const entry=VISUAL_GUIDES[lang()][operation];
-    if(!entry)return;
-    const [title,description,steps,effect]=entry;
+    const flow=(COMMAND_FLOWS[lang()]||COMMAND_FLOWS.fr)[operation];
+    if(!flow)return;
 
     panel.textContent='';
-    node('strong',panel,title,'font-size:15px');
-    node('p',panel,description,
-      'line-height:1.5;margin:8px 0');
-    visualDiagram(panel,steps);
-    node('p',panel,effect,
-      'line-height:1.5;margin:8px 0 0;padding-left:10px;border-left:3px solid #6887a6');
-  }
+    panel.setAttribute('data-command-flow',operation);
 
+    node('strong',panel,flow.title,'font-size:16px');
+    node('p',panel,flow.description,
+      'line-height:1.4;margin:6px 0 8px');
+
+    // The diagram describes the actual endpoints, not generic boxes.
+    visualDiagram(panel,[
+      flow.origin,flow.processing,flow.destination
+    ]);
+
+    const locations=node('div',panel,undefined,
+      'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:5px');
+
+    const source=node('div',locations,undefined,
+      'padding:8px;border:1px solid #c4d3e2;border-radius:6px;min-width:0');
+    node('strong',source,lang()==='en'?'FROM':'DÉPART',
+      'font-size:11px;color:#435c73');
+    node('div',source,flow.originPlace,
+      'font-size:12px;line-height:1.4;margin-top:3px;overflow-wrap:anywhere');
+
+    const destination=node('div',locations,undefined,
+      'padding:8px;border:1px solid #c4d3e2;border-radius:6px;min-width:0');
+    node('strong',destination,lang()==='en'?'TO':'ARRIVÉE',
+      'font-size:11px;color:#435c73');
+    node('div',destination,flow.destinationPlace,
+      'font-size:12px;line-height:1.4;margin-top:3px;overflow-wrap:anywhere');
+
+    const transfer=node('p',panel,undefined,
+      'margin:9px 0 4px;line-height:1.4;font-size:12px');
+    node('strong',transfer,lang()==='en'?'FLOW — ':'FLUX — ');
+    node('span',transfer,flow.transfer);
+
+    const impact=node('p',panel,undefined,
+      'margin:7px 0 4px;line-height:1.4;padding:8px;border-left:3px solid #6887a6');
+    node('strong',impact,lang()==='en'?'CHANGES — ':'CE QUI CHANGE — ');
+    node('span',impact,flow.impact);
+
+    node('p',panel,flow.condition,
+      'margin:6px 0 0;font-size:12px;color:#516276;line-height:1.4');
+  }
   function renderDataExplanation(dialog){
     const details=node('details',dialog,undefined,
       'margin-top:12px;border:1px solid #ccd5df;padding:10px;border-radius:7px');
