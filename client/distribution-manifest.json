@@ -6,14 +6,44 @@
   "catalogueBundled": false,
   "files": [
     {
-      "path": "assets/client-Ck7VIewQ.js",
-      "bytes": 6882,
-      "sha256": "4fbe7cb82c7157b9afef664129ed1ea55cf6a58975209603bebb24edbdbe06e4"
+      "path": "assets/client-BUhUPRw_.js",
+      "bytes": 6172,
+      "sha256": "5a04f3d516d62eb5a250897b217f3bb8ab5136bb92ff6209757a5c452dc133c7"
+    },
+    {
+      "path": "bundled/index.html",
+      "bytes": 3093,
+      "sha256": "f7093420b17e122aab1116d43fd3709f22e39187f36159d401d7cd75dbb79815"
+    },
+    {
+      "path": "bundled/radar-client.js",
+      "bytes": 6172,
+      "sha256": "5a04f3d516d62eb5a250897b217f3bb8ab5136bb92ff6209757a5c452dc133c7"
     },
     {
       "path": "client.html",
       "bytes": 3115,
-      "sha256": "33f73c93b76db4eb9ba44ecda9c40183765b421ed78fe401024d1e4260da3577"
+      "sha256": "b96ad5e249ebb3638a59f960ef0dd39210731381a904a1cec185cf7d8d7d6e3c"
+    },
+    {
+      "path": "modules/index.html",
+      "bytes": 3099,
+      "sha256": "7e4dc85cff0fbf204b8da447f7f5045e9af2085a709a8f43fe46eb0b79d4cd4f"
+    },
+    {
+      "path": "modules/js/roadmap-client.mjs",
+      "bytes": 6078,
+      "sha256": "ec178fd28ce66244bcf7624aa9aa2b4bbc42d21f065461b29b95c698acefd2b3"
+    },
+    {
+      "path": "modules/src/domain/roadmap-published-projection.mjs",
+      "bytes": 5181,
+      "sha256": "abe61f5168e0db149cf7e1da804ee0674d052b872e5b8f5919f137bf69a40a75"
+    },
+    {
+      "path": "standalone/radar-client.html",
+      "bytes": 9262,
+      "sha256": "1a5222ebe06281155a1a30ac3876ab08f59ba137486aee96b9094ee245683903"
     }
   ]
 }

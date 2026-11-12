@@ -1,7 +1,7 @@
 {
   "format": "standardisation-radar-web-site",
   "version": 1,
-  "sourceCommit": "2a17678",
+  "sourceCommit": "6b969f3",
   "files": [
     {
       "path": ".nojekyll",
@@ -129,11 +129,6 @@
       "sha256": "0236c6c267f56fc21bf76af74500f29501af3cc618786c18d5f9b6515289f001"
     },
     {
-      "path": "author/css/.DS_Store",
-      "bytes": 6148,
-      "sha256": "0d996e2f5bab9d34124a2023f2285010934be4a8dd5d1d9f2617ea195de7e665"
-    },
-    {
       "path": "author/css/all.min.css",
       "bytes": 83981,
       "sha256": "a361e7885c36bacb3fd9cb068da207c3b9329962cac022d06e28923939f575e8"
@@ -167,11 +162,6 @@
       "path": "author/css/reveal.scss",
       "bytes": 52068,
       "sha256": "1f579f82e239fccf2d6a3d1f8645b154934297b40a1268ba57779ba6c97d0363"
-    },
-    {
-      "path": "author/css/theme/.DS_Store",
-      "bytes": 6148,
-      "sha256": "fedee7f603182a3e46994984138334acd11a2b27e3e72b5889f1f99ae7f00790"
     },
     {
       "path": "author/css/theme/README.md",
@@ -279,19 +269,9 @@
       "sha256": "67e27bdc6559289c0d576e7b7b0b07023bc054ed87b907cdedf937e3c95e7434"
     },
     {
-      "path": "author/js/.DS_Store",
-      "bytes": 6148,
-      "sha256": "00f87e6012b5a5ace9affe22300351ff78796c1560c9345b1505b04021445537"
-    },
-    {
       "path": "author/js/blips.js",
       "bytes": 247694,
       "sha256": "477851d93349309aac5968368ea49a77d53fa60a94a01081b9b33f99cfc65436"
-    },
-    {
-      "path": "author/js/cytoscape/.DS_Store",
-      "bytes": 6148,
-      "sha256": "d65165279105ca6773180500688df4bdc69a2c7b771752f0a46ef120b7fd8ec3"
     },
     {
       "path": "author/js/cytoscape/displayer.js",
@@ -449,11 +429,6 @@
       "sha256": "474ad527edd6418a6ca22909b2a883a4f27f667fba46d9d36551f60456f08829"
     },
     {
-      "path": "author/js/radar-iso-windowed-db.js.s14-v-backup",
-      "bytes": 13761,
-      "sha256": "36241dcd8ec1412d4a629a4e38f5a2a120a7e8b6d7238c81f364bbde9a6d5c8a"
-    },
-    {
       "path": "author/js/radar-radar-admin.js",
       "bytes": 3111,
       "sha256": "61e57c489bdd3811af7b3f2e6abb7cf1332c0236f9a7b473dc0a400bbaefe529"
@@ -504,31 +479,6 @@
       "sha256": "a4e04238ed650258ead2dca1b3544a264566cd7c60b750c20fa658513703c204"
     },
     {
-      "path": "author/js/radar-standards-panel.js.s14-t-r1-backup",
-      "bytes": 51075,
-      "sha256": "88c67bd7e6522f1ecebc00eceab96ac4807654048deb214e8b55424af1f9a1cf"
-    },
-    {
-      "path": "author/js/radar-standards-panel.js.s14-u-backup",
-      "bytes": 51427,
-      "sha256": "705d22a21c492ae5494a90cc98643f940f56779a2426a7f1c1001b6f19f084de"
-    },
-    {
-      "path": "author/js/radar-standards-panel.js.s14-v-backup",
-      "bytes": 53227,
-      "sha256": "7749b41da81b47f44238fa9cab26cc609a05ce925ec2a92d59a4fad00dc24d79"
-    },
-    {
-      "path": "author/js/radar-standards-panel.js.s14-x-backup",
-      "bytes": 61798,
-      "sha256": "a10f42853a34458e20ea1d6cc8138a886d788c596fbc6565a87a69fa72e82c16"
-    },
-    {
-      "path": "author/js/radar-standards-panel.js.s14-x-r1-backup",
-      "bytes": 64081,
-      "sha256": "daa0a3a0209e5a102e129805011bb44517a5e87935424230524d80cb4f1244ef"
-    },
-    {
       "path": "author/js/radar-workspace-explorer.js",
       "bytes": 12251,
       "sha256": "c58c38aab45754afd704ab1721855cd6a36ca69f713931b37fb07db3b370179d"
@@ -547,11 +497,6 @@
       "path": "author/js/working-groups-classic.js",
       "bytes": 808,
       "sha256": "bcb8deb82458e8251eb9b516fae4a29dff3d221def71da9c12f22144bc02014f"
-    },
-    {
-      "path": "author/lib/.DS_Store",
-      "bytes": 6148,
-      "sha256": "d65165279105ca6773180500688df4bdc69a2c7b771752f0a46ef120b7fd8ec3"
     },
     {
       "path": "author/lib/archimate.js",
@@ -1029,24 +974,49 @@
       "sha256": "0236c6c267f56fc21bf76af74500f29501af3cc618786c18d5f9b6515289f001"
     },
     {
-      "path": "client/assets/client-Ck7VIewQ.js",
-      "bytes": 6882,
-      "sha256": "4fbe7cb82c7157b9afef664129ed1ea55cf6a58975209603bebb24edbdbe06e4"
+      "path": "client/assets/client-BUhUPRw_.js",
+      "bytes": 6172,
+      "sha256": "5a04f3d516d62eb5a250897b217f3bb8ab5136bb92ff6209757a5c452dc133c7"
+    },
+    {
+      "path": "client/bundled/index.html",
+      "bytes": 3093,
+      "sha256": "f7093420b17e122aab1116d43fd3709f22e39187f36159d401d7cd75dbb79815"
+    },
+    {
+      "path": "client/bundled/radar-client.js",
+      "bytes": 6172,
+      "sha256": "5a04f3d516d62eb5a250897b217f3bb8ab5136bb92ff6209757a5c452dc133c7"
     },
     {
       "path": "client/client.html",
       "bytes": 3115,
-      "sha256": "33f73c93b76db4eb9ba44ecda9c40183765b421ed78fe401024d1e4260da3577"
+      "sha256": "b96ad5e249ebb3638a59f960ef0dd39210731381a904a1cec185cf7d8d7d6e3c"
     },
     {
       "path": "client/distribution-manifest.json",
-      "bytes": 479,
-      "sha256": "880cd3ddd07a073ea7cc7408a1922af7c4c20e688e3aab6411a5eb130e96b6ce"
+      "bytes": 1456,
+      "sha256": "3f3c0064bd6f80c6bb34c70fae191ddc961b329d05ea9838641f916fcb8ebf19"
     },
     {
-      "path": "css/.DS_Store",
-      "bytes": 6148,
-      "sha256": "0d996e2f5bab9d34124a2023f2285010934be4a8dd5d1d9f2617ea195de7e665"
+      "path": "client/modules/index.html",
+      "bytes": 3099,
+      "sha256": "7e4dc85cff0fbf204b8da447f7f5045e9af2085a709a8f43fe46eb0b79d4cd4f"
+    },
+    {
+      "path": "client/modules/js/roadmap-client.mjs",
+      "bytes": 6078,
+      "sha256": "ec178fd28ce66244bcf7624aa9aa2b4bbc42d21f065461b29b95c698acefd2b3"
+    },
+    {
+      "path": "client/modules/src/domain/roadmap-published-projection.mjs",
+      "bytes": 5181,
+      "sha256": "abe61f5168e0db149cf7e1da804ee0674d052b872e5b8f5919f137bf69a40a75"
+    },
+    {
+      "path": "client/standalone/radar-client.html",
+      "bytes": 9262,
+      "sha256": "1a5222ebe06281155a1a30ac3876ab08f59ba137486aee96b9094ee245683903"
     },
     {
       "path": "css/all.min.css",
@@ -1082,11 +1052,6 @@
       "path": "css/reveal.scss",
       "bytes": 52068,
       "sha256": "1f579f82e239fccf2d6a3d1f8645b154934297b40a1268ba57779ba6c97d0363"
-    },
-    {
-      "path": "css/theme/.DS_Store",
-      "bytes": 6148,
-      "sha256": "fedee7f603182a3e46994984138334acd11a2b27e3e72b5889f1f99ae7f00790"
     },
     {
       "path": "css/theme/README.md",
@@ -1190,13 +1155,13 @@
     },
     {
       "path": "distributions.html",
-      "bytes": 2408,
-      "sha256": "8b3bb81402f468dbf3c61e834e809ca1bce4dd218206193b49cb4d66d988c438"
+      "bytes": 2572,
+      "sha256": "3d32fdbe74415c93f3a4cf55973b8571df5bfbf06e9b80a6a6ca8b8bd17aaba9"
     },
     {
       "path": "distributions.json",
-      "bytes": 1577,
-      "sha256": "bc13d3022795dc064420812786afb6d09bba46fd26076f1a78ff4bdb31b30599"
+      "bytes": 1644,
+      "sha256": "b2e86cd7ba7b4133cc24439e1e7a858c33765a56570ec2e3cb26324a7a2a4883"
     },
     {
       "path": "ICS.csv",
@@ -1209,19 +1174,9 @@
       "sha256": "7dbf2d721bfb7e7a74e5a84a0c1ce90b3cab256ffadbd7b15068134191b15f1d"
     },
     {
-      "path": "js/.DS_Store",
-      "bytes": 6148,
-      "sha256": "00f87e6012b5a5ace9affe22300351ff78796c1560c9345b1505b04021445537"
-    },
-    {
       "path": "js/blips.js",
       "bytes": 247694,
       "sha256": "477851d93349309aac5968368ea49a77d53fa60a94a01081b9b33f99cfc65436"
-    },
-    {
-      "path": "js/cytoscape/.DS_Store",
-      "bytes": 6148,
-      "sha256": "d65165279105ca6773180500688df4bdc69a2c7b771752f0a46ef120b7fd8ec3"
     },
     {
       "path": "js/cytoscape/displayer.js",
@@ -1379,11 +1334,6 @@
       "sha256": "474ad527edd6418a6ca22909b2a883a4f27f667fba46d9d36551f60456f08829"
     },
     {
-      "path": "js/radar-iso-windowed-db.js.s14-v-backup",
-      "bytes": 13761,
-      "sha256": "36241dcd8ec1412d4a629a4e38f5a2a120a7e8b6d7238c81f364bbde9a6d5c8a"
-    },
-    {
       "path": "js/radar-radar-admin.js",
       "bytes": 3111,
       "sha256": "61e57c489bdd3811af7b3f2e6abb7cf1332c0236f9a7b473dc0a400bbaefe529"
@@ -1434,31 +1384,6 @@
       "sha256": "a4e04238ed650258ead2dca1b3544a264566cd7c60b750c20fa658513703c204"
     },
     {
-      "path": "js/radar-standards-panel.js.s14-t-r1-backup",
-      "bytes": 51075,
-      "sha256": "88c67bd7e6522f1ecebc00eceab96ac4807654048deb214e8b55424af1f9a1cf"
-    },
-    {
-      "path": "js/radar-standards-panel.js.s14-u-backup",
-      "bytes": 51427,
-      "sha256": "705d22a21c492ae5494a90cc98643f940f56779a2426a7f1c1001b6f19f084de"
-    },
-    {
-      "path": "js/radar-standards-panel.js.s14-v-backup",
-      "bytes": 53227,
-      "sha256": "7749b41da81b47f44238fa9cab26cc609a05ce925ec2a92d59a4fad00dc24d79"
-    },
-    {
-      "path": "js/radar-standards-panel.js.s14-x-backup",
-      "bytes": 61798,
-      "sha256": "a10f42853a34458e20ea1d6cc8138a886d788c596fbc6565a87a69fa72e82c16"
-    },
-    {
-      "path": "js/radar-standards-panel.js.s14-x-r1-backup",
-      "bytes": 64081,
-      "sha256": "daa0a3a0209e5a102e129805011bb44517a5e87935424230524d80cb4f1244ef"
-    },
-    {
       "path": "js/radar-workspace-explorer.js",
       "bytes": 12251,
       "sha256": "c58c38aab45754afd704ab1721855cd6a36ca69f713931b37fb07db3b370179d"
@@ -1477,11 +1402,6 @@
       "path": "js/working-groups-classic.js",
       "bytes": 808,
       "sha256": "bcb8deb82458e8251eb9b516fae4a29dff3d221def71da9c12f22144bc02014f"
-    },
-    {
-      "path": "lib/.DS_Store",
-      "bytes": 6148,
-      "sha256": "d65165279105ca6773180500688df4bdc69a2c7b771752f0a46ef120b7fd8ec3"
     },
     {
       "path": "lib/archimate.js",
@@ -1895,8 +1815,8 @@
     },
     {
       "path": "release-manifest.json",
-      "bytes": 35228,
-      "sha256": "336a7bcfd81dc87b95392be938816c021dcbbb651b17cf5e146bcc53d150ec65"
+      "bytes": 34290,
+      "sha256": "5e0d6401c6ed799ff7d4cadb21793e9e4ed129e4cc86a06b79722b6228a843bf"
     },
     {
       "path": "src/domain/roadmap-published-projection.mjs",

@@ -1,7 +1,7 @@
 {
   "format": "standardisation-radar-distributions",
   "version": 1,
-  "sourceCommit": "2a17678",
+  "sourceCommit": "6b969f3",
   "variants": [
     {
       "product": "author",
@@ -35,8 +35,8 @@
       "mode": "standalone",
       "requiresServer": false,
       "isoCatalogue": false,
-      "status": "planned",
-      "entry": null,
+      "status": "available",
+      "entry": "client/standalone/radar-client.html",
       "target": "client/standalone/radar-client.html"
     },
     {
@@ -45,7 +45,7 @@
       "requiresServer": true,
       "isoCatalogue": false,
       "status": "available",
-      "entry": "client/client.html",
+      "entry": "client/bundled/index.html",
       "target": "client/bundled/index.html"
     },
     {
@@ -53,8 +53,8 @@
       "mode": "modules",
       "requiresServer": true,
       "isoCatalogue": false,
-      "status": "planned",
-      "entry": null,
+      "status": "available",
+      "entry": "client/modules/index.html",
       "target": "client/modules/index.html"
     }
   ],

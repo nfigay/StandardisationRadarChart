@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Roadmap publiée — Consultation</title>
+  <style>
+    :root {font-family:system-ui,sans-serif;color:#24364b;
+      background:#f3f6fa}
+    * {box-sizing:border-box}
+    body {margin:0}
+    header {background:#193653;color:white;padding:20px 24px}
+    header h1 {margin:0;font-size:1.5rem}
+    header p {margin:6px 0 0;color:#dce8f5}
+    main {max-width:1200px;margin:auto;padding:20px}
+    .panel {background:white;border:1px solid #ced9e5;
+      border-radius:12px;padding:16px;margin-bottom:16px}
+    .layout {display:grid;grid-template-columns:minmax(0,2fr)
+      minmax(260px,1fr);gap:16px}
+    #radar {width:100%;height:auto;background:#fafcff;
+      border:1px solid #dce4ef;border-radius:8px}
+    #items {padding:0;list-style:none;max-height:360px;
+      overflow:auto}
+    #items li {margin:5px 0}
+    #items button {display:block;width:100%;text-align:left;
+      padding:10px;border:1px solid #cbd8e7;border-radius:7px;
+      background:white;color:inherit;cursor:pointer}
+    #items button[aria-pressed=true] {background:#e2effd;
+      border-color:#346ea6}
+    #items button:focus-visible {outline:3px solid #346ea6;
+      outline-offset:2px}
+    #details {white-space:pre-wrap;overflow-wrap:anywhere}
+    .muted {color:#597085}
+    .error {color:#a02020}
+    label {font-weight:600}
+    input {display:block;margin:10px 0;max-width:100%}
+    .meta {font-size:.9rem;color:#51687d}
+    @media(max-width:760px){
+      .layout {grid-template-columns:1fr}
+      main {padding:12px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Roadmap publiée</h1>
+    <p>Client de consultation — aucune fonction d'édition</p>
+  </header>
+  <main>
+    <section class="panel" aria-label="Chargement de roadmap">
+      <label for="package-file">Ouvrir un paquet de roadmap publié</label>
+      <input id="package-file" type="file" accept=".json,application/json">
+      <p id="message" role="status" aria-live="polite">
+        Choisissez le fichier JSON d'une révision publiée.
+      </p>
+      <p class="meta">Le fichier est lu localement dans ce navigateur.
+        Aucun catalogue ISO global n'est téléchargé.</p>
+    </section>
+
+    <section class="panel" aria-label="Roadmap">
+      <h2 id="roadmap-title">Aucune roadmap chargée</h2>
+      <p id="roadmap-meta" class="meta"></p>
+      <div class="layout">
+        <div>
+          <svg id="radar" viewBox="0 0 800 800"
+            role="img" aria-label="Position des blips de la roadmap"></svg>
+          <p class="meta">Les positions publiées sont conservées dans le repère du Créateur (800 × 800). Les styles avancés restent à consolider.</p>
+        </div>
+        <aside>
+          <h3>Éléments publiés</h3>
+          <ul id="items"></ul>
+          <h3>Détails</h3>
+          <div id="details" class="muted">Sélectionnez un élément.</div>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <script>
+(function(){
+"use strict";
+const A=t=>typeof t=="string"&&t.trim().length>0;function p(t,e){if(!A(t))throw Error("invalid "+e);return t}function w(t){return JSON.parse(JSON.stringify(t))}function g(t,e){const r={};for(const a of e)Object.hasOwn(t,a)&&(r[a]=w(t[a]));return r}function x(t,e,r,a){const i=t.filter(n=>n?.[e]===r);if(i.length!==1)throw Error("unresolved or ambiguous "+a+": "+r);return i[0]}function k(t,e){if(p(e,"revisionId"),!t||typeof t!="object")throw Error("invalid catalog");for(const o of["radarRevisions","standards","organizations","portfolios"])if(!Array.isArray(t[o]))throw Error("missing catalog array: "+o);if(t.assessments!=null&&!Array.isArray(t.assessments))throw Error("invalid assessments");const r=x(t.radarRevisions,"revisionId",e,"revision");if(r.status!=="published")throw Error("only published revisions may be projected");if(!Array.isArray(r.blips))throw Error("invalid revision blips");const a=x(t.organizations,"organizationId",p(r.ownerOrganizationId,"ownerOrganizationId"),"organization"),i=x(t.portfolios,"portfolioId",p(r.portfolioId,"portfolioId"),"portfolio");if(i.ownerOrganizationId!==a.organizationId)throw Error("organization / portfolio mismatch");const n=new Map,m=new Map,c=new Set,b=r.blips.map(o=>{if(!o||typeof o!="object")throw Error("invalid blip");const l=p(o.blipId,"blipId"),y=p(o.standardId,"standardId");if(c.has(l))throw Error("duplicate blipId: "+l);if(c.add(l),p(o.label,"label"),p(o.ring,"ring"),p(o.quadrant,"quadrant"),!Number.isFinite(o.position?.x)||!Number.isFinite(o.position?.y))throw Error("invalid blip position: "+l);const v=x(t.standards,"standardId",y,"standard");if(n.set(y,g(v,["standardId","name"])),o.assessmentId!=null){const s=p(o.assessmentId,"assessmentId"),f=x(t.assessments||[],"assessmentId",s,"assessment");m.set(s,g(f,["assessmentId","name","title"]))}return g(o,["blipId","standardId","assessmentId","label","ring","quadrant","position"])}),d={format:"standardisation-roadmap",version:2,lifecycle:"published",roadmap:g(r,["revisionId","radarId","version","title","ownerOrganizationId","portfolioId"]),organization:g(a,["organizationId","name"]),portfolio:g(i,["portfolioId","ownerOrganizationId","name"]),blips:b,standards:[...n.values()].sort((o,l)=>o.standardId.localeCompare(l.standardId)),assessments:[...m.values()].sort((o,l)=>o.assessmentId.localeCompare(l.assessmentId))};return w(d)}function O(t){const e=typeof t=="string"?JSON.parse(t):t;if(!e||e.format!=="standardisation-roadmap"||e.version!==2||e.lifecycle!=="published")throw Error("unsupported published roadmap projection");const r={radarRevisions:[{...e.roadmap,status:"published",blips:e.blips}],organizations:[e.organization],portfolios:[e.portfolio],standards:e.standards,assessments:e.assessments};return k(r,e.roadmap?.revisionId)}const N="http://www.w3.org/2000/svg";function S(t){const e=O(t),r=new Map(e.standards.map(n=>[n.standardId,n])),a=new Map(e.assessments.map(n=>[n.assessmentId,n])),i=e.blips.map(n=>({id:n.blipId,label:n.label,ring:n.ring,quadrant:n.quadrant,x:n.position.x,y:n.position.y,standard:r.get(n.standardId),assessment:n.assessmentId?a.get(n.assessmentId):null}));return{id:e.roadmap.radarId,title:e.roadmap.title||e.roadmap.radarId,revision:e.roadmap.revisionId,version:e.roadmap.version||"",organization:e.organization.name||"",items:i}}function I(t,e,r,a){const i=document.createElement(e);return r!==void 0&&(i.textContent=r),t.appendChild(i),i}function h(t,e,r={}){const a=document.createElementNS(N,e);for(const[i,n]of Object.entries(r))a.setAttribute(i,String(n));return t.appendChild(a),a}function q(t=document){const e=t.getElementById("package-file"),r=t.getElementById("message"),a=t.getElementById("roadmap-title"),i=t.getElementById("roadmap-meta"),n=t.getElementById("radar"),m=t.getElementById("items"),c=t.getElementById("details");if([e,r,a,i,n,m,c].some(d=>!d))throw Error("client DOM is incomplete");function b(d){a.textContent=d.title,i.textContent=["Révision : "+d.revision,d.version&&"Version : "+d.version,d.organization&&"Organisation : "+d.organization,d.items.length+" éléments"].filter(Boolean).join(" · "),n.replaceChildren(),m.replaceChildren(),c.textContent="Sélectionnez un élément.";for(const s of[350,250,150])h(n,"circle",{cx:400,cy:400,r:s,fill:"none",stroke:"#d4dfeb","stroke-width":1.5});h(n,"line",{x1:60,y1:400,x2:740,y2:400,stroke:"#d4dfeb"}),h(n,"line",{x1:400,y1:60,x2:400,y2:740,stroke:"#d4dfeb"}),[{x:260,y:390,text:"Adopted"},{x:200,y:390,text:"Candidate"},{x:100,y:390,text:"Track"},{x:80,y:75,text:"Available"},{x:580,y:75,text:"Monitored"},{x:70,y:715,text:"Developed"},{x:570,y:715,text:"Participated"}].forEach(s=>{const f=h(n,"text",{x:s.x,y:s.y,"font-size":14,fill:"#38516d"});f.textContent=s.text});const l=new Map,y=new Map;function v(s){for(const[f,u]of l)u.setAttribute("aria-pressed",String(f===s.id));for(const[f,u]of y)u.setAttribute("stroke",f===s.id?"#d97706":"#ffffff"),u.setAttribute("stroke-width",f===s.id?5:2);c.replaceChildren(),I(c,"p","Norme : "+(s.standard?.name||s.standard?.standardId||"—")),I(c,"p","Anneau : "+s.ring),I(c,"p","Quadrant : "+s.quadrant),s.assessment&&I(c,"p","Évaluation : "+(s.assessment.name||s.assessment.title||s.assessment.assessmentId))}d.items.forEach((s,f)=>{const u=h(n,"circle",{cx:s.x,cy:s.y,r:8,fill:"#326fa8",stroke:"#ffffff","stroke-width":2});y.set(s.id,u);const C=h(n,"text",{x:s.x+11,y:s.y-9,"font-size":11,fill:"#24364b"});C.textContent=String(f+1);const z=I(m,"li"),E=I(z,"button",f+1+". "+s.label);E.type="button",E.setAttribute("aria-pressed","false"),E.addEventListener("click",()=>v(s)),l.set(s.id,E)}),d.items.length&&v(d.items[0])}return e.addEventListener("change",async()=>{const d=e.files?.[0];if(d){r.textContent="Lecture du paquet…",r.className="";try{const o=await d.text(),l=S(o);b(l),r.textContent="Roadmap publiée chargée : "+l.items.length+" éléments."}catch(o){a.textContent="Aucune roadmap chargée",i.textContent="",n.replaceChildren(),m.replaceChildren(),c.textContent="Aucun paquet valide chargé.",r.className="error",r.textContent="Paquet refusé : "+String(o?.message||o)}}}),{render:b}}typeof document<"u"&&document.getElementById("package-file")&&q(document);
+
+})();
+</script>
+</body>
+</html>
