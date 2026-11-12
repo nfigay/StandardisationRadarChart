@@ -1,5 +1,45 @@
 # S14.3-A6/A7 — Trois distributions Client
 
+<!-- S14.3-A8.0-COMMON-ARCHITECTURE -->
+
+## Statut révisé — S14.3-A8.0
+
+Ce document décrit les réalisations historiques A6/A7.
+
+Les trois variantes techniques et leurs tests constituent
+des acquis, mais leur moteur de présentation spécifique
+n'est pas l'architecture cible du Viewer.
+
+L'application client.html et le module roadmap-client.mjs
+constituent un prototype expérimental minimal.
+
+Le développement fonctionnel spécifique de ce prototype
+est gelé au profit de la convergence vers le socle commun.
+
+La projection experimental v2 reste une référence
+d'échange minimale et de validation.
+
+Elle ne constitue pas le modèle natif de publication
+des futurs espaces de consultation.
+
+Les Viewers cibles seront produits depuis l'application
+unique Creator/Publisher, avec les composants communs.
+
+Voir :
+
+- [Architecture 79](79-S14-3-COMMON-CREATOR-PUBLISHER-VIEWER.md)
+- [Guidelines](../governance/GUIDELINES-CREATOR-PUBLISHER-VIEWER.md)
+- [Plan de convergence](../governance/PLAN-REALISATION-S14-3-CREATOR-PUBLISHER-VIEWER.md)
+
+Les résultats historiques de construction et de
+publication décrits ci-dessous restent inchangés.
+
+Les contrôles HTTP positifs sur 19 ressources ont
+également été validés.
+
+La qualification navigateur complète reste ouverte.
+
+
 ## Contexte
 
 La livraison R3, issue du commit 2a17678,

@@ -1,5 +1,36 @@
 # S14.3-A5-R3 — Distribution Web et branche gh-pages
 
+<!-- S14.3-A8.0-COMMON-ARCHITECTURE -->
+
+## Complément S14.3-A8.0 — portée de l'infrastructure
+
+L'infrastructure main / gh-pages, les manifestes et la
+publication logicielle restent valides.
+
+La séparation technique author / client ne doit pas
+être interprétée comme une séparation de deux moteurs
+applicatifs indépendants.
+
+L'architecture cible est définie dans
+[le document 79](79-S14-3-COMMON-CREATOR-PUBLISHER-VIEWER.md).
+
+Le produit author devient le Creator/Publisher.
+
+Les distributions client convergeront vers des Viewers
+issus du même socle applicatif.
+
+La publication du logiciel sur GitHub Pages est distincte
+de la génération des publications métier depuis le Creator.
+
+Une publication métier destinée à des acteurs spécifiques
+peut contenir des données non publiques et ne doit pas
+être publiée automatiquement sur GitHub Pages.
+
+Les statuts du contrat de distribution et du portail
+doivent distinguer les prototypes et les variantes cibles
+effectivement qualifiées.
+
+
 ## Objectif
 
 Produire et publier des distributions executables

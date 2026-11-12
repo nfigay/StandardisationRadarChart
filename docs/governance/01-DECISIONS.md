@@ -67,3 +67,46 @@ Les décisions métier et les questions ouvertes restent inchangées.
 ## Traçabilité Lot 1 — moteur de création (2026-11-07)
 
 Les deux commandes de création d'une révision `draft` sont implémentées au niveau service ; la persistance du standard passe par le `imports[]` privé existant et le blip par ajout incrémental Cytoscape. Cette intégration ne tranche **aucun** arbitrage métier ISO/édition, assessment, multi-catalogues ni relation EA : **DEC-009, DEC-010, DEC-016, DEC-017, DEC-018 restent OPEN**. Le contrat, les limites et les vérifications associées figurent dans `docs/architecture/04-LOT1-MOTEUR-CREATION.md`.
+
+---
+
+<!-- S14.3-A8.0-COMMON-ARCHITECTURE -->
+
+## Décision S14.3-A8.0 — convergence applicative
+
+Statut : acceptée.
+
+Référence : [Architecture 79](../architecture/79-S14-3-COMMON-CREATOR-PUBLISHER-VIEWER.md).
+
+### Décisions
+
+- Creator et Publisher sont une seule application.
+- Les acteurs de création assurent également la publication.
+- Aucun produit Publisher indépendant n'est introduit.
+- Le Viewer réutilise le socle métier et UI du Creator.
+- Les capacités et données sont configurables.
+- Les modules sont sélectionnés selon les dépendances.
+- Les publications sont gérées dans le workspace natif.
+- La prévisualisation utilise le socle et les données projetées.
+- Les deux familles disposent des trois modes techniques.
+- Le Creator autonome doit pouvoir générer des Viewers.
+- Le Client A6/A7 est conservé comme prototype transitoire.
+
+### Portée
+
+Cette décision remplace les orientations contradictoires
+relatives à deux applications indépendantes.
+
+Elle ne remet pas en cause les contrats métier existants,
+la gestion des révisions, les catalogues ISO ni la chaîne
+de construction et de publication déjà validée.
+
+### Conséquences
+
+Les nouveaux développements doivent suivre les
+[guidelines](GUIDELINES-CREATOR-PUBLISHER-VIEWER.md)
+et le
+[plan de réalisation](PLAN-REALISATION-S14-3-CREATOR-PUBLISHER-VIEWER.md).
+
+Les détails techniques de composition et de persistance
+restent à qualifier par les lots d'implémentation.

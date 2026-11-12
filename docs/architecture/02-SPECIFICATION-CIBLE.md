@@ -1,5 +1,31 @@
 # S — Dossier de spécification consolidée : produit et solution cible
 
+<!-- S14.3-A8.0-COMMON-ARCHITECTURE -->
+
+## Mise à jour normative S14.3-A8.0
+
+La spécification cible est complétée par l'architecture
+[79 — Creator/Publisher et Viewer communs](79-S14-3-COMMON-CREATOR-PUBLISHER-VIEWER.md).
+
+En cas de divergence sur la séparation des applications,
+la composition des Viewers ou la publication, la décision
+S14.3-A8.0 prévaut.
+
+Le Creator et le Publisher constituent une seule application.
+
+Les Viewers réutilisent les composants UI, le moteur
+applicatif et le modèle métier natif de cette application.
+
+Les capacités, la projection des connaissances et la
+composition des modules définissent la distribution.
+
+Les exigences CPV-01 à CPV-12 complètent les exigences
+existantes sans modifier implicitement leurs identifiants.
+
+Les modalités de réalisation sont définies dans le
+[plan de convergence](../governance/PLAN-REALISATION-S14-3-CREATOR-PUBLISHER-VIEWER.md).
+
+
 **Référence:** SRC-SPEC-0.1 · **Nature:** normative/TO-BE · **Status:** candidate, not approved · **Date:** 2026-11-06.
 
 ## S0. Règles de rédaction et statut

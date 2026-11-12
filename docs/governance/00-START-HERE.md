@@ -1,5 +1,30 @@
 # START HERE — Stable project handover / future conversations
 
+<!-- S14.3-A8.0-COMMON-ARCHITECTURE -->
+
+## Référentiel courant — Creator/Publisher et Viewer
+
+À partir de S14.3-A8.0, lire les trois documents suivants
+avant tout développement relatif aux profils,
+aux Viewers ou à la publication :
+
+1. [Architecture commune 79](../architecture/79-S14-3-COMMON-CREATOR-PUBLISHER-VIEWER.md)
+2. [Guidelines Creator/Publisher et Viewer](GUIDELINES-CREATOR-PUBLISHER-VIEWER.md)
+3. [Plan de réalisation S14.3](PLAN-REALISATION-S14-3-CREATOR-PUBLISHER-VIEWER.md)
+
+Décision centrale : une seule application Creator/Publisher,
+générant des Viewers configurés à partir du même socle.
+
+Le Client spécifique A6/A7 est un prototype conservé
+pendant la transition, et non le produit Viewer cible.
+
+Les documents historiques restent consultables et
+conservent leurs preuves et décisions non remplacées.
+
+La prochaine intervention de développement porte sur
+A8.1/A8.2 : profils, capacités et interface commune.
+
+
 **Baseline ID:** `SRC-DOC-0.1` · **Last consolidated:** 2026-11-06 · **Current workstream:** `10G-UX-B1.4`, preparation stage; last completed diagnostic `B1.4-P2`.
 
 ## Product mission
