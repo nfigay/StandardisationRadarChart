@@ -29,11 +29,15 @@ test('S14.1 catalogue absent : synchronisation distribuée',()=>{
   assert.match(panel,/await loadIsoCache\(\)/);
 });
 
-test('S14.1 déploiement manuel et automatique',()=>{
+test('S14.1 construction manuelle et automatique des distributions',()=>{
   assert.match(
     workflow,
     /push:\s*\n\s*branches:\s*\[main\]/
   );
   assert.match(workflow,/workflow_dispatch:/);
-  assert.match(workflow,/deploy-pages@v4/);
+  assert.match(workflow,/actions\/upload-artifact@v4/);
+  assert.match(workflow,/npm run build:dist/);
+  assert.match(workflow,/npm run verify:dist/);
+  assert.doesNotMatch(workflow,/actions\/deploy-pages@/);
+  assert.doesNotMatch(workflow,/actions\/upload-pages-artifact@/);
 });

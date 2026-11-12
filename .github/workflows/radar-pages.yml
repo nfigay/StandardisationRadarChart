@@ -1,68 +1,67 @@
-name: Standardization Radar Chart — GitHub Pages
+name: Standardization Radar Chart - Build distributions
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
-  pages: write
-  id-token: write
+
 concurrency:
-  group: radar-github-pages
+  group: radar-distribution-build
   cancel-in-progress: false
+
 jobs:
-  build-and-deploy:
+  build-distributions:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - name: Checkout
+      - name: Checkout sources
         uses: actions/checkout@v4
-      - name: Node 22
+
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version-file: .nvmrc
+
       - name: Install dependencies
         run: npm install --no-audit --no-fund
-      - name: Test S14-Z
-        run: node --test tests/radar-s14-z.test.mjs
-      - name: Build GitHub Pages
+
+      - name: Automated tests
+        run: node --test tests/*.test.mjs
+
+      - name: Build Creator
         run: |
-          rm -rf .radarchart-build/pages
           npm run build:pages
           npm run verify:pages
-      - name: Prepare Pages output
-        run: |
-          touch .radarchart-build/pages/.nojekyll
-          test -f radar-catalog-config.json
-          test -f catalog-distribution/manifest.json
-
-          # The complete Vite build already includes ISO distribution.
-
-          test -f .radarchart-build/pages/catalog-distribution/manifest.json
-          cat > .radarchart-build/pages/index.html <<'HTML'
-          <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=./radar.html"><title>Standardization Radar Chart</title></head><body><a href="./radar.html">Ouvrir le radar</a></body></html>
-          HTML
           node tools/check-pages-readiness.mjs --repo . --out .radarchart-build/pages --strict
-      - name: Build isolated Client
+          test -f .radarchart-build/pages/src/domain/roadmap-published-projection.mjs
+
+      - name: Build Client
         run: |
           npm run build:client
           npm run verify:client
-      - name: Assemble and verify products
+
+      - name: Assemble products
         run: |
           npm run assemble:products
           npm run verify:products
-      - name: Prepare multi-product Pages
+
+      - name: Prepare site
         run: |
           node scripts/prepare-pages-products.mjs prepare
           node scripts/prepare-pages-products.mjs verify
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+
+      - name: Build final distribution
+        run: |
+          npm run build:dist
+          npm run verify:dist
+
+      - name: Upload verified distribution
+        uses: actions/upload-artifact@v4
         with:
-          path: .radarchart-build/pages-multiproduct
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+          name: radar-web-distribution
+          path: dist/
+          include-hidden-files: true
+          if-no-files-found: error

@@ -5,7 +5,10 @@ import { existsSync, cpSync } from 'node:fs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const legacyDirectories = ['js', 'lib', 'css', 'webfonts'];
-const legacyFiles = ['ICS.csv'];
+const legacyFiles = [
+    'ICS.csv',
+    'src/domain/roadmap-published-projection.mjs'
+  ];
 
 // The legacy application depends on classic <script> tags and globals.
 // Vite does not bundle classic scripts: preserve their original paths in dist.

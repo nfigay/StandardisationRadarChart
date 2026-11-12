@@ -14,9 +14,14 @@
     "build:client": "node scripts/build-client.mjs",
     "verify:client": "node scripts/verify-client-build.mjs .radarchart-build/client",
     "assemble:products": "node scripts/assemble-products.mjs assemble .radarchart-build/products $(git rev-parse --short HEAD)",
-    "verify:products": "node scripts/assemble-products.mjs verify .radarchart-build/products"
+    "verify:products": "node scripts/assemble-products.mjs verify .radarchart-build/products",
+    "build:dist": "node scripts/build-web-distribution.mjs build",
+    "verify:dist": "node scripts/build-web-distribution.mjs verify"
   },
   "devDependencies": {
     "vite": "^7.3.0"
+  },
+  "engines": {
+    "node": ">=22.12.0 <23"
   }
 }
