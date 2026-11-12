@@ -45,12 +45,24 @@ jobs:
           <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=./radar.html"><title>Standardization Radar Chart</title></head><body><a href="./radar.html">Ouvrir le radar</a></body></html>
           HTML
           node tools/check-pages-readiness.mjs --repo . --out .radarchart-build/pages --strict
+      - name: Build isolated Client
+        run: |
+          npm run build:client
+          npm run verify:client
+      - name: Assemble and verify products
+        run: |
+          npm run assemble:products
+          npm run verify:products
+      - name: Prepare multi-product Pages
+        run: |
+          node scripts/prepare-pages-products.mjs prepare
+          node scripts/prepare-pages-products.mjs verify
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .radarchart-build/pages
+          path: .radarchart-build/pages-multiproduct
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
