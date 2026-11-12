@@ -21,6 +21,8 @@
 | DEC-015 | OPEN | Règles de migration des blips legacy (IDs parfois labels) | Reconciliation sans fausse correspondance | Jeu de fixtures / revue humaine |
 | DEC-016 | OPEN | Politique de sélection/import de catalogues multiples | Persistance actuelle restreinte à un catalogue pour certaines actions | Scénarios multi-consortium |
 
+| DEC-019 | ADOPTED-PRINCIPLE | Creator/Publisher unique ; Viewers dérivés du socle commun avec capacités, modules et données configurés | Réutilisation applicative et publication adaptée aux destinataires | Qualification A8/A9/A10 |
+
 **Approval rule:** toute conversion d'une proposition en `ADOPTED-PRINCIPLE`, ou décision de coder, doit être tracée avec date, auteur/approbateur et référence (issue/commit/échange). L'accord sur cette baseline documentaire ne vaut pas autorisation de modifier l'application.
 
 
@@ -72,9 +74,20 @@ Les deux commandes de création d'une révision `draft` sont implémentées au n
 
 <!-- S14.3-A8.0-COMMON-ARCHITECTURE -->
 
-## Décision S14.3-A8.0 — convergence applicative
+## DEC-019 — S14.3-A8.0 : convergence applicative
 
-Statut : acceptée.
+Statut : `ADOPTED-PRINCIPLE`.
+
+Date : 2026-11-12.
+
+Approbateur : porteur du projet.
+
+Référence : échanges de validation A8.0
+et baseline documentaire d19b3cc.
+
+Cette décision fixe la cible produit.
+Elle ne vaut pas autorisation implicite
+de modifier ou publier le code.
 
 Référence : [Architecture 79](../architecture/79-S14-3-COMMON-CREATOR-PUBLISHER-VIEWER.md).
 

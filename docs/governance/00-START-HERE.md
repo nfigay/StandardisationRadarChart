@@ -1,29 +1,282 @@
-# START HERE — Stable project handover / future conversations
+# START HERE — Référentiel courant du projet
 
-<!-- S14.3-A8.0-COMMON-ARCHITECTURE -->
+<!-- S14.3-A8.0-R2-CONSOLIDATION -->
 
-## Référentiel courant — Creator/Publisher et Viewer
+## 1. État de référence
 
-À partir de S14.3-A8.0, lire les trois documents suivants
-avant tout développement relatif aux profils,
-aux Viewers ou à la publication :
+- Date de consolidation : 2026-11-12.
+- Baseline logicielle : 6b969f3.
+- Baseline documentaire : d19b3cc.
+- Distribution publique : bf6472a.
+- Branche de développement : main.
+- Branche de distribution : gh-pages.
+- Tests de la baseline logicielle : 464 réussis.
+- Ressources HTTP positives contrôlées : 19.
+- Chantier courant : S14.3-A8.0.
+- Prochain chantier : S14.3-A8.1/A8.2.
+
+Ces références identifient la baseline de convergence.
+Elles ne dispensent pas de contrôler le HEAD réel
+avant chaque intervention.
+
+Le rapport A8.0-R1 confirme que le référentiel
+documentaire d19b3cc est présent localement et
+sur origin/main.
+
+La branche gh-pages reste au commit bf6472a.
+
+## 2. Documents à lire en priorité
 
 1. [Architecture commune 79](../architecture/79-S14-3-COMMON-CREATOR-PUBLISHER-VIEWER.md)
 2. [Guidelines Creator/Publisher et Viewer](GUIDELINES-CREATOR-PUBLISHER-VIEWER.md)
 3. [Plan de réalisation S14.3](PLAN-REALISATION-S14-3-CREATOR-PUBLISHER-VIEWER.md)
+4. [Registre des décisions](01-DECISIONS.md)
+5. [Checklist de revue](02-REVIEW-CHECKLIST.md)
+6. [Matrice des exigences](../requirements/requirements.csv)
+7. [Spécification cible](../architecture/02-SPECIFICATION-CIBLE.md)
+8. [Architecture de distribution 77](../architecture/77-S14-3-DISTRIBUTION-GH-PAGES.md)
 
-Décision centrale : une seule application Creator/Publisher,
-générant des Viewers configurés à partir du même socle.
+Les documents historiques restent des sources de
+preuve et de contexte.
 
-Le Client spécifique A6/A7 est un prototype conservé
-pendant la transition, et non le produit Viewer cible.
+En cas de contradiction sur la séparation Creator,
+Publisher et Viewer, la décision S14.3-A8.0 prévaut.
 
-Les documents historiques restent consultables et
-conservent leurs preuves et décisions non remplacées.
+## 3. Mission du produit
 
-La prochaine intervention de développement porte sur
-A8.1/A8.2 : profils, capacités et interface commune.
+Standardization Radar Chart est une application
+browser-first et offline-first de gestion,
+d'évaluation et de publication de connaissances
+relatives à la standardisation.
 
+Elle permet notamment à des consortiums,
+entreprises et experts de maintenir leurs catalogues,
+évaluer les normes, construire des roadmaps et
+distribuer des espaces de consultation adaptés.
+
+Le Creator et le Publisher constituent une seule
+application et un même environnement de travail.
+
+Les acteurs qui construisent les catalogues et
+les roadmaps préparent également les publications.
+
+Le Creator/Publisher génère des Viewers configurés
+à partir du même socle applicatif et du même
+modèle métier natif.
+
+Les capacités, composants logiciels et données
+distribuées sont sélectionnés selon les besoins
+des destinataires.
+
+## 4. Principes non négociables
+
+1. Autorisation explicite avant modification,
+   commit ou déploiement. Une décision d'architecture
+   ne vaut pas autorisation implicite de coder.
+
+2. Réutilisation des composants existants avant
+   création d'un composant équivalent.
+
+3. W2UI-first : W2UI possède le layout, les panneaux,
+   leur visibilité et le cycle de redimensionnement.
+
+4. SVG/D3 possède la géométrie et les éléments
+   graphiques du radar ; Cytoscape possède le graphe
+   interactif et les blips. Le repère logique est commun.
+
+5. Préserver les coordonnées, les identifiants,
+   les relations, les protections des révisions et
+   les invariants du modèle métier.
+
+6. Ne pas utiliser un placement aléatoire historique
+   pour répondre à un redimensionnement du viewport.
+
+7. Préserver les usages navigateur et hors ligne,
+   ainsi que les formats d'échange ouverts.
+
+8. Distinguer la norme, son édition, l'évaluation
+   contextuelle et le blip.
+
+9. Contrôler les capacités dans les services
+   applicatifs, et non uniquement dans l'interface.
+
+10. Filtrer les données avant leur distribution
+    et vérifier la fermeture des références.
+
+11. Distinguer masquage UI, contrôle d'exécution
+    et exclusion physique des modules.
+
+12. Ne pas confondre preuves, propositions, décisions,
+    implémentations et validations.
+
+13. Ne pas publier de données confidentielles
+    sur GitHub Pages public.
+
+## 5. État fonctionnel et technique
+
+Les lots S13, S14, S14.1 et S14.2 ont établi
+les mécanismes historiques de création, de révisions,
+de catalogue ISO et de consultation.
+
+Les travaux S14.3-A1 à A7 ont introduit
+les projections publiées et l'infrastructure
+de distribution multi-produits.
+
+Les réalisations suivantes restent des acquis :
+
+- gestion du catalogue ISO ;
+- navigation et recherche dans le catalogue ;
+- cycle de vie des révisions ;
+- projection du modèle métier ;
+- viewport commun W2UI/SVG/Cytoscape ;
+- construction Vite ;
+- séparation main et gh-pages ;
+- manifestes d'intégrité ;
+- publication atomique fast-forward ;
+- préservation du radar PLM historique.
+
+Les trois variantes techniques du Client A6/A7
+sont construites et publiées.
+
+Toutefois, leur moteur HTML/SVG spécifique
+constitue un prototype expérimental.
+
+Ce prototype n'est pas le Viewer cible.
+
+Son développement fonctionnel est gelé au profit
+de la réutilisation de l'application historique.
+
+La recette navigateur complète reste à terminer,
+notamment l'export depuis le Creator et l'usage
+des paquets dans les trois variantes.
+
+Les réponses HTTP 503 rencontrées lors de contrôles
+négatifs sont des vérifications non concluantes,
+et non une preuve de présence des fichiers attendus absents.
+
+## 6. Prochain chantier autorisable
+
+S14.3-A8.1/A8.2 :
+
+- point d'entrée et initialisation configurables ;
+- profil Creator/Publisher ;
+- profil Viewer ;
+- registre de capacités ;
+- contrôles applicatifs des mutations ;
+- composants et actions communs ;
+- réutilisation du radar historique ;
+- navigation et consultation en lecture seule ;
+- cycle de vie partagé.
+
+Le premier résultat attendu est une application
+historique capable de fonctionner en profil
+Creator/Publisher ou Viewer.
+
+Aucun nouveau moteur de rendu radar ne doit être
+introduit pour réaliser ce premier résultat.
+
+Ce lot peut être transitoire quant à l'exclusion
+physique de certains modules legacy.
+
+Cette limite doit être explicitement documentée.
+
+Voir le plan de réalisation pour les livrables,
+dépendances et critères d'acceptation.
+
+## 7. Suite de la réalisation
+
+- A8.3/A8.4 : modèle natif des publications
+  et projection configurable des connaissances.
+- A8.5 : Publisher intégré et prévisualisation.
+- A9.1/A9.2 : sélection des modules et trois
+  distributions Viewer.
+- A9.3 : trois distributions Creator/Publisher.
+- A10 : qualification intégrée et substitution
+  du prototype Client.
+
+Les lots peuvent être regroupés en interventions
+fonctionnelles cohérentes.
+
+Chaque intervention doit produire du code,
+des tests et une contribution architecturale,
+sauf lorsqu'elle est explicitement documentaire.
+
+## 8. Contrat d'intervention
+
+Outillage : Node.js et Bash.
+
+Les diagnostics sont en lecture seule, sauf
+autorisation explicite de modification.
+
+Les scripts vérifient leurs préconditions.
+
+Les fichiers modifiés font l'objet d'une sauvegarde
+et d'une sélection Git explicite.
+
+Les données de travail, caches ISO et sauvegardes
+locales ne sont pas supprimés sans autorisation.
+
+Les rapports Terminal sont copiables intégralement.
+
+Les diagnostics DevTools prévoient un mécanisme
+de copie du rapport JSON complet.
+
+Avant chaque lot :
+
+- identifier le commit réellement inspecté ;
+- identifier les exigences concernées ;
+- préciser le périmètre autorisé ;
+- examiner les composants et contrats existants ;
+- annoncer les critères d'acceptation.
+
+Après chaque lot :
+
+- rapporter les modifications ;
+- rapporter les tests effectivement exécutés ;
+- distinguer build, publication et recette navigateur ;
+- actualiser l'architecture et le plan ;
+- enregistrer les preuves disponibles ;
+- identifier les limitations restantes.
+
+## 9. Reprise dans une autre conversation
+
+Fournir ce document, l'architecture 79,
+les guidelines, le plan de réalisation,
+le registre des décisions et les exigences.
+
+Fournir également le rapport Git courant,
+les résultats des derniers tests et les
+éventuelles modifications locales.
+
+Le nouveau contexte doit utiliser le prochain
+chantier indiqué dans le plan de réalisation,
+et non reprendre automatiquement une ancienne
+étape figurant dans l'historique.
+
+## 10. Session handoff
+
+- Dernière baseline logicielle : 6b969f3.
+- Baseline documentaire de convergence : d19b3cc.
+- Distribution publique : bf6472a.
+- Dernière validation logicielle : 464/464 tests.
+- Exigences nouvelles : CPV-01 à CPV-12.
+- Qualification navigateur : partiellement ouverte.
+- Action suivante : préparer et autoriser A8.1/A8.2.
+- Modification applicative A8.0 : aucune.
+
+## 11. Historique antérieur
+
+Le contenu suivant est conservé pour sa valeur
+historique et documentaire.
+
+Il ne décrit plus l'état courant du projet.
+
+Ses indications de prochaine étape, ses anciens
+états Git et ses anciennes lacunes de réalisation
+ne doivent pas être interprétés comme des
+instructions actuelles.
+
+---
 
 **Baseline ID:** `SRC-DOC-0.1` · **Last consolidated:** 2026-11-06 · **Current workstream:** `10G-UX-B1.4`, preparation stage; last completed diagnostic `B1.4-P2`.
 

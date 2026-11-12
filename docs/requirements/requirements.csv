@@ -48,3 +48,15 @@ REQ-MIG-02,Migration,Preserve original artifacts rollback,A5,DEC-015,Migration p
 REQ-ARCH-01,Architecture,Pure domain and UI adapters,A4,DEC-004,Modularization,VER-BUILD-01,proposed,not_started,not_run,,DOC-P6-A,not_assessed
 REQ-ARCH-02,Architecture,Incremental legacy-safe integration,A4/A5,DEC-004,Bootstrap/adapters,VER-BUILD-01,proposed,not_started,not_run,,DOC-P6-A,not_assessed
 REQ-ARCH-03,Governance,Review baseline before code changes,A3,OPEN,Development process,VER-BUILD-01,proposed,not_started,not_run,,DOC-P6-A,not_assessed
+CPV-01,Architecture,Creator et Publisher dans une seule application,ARCH-79/20,DEC-019,A8.3/A8.5 : Parcours intégré de création et publication,VER-CPV-01,approved,not_started,not_run,,Architecture 79 ; baseline d19b3cc,not_assessed
+CPV-02,Architecture,Radar et composants UI communs,ARCH-79/20,DEC-019,A8.1/A8.2 : Parité W2UI SVG/D3 Cytoscape,VER-CPV-02,approved,not_started,not_run,,Architecture 79 ; baseline d19b3cc,not_assessed
+CPV-03,Integrity,Contrôle des capacités à l’exécution,ARCH-79/20,DEC-019,A8.1/A8.2 : Refus des mutations non autorisées,VER-CPV-03,approved,not_started,not_run,,Architecture 79 ; baseline d19b3cc,not_assessed
+CPV-04,Publication,Définitions de publication persistantes,ARCH-79/20,DEC-019,A8.3 : Sauvegarde et restauration des définitions,VER-CPV-04,approved,not_started,not_run,,Architecture 79 ; baseline d19b3cc,not_assessed
+CPV-05,Publication,Livraisons identifiables et traçables,ARCH-79/20,DEC-019,A8.3/A9.2 : Manifestes et provenance des livraisons,VER-CPV-05,approved,not_started,not_run,,Architecture 79 ; baseline d19b3cc,not_assessed
+CPV-06,Integrity,Projection native fermée et filtrée,ARCH-79/20,DEC-019,A8.4 : Projection multiradar et fermeture des références,VER-CPV-06,approved,not_started,not_run,,Architecture 79 ; baseline d19b3cc,not_assessed
+CPV-07,UX,Prévisualisation fidèle et isolée,ARCH-79/20,DEC-019,A8.5 : Parité entre prévisualisation et livraison,VER-CPV-07,approved,not_started,not_run,,Architecture 79 ; baseline d19b3cc,not_assessed
+CPV-08,Architecture,Exclusion physique des modules inutiles,ARCH-79/20,DEC-019,A9.1 : Inventaire et fermeture des dépendances,VER-CPV-08,approved,not_started,not_run,,Architecture 79 ; baseline d19b3cc,not_assessed
+CPV-09,NFR,Parité dans les trois modes techniques,ARCH-79/20,DEC-019,A9.2/A9.3 : Recette des six distributions,VER-CPV-09,approved,not_started,not_run,,Architecture 79 ; baseline d19b3cc,not_assessed
+CPV-10,Publication,Creator autonome capable de publier,ARCH-79/20,DEC-019,A9.3 : Génération hors ligne sans outils externes,VER-CPV-10,approved,not_started,not_run,,Architecture 79 ; baseline d19b3cc,not_assessed
+CPV-11,Integrity,Protection du cycle de vie et des révisions,ARCH-79/20,DEC-019,A8.1/A8.2 : Non-régression et protection des révisions,VER-CPV-11,approved,not_started,not_run,,Architecture 79 ; baseline d19b3cc,not_assessed
+CPV-12,Integrity,Absence de fuite de données hors périmètre,ARCH-79/20,DEC-019,A8.4/A9.2 : Contrôles négatifs des artefacts,VER-CPV-12,approved,not_started,not_run,,Architecture 79 ; baseline d19b3cc,not_assessed

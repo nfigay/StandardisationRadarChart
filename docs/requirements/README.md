@@ -1,6 +1,6 @@
 # Matrice de traçabilité
 
-Le fichier [`requirements.csv`](requirements.csv) est l'index de suivi. Il comporte **49 exigences** reliées aux chapitres de l'analyse, aux décisions, aux composants à créer ou modifier et aux tests.
+Le fichier [`requirements.csv`](requirements.csv) est l'index de suivi. Il comporte **61 exigences** reliées aux chapitres de l'analyse, aux décisions, aux composants à créer ou modifier et aux tests.
 
 ## États
 
@@ -31,8 +31,27 @@ définie dans le
 
 Ces exigences complètent le registre existant.
 
-Le fichier requirements.csv n'est pas modifié
-automatiquement par cette décision.
+Les douze exigences CPV sont désormais
+intégrées dans requirements.csv.
 
-L'intégration structurée des nouvelles exigences
-devra respecter le schéma et les conventions du registre.
+Les 49 exigences historiques sont conservées.
+
+La décision de référence est DEC-019.
+
+Les nouvelles exigences sont approuvées au niveau
+de leur cible fonctionnelle et architecturale.
+
+Leur statut initial d'implémentation est not_started.
+Leur statut initial de vérification est not_run.
+
+Le champ evidence_commit reste vide tant qu'une
+preuve d'implémentation ou de validation n'a pas
+été enregistrée.
+
+Les identifiants VER-CPV-01 à VER-CPV-12
+désignent les vérifications à réaliser.
+
+L'attribution d'un identifiant de vérification
+ne constitue pas une réussite de test.
+
+<!-- S14.3-A8.0-R2-CONSOLIDATION -->
