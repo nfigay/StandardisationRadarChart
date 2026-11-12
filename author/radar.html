@@ -1,0 +1,2258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Chart Builder</title>
+    <script src="./js/blips.js"></script>
+    <script src="./js/working-groups-classic.js"></script>
+    <script src="./js/radar-revision-session.js"></script>
+    <script src="./js/radar-catalog-adapter.js"></script>
+    <script src="./js/radar-artifact-integrity.js"></script>
+    <script src="./js/radar-catalog-persistence.js"></script>
+    <script src="./js/radar-catalog-creation.js"></script>
+    <script src="./js/radar-catalog-create-form.js"></script>
+    <script src="./js/radar-revision-dialogs.js"></script>
+    <script src="./js/radar-radar-admin.js"></script>
+    <script src="./js/radar-catalog-ui.js"></script>
+    <script src="./js/radar-standard-registry.js"></script>
+    <script src="./js/radar-iso-open-data.js"></script>
+    <script src="./js/radar-iso-rss.js"></script>
+    <script src="./js/radar-catalog-atomic.js"></script>
+    <script src="./js/radar-catalog-followed.js"></script>
+    <script src="./js/radar-catalog-distribution.js"></script>
+    <script src="./js/radar-catalog-changes.js"></script>
+    <script src="./js/radar-iso-full-grid.js"></script>
+    <script src="./js/radar-iso-tree-index.js"></script>
+    <script src="./js/radar-iso-sidebar-index.js"></script>
+    <!-- ISO streaming engine: available before application initialization -->
+    <script src="js/radar-iso-stream-core.js"></script>
+    <script src="js/radar-iso-windowed-db.js"></script>
+    <script src="js/radar-iso-stream-distribution.js"></script>
+    <script src="./js/radar-standards-panel.js"></script>
+    <script src="./js/radar-iso-toolbar.js"></script>
+    <script src="./js/radar-workspace-explorer.js"></script>
+    <script src="./js/radar.js"></script>
+    <script src="./js/cytoscape/RadarStyle.js"></script>
+    <script src="./js/cytoscape/RadarStyle.js"></script>
+    <script src="lib/d3.min.js"></script>
+    <script src="lib/papaparse.js"></script>
+    <script src="lib/uuid.min.js"></script>
+    <script src="lib/index.umd.js"></script>
+    <script src="lib/cytoscape.min.js"></script>
+    <script src="lib/layout-base.js"></script>
+    <script src="lib/cose-base.js"></script>
+    <script src="lib/cytoscape-fcose.js"></script>
+    <script src="lib/cytoscape-undo-redo.js"></script>
+    <script src="lib/cytoscape-expand-collapse.js"></script>
+    <script src="lib/popper.js"></script>
+    <script src="lib/cytoscape-popper.min.js"></script>
+    <script src="lib/tippy-bundle.iife.js"></script>
+    <script src="lib/w2ui.min.js"></script>
+    <script src="lib/layout-base.js"></script>
+    <script src="lib/cola.min.js"></script>
+    <script src="lib/cytoscape-cola.js"></script>
+    <!-- Dagre.js (Required for cytoscape-dagre) -->
+    <script src="lib/dagre.min.js"></script>
+    <!-- Cytoscape-Dagre Extension -->
+    <script src="lib/cytoscape-dagre.js"></script>
+    <script src="lib/i18next.min.js"></script>
+    <script src="js/ics.js"></script>
+
+
+
+    <style>
+        /* Style for select boxes */
+        select {
+            width: 100%;
+            height: 150px;
+            margin-top: 5px;
+        }
+
+        /* Hide the native file input */
+        #fileInput,
+        #fileInput2 {
+            display: none;
+        }
+
+        #radar-container {
+            position: relative;
+            flex: 1 1 800px;
+            min-width: 0;
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            border: 0;
+        }
+
+        #svg-container,
+        #cy-container,
+        #cy2-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* transform: scale(1);
+            /* Scale the container by 90% (reducing by 10%) */
+            transform-origin: top left;
+            /* Ensure scaling happens from the top-left corner */
+        }
+
+        #svg-container {
+            background-color: white;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Inactive compatibility layer: never intercept Cytoscape input. */
+        #cy2-container {
+            pointer-events: none;
+        }
+    </style>
+    <script>
+        window.addEventListener('beforeunload', function (event) {
+            // Cancel the event to trigger the confirmation dialog
+            event.preventDefault();
+
+            // Setting event.returnValue triggers the browser's confirmation dialog
+            event.returnValue = 'Are you sure you want to leave? You may have unsaved changes.';
+
+            // Note: The text inside event.returnValue will not be shown in modern browsers;
+            // the browser will display a standard message instead.
+        });
+    </script>
+  <script type="module" crossorigin src="/StandardisationRadarChart/assets/radar--vG1J_f9.js"></script>
+  <link rel="stylesheet" crossorigin href="/StandardisationRadarChart/assets/radar-Cog1wUm_.css">
+</head>
+
+<body>
+    <div id="svg-overlay2"></div>
+
+    <div id="app" style="width: 100%; height: 100vh;">
+        <div id="mainLayout" style="height: calc(100% - 40px);" />
+    </div>
+
+    <div style="height: 100px;" id="output" style="display: block;"></div>
+
+    <input type="file" name="name" id="inputfile" style="display:none" />
+    <input type="file" name="name" id="load-from-inp" style="display:none" />
+    <input type="file" id="jsonl-hidden-input" accept=".jsonl,.ndjson" style="display:none;">
+
+
+
+
+    <script>
+        // createRadarSVG("PLM", 800, 800)
+
+        var mainMenu;
+        var myLayout
+        var removed;
+        let cy;
+        var api;
+        const resources = {
+            en: {
+                translation: {
+                    forms: {
+                        blipForm: 'Standard follow up relative data'
+                    },
+                    menu: {
+                        language: "Language",
+                        iso: "ISO",
+                        tc: "Technical Committees",
+                        loadtc: "Load",
+                        savetc: "Save",
+                        fetchstandard:"Fetch Standard(RSS)",
+                        fr: "🇫🇷 French",
+                        en: "🇬🇧 English",
+                        files: "Files",
+                        newcatalog: "New catalog and working radar",
+                        loadcatalogjson: "Open JSON catalog",
+                        savecatalogjson: "Save JSON catalog",
+                        createdraft: "Create / Open Working Radar",
+                        asd2019: "ASD SSG 2019",
+                        loadasd: "Load historical radars",
+                        asdUnassigned: "Unassigned historical records",
+                        radartools: "Radar tools",
+                        publishcatalogrevision: "Publish draft revision",
+                        exportclientroadmap: "Export published roadmap for client",
+                        archivecatalogrevision: "Archive published revision",
+                        selectcatalogrevision: "Select revision",
+                        renameradar: "Rename radar",
+                        renamerevision: "Name revision",
+                        standardregistry: "Standard references",
+                        createcatalogblip: "Add blip",
+                        createstandardblip: "Quick local creation (unverified) and blip",
+                        modeLocked: "Locked",
+                        modeGrab: "Grab On",
+                        modeChange: "Change On",
+                        showEditor: "Show editor tools",
+                        removeWorkspace: "Remove from workspace",
+                        removeConfirm: "Delete selected content from the active workspace?",
+                        savecsvssr: "Export blips CSV",
+                        loadcsvssr: "Import blips CSV",
+                        loadgraphssr: "Open SSR graph",
+                        savegraphssr: "Save SSR graph",
+                        switch: "Switch",
+                        radars: "Legacy radars",
+                        mbse: "SE and MBSE Radar",
+                        plm: "PLM ASD SSG Radar",
+                        virtualmanufacturing: "Virtual Manufacturing Radar",
+                        expandCollapse: "Expand/Collapse",
+                        nodes: "Nodes",
+                        expandAllNodes: "Expand All",
+                        collapseAllNodes: "Collapse All",
+                        expandSelectedNodes: "Expand Selected",
+                        collapseSelectedNodes: "Collapse Selected",
+                        expandSelectedNodesRecursively: "Expand Selected Recursively",
+                        collapseSelectedNodesRecursively: "Collapse Selected Recursively",
+                        edges: "Edges",
+                        expandAllEdges: "Expand All",
+                        collapseAllEdges: "Collapse All",
+                        expandSelectedEdges: "Expand Selected",
+                        collapseSelectedEdges: "Collapse Selected",
+                        collapseEdgesBetweenNodes: "Reduce Between Selected Nodes",
+                        expandEdgesBetweenNodes: "Expand Between Selected Nodes",
+                        rendering: "Rendering",
+                        renderingnodeirishortname: "Render by Entity IRI Short Name(id)",
+                        noderenderinglabel: "Render by Label(RDFS Label)",
+                        noderenderingprefix: "Render by prefixed name",
+                        noderenderingannotation: "Render by annotation property",
+                        noderenderingcustom: "Customed rendering",
+                        edgeirishortName: "Render by Property IRI Short Name(id)",
+                        edgerenderingprefixName: "Render by prefixed name",
+                        edgerenderinglabel: "Render by Label(RDFS Label)",
+                        edgerenderingannotationProperty: "Render by annotation property",
+                        edgerenderingcustom: "Customed rendering",
+                        label: "Label",
+                        prefixName: "Prefix Name",
+                        annotationProperty: "Annotation Property",
+                        customRendering: "Custom Rendering",
+                        display: "Display",
+                        showowlconstructs: "Show OWL Constructs Nodes",
+                        showisa: "Show isa as link",
+                        showdomainrange: "Show domain and range as nodes",
+                        showlabelasnode: "Show labels as nodes",
+                        showlabelasedge: "Show labels as edges",
+                        showannotationasnode: "Show annotations as nodes",
+                        showannotationasedge: "Show annotations as edges",
+                        viewpoint: "Viewpoints",
+                        individual: "Individuals",
+                        ontology: "Ontologies",
+                        sop: "Subject Object Properties",
+                        data: "Data",
+                        layout: "Layouts",
+                        fcose: "Fcose",
+                        grid: "Grid",
+                        circle: "Circle",
+                        cose: "Cose",
+                        breadthfirst: "Breadthfirst",
+                        concentric: "Concentric",
+                        random: "Random",
+                        cola: "Cola",
+                        dagre: "Dagre",
+                        showhidegrabifydelete: "Actions on graph elements",
+                        showhide: "Show/Hide",
+                        hideselected: "Hide Selected",
+                        hidenonselected: "Hide Non Selected",
+                        unhideall: "Unhide All",
+                        grabifyungrabify: "Grabify/Ungrabify",
+                        ungrabifyselected: "Ungrabify Selected",
+                        ungrabifynonselected: "Ungrabify Non Selected",
+                        grabifyselected: "Grabify Selected",
+                        grabifynonselect: "Grabify Non Selected",
+                        lockunlock: "Lock/Unlock",
+                        lockselected: "Lock Selected",
+                        locknonselected: "Lock Non Selected",
+                        unlockselected: "Unlock Selected",
+                        unlocknonselect: "Unlock Non Select",
+                        removerestore: "Remove Restore",
+                        removeselected: "Remove Selected",
+                        removeunselected: "Remove Unselected",
+                        removeall: "Remove All",
+                        restore: "Restore"
+                    },
+                    confirm: {
+                        replacegraph: "Do you want to replace the current graph? If yes, current graph will be removed, if no, it will be merged with the import.",
+                        rdfinplaceofowl: "Do you want to show RDF triples in place of OWL?"
+                    },
+                    alert: {
+                        selectowlinferred: "Please select the inferred OWL File",
+                        selectowl: "Please select you OWL File"
+                    }
+                }
+            },
+            fr: {
+                translation: {
+                    forms: {
+                        blipForm: 'Données relatives au standard suivi',
+                    },
+                    menu: {
+                        language: "Langage",
+                        iso: "ISO",
+                        tc: "Comités Techniques",
+                        loadtc: "Charger",
+                        savetc: "Sauver",
+                        fetchstandard: ("Charger Norme (RSS)"),
+                        fr: "🇫🇷 Français",
+                        en: "🇬🇧 English",
+                        files: "Fichiers",
+                        newcatalog: "Nouveau catalogue et radar de travail",
+                        loadcatalogjson: "Ouvrir un catalogue JSON",
+                        savecatalogjson: "Sauvegarder le catalogue JSON",
+                        createdraft: "Créer / ouvrir un radar de travail",
+                        asd2019: "ASD SSG 2019",
+                        loadasd: "Charger les radars historiques",
+                        asdUnassigned: "Enregistrements historiques non affectés",
+                        radartools: "Outils du radar",
+                        publishcatalogrevision: "Publier la révision de travail",
+                        exportclientroadmap: "Exporter la roadmap publiée pour le Client",
+                        archivecatalogrevision: "Archiver la révision publiée",
+                        selectcatalogrevision: "Sélectionner une révision",
+                        renameradar: "Renommer le radar",
+                        renamerevision: "Nommer la révision",
+                        standardregistry: "Références normatives",
+                        createcatalogblip: "Ajouter un blip",
+                        createstandardblip: "Création rapide locale (non vérifiée) et ajout d’un blip",
+                        modeLocked: "Verrouillé",
+                        modeGrab: "Déplacement",
+                        modeChange: "Déplacement et zones",
+                        showEditor: "Afficher les outils d’édition",
+                        removeWorkspace: "Retirer de l’espace de travail",
+                        removeConfirm: "Supprimer le contenu sélectionné de l’espace de travail actif ?",
+                        loadcsvssr: "Importer des blips CSV",
+                        savecsvssr: "Exporter des blips CSV",
+                        loadgraphssr: "Ouvrir un graphe SSR",
+                        savegraphssr: "Sauvegarder le graphe SSR",
+                        switch: "Inverser",
+                        semanticlandscape: "Standardization Landscape",
+                        semanticlandscape: "Paysage de la standadisation",
+                        radars: "Radars existant",
+                        mbse: "Radar SE et MBSE",
+                        plm: "Radar PLM de l'ASD SSG",
+                        virtualmanufacturing: "Radar Virtual Manufacturing",
+                        expandCollapse: "Développer/Réduire",
+                        nodes: "Nœuds",
+                        expandAllNodes: "Tout développer",
+                        collapseAllNodes: "Tout réduire",
+                        expandSelectedNodes: "Développer sélectionnés",
+                        collapseSelectedNodes: "Réduire sélectionnés",
+                        expandSelectedNodesRecursively: "Développer sélectionnés récursivement",
+                        collapseSelectedNodesRecursively: "Réduire sélectionnés récursivement",
+                        edges: "Arêtes",
+                        expandAllEdges: "Tout développer",
+                        collapseAllEdges: "Tout réduire",
+                        expandSelectedEdges: "Développer sélectionnés",
+                        collapseSelectedEdges: "Réduire sélectionnés",
+                        collapseEdgesBetweenNodes: "Réduire entre les noeuds sélectionnés",
+                        expandEdgesBetweenNodes: "Développer entre les noeuds sélectionnés",
+                        rendering: "Rendu",
+                        renderingnodeirishortname: "Nom court IRI",
+                        label: "Étiquette",
+                        prefixName: "Nom du préfixe",
+                        annotationProperty: "Propriété d’annotation",
+                        customRendering: "Rendu personnalisé",
+                        display: "Affichage",
+                        showowlconstructs: "... des nœuds OWL",
+                        showisa: "... de 'isa' comme lien",
+                        showdomainrange: "... des domaines et portées comme nœuds",
+                        showlabelasnode: "... des labels comme noeuds",
+                        showlabelasedge: "... des labels comme liens",
+                        showannotationasnode: "... des annotations comme noeuds",
+                        showannotationasedge: "... des annotations comme liens",
+                        viewpoint: "Points de vue",
+                        individual: "Individus",
+                        ontology: "Ontologies",
+                        sop: "Propriétés sujet-objet",
+                        data: "Données",
+                        layout: "Mises en page",
+                        fcose: "Fcose",
+                        grid: "Grille",
+                        circle: "Cercle",
+                        cose: "Cose",
+                        breadthfirst: "Parcours en largeur",
+                        concentric: "Concentrique",
+                        random: "Aléatoire",
+                        cola: "Cola",
+                        dagre: "Dagre",
+                        showhidegrabifydelete: "Actions sur éléments du graphe",
+                        showhide: "Montrer/Cacher",
+                        hideselected: "Cacher les sélectionnés",
+                        hidenonselected: "Cacher les non sélectionnés",
+                        unhideall: "Révéler tout",
+                        grabifyungrabify: "Activer/Désactiver la prise",
+                        ungrabifyselected: "Libérer la sélection",
+                        ungrabifynonselected: "Libérer les non sélectionnés",
+                        grabifyselected: "Prendre la sélection",
+                        grabifynonselect: "Prendre les non sélectionnés",
+                        lockunlock: "Verrouiller/Déverrouiller",
+                        lockselected: "Verrouiller la sélection",
+                        locknonselected: "Verrouiller les non sélectionnés",
+                        unlockselected: "Déverrouiller la sélection",
+                        unlocknonselect: "Déverrouiller les non sélectionnés",
+                        removerestore: "Supprimer/Restaurer",
+                        removeselected: "Supprimer la sélection",
+                        removeunselected: "Supprimer les non sélectionnés",
+                        removeall: "Tout supprimer",
+                        restore: "Restaurer",
+                        rendering: "Rendu",
+                        renderingnodeirishortname: "Rendu par Nom Court de l'IRI de l'Entité (id)",
+                        noderenderinglabel: "Rendu par Libellé (RDFS Label)",
+                        noderenderingprefix: "Rendu par Nom Préfixé",
+                        noderenderingannotation: "Rendu par Propriété d'Annotation",
+                        noderenderingcustom: "Rendu Personnalisé",
+                        edgeirishortName: "Rendu par Nom Court de l'IRI de la Propriété (id)",
+                        edgerenderingprefixName: "Rendu par Nom Préfixé",
+                        edgerenderinglabel: "Rendu par Libellé (RDFS Label)",
+                        edgerenderingannotationProperty: "Rendu par Propriété d'Annotation",
+                        edgerenderingcustom: "Rendu Personnalisé"
+                    },
+                    confirm: {
+                        replacegraph: "Voulez vous remplacer le graphe courant? Sinon l'import sera fusionné avec le graphe courant.",
+                        rdfinplaceofowl: "Voulez vous visualizer le graphe RDF au lien de l'ontologie OWL?   "
+                    }
+                    ,
+                    alert: {
+                        selectowlinferred: "Veuillez sélectionner le fichier OWL inferred.",
+                        selectowl: "Veuillez sélectionner un fichier OWL."
+                    }
+                }
+            }
+        };
+
+        function doElemsMultiTypes(elems) {
+            const classDict = {};
+            for (let i = 0; i < elems.length; i++) {
+                classDict[elems[i].data('edgeType')] = true;
+            }
+            return Object.keys(classDict).length > 1;
+        }
+        function exportVisibleGraphToFile(cy) {
+            let graphData = [];
+
+            // Extract visible nodes
+            cy.nodes(':visible').forEach(node => {
+                let nodeData = {
+                    data: {
+                        id: node.id(),
+                        label: node.data('label'),
+                    }
+                };
+
+                let parent = node.parent();
+                if (parent.length > 0) {
+                    nodeData.data.parent = parent.id();
+                }
+
+                let classes = node.classes();
+                if (classes) {
+                    nodeData.classes = classes;
+                }
+
+                graphData.push(nodeData);
+            });
+
+            // Extract visible edges
+            cy.edges(':visible').forEach(edge => {
+                let edgeData = {
+                    data: {
+                        id: edge.id(),
+                        source: edge.source().id(),
+                        target: edge.target().id(),
+                        label: edge.data('label'),
+                        type: edge.data('type')
+                    },
+                    classes: edge.classes() // Récupération directe des classes existantes
+                };
+
+                let edgeType = edge.data('edgeType');
+                if (edgeType) {
+                    edgeData.data.edgeType = edgeType;
+                }
+
+                graphData.push(edgeData);
+            });
+
+
+            // Convertir en JSON et créer un Blob
+            let jsonString = JSON.stringify(graphData, null, 2);
+            let blob = new Blob([jsonString], { type: "application/json" });
+
+            // Créer un lien de téléchargement
+            let a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            var filename = "owl.json"
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+
+        i18next.init({
+            lng: "fr", // Default language
+            fallbackLng: "en", // Fallback language
+            resources: resources // Use in-memory translations
+        })
+
+        function changeLanguage(lang) {
+            i18next.changeLanguage(lang, () => {
+                updateToolbarTranslations();
+                // S14-K-R4: reproject statuses and revision labels on language switch.
+                window.__radarWorkspaceExplorer?.refresh?.();
+                window.__radarCatalogUI?.refreshRadarLabels?.();
+                const draftButton = w2ui.toolbar?.get('createdraft');
+                if (draftButton) {
+                    draftButton.text = '✏️ ' + i18next.t('menu.createdraft');
+                    w2ui.toolbar.refresh('createdraft');
+                }
+                //   w2ui.blipForm.header = i18next.t("forms.blipForm");
+                //   w2ui.blipForm.refresh();
+
+            });
+        }
+
+        function updateMenu() {
+            w2ui.mainMenu.items.forEach(item => {
+                item.text = i18next.t(item.text); // Translate
+            });
+            w2ui.mainMenu.refresh(); // Refresh UI
+        }
+
+        function addNewMenuItem() {
+
+            mainMenu.items.push({
+                type: "button",
+                id: "newItem",
+                text: i18next.t("menu.newItem"),
+                icon: "fa fa-star"
+            });
+
+            mainMenu.refresh();
+            updateToolbarTranslations(); // Ensure default language is applied to menu items  
+
+        }
+
+
+        function updateToolbarTranslations() {
+            mainMenu.items.forEach(item => {
+
+                if (item.id in i18next.t("menu", { returnObjects: true })) {
+                    item.text = i18next.t(`menu.${item.id}`);
+                    //  console.log(item.id)
+                    // console.log(item.id + " -> " + item.text)
+                    if (item.items) {
+                        item.items.forEach(subItem => {
+                            if (subItem.id in i18next.t("menu", { returnObjects: true })) {
+                                subItem.text = i18next.t(`menu.${subItem.id}`);
+                            }
+                            // console.log(subItem.id + " -> " + subItem.text)
+                            if (subItem.items) {
+                                subItem.items.forEach(subSubItem => {
+                                    if (subSubItem.id in i18next.t("menu", { returnObjects: true })) {
+                                        subSubItem.text = i18next.t(`menu.${subSubItem.id}`);
+                                    }
+                                    //  console.log(subSubItem.id + " -> " + subSubItem.text)
+                                });
+                            }
+                        });
+                    }
+                }
+
+            });
+
+            mainMenu.refresh(); // Apply the changes
+        }
+
+        var groupEdges = true;
+        var allowNestedEdgeCollapse = true;
+        function getEdgeOptions() {
+            var groupEdgesOfSameTypeOnCollapse = groupEdges;
+            var allowNestedEdgeCollapse = allowNestedEdgeCollapse;
+
+            return { groupEdgesOfSameTypeOnCollapse: groupEdgesOfSameTypeOnCollapse, allowNestedEdgeCollapse: allowNestedEdgeCollapse };
+        }
+
+        function updateFormsTranslations() {
+            mainMenu.items.forEach(item => {
+
+                if (item.id in i18next.t("menu", { returnObjects: true })) {
+                    item.text = i18next.t(`menu.${item.id}`);
+                    //  console.log(item.id)
+                    // console.log(item.id + " -> " + item.text)
+                    if (item.items) {
+                        item.items.forEach(subItem => {
+                            if (subItem.id in i18next.t("menu", { returnObjects: true })) {
+                                subItem.text = i18next.t(`menu.${subItem.id}`);
+                            }
+                            // console.log(subItem.id + " -> " + subItem.text)
+                            if (subItem.items) {
+                                subItem.items.forEach(subSubItem => {
+                                    if (subSubItem.id in i18next.t("menu", { returnObjects: true })) {
+                                        subSubItem.text = i18next.t(`menu.${subSubItem.id}`);
+                                    }
+                                    //  console.log(subSubItem.id + " -> " + subSubItem.text)
+                                });
+                            }
+                        });
+                    }
+                }
+
+            });
+
+            mainMenu.refresh(); // Apply the changes
+        }
+
+        var groupEdges = true;
+        var allowNestedEdgeCollapse = true;
+        function getEdgeOptions() {
+            var groupEdgesOfSameTypeOnCollapse = groupEdges;
+            var allowNestedEdgeCollapse = allowNestedEdgeCollapse;
+
+            return { groupEdgesOfSameTypeOnCollapse: groupEdgesOfSameTypeOnCollapse, allowNestedEdgeCollapse: allowNestedEdgeCollapse };
+        }
+
+
+        const script = document.createElement("script");
+        script.src = "lib/cytoscape-cola.js";
+        script.onload = function () {
+            console.log("Cytoscape-Cola loaded successfully");
+            cytoscape.use(cytoscapeCola);
+        };
+        document.head.appendChild(script);
+
+        const script2 = document.createElement("script");
+        script2.src = "lib/cytoscape-dagre.js";
+        script2.onload = function () {
+            console.log("Cytoscape-Dagre loaded successfully");
+            cytoscape.use(cytoscapeDagre);
+        };
+
+        document.head.appendChild(script2);
+        function applyDagreLayout(rankDir = 'TB') { // Default to 'Top-Bottom'
+            let layout = cy.layout({
+                name: 'dagre',
+                rankDir: rankDir, // Accepts 'TB' (top-bottom), 'LR' (left-right), etc.
+                animate: true
+            });
+
+            layout.run(); // Apply layout
+        }
+
+        var groupEdges = true;
+        var allowNestedEdgeCollapse = true;
+
+        // Function to toggle the icon between checked and unchecked states
+
+        function toggleIcon(itemId) {
+            let item = w2ui.toolbar.get(itemId);
+            let newIcon = item.icon === 'fa fa-square' ? 'fa fa-check-square' : 'fa fa-square'; // Toggle between square and check-square
+
+            // Update the item with the new icon
+            w2ui.toolbar.set(itemId, { icon: newIcon });
+        }
+        // Fonction pour changer le layout
+        function changeLayout(layoutName) {
+            cy.layout({ name: layoutName, animate: true, fit: true, padding: 10 }).run();
+        }
+
+        // Function for reading files - will be updated with a more sophisticated one
+        function readTxtFile(file, cb) {
+            const fileReader = new FileReader();
+            fileReader.onload = () => {
+                try {
+                    cb(fileReader.result);
+                } catch (error) {
+                    logger.error('Given file is not suitable.', error);
+                }
+            };
+            fileReader.onerror = (error) => {
+                logger.error('File could not be read!', error);
+                fileReader.abort();
+            };
+            fileReader.readAsText(file);
+        }
+
+        function getMenuItems() {
+            return [
+
+                {
+                    type: "menu", id: "files", text: i18next.t("menu.files"),
+                    items: [
+                        { id: "newcatalog", text: i18next.t("menu.newcatalog") },
+                        { id: "loadcatalogjson", text: i18next.t("menu.loadcatalogjson") },
+                        { id: "savecatalogjson", text: i18next.t("menu.savecatalogjson") },
+                        { type: "break" },
+                        { id: "loadgraphssr", text: i18next.t("menu.loadgraphssr") },
+                        { id: "savegraphssr", text: i18next.t("menu.savegraphssr") },
+                        { type: "break" },
+                        { id: "loadcsvssr", text: i18next.t("menu.loadcsvssr") },
+                        { id: "savecsvssr", text: i18next.t("menu.savecsvssr") },
+                    ]
+                },
+                {
+                    type:'menu',id:'asd2019',text:i18next.t('menu.asd2019'),
+                    items:[{id:'loadasd',text:i18next.t('menu.loadasd')}]
+                },
+                {
+                    type:'menu',id:'radartools',text:i18next.t('menu.radartools'),
+                    items:[
+                        {id:'createdraft',text:i18next.t('menu.createdraft')},
+                        {id:'publishcatalogrevision',text:i18next.t('menu.publishcatalogrevision')},
+                        {id:'exportclientroadmap',text:i18next.t('menu.exportclientroadmap')},
+                        {id:'archivecatalogrevision',text:i18next.t('menu.archivecatalogrevision')},
+                        {id:'selectcatalogrevision',text:i18next.t('menu.selectcatalogrevision')},
+                        {id:'renameradar',text:i18next.t('menu.renameradar')},
+                        {id:'renamerevision',text:i18next.t('menu.renamerevision')},
+                        {id:'standardregistry',text:i18next.t('menu.standardregistry')},
+                        {id:'createcatalogblip',text:i18next.t('menu.createcatalogblip')},
+                        {id:'createstandardblip',text:i18next.t('menu.createstandardblip')},
+                        {type:'break'},
+                        {id:'modeLocked',text:i18next.t('menu.modeLocked')},
+                        {id:'modeGrab',text:i18next.t('menu.modeGrab')},
+                        {id:'modeChange',text:i18next.t('menu.modeChange')},
+                        {type:'break'},
+                        {id:'showEditor',text:i18next.t('menu.showEditor')}
+                    ]
+                },
+                {
+                    type: "menu", id: "expandCollapse", text: i18next.t("menu.expandCollapse"), hidden: true, icon: "fa fa-object-group",
+                    items: [
+                        {
+                            id: "nodes", text: i18next.t("menu.nodes"),
+                            items: [
+                                { id: "expandAllNodes", text: i18next.t("menu.expandAllNodes") },
+                                { id: "collapseAllNodes", text: i18next.t("menu.collapseAllNodes") },
+                                { id: "expandSelectedNodes", text: i18next.t("menu.expandSelectedNodes") },
+                                { id: "collapseSelectedNodes", text: i18next.t("menu.collapseSelectedNodes") },
+                                { id: "expandSelectedNodesRecursively", text: i18next.t("menu.expandSelectedNodesRecursively") },
+                                { id: "collapseSelectedNodesRecursively", text: i18next.t("menu.collapseSelectedNodesRecursively") },
+                            ]
+                        },
+                        {
+                            id: "edges", text: i18next.t("menu.edges"),
+                            items: [
+                                { id: "expandAllEdges", text: i18next.t("menu.expandAllEdges") },
+                                { id: "collapseAllEdges", text: i18next.t("menu.collapseAllEdges") },
+                                { id: "expandSelectedEdges", text: i18next.t("menu.expandSelectedEdges") },
+                                { id: "collapseSelectedEdges", text: i18next.t("menu.collapseSelectedEdges") },
+                                { id: "collapseEdgesBetweenNodes", text: i18next.t("menu.collapseEdgesBetweenNodes") },
+                                { id: "expandEdgesBetweenNodes", text: i18next.t("menu.expandEdgesBetweenNodes") },
+
+                            ]
+                        }
+                    ]
+                },
+                {
+                    type: 'menu-check', id: 'rendering', text: i18next.t("menu.rendering"), hidden: true, icon: 'fa fa-eye', disabled: false,
+                    items: [
+                        { text: '-- Node' },
+
+                        { id: 'renderingnodeirishortname', text: i18next.t("menu.renderingnodeirishortname"), disabled: true },
+                        { id: 'noderenderinglabel', text: i18next.t("menu.noderenderinglabel"), disabled: true },
+                        { id: 'noderenderingprefix', text: i18next.t("menu.noderenderingprefix"), disabled: true },
+                        { id: 'noderenderingannotation', text: i18next.t("menu.noderenderingannotation"), disabled: true },
+                        { id: 'noderenderingcustom', text: i18next.t("menu.noderenderingcustom"), disabled: true }
+
+                        ,
+                        { text: '-- Edge' },
+
+                        { id: 'edgeirishortName', text: i18next.t("menu.edgeirishortName"), disabled: true },
+                        { id: 'edgerenderingprefixName', text: i18next.t("menu.edgerenderingprefixName"), disabled: true },
+                        { id: 'edgerenderinglabel', text: i18next.t("menu.edgerenderinglabel"), disabled: true },
+                        { id: 'edgerenderingannotationProperty', text: i18next.t("menu.edgerenderingannotationProperty"), disabled: true },
+                        { id: 'edgerenderingcustom', text: i18next.t("menu.edgerenderingcustom"), disabled: true }
+                    ]
+                },
+                {
+                    type: 'menu', id: 'showhidegrabifydelete', text: i18next.t("menu.showhidegrabifydelete"), icon: 'fa fa-eye',
+                    items: [
+                        {
+                            id: 'showhide', text: i18next.t("menu.showhide"),
+                            items: [
+                                { id: 'hideselected', text: i18next.t("menu.hideselected") },
+                                { id: 'hidenonselected', ttext: i18next.t("menu.hidenonselected") },
+                                { id: 'unhideall', text: i18next.t("menu.unhideall") },
+                            ]
+                        },
+                        {
+                            id: 'grabifyungrabify', text: i18next.t("menu.ungrabifyselected"),
+                            items: [
+                                { id: 'ungrabifyselected', text: i18next.t("menu.ungrabifyselected") },
+                                { id: 'ungrabifynonselected', text: i18next.t("menu.ungrabifynonselected") },
+                                { id: 'grabifyselected', text: i18next.t("menu.grabifyselected") },
+                                { id: 'grabifynonselect', text: i18next.t("menu.grabifynonselect") }
+                            ]
+                        },
+                        {
+                            id: 'lockunlock', text: i18next.t("menu.lockunlock"),
+                            items: [
+                                { id: 'lockselected', text: i18next.t("menu.lockselected") },
+                                { id: 'locknonselected', text: i18next.t("menu.locknonselected") },
+                                { id: 'unlockselected', text: i18next.t("menu.unlockselected") },
+                                { id: 'unlocknonselect', text: i18next.t("menu.unlocknonselect") }
+                            ]
+                        },
+                        {
+                            id: 'removerestore', text: i18next.t("menu.removerestore"),
+                            items: [
+                                { id: 'removeselected', text: i18next.t("menu.removeselected") },
+                                { id: 'removeunselected', text: i18next.t("menu.removeunselected") },
+                                { id: 'removeall', text: i18next.t("menu.removeall") },
+                                { id: 'restore', text: i18next.t("menu.restore") },
+
+                            ]
+                        }
+                    ]
+                },
+                {
+                    type: 'menu-check', id: 'display', text: i18next.t('display'), hidden: true, icon: 'fa fa-eye', disabled: false,
+                    items: [
+                        { id: 'showowlconstructs', text: i18next.t('showowlconstructs'), disabled: true },
+                        { id: 'showisa', text: i18next.t('showisa'), disabled: true },
+                        { id: 'showdomainrange', text: i18next.t('showdomainrange'), disabled: true },
+                        { id: 'showlabelasnode', text: i18next.t('showlableasnode'), disabled: true },
+                        { id: 'showlabelasedge', text: i18next.t('showlabelasedge'), disabled: true },
+                        { id: 'showannotationasnode', text: i18next.t('showannotationasnode'), disabled: true },
+                        { id: 'showannotationasedge', text: i18next.t('showannotationasedge'), disabled: true }
+
+                    ],
+                },
+                {
+                    type: 'menu-check', id: 'viewpoint', text: i18next.t('viewpoint'), hidden: true, icon: 'fa fa-eye', disabled: false,
+                    items: [
+                        { id: 'individual', text: i18next.t('individual'), disabled: true },
+                        { id: 'ontology', text: 'ontology', disabled: true },
+                        { id: 'sop', text: 'Subject Object Properties', disabled: true },
+                        { id: 'data', text: 'Data', disabled: true },
+                    ]
+                },
+                {
+                    type: "menu-radio", id: "layout", text: i18next.t("menu.layout"), hidden: true, icon: "fa fa-eye",
+                    selected: "fcose",
+                    items: [
+                        { id: "fcose", text: i18next.t("menu.fcose") },
+                        { id: "grid", text: i18next.t("menu.grid") },
+                        { id: "circle", text: i18next.t("menu.circle") },
+                        { id: "cose", text: i18next.t("menu.cose") },
+                        { id: "breadthfirst", text: i18next.t("menu.breadthfirst") },
+                        { id: "concentric", text: i18next.t("menu.concentric") },
+                        { id: "random", text: i18next.t("menu.random") },
+                        { id: "cola", text: i18next.t("menu.cola") },
+                        { id: "dagre", text: i18next.t("menu.dagre") }
+                    ]
+                },
+                {
+                    type: "menu-radio", id: "language", text: i18next.t("menu.language"), icon: "fa fa-eye",
+                    selected: "fr",
+                    items: [
+                        { id: "fr", text: i18next.t("fr") },
+                        { id: "en", text: i18next.t("en") },
+                    ]
+
+                },
+                { type: 'spacer' },
+            ];
+        }
+        function initializeMainMenu() {
+            if (w2ui.mainMenu) return; // Prevent multiple initializations
+            mainMenu = new w2toolbar({
+                name: "mainMenu",
+                items: getMenuItems(),
+                onClick: function (event) {
+                    handleMenuAction(event); // Handle menu actions
+                }
+            });
+            updateToolbarTranslations()
+            return mainMenu;
+        }
+
+
+        // CSV SSR tabular v0: preserve visible Cytoscape node properties, not full graph layout.
+        function exportVisibleRadarCSV(cytoscapeGraph, papa) {
+            const nodes = cytoscapeGraph.nodes(':visible').toArray();
+            const rows = nodes.map(node => ({ ...node.data() }));
+            const fields = [...new Set(rows.flatMap(row => Object.keys(row)))];
+            if (rows.length === 0 || fields.length === 0) return '';
+            const data = rows.map(row => fields.map(field => {
+                const value = row[field];
+                if (value == null) return '';
+                const text = typeof value === 'object' ? JSON.stringify(value) : String(value);
+                // Prevent CSV formula execution when opening exported data in spreadsheets.
+                return /^[=+\-@\t\r]/.test(text) ? "'" + text : text;
+            }));
+            return papa.unparse({ fields, data }, { quotes: true });
+        }
+
+        // A single direct W2UI item callback owns draft creation.
+        // The toolbar-wide click switch deliberately does not invoke it again.
+        function handleCreateOrOpenDraft() {
+            try {
+                const result = window.__radarCatalogUI.createOrOpenDraft(w2ui.toolbar, cy, drawSelectedWorkgroup);
+                console.log('Draft:', result);
+                w2alert(window.__radarRevisionDialogs.t(result.action==='created' ? 'draftCreated' : 'draftOpened'));
+            } catch (error) {
+                console.error('Draft creation rejected:', error);
+                w2alert(window.__radarRevisionDialogs.t('draftFailure')+': '+error.message);
+            }
+        }
+
+        // C1 deliberately creates a catalog with its first empty draft in one transaction.
+        // Canceling any prompt leaves the workspace unchanged.
+        function handleNewCatalog() {
+            const labels = i18next.language?.startsWith('fr')
+                ? ['Nom du catalogue', "Nom de l'organisation", 'Nom du portefeuille', 'Nom du premier radar']
+                : ['Catalog name', 'Organization name', 'Portfolio name', 'First radar name'];
+            const values = [];
+            for (const label of labels) {
+                const value = window.prompt(label);
+                if (value === null) return;
+                if (!value.trim()) { w2alert(label + ' : valeur obligatoire'); return; }
+                values.push(value);
+            }
+            try {
+                const result = window.__radarCatalogUI.createNewCatalog({
+                    catalogTitle: values[0], organizationName: values[1],
+                    portfolioName: values[2], radarTitle: values[3]
+                }, w2ui.toolbar, cy, drawSelectedWorkgroup);
+                console.log('New catalog:', result);
+                w2alert('Catalog created in memory: ' + result.catalogTitle + '. Use Files → Save JSON catalog to download it.');
+            } catch (error) {
+                console.error('New catalog rejected:', error);
+                w2alert('New catalog rejected: ' + error.message);
+            }
+        }
+
+        function initializeToolbar() {
+            const workingGroupMenuItems = getWorkingGroupsWithCount().map(group => ({
+                id: group.id, // Unique identifier
+                text: group.text, // Display name
+                count: group.count
+            }));
+
+            // Set the title separately by updating the panel's `toolbar` or using custom HTML
+            // The legacy title element was removed when the W2UI explorer replaced the sidebar.
+            return new w2toolbar({
+                box: '#toolbar-container',
+                name: 'toolbar',
+                items: [
+                    {
+                        type: 'label',
+                        id: 'item1',
+                        text: 'ASD SSG 2019 Radars',
+                        tooltip: 'Working groups Radars in 2019',
+                    },
+                    { type: 'new-line' },
+                    {
+                        type: 'menu-radio',
+                        id: 'item2',
+                        icon: 'fa fa-bullseye',
+                        tooltip: 'You can select blips per Working Group(WG)from hardoded historic data.<br/>The number of standards is indicated.<br/>nly those with a valid value for both ring and quadrant will be displayed.',
+                        text(item) {
+                            // Get the full item object from the toolbar
+                            let fullItem = w2ui.toolbar.get('item2');
+                            let selectedId = fullItem?.selected; // Get selected ID
+                            let selectedItem = fullItem?.items.find(i => i.id === selectedId); // Find the selected item
+
+                            if (selectedItem) {
+                                return `WG: ${selectedItem.text}`; // Show count for selected WG
+                            } else {
+                                return 'Select Group'; // Default text if no selection
+                            }
+                        },
+                        selected: null, // Active workspace starts empty; ASD is explicit-load only. // Default to first item
+                        items: workingGroupMenuItems
+                    },
+                    { type: 'new-line' },
+                   
+                    {
+                        type: 'label',
+                        id: 'item3',
+                        text: 'Change Mode',
+                        tooltip: 'For locking, allowing grabbing in the same zone or grabbing with zone changes.',
+                    },
+                    { type: 'new-line' },
+                    {
+                        type: 'menu-radio', id: 'item4',
+                        selected: 'locked',
+                        items: [
+                            { id: 'locked', text: '🔒 Locked' },
+                            { id: 'grabon', text: '✋ Grab On' },
+                            { id: 'changeon', text: '🔄 Change On' }
+                        ],
+                        text(item) {
+                            let text = item.selected;
+                            let el = this.get('item4:' + item.selected);
+                            return el.text;
+                        },
+
+                    },
+                    { type: 'new-line' },
+                    {
+                        type: 'label', id: 'searchStandard', text: 'Search ISO Standard',
+                        tooltip: 'Searching ISO standards according to some research criteria',
+                    },
+                    { type: 'new-line' },
+                    {
+                        type: 'input', id: 'ICS', text: 'ICS: ', value: '', placeholder: 'ISO Class for Standards',
+                        input: {
+                            style: 'width: 100px'
+                        }
+                    },
+                    { type: 'new-line' },
+                    {
+                        type: 'input', id: 'ITC', text: 'ITC: ', value: '', placeholder: 'ISO Technical Committee',
+                        input: {
+                            style: 'width: 100px'
+                        }
+                    },
+                    { type: 'new-line' },
+                    {
+                        type: 'input', id: 'keywords', text: 'Keywords: ', value: '', placeholder: 'Keywords separated with commas for textual research',
+                        input: {
+                            style: 'width: 150px'
+                        }
+                    },
+                    { type: 'new-line' },
+                    {
+                        type: 'input', id: 'filterfor', text: 'applied to: ', value: '', placeholder: 'list of fields',
+                        input: {
+                            style: 'width: 60px'
+                        }
+                    },
+
+                    { type: 'button', id: 'createdraft', text: '✏️ ' + i18next.t('menu.createdraft'),
+                      onClick: () => handleCreateOrOpenDraft() },
+                    { type: 'new-line', hidden: true },
+                    { type: 'new-line', hidden: true },
+                    { type: 'button', id: 'switch', text: '🔄' + i18next.t("menu.switch"), hidden: true },
+                    { type: 'new-line', hidden: true },
+                    { type: 'new-line', hidden: true },
+                    {
+                        type: 'label', id: 'semanticlandscape', text: i18next.t("menu.semanticlandscape"),
+                        tooltip: 'Strategic Standardization Landscape ',
+                        hidden: true
+                    },
+
+
+
+                ],
+                // Place onClick *outside* of the items array
+                onChange(event) {
+                    console.log('ICS field changed: ', event.target.value);
+                    // Add custom logic for handling change event
+                },
+                onBlur(event) {
+                    console.log('ICS field left (blurred)');
+                    // Add custom logic for handling blur (leave) event
+                },
+
+                onClick(event) {
+                    const target = event.target.split(':')[0]; // Get the part before the colon
+                    const subTarget = event.target.split(':')[1];
+                    // Protect published/archived revisions at the existing W2UI action boundary.
+                    const readonlyToolbarAllowed = ['item2', 'createdraft', 'newcatalog', 'loadcatalogjson',
+                        'savecatalogjson', 'savegraphssr', 'savecsvssr'];
+                    const safeLockedMode = target === 'item4' && subTarget === 'locked';
+                    if (window.__radarCatalogUI?.isReadOnly() &&
+                        !readonlyToolbarAllowed.includes(target) && !safeLockedMode) {
+                        offerDraftForReadOnlyAction();
+                        return;
+                    }
+                    switch (target) {
+                        case 'item2': // Handle workgroup selection
+                            if (subTarget) {
+                                drawSelectedWorkgroup(window.__radarCatalogUI?.resolve(subTarget) || subTarget)
+                            }
+                            break;
+                        case 'item4': // Handle workgroup selection
+                            if (subTarget) {
+                                switch (subTarget) {
+                                    case 'locked':
+                                        cy.nodes().ungrabify();
+                                        allowZoneChanges = false
+                                        break;
+                                    case 'grabon':
+                                        cy.nodes().grabify();
+                                        allowZoneChanges = false
+                                        break;
+                                    case 'changeon':
+                                        cy.nodes().grabify();
+                                        allowZoneChanges = true
+                                        break;
+                                }
+                            }
+                            break;
+
+                        case 'createdraft':
+                            // Handled once by the item's onClick, never twice here.
+                            break;
+                        case 'newcatalog':
+                            handleNewCatalog();
+                            break;
+                        case 'loadcatalogjson':
+                            window.__radarCatalogUI.openFile();
+                            break;
+                        case 'savecatalogjson':
+                            try {
+                                if(window.__radarWorkspaceExplorer?.status?.().sources.some(s=>s.kind==='asd'))
+                                    throw Error('ASD workspace conversion to catalog JSON is not supported yet; export refused to avoid dropping ASD radars.');
+                                Promise.resolve(window.__radarCatalogPersistence.download(cy)).catch(error => {
+                                    console.error('Catalog export rejected:', error);
+                                    w2alert('Catalog export rejected: ' + error.message);
+                                });
+                            } catch (error) {
+                                console.error('Catalog export rejected:', error);
+                                w2alert('Catalog export rejected: ' + error.message);
+                            }
+                            break;
+                        case 'loadcsvssr': {
+                            // Dedicated one-shot picker: do not reuse #inputfile (its existing handler can clear the graph).
+                            if (typeof Papa === 'undefined' || typeof Papa.parse !== 'function' ||
+                                !window.__radarCSVSSR || typeof cy === 'undefined' || !cy) {
+                                w2alert('CSV SSR importer is not ready.');
+                                break;
+                            }
+                            const picker = document.createElement('input');
+                            picker.type = 'file';
+                            picker.accept = '.csv,text/csv';
+                            picker.style.display = 'none';
+                            document.body.appendChild(picker);
+                            picker.onchange = () => {
+                                const file = picker.files?.[0];
+                                picker.remove();
+                                if (!file) return;
+                                if (file.size > 10 * 1024 * 1024) {
+                                    w2alert('CSV SSR file exceeds the 10 MB limit.');
+                                    return;
+                                }
+                                Papa.parse(file, {
+                                    header: true,
+                                    beforeFirstChunk: chunk => chunk.replace(/^\uFEFF/, ''),
+                                    skipEmptyLines: 'greedy',
+                                    complete: (result) => {
+                                        try {
+                                            const existing = cy.nodes().map(n => ({ ...n.data() }));
+                                            const plan = window.__radarCSVSSR.prepareCSVSSRImport(result, existing);
+                                            // No silent replacement: ask before any live graph mutation.
+                                            const summary = `CSV SSR: ${plan.total} rows, ${plan.additions.length} additions, ` +
+                                                `${plan.updates.length} updates, ${plan.unchanged.length} unchanged. ` +
+                                                `Merge into the current graph? No nodes or edges will be deleted.`;
+                                            w2confirm(summary).yes(() => {
+                                                try {
+                                                    const fresh = window.__radarCSVSSR.prepareCSVSSRImport(
+                                                        result, cy.nodes().map(n => ({ ...n.data() })));
+                                                    if (fresh.additions.length !== plan.additions.length ||
+                                                        fresh.updates.length !== plan.updates.length) {
+                                                        w2alert('Graph changed during confirmation; please retry import.');
+                                                        return;
+                                                    }
+                                                    for (const item of fresh.additions) {
+                                                        if (!Number.isFinite(item.data.x) || !Number.isFinite(item.data.y)) {
+                                                            w2alert('New CSV SSR nodes require numeric x and y coordinates.');
+                                                            return;
+                                                        }
+                                                    }
+                                                    const applied = window.__radarCSVSSR.applyCSVSSRImport(fresh, cy);
+                                                    w2alert(`CSV SSR merge complete: ${applied.added} added, ${applied.updated} updated, ${applied.unchanged} unchanged.`);
+                                                } catch (error) {
+                                                    console.error('CSV SSR merge failed:', error);
+                                                    w2alert(`CSV SSR merge failed: ${error.message}`);
+                                                }
+                                            });
+                                        } catch (error) {
+                                            console.error('CSV SSR validation failed:', error);
+                                            w2alert(`CSV SSR rejected: ${error.message}`);
+                                        }
+                                    },
+                                    error: (error) => {
+                                        console.error('CSV SSR parse failed:', error);
+                                        w2alert('CSV SSR file could not be read.');
+                                    }
+                                });
+                            };
+                            picker.click();
+                            break;
+                        }
+                        case 'savecsvssr': {
+                            if (typeof cy === 'undefined' || !cy || typeof Papa === 'undefined' || typeof Papa.unparse !== 'function') {
+                                w2alert('Radar or CSV library unavailable.');
+                                break;
+                            }
+                            const csv = exportVisibleRadarCSV(cy, Papa);
+                            if (!csv) {
+                                w2alert('No visible radar nodes to export.');
+                                break;
+                            }
+                            const blob = new Blob(['\uFEFF', csv], { type: 'text/csv;charset=utf-8' });
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = 'radar-blips.csv';
+                            document.body.appendChild(link);
+                            link.click();
+                            link.remove();
+                            setTimeout(() => URL.revokeObjectURL(url), 1000);
+                            break;
+                        }
+                        case 'savegraphssr':
+                            // downloadCompleteRadarData()
+                            if (typeof cy === 'undefined' || !cy) {
+                                console.warn("Cytoscape instance (cy) is not initialized.");
+                                w2alert("Graph non initialisé. Impossible de sauvegarder.");
+                                break;
+                            }
+                            var fileNameToSave = "radar.ssr";
+                            w2prompt({
+                                label: 'Enter value',
+                                value: fileNameToSave,
+                                attrs: 'size=6'
+                            })
+                                .change((event) => {
+                                    fileNameToSave = event.detail.originalEvent.target.value;
+                                })
+                                .ok(() => {
+                                    var visibleElements = cy.elements(':visible'); // Sélectionne uniquement les éléments visibles
+                                    api.saveJson(visibleElements, fileNameToSave);
+                                });
+                            break;
+                        case 'loadgraphssr':
+                            const el = document.getElementById('load-from-inp');
+                            el.value = '';
+                            el.click();
+                            break;
+                    }
+                }
+            });
+        }
+
+
+
+        // Read-only is not a dead end: explicitly offer to derive a new working revision.
+        // This NEVER edits a published/archived snapshot and requires user confirmation.
+        function offerDraftForReadOnlyAction() {
+            const group = window.__radarRevisionSession?.status?.().activeGroup;
+            const revision = window.__radarCatalogAdapter?.getRevision?.(group);
+            if (!revision || revision.status === 'draft') {
+                w2alert('Cette action nécessite une révision de travail (draft).');
+                return;
+            }
+            if (typeof window.confirm !== 'function') {
+                w2alert('Cette révision est en lecture seule. Outils du radar → Créer / ouvrir un radar de travail.');
+                return;
+            }
+            if (window.confirm('Révision ' + revision.status + ' : son contenu est protégé.\n' +
+                'Créer ou ouvrir une NOUVELLE révision draft pour poursuivre le travail ?\n' +
+                'La publication actuelle restera inchangée.')) {
+                handleCreateOrOpenDraft();
+            }
+        }
+
+        function handleMenuAction(event) {
+            // The main Files menu is the sole visible entry point for file actions.
+            // Reuse the existing toolbar action handler without duplicating IO code.
+            // The toolbar guard protects graph mutations. Exporting catalog JSON is read-only
+            // and must remain available after publishing or archiving a revision.
+            const fileActions = ['newcatalog', 'loadcatalogjson', 'savecatalogjson',
+                'loadgraphssr', 'savegraphssr', 'loadcsvssr', 'savecsvssr'];
+            if (typeof event.target === 'string' && event.target.startsWith('files:')) {
+                const fileAction = event.target.slice('files:'.length);
+                if (fileActions.includes(fileAction)) {
+                    // Check BEFORE delegation: the Files submenu otherwise bypasses
+                    // the top-level read-only policy entirely.
+                    if (window.__radarCatalogUI?.isReadOnly() &&
+                        !['savecatalogjson', 'newcatalog'].includes(fileAction)) {
+                        offerDraftForReadOnlyAction();
+                        return;
+                    }
+                    if (!w2ui.toolbar || typeof w2ui.toolbar.onClick !== 'function') {
+                        w2alert(i18next.t('menu.files') + ': toolbar unavailable');
+                        return;
+                    }
+                    w2ui.toolbar.onClick({ target: fileAction });
+                }
+                return;
+            }
+            // Top-level menu activation is navigation, not a graph mutation.
+            // Never intercept a parent menu before the user can select permitted actions.
+            if (typeof event.target === 'string' && !event.target.includes(':')) return;
+            // Consultation remains usable for published revisions. These cases
+            // have no graph-data mutations; layout/import/graph editing stay blocked.
+            const readonlyMenuAllowed = ['asd2019:loadasd', 'files:newcatalog', 'files:savecatalogjson', 'radartools:createdraft',
+                'radartools:modeLocked', 'radartools:showEditor', 'radartools:publishcatalogrevision', 'radartools:exportclientroadmap', 'radartools:archivecatalogrevision', 'radartools:selectcatalogrevision', 'radartools:renameradar', 'radartools:renamerevision', 'radartools:standardregistry', 'view:nodeRendering', 'view.edgeRendering',
+                'language:fr', 'language:en', 'owl:exportjson', 'owl:savegraph'];
+            if (window.__radarCatalogUI?.isReadOnly() &&
+                !readonlyMenuAllowed.includes(event.target)) {
+                offerDraftForReadOnlyAction();
+                return;
+            }
+            switch (event.target) {
+                case 'asd2019:loadasd':
+                    try {
+                        window.__radarWorkspaceExplorer.loadASD(getWorkingGroupsWithCount());
+                    } catch(e) {w2alert(e.message);}
+                    break;
+                case 'radartools:selectcatalogrevision':
+                    try { window.__radarCatalogUI.openRevisionPicker(); }
+                    catch(error) { console.error('Revision selection rejected:',error); w2alert(error.message); }
+                    break;
+                case 'radartools:renameradar':
+                case 'radartools:renamerevision':
+                    try { window.__radarRadarAdmin.open(event.target.endsWith('renamerevision')?'revision':'radar'); }
+                    catch(error) { console.error('Radar administrative edit rejected:',error); w2alert(error.message); }
+                    break;
+                case 'radartools:standardregistry':
+                    try { window.__radarStandardsPanel.open(); }
+                    catch(error) { console.error('Standard registry rejected:',error); w2alert(error.message); }
+                    break;
+                case 'radartools:createdraft':
+                    handleCreateOrOpenDraft();
+                    break;
+                case 'radartools:exportclientroadmap': {
+                    // User-initiated export: published revision only.
+                    // Nothing is published to a server or stored in IndexedDB.
+                    Promise.resolve().then(async () => {
+                        const group=window.__radarRevisionSession?.status?.().activeGroup;
+                        const revision=window.__radarCatalogAdapter?.getRevision?.(group);
+                        if(!group || !revision || revision.status!=='published')
+                            throw Error('Sélectionner une révision publiée avant export.');
+                        const persistence=window.__radarCatalogPersistence;
+                        if(!persistence?.ownsRevision?.(group,revision.revisionId))
+                            throw Error('Révision absente du catalogue actif.');
+
+                        // Reuse the authoritative Creator catalogue.
+                        // The projection emits ONLY the selected revision,
+                        // its referenced standards and assessments.
+                        const source=persistence.build(cy);
+                        const {createPublishedRoadmapProjection}=await import(
+                            './src/domain/roadmap-published-projection.mjs'
+                        );
+                        const output=createPublishedRoadmapProjection(
+                            source,revision.revisionId
+                        );
+                        const blob=new Blob(
+                            [JSON.stringify(output,null,2)+'\\n'],
+                            {type:'application/json;charset=utf-8'}
+                        );
+                        const url=URL.createObjectURL(blob);
+                        try {
+                            const link=document.createElement('a');
+                            link.href=url;
+                            link.download='roadmap-client.json';
+                            document.body.appendChild(link);
+                            link.click();
+                            link.remove();
+                        } finally {
+                            setTimeout(()=>URL.revokeObjectURL(url),1000);
+                        }
+                    }).catch(error => {
+                        console.error('Client roadmap export rejected:',error);
+                        w2alert('Export Client refusé : '+error.message);
+                    });
+                    break;
+                }
+                case 'radartools:publishcatalogrevision':
+                case 'radartools:archivecatalogrevision': {
+                    const action=event.target.endsWith('publishcatalogrevision')?'publish':'archive';
+                    const selectedGroup=window.__radarRevisionSession?.status?.().activeGroup;
+                    const activeRevision=window.__radarCatalogAdapter?.getRevision?.(selectedGroup);
+                    const required=action==='publish'?'draft':'published';
+                    if (!activeRevision) {
+                        w2alert(window.__radarRevisionDialogs.t('noRevision'));
+                        break;
+                    }
+                    if (activeRevision.status!==required) {
+                        w2alert(window.__radarRevisionDialogs.t(action==='publish' ? 'onlyDraft' : 'onlyPublished'));
+                        break;
+                    }
+                    window.__radarRevisionDialogs.confirmLifecycle(action, () => {
+                        try {
+                            const result=window.__radarCatalogUI.transitionActiveRevision(action,w2ui.toolbar,cy);
+                            w2alert(window.__radarRevisionDialogs.t('remember'));
+                        } catch(error) {
+                            console.error('Revision lifecycle rejected:',error);
+                            w2alert(window.__radarRevisionDialogs.t('failed')+': '+error.message);
+                        }
+                    });
+                    break;
+                }
+
+                case 'radartools:createcatalogblip':
+                case 'radartools:createstandardblip':
+                    try {
+                        window.__radarCatalogCreateForm.open(cy, event.target.endsWith('createstandardblip') ? 'new' : 'existing');
+                    } catch (error) {
+                        console.error('Catalog creation form rejected:', error);
+                        w2alert(error.message);
+                    }
+                    break;
+                case 'radartools:modeLocked':
+                case 'radartools:modeGrab':
+                case 'radartools:modeChange': {
+                    const mapped={modeLocked:'locked',modeGrab:'grabon',modeChange:'changeon'}[event.target.split(':')[1]];
+                    w2ui.toolbar.onClick({target:'item4:'+mapped});
+                    break;
+                }
+                case 'radartools:showEditor': {
+                    const editor=document.getElementById('toolbar-container');
+                    if(editor) editor.hidden=!editor.hidden;
+                    break;
+                }
+                case 'radars:plm':
+                    // loading ASD SSG Blips filtered by"working_group": "PLM",
+                    var workingGroup = "PLM"
+                    // Filter out the blips that match the valid rings and quadrants
+                    const validRings = ["Adopted", "Candidate", "Track"];
+                    const validQuadrants = ["Available", "Monitored", "Participated", "Developed"];
+
+                    var RadarInputs = ASD_SSG_Blips.filter(function (blip) {
+                        return blip.working_group == workingGroup;
+                    })
+                    var filteredBlips = RadarInputs.filter(d =>
+                        validRings.includes(d.ring) && validQuadrants.includes(d.quadrant));
+                    drawSelectedWorkgroup(workingGroup)
+                    break;
+                case 'view:nodeRendering':
+                    break;
+                case "view.edgeRendering":
+                    console.log("createEdgeRenderingSubMenu();")
+                    break;
+                case 'files:open':
+                    const file = document.getElementById('inputfile');
+                    file.value = '';
+                    file.click();
+                    break;
+                case 'owl:save':
+
+                    break;
+                case 'owl:loadgraph':
+                    const el = document.getElementById('load-from-inp');
+                    el.value = '';
+                    el.click();
+                    break;
+                case 'owl:exportjson':
+                    exportVisibleGraphToFile(cy);
+                    break;
+                case 'owl:savegraph':
+                    if (typeof cy === 'undefined' || !cy) {
+                        console.warn("Cytoscape instance (cy) is not initialized.");
+                        w2alert("Graph non initialisé. Impossible de sauvegarder.");
+                        break;
+                    }
+                    var fileNameToSave = "myGraph.archicg";
+                    w2prompt({
+                        label: 'Enter value',
+                        value: fileNameToSave,
+                        attrs: 'size=6'
+                    })
+                        .change((event) => {
+                            fileNameToSave = event.detail.originalEvent.target.value;
+                        })
+                        .ok(() => {
+                            var visibleElements = cy.elements(':visible'); // Sélectionne uniquement les éléments visibles
+                            api.saveJson(visibleElements, fileNameToSave);
+                        });
+                    break;
+                case 'expandCollapse:expandAllNodes':
+                    api.expandAll()
+                    api.collapseAllEdges(getEdgeOptions())
+                    break;
+                case 'expandCollapse:collapseAllNodes':
+                    api.collapseAll()
+                    api.collapseAllEdges(getEdgeOptions())
+                    break;
+                case 'expandCollapse:expandSelectedNodes':
+                    api.expand(cy.$(":selected"));
+                    api.collapseAllEdges(getEdgeOptions())
+                    break;
+                case 'expandCollapse:collapseSelectedNodes':
+                    api.collapse(cy.$(":selected"));
+                    break;
+                case 'expandCollapse:expandSelectedNodesRecursively':
+                    api.expandRecursively(cy.$(":selected"));
+                    api.collapseAllEdges(getEdgeOptions())
+                    break;
+                case 'expandCollapse:collapseSelectedNodesRecursively':
+                    api.collapseRecursively(cy.$(":selected"));
+                    break;
+                case 'expandCollapse:expandAllEdges':
+                    //  alert("expandAllEdges")
+                    api.expandAllEdges(getEdgeOptions());
+                    break;
+                case 'expandCollapse:collapseAllEdges':
+                    //  alert("collapseAllEdges")
+                    var options = {}
+                    api.collapseAllEdges(getEdgeOptions())
+                    break;
+                case 'expandCollapse:expandSelectedEdges':
+                    api.expandEdges(cy.$("edge:selected"), getEdgeOptions());
+                    break;
+                case 'expandCollapse:collapseSelectedEdges':
+                    api.collapseEdges(cy.$("edge:selected"), getEdgeOptions());
+                    break;
+                case 'expandCollapse:collapseEdgesBetweenNodes':
+                    api.collapseEdgesBetweenNodes(cy.$("node:selected"), getEdgeOptions());
+                    break;
+                case 'expandCollapse:expandEdgesBetweenNodes':
+                    api.expandEdgesBetweenNodes(cy.$("node:selected"), getEdgeOptions());
+                    break;
+                case 'isaEdges':
+                    setTypingDisplay('isaEdges');
+                    break;
+                case 'postfixNotation':
+                    setTypingDisplay('postfixNotation');
+                    break;
+                case 'dataAsNodes':
+                    setDataDisplay('dataAsNodes');
+                    break;
+                case 'dataAsEdges':
+                    setDataDisplay('dataAsEdges');
+                    break;
+                case 'datatypeAsNodes':
+                    setDatatypeDisplay('datatypeAsNodes');
+                    break;
+                case 'datatypeOnEdges':
+                    setDatatypeDisplay('datatypeOnEdges');
+                    break;
+                case 'layout:fcose':
+                    changeLayout('fcose');
+                    break;
+                case 'layout:grid':
+                    changeLayout('grid');
+                    break;
+                case 'layout:circle':
+                    changeLayout('circle');
+                    break;
+                case 'layout:cose':
+                    changeLayout('cose');
+                    break;
+                case 'layout:breadthfirst':
+                    changeLayout('breadthfirst');
+                    break; case 'layout:concentric':
+                    changeLayout('concentric');
+                    break;
+                case 'layout:random':
+                    changeLayout('random');
+                    break;
+                case 'layout:cola':
+                    changeLayout('cola');
+                    break;
+                case 'layout:dagre':
+                    applyDagreLayout('TB');
+                    break;
+                case 'language:fr':
+                    changeLanguage('fr')
+                    break;
+                case 'language:en':
+                    changeLanguage('en')
+                    break;
+
+                case 'showhidegrabifydelete:showhide':
+                    break;
+                case 'showhidegrabifydelete:hideselected':
+                    var eles = cy.$(":selected");
+                    eles = eles.filter(":visible");
+                    eles = eles.union(eles.connectedEdges());
+                    eles.unselect();
+                    console.log(eles)
+                    eles.css('visibility', 'hidden');
+                    eles.css('display', 'none');
+                    break;
+                case 'showhidegrabifydelete:hidenonselected':
+                    var unselected = cy.nodes(":unselected");
+                    var selected = cy.nodes(":selected");
+                    unselected.forEach(function (node) {
+                        if (node.descendants(node.id()).intersection(selected).length == 0) {
+                            node.css('visibility', 'hidden');
+                            node.css('display', 'none');
+                        }
+                    })
+                    break;
+                case 'showhidegrabifydelete:unhideall':
+                    var eles = cy.filter(":hidden");
+                    var connectedEdges = eles.connectedEdges(function (edge) {
+                        if ((edge.source().visible() || eles.contains(edge.source())) && (edge.target().visible() || eles.contains(edge.target()))) {
+                            return true;
+                        }
+                        return false;
+                    });
+                    eles = eles.union(connectedEdges);
+                    eles.unselect();
+                    eles.style('visibility', 'visible');
+                    eles.style('display', 'element');
+                    break;
+                case 'showhidegrabifydelete:grabifyungrabify':
+                    break;
+                case 'showhidegrabifydelete:ungrabifyselected':
+                    var nodes = cy.nodes(":selected").ungrabify();
+                    ungrabifiedNodes = ungrabifiedNodes.concat(nodes);
+                    nodes.unselect();
+                    break;
+                case 'showhidegrabifydelete:ungrabifynonselected':
+                    var nodes = cy.nodes(":unselected").ungrabify();
+                    ungrabifiedNodes = ungrabifiedNodes.concat(nodes);
+                    nodes.unselect();
+                    break;
+                case 'showhidegrabifydelete:grabifyselected':
+                    var nodes = cy.nodes(":selected").grabify();
+                    ungrabifiedNodes = ungrabifiedNodes.filter(function (el) {
+                        return !nodes.includes(el);
+                    });
+                    nodes.unselect();
+                    break;
+                case 'showhidegrabifydelete:grabifynonselect':
+                    var nodes = cy.nodes(":unselected").grabify();
+                    ungrabifiedNodes = ungrabifiedNodes.filter(function (el) {
+                        return !nodes.includes(el);
+                    });
+                    nodes.unselect();
+                    break;
+                case 'showhidegrabifydelete:lockunlock':
+                    break;
+                case 'showhidegrabifydelete:lockselected':
+                    var nodes = cy.nodes(":selected").lock();
+                    lockedNodes = lockedNodes.concat(nodes);
+                    nodes.unselect();
+                    break;
+                case 'showhidegrabifydelete:locknonselected':
+                    var nodes = cy.nodes(":unselected").lock();
+                    lockedNodes = lockedNodes.concat(nodes);
+                    nodes.unselect();
+                    break;
+                case 'showhidegrabifydelete:unlockselected':
+                    var nodes = cy.nodes(":selected").unlock();
+                    lockedNodes = lockedNodes.filter(function (el) {
+                        return !nodes.includes(el);
+                    });
+                    nodes.unselect();
+                    break;
+                case 'showhidegrabifydelete:unlocknonselect':
+                    var nodes = cy.nodes(":unselected").unlock();
+                    lockedNodes = lockedNodes.filter(function (el) {
+                        return !nodes.includes(el);
+                    });
+                    nodes.unselect();
+                    break;
+
+                case 'showhidegrabifydelete:removeselected':
+                    //   if (undoRedo) { ur.do("remove", elements) } else { removed = removed.union(cy.remove(elements)); }
+
+                    removed = cy.remove(cy.$(":selected"));
+
+                    break;
+                case 'showhidegrabifydelete:removeunselected':
+                    //  if (undoRedo) { ur.do("remove", elements) } else { removed = removed.union(cy.remove(elements)); }
+                    removed = cy.remove(cy.$(":unselected"));
+
+                    break;
+                case 'showhidegrabifydelete:removeall':
+                    //    if (undoRedo) { ur.do("remove", elements) } else { removed = removed.union(cy.remove(elements)); }
+                    removed = cy.remove(cy.$());
+                    break;
+                case 'showhidegrabifydelete:restore':
+                    removed.restore();
+                    break;
+                default:
+                    // alert(event.target)
+                    break;
+            }
+        }
+        // Define the layout first
+        myLayout = new w2layout({
+            //box: '#layout',
+            name: 'mainLayout',
+            panels: [
+                { type: 'top', size: 50, style: 'border-bottom: 1px solid #ccc;' },
+                {
+                    type: 'left', resizable: true, size: 250, style: 'border-right: 1px solid #ccc;',
+                    html: `<div id="workspace-explorer" style="width:100%;height:100%"></div>
+                           <div id="toolbar-container" hidden style="position:absolute;top:55px;left:0;z-index:20;background:white;max-height:80vh;overflow:auto"></div>`
+                },
+                {
+                    type: 'main', resizable: true, style: 'background: #f8f9fa;',
+                    html: `
+                     <div id="main-container" style="display: flex; flex-direction: row;height: 100%; width: 100%;">
+                        <div id="radar-container">
+                             <div id="svg-container"></div>
+                             <div id="cy-container"></div>
+                             <div id="cy2-container"></div>
+                        </div>
+                </div>` },
+                {
+                    type: 'right', resizable: true, size: 300, style: 'border-left: 1px solid #ccc;',
+                    html: ``
+                },
+                { type: 'bottom', resizable: true, size: 240, style: 'border-top: 1px solid #ccc;', html: `<div id="standard-references-panel" style="height:100%;width:100%"></div>` }
+            ]
+        })
+        myLayout.render('#mainLayout'); // Render the layout in the container      
+        w2ui.mainLayout.html('top', initializeMainMenu());
+        //w2ui.mainLayout.html('left', initializeToolbar());//initializeToolbar2());
+        initializeToolbar().render("#toolbar-container")
+        window.__radarWorkspaceExplorer.initialize({mount:document.getElementById('workspace-explorer'),
+            graph:function(){return cy;},select:function(group){drawSelectedWorkgroup(group);}});
+        window.__radarStandardsPanel?.initialize(document.getElementById('standard-references-panel'), function(){return cy;});
+
+
+
+        // Dynamically assign the form to the right panel of the layout
+        // w2ui.mainLayout.html('right', createForm());
+        drawSVG()
+
+
+
+        w2ui.toolbar.on('click', (event) => {
+            console.log('Click', event);
+        })
+
+        // --- Placeholder Functions ---
+        function Open() {
+            console.log("Open...");
+            // TODO: Implement file input and OWL parsing
+        }
+
+        function importInferred() {
+            console.log("Import OWL file with inference...");
+            // TODO: Implement inference-based OWL loading
+        }
+
+        function expandAllNodes() {
+            console.log("Expanding all nodes...");
+            // TODO: Call Cytoscape.js expand function
+        }
+
+        function collapseAllNodes() {
+            console.log("Collapsing all nodes...");
+            // TODO: Call Cytoscape.js collapse function
+        }
+
+        function expandSelectedNodes() {
+            console.log("Expanding selected nodes...");
+            // TODO: Expand only selected nodes in Cytoscape.js
+        }
+
+        function collapseSelectedNodes() {
+            console.log("Collapsing selected nodes...");
+            // TODO: Collapse only selected nodes in Cytoscape.js
+        }
+
+        function setTypingDisplay(mode) {
+            console.log("Setting typing display mode:", mode);
+            // TODO: Change the display style for types
+        }
+
+        function setDataDisplay(mode) {
+            console.log("Setting data display mode:", mode);
+            // TODO: Adjust visualization for annotations and data
+        }
+
+        function setDatatypeDisplay(mode) {
+            console.log("Setting datatype display mode:", mode);
+            // TODO: Adjust how datatypes are displayed (nodes or edges)
+        }
+
+
+        var nodes = [];
+        var edges = [];
+        var equivalenceGroups = new Map();
+
+
+        function makePopper(ele) {
+            // console.log("makePopper")
+            let ref = ele.popperRef();
+            ele.tippy = tippy(document.createElement('div'), {
+                // popperInstance will be available onCreate
+                lazy: false,
+                followCursor: 'true',
+                hideOnClick: false,
+                flipOnUpdate: true,
+                onShow(instance) {
+                    instance.popperInstance.reference = ref
+                },
+            });
+            ele.tippy.setContent(ele.id());
+        }
+
+
+        // Create Node Function
+        function createNode(id, label, type, IRI, parent = null) {
+            // Prepare the node data
+            const nodeData = {
+                id,
+                label,
+                type,
+                IRI
+            };
+            // Add the parent only if it is defined
+            if (parent) {
+                nodeData.parent = parent;
+            }
+            // Push the node data to the array
+            nodes.push({
+                group: 'nodes',
+                data: nodeData,
+                classes: type
+            });
+            //   console.log(`I'm creating a node with id=${nodeData.id}`)
+        }
+
+        function updateNode(id, characteristics = {}) {
+            // Find the node by id
+            //alert ("updateNode:(" +id+")")
+            const node = nodes.find(n => n.data.id === id);
+
+            // If the node exists, update its characteristics
+            if (node) {
+                // Check if the object contains specific characteristics and update accordingly
+                if (characteristics.functional) {
+                    node.data.functional = true;
+                    node.data.label = '→' + node.data.label;
+                }
+                if (characteristics.transitive) {
+                    node.data.transitive = true;
+                    node.data.label = '△' + node.data.label;
+                }
+                if (characteristics.inverseFunctional) {
+                    node.data.inverseFunctional = true;
+                    node.data.label = '←' + node.data.label;
+                }
+                if (characteristics.irreflexive) {
+                    node.data.irreflexive = true;
+                    node.data.label = '𐌗◯' + node.data.label;
+                }
+                if (characteristics.reflexive) {
+                    node.data.reflexive = true;
+                    node.data.label = '◯' + node.data.label;
+                }
+                if (characteristics.namedNodemetric) {
+                    node.data.namedNodemetric = true;
+                    node.data.label = '↔' + node.data.label;
+                }
+                if (characteristics.asymmetric) {
+                    node.data.asymmetric = true;
+                    node.data.label = '𐌗↔' + node.data.label;
+                }
+                //alert (JSON.stringify(node))
+            }
+        }
+
+        function createEdge(id, label, source, target, type) {
+            // Retrieve the style for the given type
+
+            // Prepare the edge data
+            const edgeData = {
+                id,
+                label,
+                source,
+                target,
+                type,
+                edgeType: type
+            };
+
+            // Push the edge data to the edges array
+            edges.push({
+                group: 'edges',
+                data: edgeData,
+                classes: type // Optional: Keep the class for additional styling
+            });
+        }
+
+
+        // Fonction de validation RDF for s o p triples visualisation
+        function validateRDF(store) {
+
+            //initialisation du graphe
+            cy.elements().remove();
+            cy.add(nodes);
+            edges.forEach(edge => {
+                try {
+                    // Add the edge directly using its existing data
+                    cy.add({
+                        group: 'edges',
+                        data: edge.data,
+                        classes: edge.classes
+                    });
+                } catch (error) {
+                    console.warn(`Error adding edge ${edge.data.id}: ${error.message}`);
+
+                    // Check and create missing source node
+                    alert("blank source: " + edge.data.source)
+                    if (cy.getElementById(edge.data.source).length === 0) {
+                        cy.add({
+                            group: 'nodes',
+                            data: { id: edge.data.source },
+                            classes: 'blank-node'
+                        });
+                        console.log(`Created blank node: ${edge.data.source}`);
+                    }
+                    console.log("blank target: " + edge.data.source)
+                    // Check and create missing target node
+                    if (cy.getElementById(edge.data.target).length === 0) {
+                        cy.add({
+                            group: 'nodes',
+                            data: { id: edge.data.target },
+                            classes: 'blank-node'
+                        });
+                        console.log(`Created blank node: ${edge.data.target}`);
+                    }
+
+                    // Retry adding the edge now that nodes exist
+                    try {
+                        cy.add({
+                            group: 'edges',
+                            data: edge.data,
+                            classes: edge.classes
+                        });
+                    } catch (retryError) {
+                        console.error(`Failed again to add edge ${edge.data.id}:`, retryError);
+                    }
+
+                }
+            });
+            console.log("Graph successfully imported into Cytoscape!");
+            // Déplier tout au chargement
+            api.expandAll();
+            api.collapseAllEdges(getEdgeOptions())
+        }
+
+        myLayout.on('resize', function (event) {
+            setTimeout(() => window.__radarViewportSync?.(), 100);
+        });
+
+
+
+        //// Loading files
+        document.getElementById('load-from-inp').addEventListener('change', function () {
+            if (window.__radarCatalogUI?.isReadOnly()) { w2alert('Published revision is read-only.'); this.value=''; return; }
+           
+            readTxtFile(this.files[0], function (txt) {
+                w2confirm('Do you want to replace? If yes, current graph will be removed, if no, it will be fusionned with the import)')
+                    .yes(() => {
+                        if (window.__radarCatalogUI?.isReadOnly()) { w2alert('Published revision is read-only.'); return; }
+                        window.__radarRevisionSession.beforeExternalReplace(cy);
+                        cy.$().remove();
+                        api.loadJson(txt);
+                        window.__radarRevisionSession.adoptLoaded(cy);
+
+                    })
+                    .no(() => {
+                        // api.loadJson(txt);
+                        alert("Merging content of radards not supported at this stage.")
+
+                    });
+            })
+        });
+
+        //// Loading files
+        document.getElementById('inputfile').addEventListener('change', function (event) {
+            if (window.__radarCatalogUI?.isReadOnly()) { w2alert('Published revision is read-only.'); this.value=''; return; }
+            const file = event.target.files[0];
+            if (!file) {
+                alert("No file selected!");
+                return;
+            }
+            w2confirm(i18next.t(`confirm.replacegraph`))
+                .yes(() => {
+                    if (window.__radarCatalogUI?.isReadOnly()) { w2alert('Published revision is read-only.'); return; }
+                    cy.$().remove();
+                    openCSV(file); // Pass file object
+                })
+                .no(() => {
+                    if (window.__radarCatalogUI?.isReadOnly()) { w2alert('Published revision is read-only.'); return; }
+                    openCSV(file); // Pass file object
+                });
+        });
+
+
+        document.getElementById('jsonl-hidden-input').addEventListener('change', function (e) {
+            if (window.__radarCatalogUI?.isReadOnly()) { w2alert('Published revision is read-only.'); this.value=''; return; }
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const maxSizeMB = 100;
+            const fileSizeMB = file.size / (1024 * 1024);
+            if (fileSizeMB > maxSizeMB) {
+                alert(`Le fichier est trop volumineux (${fileSizeMB.toFixed(2)} MB). Veuillez sélectionner un fichier de moins de ${maxSizeMB} MB.`);
+                e.target.value = '';
+                return;
+            }
+
+            readJSONLFile(file, (jsonArray) => {
+                const graphData = {
+                    nodes: [],
+                    edges: []
+                };
+
+                const nodeIndex = new Map();
+                const edgeIndex = new Set();
+
+                // Racine du graphe
+                const rootNode = {
+                    data: {
+                        id: "iso-tc",
+                        label: "ISO Technical Committees",
+                        type: "business-actor",
+                        specialization: "isotc"
+                    }
+                };
+                graphData.nodes.push(rootNode);
+                nodeIndex.set(rootNode.data.id, rootNode);
+
+                function ensureOrgNode(org) {
+                    const orgNodeId = org.id;
+                    if (!nodeIndex.has(orgNodeId)) {
+                        const node = {
+                            data: {
+                                id: orgNodeId,
+                                label: org.acronym || org.name || orgNodeId,
+                                type: 'organization',
+                                specialization: 'member-body'
+                            }
+                        };
+                        graphData.nodes.push(node);
+                        nodeIndex.set(orgNodeId, node);
+                    }
+                    return orgNodeId;
+                }
+
+                function addEdge(source, target, label, type) {
+                    return;
+                    const edgeId = `rel-${source}-${label}-${target}`;
+                    if (!edgeIndex.has(edgeId)) {
+                        graphData.edges.push({
+                            data: {
+                                id: edgeId,
+                                source,
+                                target,
+                                edgeType: type,
+                                label
+                            }
+                        });
+                        edgeIndex.add(edgeId);
+                    }
+                }
+
+                function processMembers(tc, nodeId, members, label) {
+                    if (label == 'committeeLiaison') {
+                        if (!Array.isArray(members)) return;
+                        members.forEach(member => {
+                            const memberNodeId = ensureOrgNode(member);
+                            addEdge(nodeId, memberNodeId, label, 'aggregation');
+                        });
+
+                    }
+                    else {
+                        if (!Array.isArray(members)) return;
+                        members.forEach(member => {
+                            const memberNodeId = ensureOrgNode(member);
+                            addEdge(nodeId, memberNodeId, label, 'aggregation');
+                        });
+                    }
+                }
+
+                jsonArray.forEach(tc => {
+                    const nodeId = tc.id;
+                    const nodeData = {
+                        id: nodeId,
+                        label: tc.reference,
+                        type: 'business-actor',
+                        specialization: 'isotc',
+                        description: tc.title?.en || ''
+                    };
+
+                    if (tc.parentId !== null) {
+                        nodeData.parent = tc.parentId;
+                    } else {
+                        nodeData.parent = 'iso-tc';
+                    }
+
+                    const relationKeys = ['pMembers', 'oMembers', 'committeeLiaisons', 'organizationLiaisons', 'childrenId'];
+
+                    Object.entries(tc).forEach(([key, value]) => {
+                        if (key === 'parentId' || key === 'id' || relationKeys.includes(key)) return;
+                        if (value && typeof value === 'object' && !Array.isArray(value)) {
+                            Object.entries(value).forEach(([subKey, subValue]) => {
+                                nodeData[`${key}.${subKey}`] = subValue;
+                            });
+                        } else {
+                            nodeData[key] = value;
+                        }
+                    });
+
+                    const node = { data: nodeData };
+                    graphData.nodes.push(node);
+                    nodeIndex.set(nodeId, node);
+
+                    processMembers(tc, nodeId, tc.pMembers, 'pMember');
+                    processMembers(tc, nodeId, tc.oMembers, 'oMember');
+                    processMembers(tc, nodeId, tc.committeeLiaisons, 'committeeLiaison');
+                    processMembers(tc, nodeId, tc.organizationLiaisons, 'organizationLiaison');
+
+                    if (tc.parentId !== null) {
+                        const parentId = tc.parentId;
+                        addEdge(parentId, nodeId, 'subCommitteeOf', 'composition');
+                    }
+                });
+
+                const blob = new Blob([JSON.stringify(graphData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'tc-graph.json';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 0);
+
+                e.target.value = '';
+            }, (err, line, i) => {
+                alert(`Erreur à la ligne ${i + 1}: ${line}`);
+            });
+        });
+
+
+        // Initialize Cytoscape.js
+        var elements = [
+            //  { data: { id: 'a', label: "Feed the radar" }, position: { x: 400, y: 400 } },
+
+        ];
+        cy = cytoscape({
+            container: document.getElementById("cy-container"),
+            elements: elements,
+            style: RadarStyle,
+            zoomingEnabled: true,         // Allow programmatic viewport zoom
+            userZoomingEnabled: false,     // Disable user-initiated zooming
+            userPanningEnabled: false,     // Disable user-initiated panning
+            panningEnabled: true,         // Allow programmatic viewport pan
+            autolock: false,                // Lock nodes in place (prevents accidental grabbing)
+            autoungrabify: false,           // Prevents nodes from being grabbed and moved          
+            layout: {
+                name: 'preset',            // Use 'preset' layout to respect given node positions
+                fit: false,                // Prevent auto-fit adjustment after layout
+                padding: 30                // Optional padding for the layout
+            }
+        });
+        console.log(cy.zoom())
+        console.log(cy.pan())
+        // Ajout des plugins
+        var ur = cy.undoRedo();
+
+        var api = cy.expandCollapse({
+            layoutBy: { name: 'fcose', animate: true },
+            fisheye: true,
+            animate: 'end',
+            undoable: true
+        });
+
+
+        cy.on('grab', 'node', function (evt) {
+            let node = evt.target;
+            let pos = node.position();
+            let { zone, quadrant } = getZone(pos.x, pos.y, radii);
+
+            console.log(`GRAB: Node ${node.id()} -> Zone: ${zone}, Quadrant: ${quadrant}`);
+
+            // Vérifier que getZone() retourne bien une valeur correcte
+            if (zone === undefined || quadrant === undefined) {
+                console.error(`⚠️ ERREUR: getZone() a retourné undefined pour le noeud ${node.id()}`);
+                return;
+            }
+
+            // Stocker la position et les attributs initiaux
+            node.scratch('_initialPosition', { x: pos.x, y: pos.y });
+            node.scratch('_initialZone', zoneRingMapping[zone]); // Stocke la valeur en texte ("Track", "Candidate", ...)
+            node.scratch('_initialQuadrant', quadrantMapping[quadrant]); // Stocke en texte ("Monitored", "Available", ...)
+        });
+
+        cy.on('free', 'node', function (evt) {
+            if (window.__radarCatalogUI?.isReadOnly()) return;
+            let node = evt.target;
+            let pos = node.position();
+            backToInitialPosition = false
+            let initialZone = node.scratch('_initialZone');
+            let initialQuadrant = node.scratch('_initialQuadrant');
+
+
+            //  alert ("x:"+ pos.x + " y;"+ pos.y + " raddi:"+ radii)
+            let { zone, quadrant } = getZone(pos.x, pos.y, radii);
+            //  alert ("zone:"+ zone+ " quadrant:"+ quadrant)
+            if (zone === undefined || quadrant === undefined) {
+                console.log(`⚠️ ATTENTION: getZone() a retourné undefined pour le noeud ${node.id()}`);
+                backToInitialPosition = true;
+            }
+            else {
+                backToInitialPosition = false
+                let newZone = zoneRingMapping[zone]; // Convertir la zone en son label
+                let newQuadrant = quadrantMapping[quadrant]; // Convertir le quadrant en son label
+                console.log(`FREE: Node ${node.id()} -> New Zone: ${newZone}, New Quadrant: ${newQuadrant}`);
+                console.log(`Initial Zone: ${initialZone}, Initial Quadrant: ${initialQuadrant}`);
+
+                node.data({
+                    ring: newZone,
+                    quadrant: newQuadrant
+                });
+
+                // Vérifier si la zone ou le quadrant ont changé
+                if ((newZone !== initialZone || newQuadrant !== initialQuadrant) && !allowZoneChanges) {
+                    //    alert ("newZone:"+ newZone+ " newQuadrant:"+ newQuadrant +"initialZone:"+ initialZone+ " initialQuadrant:"+ initialQuadrant )
+                    backToInitialPosition = true
+                }
+            }
+
+
+            // Vérifier si la zone ou le quadrant ont changé
+            if (backToInitialPosition) {
+
+                console.warn(`Zone ou quadrant modifié pour le nœud ${node.id()}! Retour à la position initiale.`);
+
+                let initialPos = node.scratch('_initialPosition');
+
+                // Animation du retour à la position initiale
+                node.animate({
+                    position: { x: initialPos.x, y: initialPos.y }
+                }, {
+                    duration: 300
+                });
+                console.log("avant")
+                console.log(node.data())
+
+                // Réinitialiser les attributs du nœud
+                node.data({
+                    ring: initialZone,
+                    quadrant: initialQuadrant
+                });
+                console.log("apres")
+                console.log(node.data())
+            }
+
+            let form = generateFormFromCytoscapeElement(node);
+
+            // Render form inside the right panel of w2ui layout
+            w2ui.mainLayout.html('right', '<div id="form"></div>');
+            form.render('#form');
+        });
+
+
+        // === CYTOSCAPE EVENT TO DISPLAY FORM IN RIGHT PANEL ===
+        cy.on('tap', 'node', function (evt) {
+            let node = evt.target;
+            let form = generateFormFromCytoscapeElement(node);
+
+            // Render form inside the right panel of w2ui layout
+            w2ui.mainLayout.html('right', '<div id="form"></div>');
+            form.render('#form');
+        });
+
+
+    </script>
+
+
+<!-- ISO streaming engine loaded before panel initialization -->
+  <!-- S14-Z ISO sources -->
+  <script src="./js/radar-s14-z-sources.js"></script>
+</body>
+
+</html>

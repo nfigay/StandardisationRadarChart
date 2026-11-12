@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "catalogId": "iso",
+  "release": "2026-11-09",
+  "source": "ISO Open Data",
+  "sourceLicense": "ODC-By 1.0",
+  "sourceManifestUpdatedAt": "2026-11-09T00:03:45.480Z",
+  "generatedAt": "2026-11-09T14:23:00.208Z",
+  "datasets": [
+    {
+      "id": "deliverables",
+      "source": "iso_deliverables_metadata",
+      "path": "deliverables.jsonl.gz",
+      "compression": "gzip",
+      "mediaType": "application/x-ndjson",
+      "bytes": 16645630,
+      "sha256": "57ee7f90e1d087dfbbc73c93e5813c2a6cb07ffcdd44cbd4e8a56f4e9196db2c",
+      "uncompressedBytes": 79888696,
+      "uncompressedSha256": "6a3b3ff4c131304f4c6abf0bf9ebbf7001ef83224b4b65e40027627ac5f41bc7",
+      "records": 81768
+    },
+    {
+      "id": "committees",
+      "source": "iso_technical_committees",
+      "path": "committees.jsonl.gz",
+      "compression": "gzip",
+      "mediaType": "application/x-ndjson",
+      "bytes": 338130,
+      "sha256": "ee329e4a7328447d10c9492172afb18ba236a1cb246d1878e893d39e1f93bff4",
+      "uncompressedBytes": 2134555,
+      "uncompressedSha256": "0b72e27b6cd72b4afe87fce6e96b560461aaef444aa190c4e088e09ba5466a7e",
+      "records": 810
+    }
+  ]
+}

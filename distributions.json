@@ -1,0 +1,67 @@
+{
+  "format": "standardisation-radar-distributions",
+  "version": 1,
+  "sourceCommit": "2a17678",
+  "variants": [
+    {
+      "product": "author",
+      "mode": "standalone",
+      "requiresServer": false,
+      "isoCatalogue": true,
+      "status": "planned",
+      "entry": null,
+      "target": "author/standalone/radar-author.html"
+    },
+    {
+      "product": "author",
+      "mode": "bundled",
+      "requiresServer": true,
+      "isoCatalogue": true,
+      "status": "planned",
+      "entry": null,
+      "target": "author/bundled/index.html"
+    },
+    {
+      "product": "author",
+      "mode": "modules",
+      "requiresServer": true,
+      "isoCatalogue": true,
+      "status": "planned",
+      "entry": null,
+      "target": "author/modules/index.html"
+    },
+    {
+      "product": "client",
+      "mode": "standalone",
+      "requiresServer": false,
+      "isoCatalogue": false,
+      "status": "planned",
+      "entry": null,
+      "target": "client/standalone/radar-client.html"
+    },
+    {
+      "product": "client",
+      "mode": "bundled",
+      "requiresServer": true,
+      "isoCatalogue": false,
+      "status": "available",
+      "entry": "client/client.html",
+      "target": "client/bundled/index.html"
+    },
+    {
+      "product": "client",
+      "mode": "modules",
+      "requiresServer": true,
+      "isoCatalogue": false,
+      "status": "planned",
+      "entry": null,
+      "target": "client/modules/index.html"
+    }
+  ],
+  "compatibilityEntries": [
+    "index.html",
+    "radar.html",
+    "author/radar.html",
+    "client/client.html"
+  ]
+}

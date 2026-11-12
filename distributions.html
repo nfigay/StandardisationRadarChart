@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1">
+<title>Standardization Radar Chart - Distributions</title>
+<style>
+body {
+  font:16px/1.6 system-ui,sans-serif;
+  max-width:980px;
+  margin:3rem auto;
+  padding:1rem;
+  background:#f5f7fa;
+  color:#24364a
+}
+h1 {font-size:2rem}
+section {
+  background:white;
+  padding:24px;
+  margin:20px 0;
+  border:1px solid #d5dfe8;
+  border-radius:10px
+}
+.grid {
+  display:grid;
+  grid-template-columns:
+    repeat(auto-fit,minmax(260px,1fr));
+  gap:20px
+}
+a {color:#155b98}
+.action {
+  display:inline-block;
+  padding:10px 16px;
+  background:#155b98;
+  color:white;
+  border-radius:6px;
+  text-decoration:none
+}
+table {
+  border-collapse:collapse;
+  width:100%
+}
+td,th {
+  padding:12px;
+  border-bottom:1px solid #ccd5df;
+  text-align:left
+}
+small {color:#64748b}
+</style>
+</head>
+<body>
+<h1>Standardization Radar Chart</h1>
+<p>Distributions du Créateur et du Client.</p>
+<small>Livraison issue du commit 2a17678</small>
+
+<div class="grid">
+<section>
+<h2>Créateur</h2>
+<p>Édition des radars, catalogue ISO,
+gestion des révisions et publication.</p>
+<a class="action" href="author/radar.html">
+Ouvrir le Créateur
+</a>
+<p><small>Distribution Web historique.</small></p>
+</section>
+
+<section>
+<h2>Client</h2>
+<p>Consultation des roadmaps publiées,
+sans catalogue ISO global.</p>
+<a class="action" href="client/client.html">
+Ouvrir le Client
+</a>
+<p><small>Distribution JavaScript packagée.</small></p>
+</section>
+</div>
+
+<section>
+<h2>Six distributions cibles</h2>
+<table>
+<thead>
+<tr><th>Mode</th><th>Créateur</th><th>Client</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>Standalone HTML</td>
+<td>Planifié</td>
+<td>Planifié</td>
+</tr>
+<tr>
+<td>Bundle JavaScript</td>
+<td>Planifié</td>
+<td><a href="client/client.html">Disponible</a></td>
+</tr>
+<tr>
+<td>Modules ES6</td>
+<td>Planifié</td>
+<td>Planifié</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>Compatibilité historique</h2>
+<p><a href="index.html">Radar PLM historique</a></p>
+<p><a href="radar.html">Créateur historique</a></p>
+</section>
+
+<section>
+<h2>Manifestes de livraison</h2>
+<p><a href="distributions.json">
+Contrat des six distributions</a></p>
+<p><a href="release-manifest.json">
+Intégrité des produits</a></p>
+<p><a href="site-manifest.json">
+Intégrité du site complet</a></p>
+</section>
+</body>
+</html>

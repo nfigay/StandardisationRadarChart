@@ -1,0 +1,19 @@
+{
+  "format": "standardisation-roadmap-client-distribution",
+  "version": 1,
+  "product": "client",
+  "entry": "client.html",
+  "catalogueBundled": false,
+  "files": [
+    {
+      "path": "assets/client-Ck7VIewQ.js",
+      "bytes": 6882,
+      "sha256": "4fbe7cb82c7157b9afef664129ed1ea55cf6a58975209603bebb24edbdbe06e4"
+    },
+    {
+      "path": "client.html",
+      "bytes": 3115,
+      "sha256": "33f73c93b76db4eb9ba44ecda9c40183765b421ed78fe401024d1e4260da3577"
+    }
+  ]
+}
