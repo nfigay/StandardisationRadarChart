@@ -29,6 +29,10 @@ import {
   verifyPagesMultiProducts
 } from './prepare-pages-products.mjs';
 
+import {
+  verifyClientVariants
+} from './build-client-variants.mjs';
+
 export function contract(commit){
   return {
     format:'standardisation-radar-distributions',
@@ -42,12 +46,16 @@ export function contract(commit){
         requiresServer:mode!=='standalone',
         isoCatalogue:product==='author',
 
-        status:product==='client' && mode==='bundled'
+        status:product==='client'
           ?'available'
           :'planned',
 
-        entry:product==='client' && mode==='bundled'
-          ?'client/client.html'
+        entry:product==='client'
+          ?`client/${mode}/${
+            mode==='standalone'
+              ?'radar-client.html'
+              :'index.html'
+          }`
           :null,
 
         target:`${product}/${mode}/${
@@ -95,6 +103,12 @@ export function inventory(directory){
           '.github'
         ].includes(entry.name),
         'Development resource: '+filename
+      );
+
+      assert(
+        entry.name!=='.DS_Store' &&
+        !/\.s14-.*-backup$|\.bak$/.test(entry.name),
+        'Unwanted backup or metadata: '+filename
       );
 
       if(entry.isDirectory()){
@@ -252,14 +266,13 @@ export function verify(directory){
     );
   }
 
-  const clientJS=inventory(
-    join(root,'client')
-  ).filter(f=>/\.(js|mjs)$/.test(f.path));
+  verifyClientVariants(join(root,'client'));
 
-  assert.equal(
-    clientJS.length,1,
-    'Client must have one JS bundle'
-  );
+  for(const variant of distributions.variants){
+    if(variant.status==='available'){
+      checkEntry(root,variant.entry);
+    }
+  }
 
   return {
     sourceCommit:release.sourceCommit,
@@ -272,6 +285,35 @@ export function verify(directory){
 }
 
 function portal(commit){
+  const variants=contract(commit).variants;
+
+  const labels={
+    standalone:'Standalone HTML',
+    bundled:'Bundle JavaScript',
+    modules:'Modules ES6'
+  };
+
+  const cell=(product,mode)=>{
+    const variant=variants.find(
+      v=>v.product===product && v.mode===mode
+    );
+
+    if(variant.status!=='available')
+      return '<td>Planifié</td>';
+
+    const download=mode==='standalone'
+      ?` · <a href="${variant.entry}" download>Télécharger</a>`
+      :'';
+
+    return `<td><a href="${variant.entry}">Ouvrir</a>${download}</td>`;
+  };
+
+  const rows=Object.keys(labels).map(
+    mode=>`<tr><td>${labels[mode]}</td>${
+      cell('author',mode)
+    }${cell('client',mode)}</tr>`
+  ).join('\n');
+
   return `<!doctype html>
 <html lang="fr">
 <head>
@@ -343,10 +385,10 @@ Ouvrir le Créateur
 <h2>Client</h2>
 <p>Consultation des roadmaps publiées,
 sans catalogue ISO global.</p>
-<a class="action" href="client/client.html">
+<a class="action" href="client/bundled/index.html">
 Ouvrir le Client
 </a>
-<p><small>Distribution JavaScript packagée.</small></p>
+<p><small>Trois modes de distribution disponibles.</small></p>
 </section>
 </div>
 
@@ -357,21 +399,7 @@ Ouvrir le Client
 <tr><th>Mode</th><th>Créateur</th><th>Client</th></tr>
 </thead>
 <tbody>
-<tr>
-<td>Standalone HTML</td>
-<td>Planifié</td>
-<td>Planifié</td>
-</tr>
-<tr>
-<td>Bundle JavaScript</td>
-<td>Planifié</td>
-<td><a href="client/client.html">Disponible</a></td>
-</tr>
-<tr>
-<td>Modules ES6</td>
-<td>Planifié</td>
-<td>Planifié</td>
-</tr>
+${rows}
 </tbody>
 </table>
 </section>

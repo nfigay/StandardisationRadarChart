@@ -18,6 +18,14 @@ if(existsSync(output)){
     [
       process.execPath,
       [
+        'scripts/build-client-variants.mjs',
+        'build',
+        '.radarchart-build/client'
+      ]
+    ],
+    [
+      process.execPath,
+      [
         'scripts/verify-client-build.mjs',
         '.radarchart-build/client',
         '--write-manifest'

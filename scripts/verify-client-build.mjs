@@ -6,6 +6,10 @@ import {resolve,relative,join} from 'node:path';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 
+import {
+  verifyClientVariants
+} from './build-client-variants.mjs';
+
 const MANIFEST='distribution-manifest.json';
 
 export function inventory(root){
@@ -43,6 +47,13 @@ export function verifyClientBuild(root,{
   }
 
   const files=inventory(directory);
+
+  if(['standalone','bundled','modules'].some(
+    mode=>existsSync(join(directory,mode))
+  )){
+    verifyClientVariants(directory);
+  }
+
   const html='client.html';
 
   if(!files.includes(html)){
@@ -100,7 +111,7 @@ export function verifyClientBuild(root,{
 
     const bytes=readFileSync(absolute);
 
-    if(name.endsWith('.js') || name.endsWith('.html')){
+    if(/\.(js|mjs|html)$/.test(name)){
       const content=bytes.toString('utf8');
 
       if(name.endsWith('.js')){

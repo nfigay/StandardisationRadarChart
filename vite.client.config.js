@@ -6,6 +6,7 @@ export default defineConfig({
   base:'./',
   publicDir:false,
   build:{
+    modulePreload:false,
     outDir:resolve('.radarchart-build/client'),
     emptyOutDir:false,
     assetsDir:'assets',

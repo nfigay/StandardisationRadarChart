@@ -26,7 +26,7 @@ test('six variantes, deux produits, trois modes',()=>{
     c.variants.filter(
       x=>x.status==='available'
     ).length,
-    1
+    3
   );
 
   for(const product of ['author','client']){
@@ -53,6 +53,10 @@ test('six variantes, deux produits, trois modes',()=>{
 
     if(v.status==='planned'){
       assert.equal(v.entry,null);
+      assert.equal(v.product,'author');
+    }else{
+      assert.equal(v.product,'client');
+      assert.equal(v.entry,v.target);
     }
   }
 });

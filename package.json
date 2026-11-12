@@ -16,7 +16,9 @@
     "assemble:products": "node scripts/assemble-products.mjs assemble .radarchart-build/products $(git rev-parse --short HEAD)",
     "verify:products": "node scripts/assemble-products.mjs verify .radarchart-build/products",
     "build:dist": "node scripts/build-web-distribution.mjs build",
-    "verify:dist": "node scripts/build-web-distribution.mjs verify"
+    "verify:dist": "node scripts/build-web-distribution.mjs verify",
+    "verify:client:variants": "node scripts/build-client-variants.mjs verify",
+    "publish:dist": "bash scripts/publish-web-distribution.sh"
   },
   "devDependencies": {
     "vite": "^7.3.0"

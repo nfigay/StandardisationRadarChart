@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import { resolve, dirname, join } from 'node:path';
+import { resolve, dirname, join, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { existsSync, cpSync } from 'node:fs';
 
@@ -22,7 +22,16 @@ function preserveLegacyAssets() {
       for (const name of [...legacyDirectories, ...legacyFiles]) {
         const from = join(root, name);
         if (!existsSync(from)) continue;
-        cpSync(from, join(dest, name), { recursive: true, force: true, errorOnExist: false });
+        cpSync(from, join(dest, name), {
+          recursive: true,
+          force: true,
+          errorOnExist: false,
+          filter(resource) {
+            const filename = basename(resource);
+            return filename !== '.DS_Store' &&
+              !/\.s14-.*-backup$|\.bak$/.test(filename);
+          }
+        });
       }
     }
   };
