@@ -7,7 +7,17 @@
  };
  function lang(){return String(root.i18next?.language||'fr').toLowerCase().startsWith('fr')?'fr':'en';}
  function t(key){return dict[lang()][key]||key;}
- function label(revision,index){const n=Number.isInteger(index)?'r'+(index+1):'r?';const status=t(revision.status);const v=revision.version||revision.semanticVersion||'';const named=root.__radarCatalogPersistence?.getRevisionLabel?.(revision.revisionId);const version=String(v).replace(/(?:-draft-local|:draft:local)+$/g,'');return [n,named||null,version||null,status].filter(Boolean).join(' — ');}
+ function revisionName(revision,index){
+  const named=root.__radarCatalogPersistence?.getRevisionLabel?.(revision.revisionId);
+  return named || (Number.isInteger(index)&&index>=0?'r'+(index+1):revision.revisionId);
+ }
+
+ function label(revision,index){
+  const name=revisionName(revision,index);
+  const v=revision.version||revision.semanticVersion||'';
+  const version=String(v).replace(/(?:-draft-local|:draft:local)+$/g,'');
+  return [name,version||null,t(revision.status)].filter(Boolean).join(' — ');
+ }
  function showMessage(message){if(typeof root.w2alert==='function')root.w2alert(message);else root.alert?.(message);}
  function openPicker(groups,activate,resolve){
   if(!Array.isArray(groups)||!groups.length)throw Error(t('missing'));
@@ -45,5 +55,5 @@
   }
   if(root.confirm?.(message))callback();
  }
- root.__radarRevisionDialogs=Object.freeze({t,label,openPicker,confirmLifecycle});
+ root.__radarRevisionDialogs=Object.freeze({t,label,revisionName,openPicker,confirmLifecycle});
 })(window);

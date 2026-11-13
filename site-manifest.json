@@ -1,7 +1,7 @@
 {
   "format": "standardisation-radar-web-site",
   "version": 1,
-  "sourceCommit": "61c02b9",
+  "sourceCommit": "fde5dc0",
   "files": [
     {
       "path": ".nojekyll",
@@ -360,13 +360,13 @@
     },
     {
       "path": "author/js/radar-catalog-persistence.js",
-      "bytes": 19056,
-      "sha256": "2d9da69ff8d9e9aea15409469dcf479c1c75b174e6a4716359c1419c840caa1a"
+      "bytes": 20197,
+      "sha256": "53d4efd41ee3c8562622cb4840356258ad0d680842203ada420e685ec67a405d"
     },
     {
       "path": "author/js/radar-catalog-ui.js",
-      "bytes": 18197,
-      "sha256": "a611e2a9b9af1588485deb18b83482e988f388bdd822ca801cced774e09a0bf4"
+      "bytes": 18924,
+      "sha256": "ce2ab380cdc698b84806f641b8c42bc402146afe937c4b8676efa105df92aad6"
     },
     {
       "path": "author/js/radar-iso-advanced-query.js",
@@ -375,8 +375,8 @@
     },
     {
       "path": "author/js/radar-iso-catalog-client.js",
-      "bytes": 4604,
-      "sha256": "e1fcba71cac57defb5b2425c80ab0762fd472cb1bf657a1f178a4fe059a1d127"
+      "bytes": 5081,
+      "sha256": "92ae7cc3fde4ed07578aafd452f1115d3f6d31d9014048f27bdf57590ef2f6b5"
     },
     {
       "path": "author/js/radar-iso-full-grid.js",
@@ -435,13 +435,13 @@
     },
     {
       "path": "author/js/radar-radar-admin.js",
-      "bytes": 3172,
-      "sha256": "74441d2eadfae2696946fb4a5c25138b3243f2d44d445b68452e152a87ccde5b"
+      "bytes": 3320,
+      "sha256": "b67fce03aba1bb13071bd7b7683838a766f9e4f2e0d968ef7537337b89bc7f39"
     },
     {
       "path": "author/js/radar-revision-dialogs.js",
-      "bytes": 4780,
-      "sha256": "c258b2ad0c679972b04c5bc04a157ec0022c5d1a1dd4308fe3e299b770717a4c"
+      "bytes": 4903,
+      "sha256": "f258cfeaa64e819fdffb6186a9810f9b6b1400a3fff532ca3f49951a4c40f3c9"
     },
     {
       "path": "author/js/radar-revision-session.js",
@@ -480,13 +480,13 @@
     },
     {
       "path": "author/js/radar-standards-panel.js",
-      "bytes": 78860,
-      "sha256": "a4e04238ed650258ead2dca1b3544a264566cd7c60b750c20fa658513703c204"
+      "bytes": 79224,
+      "sha256": "5aae259c3c199f0d302d5e2f37caabd0bd0c882fedc8073a81082f243bb69914"
     },
     {
       "path": "author/js/radar-workspace-explorer.js",
-      "bytes": 12591,
-      "sha256": "01984a77f61200fd5ef4515a9a4e849871039b69cc8fd9fe90b7ef7caee819d7"
+      "bytes": 12804,
+      "sha256": "ac7b646fbbcd34c98bda317ddab93d114df813f94bb1137bb94fb0fb6d04c1ce"
     },
     {
       "path": "author/js/radar.js",
@@ -1161,12 +1161,12 @@
     {
       "path": "distributions.html",
       "bytes": 2572,
-      "sha256": "346dcde93eca206c776dadf81313c96c29d6cb7dbdad7640325dabeef2b4816f"
+      "sha256": "66808d1ac066a87fa16220385e3cd9fd78763adfb296fe4f8745ba1d5344fd1c"
     },
     {
       "path": "distributions.json",
       "bytes": 1644,
-      "sha256": "9d64ae25b1f6ef7ce1677cc7a65da54ec826a1fe72dccabe720b1d529a0ce62b"
+      "sha256": "5f02fe3dde922b84e6bf459744cb844ad0973f95dc773226839b50579ef6e693"
     },
     {
       "path": "ICS.csv",
@@ -1270,13 +1270,13 @@
     },
     {
       "path": "js/radar-catalog-persistence.js",
-      "bytes": 19056,
-      "sha256": "2d9da69ff8d9e9aea15409469dcf479c1c75b174e6a4716359c1419c840caa1a"
+      "bytes": 20197,
+      "sha256": "53d4efd41ee3c8562622cb4840356258ad0d680842203ada420e685ec67a405d"
     },
     {
       "path": "js/radar-catalog-ui.js",
-      "bytes": 18197,
-      "sha256": "a611e2a9b9af1588485deb18b83482e988f388bdd822ca801cced774e09a0bf4"
+      "bytes": 18924,
+      "sha256": "ce2ab380cdc698b84806f641b8c42bc402146afe937c4b8676efa105df92aad6"
     },
     {
       "path": "js/radar-iso-advanced-query.js",
@@ -1285,8 +1285,8 @@
     },
     {
       "path": "js/radar-iso-catalog-client.js",
-      "bytes": 4604,
-      "sha256": "e1fcba71cac57defb5b2425c80ab0762fd472cb1bf657a1f178a4fe059a1d127"
+      "bytes": 5081,
+      "sha256": "92ae7cc3fde4ed07578aafd452f1115d3f6d31d9014048f27bdf57590ef2f6b5"
     },
     {
       "path": "js/radar-iso-full-grid.js",
@@ -1345,13 +1345,13 @@
     },
     {
       "path": "js/radar-radar-admin.js",
-      "bytes": 3172,
-      "sha256": "74441d2eadfae2696946fb4a5c25138b3243f2d44d445b68452e152a87ccde5b"
+      "bytes": 3320,
+      "sha256": "b67fce03aba1bb13071bd7b7683838a766f9e4f2e0d968ef7537337b89bc7f39"
     },
     {
       "path": "js/radar-revision-dialogs.js",
-      "bytes": 4780,
-      "sha256": "c258b2ad0c679972b04c5bc04a157ec0022c5d1a1dd4308fe3e299b770717a4c"
+      "bytes": 4903,
+      "sha256": "f258cfeaa64e819fdffb6186a9810f9b6b1400a3fff532ca3f49951a4c40f3c9"
     },
     {
       "path": "js/radar-revision-session.js",
@@ -1390,13 +1390,13 @@
     },
     {
       "path": "js/radar-standards-panel.js",
-      "bytes": 78860,
-      "sha256": "a4e04238ed650258ead2dca1b3544a264566cd7c60b750c20fa658513703c204"
+      "bytes": 79224,
+      "sha256": "5aae259c3c199f0d302d5e2f37caabd0bd0c882fedc8073a81082f243bb69914"
     },
     {
       "path": "js/radar-workspace-explorer.js",
-      "bytes": 12591,
-      "sha256": "01984a77f61200fd5ef4515a9a4e849871039b69cc8fd9fe90b7ef7caee819d7"
+      "bytes": 12804,
+      "sha256": "ac7b646fbbcd34c98bda317ddab93d114df813f94bb1137bb94fb0fb6d04c1ce"
     },
     {
       "path": "js/radar.js",
@@ -1826,7 +1826,7 @@
     {
       "path": "release-manifest.json",
       "bytes": 34476,
-      "sha256": "d86199fd53e1679c0ed6984bdead8688dbb7617ae2cc2bc6339327a2ac547841"
+      "sha256": "6414315afa3bb3ddf9e693f57495a3dde52073edc358edd40dc8faf67177a397"
     },
     {
       "path": "src/domain/roadmap-published-projection.mjs",

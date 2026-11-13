@@ -8,7 +8,16 @@
   var own = function (o, k) { return Object.prototype.hasOwnProperty.call(o, k); };
   var clone = function (v) { return JSON.parse(JSON.stringify(v)); };
   function fail(s) { throw Error('Catalog persistence: ' + s); }
-  function eq(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
+  function canonical(value) {
+    return JSON.stringify(value, function(key, item) {
+      if (item && typeof item === 'object' && !Array.isArray(item))
+        return Object.fromEntries(Object.keys(item).sort().map(function(k) {
+          return [k, item[k]];
+        }));
+      return item;
+    });
+  }
+  function eq(a, b) { return canonical(a) === canonical(b); }
   function remember(catalog, summary, manifest, importDigest) {
     root.__radarApplicationProfile?.assertCatalog(catalog);
     if (!catalog || !summary || !Array.isArray(summary.revisions) ||
@@ -227,7 +236,13 @@
       if (own(b,'assessmentId') || r.assessmentId) b.assessmentId=r.assessmentId || null;
       b.label=d.label; b.ring=d.ring; b.quadrant=d.quadrant;
       b.position={x:node.position.x,y:node.position.y};
-      b.context=clone(r.context || {}); b.extensions=clone(r.extensions || {});
+      // Cytoscape supplies empty defaults for optional native metadata.
+      // Do not turn absent (or null) metadata into a business change.
+      ['context','extensions'].forEach(function(key) {
+        var value=clone(r[key] || {});
+        if (!originals.has(id) || Object.keys(value).length ||
+            (own(b,key) && b[key] !== null)) b[key]=value;
+      });
       return b;
     });
   }
@@ -299,10 +314,28 @@
   function rename(kind,id,value){
     root.__radarApplicationProfile?.require("radar.rename");
     if(typeof value!=='string'||!value.trim()||value.trim().length>120)fail('invalid display name');
-    var c=sourceFor(kind,id),admin=metadata(c),key=kind==='radar'?'radarNames':'revisionLabels';
+    var c=sourceFor(kind,id);
+    var key=kind==='radar'?'radarNames':'revisionLabels';
+    var index=c.radarRevisions.findIndex(function(r){
+      return (kind==='radar'?r.radarId:r.revisionId)===id;
+    });
+    var revision=c.radarRevisions[index];
+    var current=getDisplay(kind,id);
+    var old=current||(kind==='revision'?'r'+(index+1):revision.title)||null;
+    var next=value.trim();
+    if(old===next)return {id,name:old,changed:false};
+
+    if(kind==='revision'){
+      var duplicate=c.radarRevisions.some(function(r,i){
+        if(r.revisionId===id||r.radarId!==revision.radarId)return false;
+        var name=getDisplay('revision',r.revisionId)||'r'+(i+1);
+        return name.toLowerCase()===next.toLowerCase();
+      });
+      if(duplicate)fail('revision label already used in this radar: '+next);
+    }
+
+    var admin=metadata(c);
     admin[key]=admin[key]||{};
-    var old=admin[key][id]||c.radarRevisions.find(function(r){return (kind==='radar'?r.radarId:r.revisionId)===id;})?.title||null;
-    if(old===value.trim())return {id,name:old,changed:false};
     admin[key][id]=value.trim();
     admin.nameHistory=admin.nameHistory||[];
     admin.nameHistory.push({kind:kind,id:id,previous:old,current:value.trim(),changedAt:new Date().toISOString()});

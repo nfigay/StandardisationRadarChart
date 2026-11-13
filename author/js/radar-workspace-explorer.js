@@ -75,6 +75,12 @@
       if(!revision)continue;
       radar.status=revision.status;
       var index=source.radars.indexOf(radar);
+      var sharedLabel=root.__radarRevisionDialogs?.label;
+      if(sharedLabel){
+        radar.label=sharedLabel(revision,index);
+        continue;
+      }
+      // Compatibility for isolated legacy environments.
       var custom=root.__radarCatalogPersistence?.getRevisionLabel?.(revision.revisionId);
       var number=custom&&/^r[0-9]+(?:|$)/i.test(custom)?null:'r'+(index+1);
       var version=String(revision.version||'').replace(/(?:-draft-local)+$/g,''); // presentation only

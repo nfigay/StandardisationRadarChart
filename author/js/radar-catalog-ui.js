@@ -137,6 +137,7 @@
     toolbar.refresh('item2');
     selectGroup(group);
     root.__radarWorkspaceExplorer?.draftAdded?.(group);
+    refreshCommonRevisionLabels();
     root.__radarWorkspaceExplorer?.activate?.(group);
     return {action:'created',group:group,revisionId:draftId};
   }
@@ -161,6 +162,7 @@
       toolbar.set('item2',{items:entries});toolbar.refresh('item2');
     }
     afterSelect(group,graph);
+    refreshCommonRevisionLabels();
     root.__radarWorkspaceExplorer?.refresh?.(); // Re-read authoritative adapter status.
     return result;
   }
@@ -201,6 +203,7 @@
     var summary=load(catalog,toolbar);
     persistence.remember(catalog,summary);
     explorer.addCatalog(catalog,summary);
+    refreshCommonRevisionLabels();
     toolbar.set('item2',{selected:summary.revisions[0].menuId});
     toolbar.refresh('item2');
     explorer.activate(summary.revisions[0].group);
@@ -272,6 +275,10 @@
       toolbar.refresh('item2');
     }
     // count is a monotonic allocation cursor; never reuse existing menu identities.
+    refreshCommonRevisionLabels();
+  }
+  function refreshCommonRevisionLabels(){
+    if(root.__radarRevisionDialogs?.label)refreshRadarLabels();
   }
   function refreshRadarLabels(){
     var item=root.w2ui?.toolbar?.get?.('item2');
@@ -282,6 +289,14 @@
       if(!group)return entry;
       var revision=root.__radarCatalogAdapter?.getRevision?.(group);
       if(!revision)return entry;
+      var sharedLabel=root.__radarRevisionDialogs?.label;
+      if(sharedLabel){
+        var index=root.__radarCatalogAdapter.status().indexOf(group);
+        var radarName=root.__radarCatalogPersistence?.getRadarName?.(revision.radarId)||revision.title||revision.radarId;
+        changed=true;
+        return Object.assign({},entry,{text:escapeHTML(radarName)+' — '+escapeHTML(sharedLabel(revision,index))});
+      }
+      // Compatibility for isolated legacy environments.
       var title=root.__radarCatalogPersistence?.getRadarName?.(revision.radarId)||revision.title||revision.radarId;
       var label=root.__radarCatalogPersistence?.getRevisionLabel?.(revision.revisionId)||String(revision.version||'').replace(/(?:-draft-local)+$/g,'');
       var french=String(root.i18next?.language||'fr').toLowerCase().startsWith('fr');

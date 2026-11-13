@@ -15,7 +15,11 @@
   if(!revision||!persistence?.renameRadar||!persistence?.renameRevisionLabel)throw Error(t('missing'));
   if(!root.w2popup?.open||typeof root.w2form!=='function')throw Error('w2popup / w2form unavailable');
   const radarId=revision.radarId;
-  const initial=isRevision?(persistence.getRevisionLabel(revision.revisionId)||revision.title||''):(persistence.getRadarName(radarId)||revision.title||'');
+  const index=root.__radarCatalogAdapter?.status?.().indexOf(group);
+  const initial=isRevision?
+    (root.__radarRevisionDialogs?.revisionName?.(revision,index)||
+      persistence.getRevisionLabel(revision.revisionId)||revision.revisionId):
+    (persistence.getRadarName(radarId)||revision.title||'');
   let form=null;
   const formName='radarRenameForm';
   function cleanup(){if(form){try{form.destroy();}catch(_){ }form=null;}}
