@@ -30,7 +30,7 @@ test('selection labels include administrative revision label without internal ID
  const root={i18next:{language:'fr'},__radarCatalogPersistence:{getRevisionLabel:()=> 'Correction 2026'}};
  root.window=root;vm.runInNewContext(code('js/radar-revision-dialogs.js'),root);
  const actual=root.__radarRevisionDialogs.label({revisionId:'revision-uuid:draft:local',version:'0.1.0-draft-local',status:'draft'},0);
- assert.equal(actual,'r1 — Correction 2026 — 0.1.0 — Brouillon');
+ assert.equal(actual,'Correction 2026 — 0.1.0 — Brouillon');
 });
 
 test('persistence rename is administrative and exported without editing published snapshot',()=>{

@@ -347,3 +347,217 @@ commune et cycle de vie applicatif.
 Les distributions publiques historiques
 restent inchangées jusqu'à une publication
 explicitement qualifiée.
+
+## Qualification pilote : fidélité de la persistance
+
+<!-- A8.1-RELEASE-2-R2-PERSISTENCE -->
+
+### Anomalie constatée
+
+La recette du Creator autonome a révélé
+une multiplication des brouillons lors
+de la sauvegarde d'un radar modifié.
+
+Une collision a également été observée :
+
+Catalog persistence: draft revisionId
+collision: rev-2:draft:local.
+
+### Cause identifiée
+
+Le modèle natif autorise des blips sans
+propriétés context et extensions.
+
+La projection Cytoscape représente ces
+propriétés par des objets vides.
+
+La conversion inverse ajoutait ces valeurs
+au blip natif même si celui-ci n'avait
+subi aucune modification métier.
+
+La comparaison par JSON.stringify
+considérait alors une révision publiée
+inchangée comme modifiée.
+
+Le mécanisme historique de dérivation
+automatique pouvait créer un brouillon
+superflu ou entrer en collision avec
+un brouillon explicitement créé.
+
+### Contrat de persistance
+
+- Un brouillon existant conserve son identité
+  lors de la modification et de la sauvegarde.
+- Une révision publiée inchangée reste intacte.
+- Une projection graphique ne doit pas créer
+  de modification métier artificielle.
+- L'absence ou la valeur nulle des métadonnées
+  facultatives est préservée lorsque le graphe
+  ne contient que leur valeur vide par défaut.
+- L'ordre des propriétés des objets JSON
+  n'est pas significatif pour la comparaison.
+- L'ordre des tableaux reste significatif.
+- Les modifications réelles des données
+  restent détectées.
+- Les contrôles de collision restent actifs.
+
+La correction est portée par le service
+commun radar-catalog-persistence.js.
+
+Aucun service spécifique au standalone
+n'est introduit.
+
+### Non-régression
+
+Sept tests supplémentaires couvrent :
+
+1. La révision publiée inchangée.
+2. Les sauvegardes répétées du brouillon.
+3. La suppression et la recréation du brouillon.
+4. La sauvegarde et la réouverture JSON.
+5. Les métadonnées facultatives et l'ordre
+   des propriétés.
+6. Les véritables modifications et collisions.
+7. L'archivage d'une révision inchangée.
+
+Avant correction : six échecs, un succès.
+
+Après correction : sept succès.
+
+Suite complète : 483 tests réussis.
+
+### Limites
+
+Les nouveaux tests utilisent les véritables
+services applicatifs et des doubles de test
+pour le graphe et les composants W2UI.
+
+La recette navigateur de la sauvegarde réelle,
+de l'intégrité de l'artefact téléchargé et
+de sa réouverture reste nécessaire.
+
+Le générateur HTML autonome est toujours
+un outil de construction pilote.
+
+Sa consolidation dans les sources et la
+publication des artefacts qualifiés restent
+à effectuer.
+
+<!-- A8.1-R3-FINAL-VALIDATION -->
+
+Validation finale R3 : 488 tests réussis.
+
+L’assertion historique S14-K-R3 a été actualisée
+pour refléter le nouveau contrat de présentation :
+un libellé personnalisé remplace le numéro automatique.
+Les identifiants techniques et les protections
+des révisions restent inchangés.
+
+La recette utilisateur R2 a confirmé la sauvegarde
+et la réouverture des modifications d’un brouillon.
+
+## Qualification pilote : ressources ICS autonomes
+
+<!-- A8.1-RELEASE-2-R4-ICS -->
+
+La recette R2/R3 confirme la sauvegarde,
+le renommage et la réouverture des catalogues.
+
+Le Creator autonome utilisait encore un téléchargement
+PapaParse par XMLHttpRequest pour le CSV ICS.
+Le protocole file:// bloquait cette requête.
+
+R4 utilise le mécanisme fetch embarqué en standalone
+puis analyse directement le contenu CSV.
+Le téléchargement historique reste inchangé sur serveur.
+
+Trois tests couvrent le mode autonome, le mode serveur
+et le traitement des ressources manquantes.
+Suite complète : 491 tests réussis.
+
+La consultation effective du corpus ISO et ICS
+reste à confirmer dans le navigateur hors ligne.
+
+## Qualification pilote : installation ISO embarquée
+
+<!-- A8.1-RELEASE-2-R5-ISO -->
+
+La recette R4 confirme le chargement de la classification ICS.
+Le catalogue ISO reste vide car le client refuse les URL file://.
+
+R5 introduit une adresse virtuelle HTTPS réservée :
+
+`https://standalone.invalid/StandardisationRadarChart/catalog-distribution/`
+
+Cette adresse est résolue par le mécanisme fetch embarqué.
+Elle ne désigne aucun serveur externe.
+
+Le Creator autonome accepte uniquement son catalogue intégré.
+Les validateurs historiques HTTP/HTTPS sont conservés sur serveur.
+
+Le moteur streaming, les manifestes, les empreintes SHA-256,
+la décompression et l’activation IndexedDB restent inchangés.
+
+Trois tests complémentaires couvrent la validation des adresses,
+la compatibilité serveur et le chemin client/importateur.
+
+Suite complète : 494 tests réussis.
+
+L’installation réelle et la consultation dans Chrome
+restent à confirmer avant publication.
+
+## Qualification et distribution pilote R5
+
+<!-- A8.1-PILOT-R5-QUALIFICATION -->
+
+La recette utilisateur confirme :
+
+- Modification et sauvegarde des brouillons.
+- Réouverture des catalogues modifiés.
+- Renommage et conservation des libellés.
+- Consultation du Viewer commun.
+- Chargement autonome de la classification ICS.
+- Installation des 81 768 notices ISO embarquées.
+- Consultation du catalogue par fenêtres.
+- Réutilisation du catalogue ISO après rechargement.
+
+La suite automatisée comporte 494 tests réussis.
+
+Le générateur des applications autonomes est
+consolidé dans scripts/build-common-standalone.mjs.
+
+La génération utilise le commit Git complet
+comme provenance de chaque application.
+
+Commande de reconstruction :
+
+1. npm run build:pages
+2. npm run verify:pages
+3. PILOT_DIR=<dossier-existant> node scripts/build-common-standalone.mjs
+
+Le dossier de sortie doit être vide pour les HTML.
+
+Les deux applications autonomes sont destinées
+à une GitHub Release pilote, avec les exemples
+de catalogues et les empreintes SHA-256.
+
+Les distributions historiques sont maintenues
+sur GitHub Pages pendant la convergence.
+
+Points de vigilance :
+
+- Première installation ISO relativement longue.
+- Cache navigateur dépendant du contexte local.
+- Amélioration du suivi de progression.
+- Repli sur le titre anglais à améliorer.
+- Pas de qualification exhaustive réseau coupé.
+- Publication configurable A8.2 et suivantes
+  non encore réalisée.
+
+Les profils communs constituent une séparation
+fonctionnelle, non une frontière de sécurité.
+La réduction physique des modules Viewer
+reste prévue dans les lots suivants.
+
+Cette version est destinée à la collecte
+des besoins auprès des utilisateurs pilotes.

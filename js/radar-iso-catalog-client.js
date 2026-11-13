@@ -1,7 +1,16 @@
 /* S14-S: app-facing catalog client. Static, configurable distribution; no operator collection. */
 (function(root){
  'use strict';
- function validatedBase(input){const u=new URL(input,root.location.href);if(!['https:','http:'].includes(u.protocol)||u.username||u.password||u.search||u.hash)throw Error('Invalid catalog endpoint');
+ // A8.1-R5: virtual HTTPS endpoint resolved by the embedded fetch adapter.
+ const STANDALONE_ENDPOINT='https://standalone.invalid/StandardisationRadarChart/catalog-distribution/';
+ function validatedBase(input){
+   if(root.__radarStandalone?.profile==='creator' &&
+      root.location.protocol==='file:'){
+     if(input==='./catalog-distribution/' || input===STANDALONE_ENDPOINT)
+       return STANDALONE_ENDPOINT;
+     throw Error('Standalone catalog endpoint must use the embedded distribution');
+   }
+   const u=new URL(input,root.location.href);if(!['https:','http:'].includes(u.protocol)||u.username||u.password||u.search||u.hash)throw Error('Invalid catalog endpoint');
    if(u.protocol==='http:'&&!['localhost','127.0.0.1','[::1]'].includes(u.hostname))throw Error('Remote catalogs require HTTPS');
    return u.href.endsWith('/')?u.href:u.href+'/';}
  function safePath(s){if(typeof s!=='string'||!s||s.startsWith('/')||s.includes('\\')||s.split('/').some(p=>!p||p==='.'||p==='..')||/[?#:]/.test(s))throw Error('Unsafe catalog resource path');return s;}

@@ -825,7 +825,15 @@
    const sources=['./ICS.csv',ICS_URL];let lastError='';
    for(const url of sources){
      try{
-       const rows=await new Promise((resolve,reject)=>root.Papa.parse(url,{download:true,header:true,skipEmptyLines:true,
+       // A8.1-R4: use embedded CSV through the standalone fetch adapter.
+         let csvInput=url;
+         const standalone=!!root.__radarStandalone;
+         if(standalone){
+           const response=await root.fetch(url);
+           if(!response.ok)throw Error('ICS HTTP '+response.status);
+           csvInput=await response.text();
+         }
+         const rows=await new Promise((resolve,reject)=>root.Papa.parse(csvInput,{download:!standalone,header:true,skipEmptyLines:true,
          complete:r=>r.errors?.length&&!(r.data||[]).length?reject(Error(r.errors[0].message)):resolve((r.data||[]).filter(x=>String(x?.identifier||'').trim()&&String(x?.titleFr||x?.titleEn||'').trim())),
          error:reject}));
        if(rows.length){icsRows=rows;icsError=null;break;}
