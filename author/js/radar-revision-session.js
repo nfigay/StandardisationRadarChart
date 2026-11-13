@@ -19,6 +19,7 @@
     });
   }
   function capture(graph) {
+    if(root.__radarApplicationProfile?.viewer)return;
     if (activeGroup !== null) revisions[activeGroup] = snapshot(graph);
   }
   function restore(graph, value) {
@@ -30,6 +31,11 @@
     root.__radarViewportSync?.();
   }
   function select(graph, group, initialise) {
+    if(root.__radarApplicationProfile?.viewer){
+      root.__radarApplicationProfile.assertRevision(
+        root.__radarCatalogAdapter?.getRevision?.(group)
+      );
+    }
     assertGroup(group);
     if (activeGroup === group) return;
     capture(graph);
@@ -42,6 +48,7 @@
     activeGroup = group;
   }
   function adoptLoaded(graph) {
+    root.__radarApplicationProfile?.require("graph.import");
     // Existing SSR files do not identify the selected radar at graph root.
     // Only infer it when *every* node has the same known working_group.
     var nodes = graph.nodes().jsons();
@@ -55,6 +62,7 @@
     return null;
   }
   function removeGroup(graph, group) {
+    root.__radarApplicationProfile?.require("workspace.remove");
     assertGroup(group);
     // Removing an active group clears the displayed graph instead of taking a snapshot
     // that would resurrect a deleted radar on subsequent selection.

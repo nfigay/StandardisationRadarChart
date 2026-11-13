@@ -101,6 +101,7 @@
     if(active){ var selected=tree.get('radar_'+active.replace(/[^a-zA-Z0-9_-]/g,'_'));if(selected)tree.select(selected.id); }
   }
   function loadASD(groups) {
+    root.__radarApplicationProfile?.require("workspace.loadLegacy");
     if(getSource('asd2019'))fail('ASD SSG 2019 already loaded; explicit reload is not automatic');
     if(!Array.isArray(groups)||!groups.length)fail('working groups are required');
     var distinct=new Set(),radars=[],unassignedCount=0;
@@ -125,6 +126,7 @@
     refresh();return {loaded:radars.length,unassignedCount:unassignedCount};
   }
   function addCatalog(catalog,summary) {
+    root.__radarApplicationProfile?.assertCatalog(catalog);
     if(!catalog||!Array.isArray(catalog.radarRevisions)||!summary||!Array.isArray(summary.revisions)||summary.revisions.length!==catalog.radarRevisions.length)fail('invalid catalog mapping');
     var id='catalog_'+(++serial);
     var orgs=new Map((catalog.organizations||[]).map(o=>[o.organizationId,o]));
@@ -138,6 +140,7 @@
     refresh();return id;
   }
   function draftAdded(group) {
+    root.__radarApplicationProfile?.require("revision.create");
     var revision=root.__radarCatalogAdapter?.getRevision?.(group);
     if(!revision)fail('draft not registered');
     var original=revision.extensions?.lineage?.basedOnRevisionId;
@@ -159,6 +162,7 @@
     return {group:group};
   }
   function showRemovalMenu(sourceId,group,mouse) {
+    if(root.__radarApplicationProfile?.allows('workspace.remove')===false)return;
     // W2UI context menu. No DOM mutation when the user dismisses the menu.
     if(!root.w2menu?.show || !mouse) {
       if(root.w2confirm)root.w2confirm(tr('removeConfirm','Remove selected content from memory?')).yes(()=>remove(sourceId,group));
@@ -173,6 +177,7 @@
     else remove(sourceId,group);
   }
   function remove(sourceId,group) {
+    root.__radarApplicationProfile?.require("workspace.remove");
     var s=getSource(sourceId);if(!s)fail('source does not exist');
     var targets=group?[entry(s,group)].filter(Boolean):s.radars.slice();
     if(!targets.length)fail('radar does not exist');

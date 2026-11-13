@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Radar Chart Builder</title>
+    <script src="./js/radar-application-profile.js"></script>
     <script src="./js/blips.js"></script>
     <script src="./js/working-groups-classic.js"></script>
     <script src="./js/radar-revision-session.js"></script>
@@ -859,7 +860,7 @@
             if (w2ui.mainMenu) return; // Prevent multiple initializations
             mainMenu = new w2toolbar({
                 name: "mainMenu",
-                items: getMenuItems(),
+                items: window.__radarApplicationProfile.filterMainMenu(getMenuItems()),
                 onClick: function (event) {
                     handleMenuAction(event); // Handle menu actions
                 }
@@ -888,6 +889,7 @@
         // A single direct W2UI item callback owns draft creation.
         // The toolbar-wide click switch deliberately does not invoke it again.
         function handleCreateOrOpenDraft() {
+            if (!window.__radarApplicationProfile.allows('revision.create')) return;
             try {
                 const result = window.__radarCatalogUI.createOrOpenDraft(w2ui.toolbar, cy, drawSelectedWorkgroup);
                 console.log('Draft:', result);
@@ -901,6 +903,7 @@
         // C1 deliberately creates a catalog with its first empty draft in one transaction.
         // Canceling any prompt leaves the workspace unchanged.
         function handleNewCatalog() {
+            if (!window.__radarApplicationProfile.allows('catalog.create')) return;
             const labels = i18next.language?.startsWith('fr')
                 ? ['Nom du catalogue', "Nom de l'organisation", 'Nom du portefeuille', 'Nom du premier radar']
                 : ['Catalog name', 'Organization name', 'Portfolio name', 'First radar name'];
@@ -936,7 +939,7 @@
             return new w2toolbar({
                 box: '#toolbar-container',
                 name: 'toolbar',
-                items: [
+                items: window.__radarApplicationProfile.filterToolbar([
                     {
                         type: 'label',
                         id: 'item1',
@@ -962,7 +965,7 @@
                             }
                         },
                         selected: null, // Active workspace starts empty; ASD is explicit-load only. // Default to first item
-                        items: workingGroupMenuItems
+                        items: window.__radarApplicationProfile.viewer ? [] : workingGroupMenuItems
                     },
                     { type: 'new-line' },
                    
@@ -1037,7 +1040,7 @@
 
 
 
-                ],
+                ]),
                 // Place onClick *outside* of the items array
                 onChange(event) {
                     console.log('ICS field changed: ', event.target.value);
@@ -1049,13 +1052,16 @@
                 },
 
                 onClick(event) {
+                    if (window.__radarApplicationProfile.viewer &&
+                        !window.__radarApplicationProfile.allowsToolbar(event.target)) return;
                     const target = event.target.split(':')[0]; // Get the part before the colon
                     const subTarget = event.target.split(':')[1];
                     // Protect published/archived revisions at the existing W2UI action boundary.
                     const readonlyToolbarAllowed = ['item2', 'createdraft', 'newcatalog', 'loadcatalogjson',
                         'savecatalogjson', 'savegraphssr', 'savecsvssr'];
                     const safeLockedMode = target === 'item4' && subTarget === 'locked';
-                    if (window.__radarCatalogUI?.isReadOnly() &&
+                    if (!window.__radarApplicationProfile.viewer &&
+                        window.__radarCatalogUI?.isReadOnly() &&
                         !readonlyToolbarAllowed.includes(target) && !safeLockedMode) {
                         offerDraftForReadOnlyAction();
                         return;
@@ -1232,6 +1238,7 @@
         // Read-only is not a dead end: explicitly offer to derive a new working revision.
         // This NEVER edits a published/archived snapshot and requires user confirmation.
         function offerDraftForReadOnlyAction() {
+            if (!window.__radarApplicationProfile.allows('revision.create')) return;
             const group = window.__radarRevisionSession?.status?.().activeGroup;
             const revision = window.__radarCatalogAdapter?.getRevision?.(group);
             if (!revision || revision.status === 'draft') {
@@ -1250,6 +1257,8 @@
         }
 
         function handleMenuAction(event) {
+            if (window.__radarApplicationProfile.viewer &&
+                !window.__radarApplicationProfile.allowsMenu(event.target)) return;
             // The main Files menu is the sole visible entry point for file actions.
             // Reuse the existing toolbar action handler without duplicating IO code.
             // The toolbar guard protects graph mutations. Exporting catalog JSON is read-only
@@ -1261,7 +1270,8 @@
                 if (fileActions.includes(fileAction)) {
                     // Check BEFORE delegation: the Files submenu otherwise bypasses
                     // the top-level read-only policy entirely.
-                    if (window.__radarCatalogUI?.isReadOnly() &&
+                    if (!window.__radarApplicationProfile.viewer &&
+                        window.__radarCatalogUI?.isReadOnly() &&
                         !['savecatalogjson', 'newcatalog'].includes(fileAction)) {
                         offerDraftForReadOnlyAction();
                         return;
@@ -1282,7 +1292,8 @@
             const readonlyMenuAllowed = ['asd2019:loadasd', 'files:newcatalog', 'files:savecatalogjson', 'radartools:createdraft',
                 'radartools:modeLocked', 'radartools:showEditor', 'radartools:publishcatalogrevision', 'radartools:exportclientroadmap', 'radartools:archivecatalogrevision', 'radartools:selectcatalogrevision', 'radartools:renameradar', 'radartools:renamerevision', 'radartools:standardregistry', 'view:nodeRendering', 'view.edgeRendering',
                 'language:fr', 'language:en', 'owl:exportjson', 'owl:savegraph'];
-            if (window.__radarCatalogUI?.isReadOnly() &&
+            if (!window.__radarApplicationProfile.viewer &&
+                window.__radarCatalogUI?.isReadOnly() &&
                 !readonlyMenuAllowed.includes(event.target)) {
                 offerDraftForReadOnlyAction();
                 return;
@@ -1692,12 +1703,19 @@
         initializeToolbar().render("#toolbar-container")
         window.__radarWorkspaceExplorer.initialize({mount:document.getElementById('workspace-explorer'),
             graph:function(){return cy;},select:function(group){drawSelectedWorkgroup(group);}});
-        window.__radarStandardsPanel?.initialize(document.getElementById('standard-references-panel'), function(){return cy;});
+        if (window.__radarApplicationProfile.allows('catalog.admin')) {
+            window.__radarStandardsPanel?.initialize(document.getElementById('standard-references-panel'), function(){return cy;});
+        } else {
+            w2ui.mainLayout.hide('bottom');
+        }
 
 
 
         // Dynamically assign the form to the right panel of the layout
         // w2ui.mainLayout.html('right', createForm());
+        if (window.__radarApplicationProfile.viewer) {
+            document.title='Standardization Radar Chart — Viewer';
+        }
         drawSVG()
 
 
@@ -2128,7 +2146,7 @@
             userPanningEnabled: false,     // Disable user-initiated panning
             panningEnabled: true,         // Allow programmatic viewport pan
             autolock: false,                // Lock nodes in place (prevents accidental grabbing)
-            autoungrabify: false,           // Prevents nodes from being grabbed and moved          
+            autoungrabify: window.__radarApplicationProfile.viewer,           // Prevents nodes from being grabbed and moved
             layout: {
                 name: 'preset',            // Use 'preset' layout to respect given node positions
                 fit: false,                // Prevent auto-fit adjustment after layout

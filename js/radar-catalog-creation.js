@@ -18,6 +18,7 @@
     return prefix + root.crypto.randomUUID();
   }
   function execute(graph, request, createStandard) {
+    root.__radarApplicationProfile?.require("radar.createBlip");
     var session = root.__radarRevisionSession;
     var adapter = root.__radarCatalogAdapter;
     var persistence = root.__radarCatalogPersistence;

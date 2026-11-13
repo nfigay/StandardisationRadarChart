@@ -29,7 +29,10 @@ function drawSelectedWorkgroup(workgroup) {
 function generateFormFromCytoscapeElement(ele) {
   if (!ele || !ele.isNode()) return;
 
-  let data = ele.data();
+  const viewer=window.__radarApplicationProfile?.viewer===true;
+  let data = viewer
+    ?JSON.parse(JSON.stringify(ele.data()))
+    :ele.data();
   let position = ele.position(); // Get position separately
   let formFields = {};
 
@@ -146,6 +149,10 @@ function generateFormFromCytoscapeElement(ele) {
   }
   };
 
+  if(viewer){
+    window.__radarApplicationProfile.readonlyFields(formFields);
+    formConfig.actions={};
+  }
   return new w2form(formConfig);
 }
 
@@ -202,6 +209,7 @@ function getZone(x, y, radii) {
 }
 
 function enableNodeGrabbing() {
+  window.__radarApplicationProfile?.require('radar.edit');
   cy.nodes().grabify();
 }
 
@@ -397,6 +405,7 @@ function drawSVG() {
 
 
 function plotData(RadarInputs) {
+  window.__radarApplicationProfile?.require('workspace.loadLegacy');
   cy.elements().remove();
 
   const validRings = ["Adopted", "Candidate", "Track"];
@@ -452,6 +461,7 @@ function plotData(RadarInputs) {
 }
 
 function downloadCompleteRadarData() {
+  window.__radarApplicationProfile?.require('graph.export');
   cy.nodes().ungrabify();  // Correct function to disable grabbing
   // Get the full graph data including nodes, edges, styles, and positions
   const jsonData = cy.json();
@@ -473,6 +483,7 @@ function downloadCompleteRadarData() {
 }
 
 function loadRadarData(event) {
+  window.__radarApplicationProfile?.require('graph.import');
   const file = event.target.files[0];
   if (!file) return;
 

@@ -7,6 +7,7 @@
  };
  const t=key=>(dict[String(root.i18next?.language||'fr').startsWith('fr')?'fr':'en'][key]||key);
  function open(kind){
+    root.__radarApplicationProfile?.require("radar.rename");
   const isRevision=kind==='revision';
   const group=root.__radarRevisionSession?.status?.().activeGroup;
   const revision=root.__radarCatalogAdapter?.getRevision?.(group);

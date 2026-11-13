@@ -2,6 +2,7 @@
 (function (root) {
   'use strict';
   if (root.__radarS14Z) return;
+  if(root.__radarApplicationProfile?.allows('catalog.admin')===false)return;
   const d = root.document;
   const wording = {
     fr: {

@@ -11,6 +11,7 @@
   function str(x) { return typeof x === 'string' && !!x.trim(); }
   function escapeHTML(x) { return String(x).replace(/[&<>"']/g, function(c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function prepare(catalog, state) {
+    root.__radarApplicationProfile?.assertCatalog(catalog);
     if (!catalog || !Array.isArray(catalog.radarRevisions) || !catalog.radarRevisions.length) error('radarRevisions must be a nonempty array');
     if (!Array.isArray(catalog.organizations) || !Array.isArray(catalog.standards) || !Array.isArray(catalog.portfolios)) error('organizations, standards and portfolios arrays required');
     var orgs = new Set(catalog.organizations.map(function(o) { return o.organizationId; }));
@@ -70,10 +71,18 @@
     return root.__radarCatalogAdapter?.getRevision?.(group) || null;
   }
   function isReadOnly() {
+    if(root.__radarApplicationProfile?.viewer)return true;
     var r=activeRevision();
     return !!r && r.status !== 'draft';
   }
   function afterSelect(group, graph) {
+    if(root.__radarApplicationProfile?.viewer){
+      root.__radarApplicationProfile.assertRevision(
+        root.__radarCatalogAdapter?.getRevision?.(group)
+      );
+      graph?.nodes().ungrabify();
+      return;
+    }
     var r=root.__radarCatalogAdapter?.getRevision?.(group);
     if (!r || !graph) return; // Historical groups retain their existing interaction policy.
     var mode=root.w2ui?.toolbar?.get('item4');
@@ -88,6 +97,7 @@
     }
   }
   function createOrOpenDraft(toolbar, graph, selectGroup) {
+    root.__radarApplicationProfile?.require("revision.create");
     var adapter=root.__radarCatalogAdapter, session=root.__radarRevisionSession;
     if (!adapter || !session || !toolbar || typeof selectGroup !== 'function') error('app not ready');
     var active=session.status().activeGroup, original=adapter.getRevision(active);
@@ -133,6 +143,7 @@
   // S13: explicit lifecycle transition. The UI cannot mark a revision published
   // without first capturing its current Cytoscape representation into imports[].
   function transitionActiveRevision(action, toolbar, graph) {
+    root.__radarApplicationProfile?.require("revision.publish");
     var group=root.__radarRevisionSession?.status?.().activeGroup;
     var revision=root.__radarCatalogAdapter?.getRevision?.(group);
     if (!revision || !group) error('select a catalog revision first');
@@ -156,6 +167,7 @@
   // Phase 10G-C1: create the first working radar and its catalog in memory.
   // No file access and no published snapshot are implied by this action.
   function createNewCatalog(fields, toolbar, graph, selectGroup) {
+    root.__radarApplicationProfile?.require("catalog.create");
     var persistence=root.__radarCatalogPersistence;
     var explorer=root.__radarWorkspaceExplorer;
     var adapter=root.__radarCatalogAdapter;
@@ -210,6 +222,7 @@
     },function(group){return root.__radarCatalogAdapter.getRevision(group);});
   }
   function openFile() {
+    root.__radarApplicationProfile?.require("catalog.open");
     var picker = document.createElement('input');
     picker.type = 'file'; picker.accept = '.json,application/json'; picker.style.display = 'none';
     document.body.appendChild(picker);
@@ -247,6 +260,7 @@
     picker.click();
   }
   function unregister(group) {
+    root.__radarApplicationProfile?.require("workspace.remove");
     var key=Object.keys(registry).find(function(k){return registry[k]===group;});
     if(!key)error('unknown registered group '+group);
     delete registry[key];
