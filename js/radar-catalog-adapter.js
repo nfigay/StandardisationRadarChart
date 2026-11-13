@@ -10,6 +10,7 @@
   function nonempty(x) { return typeof x === 'string' && x.trim().length > 0; }
   function own(x, k) { return Object.prototype.hasOwnProperty.call(x, k); }
   function register(group, revision) {
+    root.__radarApplicationProfile?.assertRevision(revision);
     if (!nonempty(group)) fail('group must be non-empty');
     if (own(registered, group)) fail('group already registered: ' + group);
     if (!revision || revision.schemaVersion !== '1.0.0' ||
@@ -57,11 +58,13 @@
   }
   root.__radarCatalogAdapter = Object.freeze({
     register: register, unregister:function(g) {
+    root.__radarApplicationProfile?.require("workspace.remove");
       if(!own(registered,g))fail('cannot remove unknown group: '+g);
       delete registered[g];
     }, has: function(g) { return own(registered, g); },
     getRevision: function(g) { return own(registered,g) ? clone(registered[g]) : null; },
     replaceRevision:function(group, revision, expectedStatus) {
+    root.__radarApplicationProfile?.require("revision.publish");
       if (!own(registered, group) || registered[group].status !== expectedStatus ||
           revision?.revisionId !== registered[group].revisionId ||
           revision?.radarId !== registered[group].radarId ||

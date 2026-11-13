@@ -1,5 +1,40 @@
 # START HERE — Référentiel courant du projet
 
+<!-- S14.3-A8.1-CLOSURE -->
+
+## Dernier état de réalisation — après A8.1
+
+Le dernier lot applicatif A8.1 a été validé :
+
+- 476 tests automatisés réussis ;
+- recette du Viewer commun dans Chrome ;
+- deux révisions natives navigables ;
+- coordonnées préservées ;
+- formulaire W2UI commun en lecture seule ;
+- commandes de mutation absentes des menus inspectés.
+
+La preuve architecturale courante est
+[Architecture 80](../architecture/80-S14-3-COMMON-APPLICATION-PROFILES.md).
+
+Le prochain développement est A8.2 :
+consultation des connaissances distribuées
+et cycle de vie commun du workspace.
+
+Les anciennes références de baseline dans
+ce document sont conservées pour leur
+valeur de traçabilité.
+
+Le commit courant doit être lu dans Git.
+
+La distribution publique reste celle
+de la baseline logicielle 6b969f3,
+sur gh-pages bf6472a.
+
+Ne pas confondre la réalisation source A8.1
+et une distribution publique du nouveau Viewer.
+
+
+
 <!-- S14.3-A8.0-R2-CONSOLIDATION -->
 
 ## 1. État de référence
@@ -12,8 +47,8 @@
 - Branche de distribution : gh-pages.
 - Tests de la baseline logicielle : 464 réussis.
 - Ressources HTTP positives contrôlées : 19.
-- Chantier courant : S14.3-A8.0.
-- Prochain chantier : S14.3-A8.1/A8.2.
+- Chantier courant : S14.3-A8.2.
+- Prochain chantier : S14.3-A8.2.
 
 Ces références identifient la baseline de convergence.
 Elles ne dispensent pas de contrôler le HEAD réel
@@ -261,7 +296,7 @@ et non reprendre automatiquement une ancienne
 - Dernière validation logicielle : 464/464 tests.
 - Exigences nouvelles : CPV-01 à CPV-12.
 - Qualification navigateur : partiellement ouverte.
-- Action suivante : préparer et autoriser A8.1/A8.2.
+- Action suivante : réaliser A8.2.
 - Modification applicative A8.0 : aucune.
 
 ## 11. Historique antérieur

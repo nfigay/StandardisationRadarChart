@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import vm from 'node:vm';
+import vm from './fixtures/radar-profile-test-vm.mjs';
 
 // Exercise the actual main-menu authorization and delegation preamble, not
 // a duplicated copy of the allowlist. The remaining switch uses browser UI.

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import vm from 'node:vm';
+import vm from './fixtures/radar-profile-test-vm.mjs';
 const html=fs.readFileSync(new URL('../radar.html',import.meta.url),'utf8');
 const start=html.indexOf('function handleMenuAction(event) {');
 const end=html.indexOf('            switch (event.target) {',start);

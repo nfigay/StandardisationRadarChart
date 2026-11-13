@@ -452,3 +452,56 @@ dans le suivi, sans être transformés en succès supposés.
 
 La mise à jour documentaire A8.0 ne constitue pas
 une implémentation des nouvelles fonctionnalités.
+
+## État d'avancement après A8.1
+
+<!-- S14.3-A8.1-CLOSURE -->
+
+A8.1 — Socle commun et profils : réalisé
+dans son périmètre initial.
+
+Preuves disponibles :
+
+- 476 tests automatisés réussis ;
+- deux révisions natives navigables ;
+- coordonnées conservées ;
+- verrouillage des deux blips ;
+- formulaire W2UI commun en lecture seule ;
+- menus Viewer filtrés ;
+- capacités de mutation refusées ;
+- zéro erreur du diagnostic consolidé.
+
+Voir l'architecture 80 et les rapports
+A8.1-VIEWER-SMOKE et
+A8.1-VIEWER-CONSOLIDATED.
+
+A8.2 devient le prochain lot de développement.
+
+Son périmètre est regroupé autour de :
+
+1. Consultation des références natives
+   et évaluations distribuées.
+
+2. Réutilisation des panneaux W2UI
+   et des fiches de consultation.
+
+3. Séparation des fournisseurs de données
+   et des fonctions d'administration.
+
+4. Navigation commune dans les connaissances.
+
+5. Cycle de vie partagé du workspace :
+   ouverture, remplacement, fermeture
+   et confirmations.
+
+6. Qualification comparative des deux profils,
+   y compris les contrôles navigateur
+   restant ouverts après A8.1.
+
+Les critères de validation existants sont
+conservés.
+
+Les lots A8.3 à A10 restent inchangés.
+
+La composition sélective des modules
+n'est pas considérée comme réalisée.

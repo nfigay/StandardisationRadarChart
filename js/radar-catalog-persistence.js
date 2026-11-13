@@ -10,6 +10,7 @@
   function fail(s) { throw Error('Catalog persistence: ' + s); }
   function eq(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
   function remember(catalog, summary, manifest, importDigest) {
+    root.__radarApplicationProfile?.assertCatalog(catalog);
     if (!catalog || !summary || !Array.isArray(summary.revisions) ||
         summary.revisions.length !== catalog.radarRevisions.length) fail('invalid import mapping');
     var ids = new Set();
@@ -32,6 +33,7 @@
   }
   // Explicit draft creation is part of the same imported catalog, not a parallel store.
   function registerDraft(sourceRevisionId, group, draft) {
+    root.__radarApplicationProfile?.require("revision.create");
     if (imports.length !== 1) fail('exactly one imported catalog is required to create a draft');
     var imported = imports[0];
     if (!imported.source.radarRevisions.some(function(r) {return r.revisionId === sourceRevisionId;}))
@@ -86,6 +88,7 @@
   // A locally declared record is NOT a verified SDO publication.
   // No revision/blip is created or modified by this operation.
   function declareLocalReference(standard) {
+    root.__radarApplicationProfile?.require("catalog.declareReference");
     if(imports.length!==1) fail('exactly one imported catalog required');
     var source=imports[0].source;
     if(!Array.isArray(source.standards)) fail('missing standards array');
@@ -104,6 +107,7 @@
     return {standardId:record.standardId,declared:true,verification:'unverified'};
   }
   function validateCreation(request) {
+    root.__radarApplicationProfile?.require("radar.createBlip");
     if (!request || !request.blip) fail('invalid creation request');
     var target = activeTarget(request.group,request.revisionId);
     var source = target.imported.source, revision = target.revision;
@@ -134,6 +138,7 @@
     return target;
   }
   function commitCreation(request) {
+    root.__radarApplicationProfile?.require("radar.createBlip");
     // Prepare clones first; publish neither array until every validation succeeded.
     var target = validateCreation(request);
     var source = target.imported.source;
@@ -147,6 +152,7 @@
   // S13: publish the active draft from its live graph snapshot (no layout, no graph edits).
   // Only the already-owned imports[] catalog is authoritative for an export.
   function transitionRevision(graph, group, revisionId, action) {
+    root.__radarApplicationProfile?.require("revision.publish");
     if (action !== 'publish' && action !== 'archive') fail('unsupported revision transition');
     if (imports.length !== 1) fail('exactly one catalog required');
     var imported = imports[0];
@@ -179,6 +185,7 @@
       blips:next.blips.length};
   }
   function removeGroup(group) {
+    root.__radarApplicationProfile?.require("workspace.remove");
     if(imports.length!==1)fail('exactly one imported catalog required');
     var imported=imports[0];
     var at=imported.mapping.findIndex(function(m){return m.group===group;});
@@ -225,6 +232,7 @@
     });
   }
   function build(graph) {
+    root.__radarApplicationProfile?.require("catalog.export");
     if (imports.length !== 1) fail(imports.length ?
       'multiple catalogs loaded; export separately is not yet supported' : 'no catalog loaded');
     if (!root.__radarRevisionSession || typeof root.__radarRevisionSession.exportGroup !== 'function')
@@ -289,6 +297,7 @@
     return (kind==='radar'?admin?.radarNames:admin?.revisionLabels)?.[id]||null;
   }
   function rename(kind,id,value){
+    root.__radarApplicationProfile?.require("radar.rename");
     if(typeof value!=='string'||!value.trim()||value.trim().length>120)fail('invalid display name');
     var c=sourceFor(kind,id),admin=metadata(c),key=kind==='radar'?'radarNames':'revisionLabels';
     admin[key]=admin[key]||{};
