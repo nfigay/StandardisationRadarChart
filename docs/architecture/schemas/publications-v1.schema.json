@@ -1,0 +1,513 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Standardization Radar Chart — publication authoring extension v1",
+  "description": "Structure de extensions.publications. Le validateur JS est normatif pour les références natives, l’identité, les versions, les chemins et les contraintes inter-champs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "definitions",
+    "releases"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "definitions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/definition"
+      },
+      "minItems": 0,
+      "maxItems": 10000
+    },
+    "releases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/release"
+      },
+      "minItems": 0,
+      "maxItems": 10000
+    }
+  },
+  "$defs": {
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "description",
+        "audience",
+        "scope",
+        "capabilities",
+        "presentation",
+        "packaging",
+        "dataPolicy"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4000
+        },
+        "audience": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "label",
+            "organizationIds"
+          ],
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "organizationIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "minItems": 0,
+              "maxItems": 10000,
+              "uniqueItems": true
+            }
+          }
+        },
+        "scope": {
+          "$ref": "#/$defs/scope"
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "catalog.open",
+              "radar.navigate",
+              "radar.consult"
+            ]
+          },
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true
+        },
+        "presentation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "language",
+            "references"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "language": {
+              "enum": [
+                "fr",
+                "en"
+              ]
+            },
+            "references": {
+              "type": "boolean"
+            }
+          }
+        },
+        "packaging": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "modes",
+            "data"
+          ],
+          "properties": {
+            "modes": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "standalone",
+                  "bundled",
+                  "modules"
+                ]
+              },
+              "minItems": 1,
+              "maxItems": 3,
+              "uniqueItems": true
+            },
+            "data": {
+              "enum": [
+                "embedded",
+                "external"
+              ]
+            }
+          }
+        },
+        "dataPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "isoDocument",
+            "assessments",
+            "extensions"
+          ],
+          "properties": {
+            "isoDocument": {
+              "type": "boolean"
+            },
+            "assessments": {
+              "type": "boolean"
+            },
+            "extensions": {
+              "enum": [
+                "allowlist"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selection",
+        "revisionIds",
+        "radarIds",
+        "organizationIds",
+        "portfolioIds"
+      ],
+      "properties": {
+        "selection": {
+          "enum": [
+            "explicit",
+            "allPublishedForRadars"
+          ]
+        },
+        "revisionIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "minItems": 0,
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "radarIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "minItems": 0,
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "organizationIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "minItems": 0,
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "portfolioIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "minItems": 0,
+          "maxItems": 10000,
+          "uniqueItems": true
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "selection": {
+                "const": "explicit"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "revisionIds": {
+                "minItems": 1
+              },
+              "radarIds": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "revisionIds": {
+                "maxItems": 0
+              },
+              "radarIds": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "definition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "definitionId",
+        "version",
+        "status",
+        "createdAt",
+        "updatedAt",
+        "configuration"
+      ],
+      "properties": {
+        "definitionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "status": {
+          "enum": [
+            "active",
+            "archived"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d{3}Z$"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d{3}Z$"
+        },
+        "configuration": {
+          "$ref": "#/$defs/configuration"
+        }
+      }
+    },
+    "resolvedRevision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revisionId",
+        "radarId",
+        "version",
+        "ownerOrganizationId",
+        "portfolioId"
+      ],
+      "properties": {
+        "revisionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "radarId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ownerOrganizationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "portfolioId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "bytes"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "pattern": "^[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "releaseId",
+        "createdAt",
+        "definition",
+        "source",
+        "resolvedRevisionIds",
+        "resolvedRevisions",
+        "mode",
+        "modules",
+        "artifacts",
+        "validation"
+      ],
+      "properties": {
+        "releaseId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d{3}Z$"
+        },
+        "definition": {
+          "$ref": "#/$defs/definition"
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "catalogId",
+            "catalogDigest",
+            "codeCommit"
+          ],
+          "properties": {
+            "catalogId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "catalogDigest": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "codeCommit": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}$"
+            }
+          }
+        },
+        "resolvedRevisionIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "minItems": 1,
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "resolvedRevisions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/resolvedRevision"
+          },
+          "minItems": 1,
+          "maxItems": 10000
+        },
+        "mode": {
+          "enum": [
+            "standalone",
+            "bundled",
+            "modules"
+          ]
+        },
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "minItems": 1,
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifact"
+          },
+          "minItems": 1,
+          "maxItems": 1000
+        },
+        "validation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "checks"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "reported-passed"
+              ]
+            },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "minItems": 1,
+              "maxItems": 10000,
+              "uniqueItems": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

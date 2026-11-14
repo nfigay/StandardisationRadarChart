@@ -20,6 +20,7 @@
   function eq(a, b) { return canonical(a) === canonical(b); }
   function remember(catalog, summary, manifest, importDigest) {
     root.__radarApplicationProfile?.assertCatalog(catalog);
+    validatePublications(catalog);
     if (!catalog || !summary || !Array.isArray(summary.revisions) ||
         summary.revisions.length !== catalog.radarRevisions.length) fail('invalid import mapping');
     var ids = new Set();
@@ -257,6 +258,10 @@
         fail('published snapshot differs from immutable revision');
     }
     next.status = action === 'publish' ? 'published' : 'archived';
+    if(hasPublications(imported.source)){
+      var candidate=clone(imported.source);candidate.radarRevisions[at]=next;
+      validatePublicationScopeChange(candidate);
+    }
     // Adapter replacement is validated first and reversible if a later error occurs.
     adapter.replaceRevision(group, next, required);
     imported.source.radarRevisions[at] = next;
@@ -270,6 +275,7 @@
     var at=imported.mapping.findIndex(function(m){return m.group===group;});
     if(at<0)fail('unknown catalog revision group: '+group);
     if(imported.mapping.length===1)fail('cannot export empty catalog');
+    assertCanRemoveGroups([group]);
     // Keep index mapping and revision arrays aligned; build() depends on this.
     imported.mapping.splice(at,1);
     imported.source.radarRevisions.splice(at,1);
@@ -346,6 +352,7 @@
       }
     });
     result.radarRevisions.push.apply(result.radarRevisions,additions);
+    validatePublications(result);
     return result;
   }
   // A8.2: compare portable business state, not selection/viewport state.
@@ -436,7 +443,119 @@
   function renameRevisionLabel(id,value){return rename('revision',id,value);}
   function getRadarName(id){return getDisplay('radar',id);}
   function getRevisionLabel(id){return getDisplay('revision',id);}
+  /* A8.3 — publication authoring in the same native source and dirty baseline. */
+  function hasPublications(catalog){return !!catalog?.extensions&&own(catalog.extensions,'publications');}
+  function publicationModel(){
+    if(!root.__radarPublicationModel)fail('publication model unavailable');
+    return root.__radarPublicationModel;
+  }
+  function validatePublications(catalog){
+    if(hasPublications(catalog))publicationModel().state(catalog);
+  }
+  function publicationOwner(){
+    if(!root.__radarApplicationProfile)fail('application profile unavailable');
+    root.__radarApplicationProfile.require('publication.create');
+    if(imports.length!==1)fail('exactly one catalog required for publication');
+    return imports[0];
+  }
+  function publicationId(prefix){
+    if(!root.crypto?.randomUUID)fail('secure publication identity unavailable');
+    return prefix+root.crypto.randomUUID();
+  }
+  function publicationState(){return publicationModel().state(publicationOwner().source);}
+  function commitPublicationState(owner,state){
+    if(publicationOwner()!==owner)fail('publication workspace changed');
+    var candidate=clone(owner.source);
+    if(candidate.extensions==null)candidate.extensions={};
+    if(typeof candidate.extensions!=='object'||Array.isArray(candidate.extensions))fail('invalid catalog extensions');
+    candidate.extensions.publications=clone(state);
+    validatePublications(candidate);
+    owner.source=candidate;
+  }
+  function findDefinition(state,id){
+    var d=state.definitions.find(x=>x.definitionId===id);
+    if(!d)fail('unknown publication definition: '+id);
+    return d;
+  }
+  function createPublicationDefinition(configuration){
+    var owner=publicationOwner(),model=publicationModel(),state=model.state(owner.source);
+    var now=new Date().toISOString();
+    var d=model.definition({definitionId:publicationId('publication_'),version:1,status:'active',createdAt:now,updatedAt:now,configuration:model.configuration(configuration)});
+    state.definitions.push(d);commitPublicationState(owner,state);return clone(d);
+  }
+  function updatePublicationDefinition(id,expectedVersion,configuration,status='active'){
+    var owner=publicationOwner(),model=publicationModel(),state=model.state(owner.source),old=findDefinition(state,id);
+    if(old.version!==expectedVersion)fail('stale publication definition version');
+    var d=model.definition({...old,configuration:model.configuration(configuration),status:status,version:old.version+1,updatedAt:new Date().toISOString()});
+    if(old.status===d.status&&eq(old.configuration,d.configuration))return clone(old);
+    state.definitions[state.definitions.indexOf(old)]=d;commitPublicationState(owner,state);return clone(d);
+  }
+  function removePublicationDefinition(id,expectedVersion){
+    var owner=publicationOwner(),state=publicationModel().state(owner.source),d=findDefinition(state,id);
+    if(d.version!==expectedVersion)fail('stale publication definition version');
+    if(state.releases.some(r=>r.definition.definitionId===id))fail('publication history exists; archive the definition instead');
+    state.definitions=state.definitions.filter(x=>x.definitionId!==id);commitPublicationState(owner,state);return {definitionId:id,removed:true};
+  }
+  function resolvePublicationDefinition(id){
+    var owner=publicationOwner(),model=publicationModel(),d=findDefinition(model.state(owner.source),id);
+    if(d.status!=='active')fail('publication definition is archived');
+    return {definition:clone(d),revisionIds:model.resolve(owner.source,d.configuration)};
+  }
+  function assertCanRemoveGroups(groups){
+    if(imports.length!==1)fail('exactly one catalog required');
+    var owner=imports[0];
+    if(!Array.isArray(groups)||!groups.length||new Set(groups).size!==groups.length||groups.some(g=>!owner.mapping.some(m=>m.group===g)))fail('invalid removal groups');
+    if(groups.length===owner.mapping.length)fail('cannot export empty catalog');
+    if(!hasPublications(owner.source))return true;
+    var ids=new Set(owner.mapping.filter(m=>groups.includes(m.group)).map(m=>m.revisionId));
+    var candidate=clone(owner.source);candidate.radarRevisions=candidate.radarRevisions.filter(r=>!ids.has(r.revisionId));
+    validatePublicationScopeChange(candidate);return true;
+  }
+  function validatePublicationScopeChange(candidate){
+    try{validatePublications(candidate);}catch(error){error.code='PUBLICATION_SCOPE_CONFLICT';throw error;}
+  }
+  // Hash scope: native catalog data at preparation, excluding only the entire
+  // authoring extension. No projection or generated bytes are asserted here.
+  function publicationSource(graph){
+    var source=build(graph);
+    if(hasPublications(source)){
+      delete source.extensions.publications;
+      if(!Object.keys(source.extensions).length)delete source.extensions;
+    }
+    return source;
+  }
+  async function preparePublicationRelease(graph,id,expectedVersion,mode){
+    var owner=publicationOwner(),model=publicationModel(),resolved=resolvePublicationDefinition(id),d=resolved.definition;
+    if(d.version!==expectedVersion)fail('stale publication definition version');
+    if(!d.configuration.packaging.modes.includes(mode))fail('distribution mode not selected');
+    var integrity=root.__radarArtifactIntegrity;
+    if(!integrity?.digest)fail('artifact integrity module unavailable');
+    var source=publicationSource(graph),before=canonical(build(graph));
+    var digest=await integrity.digest(source);
+    if(publicationOwner()!==owner||canonical(build(graph))!==before)fail('publication workspace changed during preparation');
+    var ids=model.resolve(source,d.configuration);
+    var records=ids.map(id=>{
+      var r=source.radarRevisions.find(x=>x.revisionId===id);
+      return {revisionId:id,radarId:r.radarId,version:r.version??null,ownerOrganizationId:r.ownerOrganizationId,portfolioId:r.portfolioId};
+    });
+    return {definition:d,source:{catalogId:owner.manifest.catalogId,catalogDigest:digest},resolvedRevisionIds:ids,resolvedRevisions:records,mode:mode};
+  }
+  // This is a ledger boundary for the future generator. Evidence is reported,
+  // not independently verified; actual artifact validation belongs to A8.4/A9.
+  async function recordPublicationRelease(graph,plan,evidence){
+    var owner=publicationOwner(),model=publicationModel(),before=canonical(build(graph));
+    if(!plan?.definition||!evidence||typeof evidence!=='object'||Array.isArray(evidence)||Object.keys(evidence).length!==4||!['codeCommit','modules','artifacts','checks'].every(k=>own(evidence,k)))fail('invalid publication generation evidence');
+    var input=clone(plan),report=clone(evidence);
+    var current=await preparePublicationRelease(graph,input.definition.definitionId,input.definition.version,input.mode);
+    if(publicationOwner()!==owner||canonical(build(graph))!==before||!eq(input,current))fail('stale publication generation plan');
+    var state=model.state(owner.source);
+    var release=model.release({releaseId:publicationId('release_'),createdAt:new Date().toISOString(),definition:current.definition,
+      source:{...current.source,codeCommit:report.codeCommit},resolvedRevisionIds:current.resolvedRevisionIds,resolvedRevisions:current.resolvedRevisions,mode:current.mode,
+      modules:report.modules,artifacts:report.artifacts,validation:{status:'reported-passed',checks:report.checks}});
+    state.releases.push(release);commitPublicationState(owner,state);return clone(release);
+  }
   root.__radarCatalogPersistence=Object.freeze({
+    publicationState:publicationState,createPublicationDefinition:createPublicationDefinition,updatePublicationDefinition:updatePublicationDefinition,removePublicationDefinition:removePublicationDefinition,resolvePublicationDefinition:resolvePublicationDefinition,preparePublicationRelease:preparePublicationRelease,recordPublicationRelease:recordPublicationRelease,assertCanRemoveGroups:assertCanRemoveGroups,
     isDirty:isDirty,markNew:markNew,closeCatalog:closeCatalog,importIsoReference:importIsoReference,renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
     registerDraft:registerDraft,removeGroup:removeGroup, ownsRevision:ownsRevision, transitionRevision:transitionRevision,
     validateCreation:validateCreation,commitCreation:commitCreation,

@@ -218,8 +218,15 @@
       .select(function(ev){if((ev.detail?.item?.id||ev.detail?.id)==='remove')confirmRemove(sourceId,group);});
   }
   function confirmRemove(sourceId,group) {
-    if(root.w2confirm)root.w2confirm(tr('removeConfirm','Delete selected in-memory content?')).yes(()=>remove(sourceId,group));
-    else remove(sourceId,group);
+    function confirmed(){
+      try{return remove(sourceId,group);}catch(error){
+        if(error.code!=='PUBLICATION_SCOPE_CONFLICT')throw error;
+        root.console?.error?.('Publication scope conflict:',error);
+        root.w2alert(root.__radarRevisionDialogs.t('publicationScopeConflict'));
+      }
+    }
+    if(root.w2confirm)root.w2confirm(tr('removeConfirm','Delete selected in-memory content?')).yes(confirmed);
+    else confirmed();
   }
   function remove(sourceId,group) {
     root.__radarApplicationProfile?.require("workspace.remove");
@@ -242,6 +249,7 @@
     if(!root.__radarRevisionSession?.removeGroup)fail('session removal not installed');
     if(s.kind==='catalog'&&(!root.__radarCatalogPersistence?.removeGroup||!root.__radarCatalogUI?.unregister))
       fail('catalog removal hooks unavailable');
+    if(s.kind==='catalog')root.__radarCatalogPersistence.assertCanRemoveGroups?.(targets.map(r=>r.group));
     // Each group is removed from model, persistence, catalog UI, and session.
     for(var r of targets) {
       if(s.kind==='catalog'){

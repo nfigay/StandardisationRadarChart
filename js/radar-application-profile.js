@@ -152,6 +152,10 @@
       );
     }
 
+    if(catalog.extensions && Object.prototype.hasOwnProperty.call(catalog.extensions,'publications')){
+      throw Error('Viewer cannot load publication authoring metadata');
+    }
+
     if(catalog.radarRevisions.some(
       revision=>revision?.status!=='published'
     )){
