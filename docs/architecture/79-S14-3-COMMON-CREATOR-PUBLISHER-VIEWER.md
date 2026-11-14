@@ -556,3 +556,31 @@ Restent à préciser par l'implémentation :
 
 Ces questions ne justifient pas la création d'un nouveau
 moteur graphique ou d'une application Publisher distincte.
+
+## 23. État de réalisation et précision produit (14 novembre 2026)
+
+La baseline de convergence 79 est mise en œuvre progressivement :
+[80 — profils](80-S14-3-COMMON-APPLICATION-PROFILES.md),
+[81 — workspace](81-S14-3-COMMON-WORKSPACE-CONSULTATION.md),
+[82 — références ISO](82-S14-3-ISO-REFERENCE-INTEGRATION.md),
+[83 — modèle](83-S14-3-PUBLICATION-MODEL.md),
+[84 — projection](84-S14-3-NATIVE-PUBLICATION-PROJECTION.md),
+[85 — Publisher et prévisualisation](85-S14-3-PUBLISHER-UI-AND-PREVIEW.md).
+
+A8.2 est publiée (`pilot-a82`, source 0b14a41, Pages ed814d6). A8.3 est
+consolidée localement (94aef3e). A8.4 a réussi 568 tests, construction et
+recettes Creator → JSON projeté → Viewer ; voir preuve 05.
+
+Un Viewer de publication est un artefact **complet et préchargé**. Le Viewer
+A8.2 générique et l'échange JSON A8.4 sont des étapes de qualification, non
+le parcours final du destinataire. La configuration de présentation minimale
+est distincte de la définition d'auteur ; ni cette dernière ni son historique
+ne sont distribués. A8.5 propose un dialogue intégré et une prévisualisation
+sur le vrai Viewer. A8.6 qualifie la génération HTML autonome depuis le
+Creator, sans outils de développement. Les modes Web et la composition
+sélective restent à réaliser en A9 ; pas de promesse de confidentialité des
+champs textuels autorisés ni de protection du code livré contre inspection.
+
+Le [plan de réalisation](../governance/PLAN-REALISATION-S14-3-CREATOR-PUBLISHER-VIEWER.md)
+porte l'état courant et les portes de qualification ; les documents de lot
+restent les contrats et preuves détaillés.

@@ -55,3 +55,15 @@ L'attribution d'un identifiant de vérification
 ne constitue pas une réussite de test.
 
 <!-- S14.3-A8.0-R2-CONSOLIDATION -->
+
+## Mise à jour de convergence — 14 novembre 2026
+
+Les statuts courants sont ceux de `requirements.csv`, pas les statuts initiaux
+ci-dessus. A8.2 est publique, A8.3 est consolidée et A8.4 a réussi ses tests et
+sa recette navigateur. CPV-06/12 disposent d'une preuve partielle A8.4 ; leur
+qualification finale dépend encore des contrats non couverts et des artefacts.
+A8.5/A8.6 distinguent l'interface, la prévisualisation, le candidat HTML et la
+livraison qualifiée. CPV-10 vise explicitement la génération dans le Creator
+sans outil de développement et l'ouverture directe du Viewer préchargé.
+Voir [preuve 05](../evidence/05-A84-CREATOR-VIEWER-VALIDATION.md) et le plan.
+Les lignes historiques REQ restent conservées.

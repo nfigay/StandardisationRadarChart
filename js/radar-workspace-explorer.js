@@ -18,15 +18,17 @@
   function getSource(id) { return sources.find(s=>s.id===id)||null; }
   function find(group) { for(var s of sources) { var r=entry(s,group); if(r)return {source:s,radar:r}; } return null; }
   var workspaceLabels={
-    fr:{workspaceOpenReplace:'Ouvrir / Remplacer',workspaceClose:'Fermer',workspaceReferences:'Références'},
-    en:{workspaceOpenReplace:'Open / Replace',workspaceClose:'Close',workspaceReferences:'References'}
+    fr:{workspaceOpenReplace:'Ouvrir / Remplacer',workspaceClose:'Fermer',workspaceReferences:'Références',workspacePublications:'Publications'},
+    en:{workspaceOpenReplace:'Open / Replace',workspaceClose:'Close',workspaceReferences:'References',workspacePublications:'Publications'}
   };
   function registerWorkspaceI18n(){
     for(var lang of ['fr','en'])root.i18next?.addResourceBundle?.(lang,'translation',{menu:workspaceLabels[lang]},true,true);
   }
   function workspaceCommands(){
     if(root.__radarApplicationProfile?.allows('catalog.open')===false)return '';
-    var buttons=[['open','workspaceOpenReplace'],['close','workspaceClose'],['references','workspaceReferences']];
+    var buttons=[['open','workspaceOpenReplace'],['close','workspaceClose']];
+    if(root.__radarPublishedPresentation?.references!==false)buttons.push(['references','workspaceReferences']);
+    if(root.__radarApplicationProfile?.allows('publication.create')&&root.__radarPublicationUI)buttons.push(['publications','workspacePublications']);
     return '<div style="display:flex;flex-wrap:wrap;gap:4px;padding:6px;border-bottom:1px solid #ddd">'+buttons.map(function(pair){
       return '<button type="button" class="w2ui-btn" data-workspace-action="'+pair[0]+'" data-workspace-i18n="'+pair[1]+'">'+safe(tr(pair[1],workspaceLabels.fr[pair[1]]))+'</button>';
     }).join('')+'</div>';
@@ -63,6 +65,7 @@
         if(action==='open')api.openFile({replace:true});
         if(action==='close')Promise.resolve(api.requestClose(hooks.graph())).catch(err=>root.w2alert(err.message));
         if(action==='references')root.__radarStandardsPanel.openReferences();
+        if(action==='publications')root.__radarPublicationUI.open(hooks.graph());
       }catch(err){root.w2alert(err.message);}
     });
     tree=new root.w2sidebar({box:mount,name:'radarWorkspaceTree',topHTML:commands,nodes:[],onClick:function(e){

@@ -123,3 +123,22 @@ et le
 
 Les détails techniques de composition et de persistance
 restent à qualifier par les lots d'implémentation.
+
+### DEC-019 — Précision du 14 novembre 2026 (A8.4 → A8.5/A8.6)
+
+Le destinataire reçoit **le Viewer lui-même**, avec HTML, JavaScript, CSS,
+bibliothèques, données projetées et configuration de consultation. Il ne doit
+ni installer le Creator ni charger manuellement un JSON séparé pour consulter
+une publication autonome. En mode Web, le paquet déployable inclut ses données
+ou les références explicites aux données distribuées avec lui.
+
+Le Creator prépare les composants Viewer lors de sa construction, puis les
+assemble avec le résultat A8.4 dans le navigateur. Première priorité : HTML
+standalone préchargé (A8.6), puis composition sélective et modes Web A9.
+La prévisualisation emploie le véritable Viewer, dans un contexte séparé du
+workspace d'auteur. Un candidat HTML n'est pas une PublicationRelease qualifiée.
+L'exclusion physique des modules inutiles, la vérification indépendante des
+octets et l'historique de livraison restent des portes explicites.
+
+Décision adoptée par clarification utilisateur ; voir architecture 85 et plan
+révisé. Ne clôture ni CPV-05/07/08/09/10/12 ni DEC-009/010.

@@ -386,3 +386,12 @@ La revue doit distinguer ce qui est :
 
 Une affirmation de validation doit correspondre
 à une preuve effectivement disponible.
+
+## G21 — Publication complète, internationalisation et baseline exacte
+
+- Un Viewer autonome de publication DOIT inclure le catalogue projeté et le charger au démarrage ; pas de JSON à choisir par le destinataire. Les modes Web livrent le paquet cohérent de ressources et données.
+- Séparer le modèle Viewer préconstruit, l'enveloppe de présentation minimale et le catalogue projeté. Ne jamais embarquer le workspace d'auteur, les définitions de publication ou les rapports de préparation.
+- Le candidat de prévisualisation ne DOIT PAS créer une livraison fictive. Les empreintes de données canoniques et les empreintes des octets distribués sont distinctes.
+- Les nouvelles commandes, aides et erreurs utilisateur DOIVENT utiliser les ressources i18next FR/EN existantes, avec actualisation dynamique sans perte de saisie lorsque le composant reste ouvert. Conserver les identifiants techniques et les erreurs de contrat métier.
+- Avant développement, partir d'un instantané exact des sources et tests ou d'un commit vérifié ; ne pas transformer un fichier inconnu par approximation. Les analyses AST (Acorn, ESLint) constituent un chantier de contrôle architectural, pas un prérequis bloquant du Publisher.
+- Les rapports d'inspection navigateur doivent copier un JSON complet ; les scripts Bash/Node produisent un rapport, `pbcopy` et ouverture TextEdit. Les preuves, propositions, réalisations et qualifications restent distinctes.

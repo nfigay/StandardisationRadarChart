@@ -15,7 +15,7 @@ Références :
 - [Guidelines](GUIDELINES-CREATOR-PUBLISHER-VIEWER.md)
 - [Prototype Client A6/A7](../architecture/78-S14-3-CLIENT-THREE-DISTRIBUTIONS.md)
 
-## 2. Baseline
+## 2. Baseline historique de convergence (A8.0)
 
 Sources : 6b969f3.
 Distribution publique : bf6472a.
@@ -31,7 +31,9 @@ Distribution publique : bf6472a.
 
 La qualification navigateur complète du Client reste ouverte.
 
-Les trois modes du Creator/Publisher restent à réaliser.
+À cette baseline historique, les trois modes du Creator/Publisher restent à réaliser.
+
+**État courant au 14 novembre 2026 :** A8.2 publique 0b14a41/ed814d6 (532 tests) ; A8.3 locale 94aef3e (552 tests) ; A8.4 qualifiée (568 tests et recette Creator/Viewer). A8.5-R1 qualifiée pour le parcours Publisher/Viewer HTML (585 tests, 9/9, preuve 06) ; A8.6 puis A9 à qualifier.
 
 Le Creator historique demeure la référence fonctionnelle
 pour la migration de l'interface et du moteur commun.
@@ -77,12 +79,13 @@ indicatives, à confirmer lors de chaque lot.
 | Lot | Résultat concret | Architecture indicative |
 |---|---|---|
 | A8.0 | Référentiel documentaire de convergence | 79 |
-| A8.1/A8.2 | Socle commun et premier Viewer utilisant l'interface historique | 80-81 |
-| A8.3/A8.4 | Publications persistantes et projection configurable des connaissances | 82-83 |
-| A8.5 | Publisher intégré et prévisualisation réelle | 84 |
-| A9.1/A9.2 | Composition sélective et génération des trois Viewer | 85-86 |
-| A9.3 | Trois distributions du Creator/Publisher | 87 |
-| A10 | Qualification de bout en bout et substitution du prototype | 88 |
+| A8.1/A8.2 | Socle commun, workspace et références ISO ; A8.2 publique | 80-82 |
+| A8.3/A8.4 | Modèle persistant et projection native qualifiés | 83-84 |
+| A8.5 | Publisher intégré et prévisualisation réelle ; qualifié pour le parcours 9/9 | 85 |
+| A8.6 | Viewer HTML préchargé généré depuis le Creator ; qualification et livraison | 86 |
+| A9.1/A9.2 | Composition sélective et trois modes Viewer | 87-88 |
+| A9.3 | Trois distributions du Creator/Publisher | 89 |
+| A10 | Qualification de bout en bout et substitution du prototype | 90 |
 
 ## 6. A8.0 — Référentiel documentaire
 
@@ -269,6 +272,21 @@ qualifiable, avant la couverture des trois modes.
 - distinction entre publication métier et révision ;
 - aucune obligation d'utiliser une autre application.
 
+## 11 bis. A8.6 — Première publication Viewer HTML autonome
+
+Objectif : depuis le Creator autonome, produire un fichier HTML complet et
+préchargé, que le destinataire ouvre sans outil de développement, sans réseau
+pour les fonctions de base et sans import manuel du JSON. La construction
+prépare le modèle Viewer ; le navigateur assemble uniquement projection et
+configuration minimale avec ce modèle, sans compilation arbitraire.
+
+Le candidat A8.5 prépare cette composition, sans enregistrer de livraison.
+A8.6 qualifie la parité prévisualisation/HTML téléchargé, la fermeture,
+les octets, la provenance de code et de données, l'absence d'administration
+et le fonctionnement hors ligne réel. Enregistrement d'une PublicationRelease
+seulement après contrôle des preuves d'artefacts. Les ressources historiques
+et les modules inutiles seront réduits en A9.1. Les modes Web restent A9.2.
+
 ## 12. A9.1 — Composition sélective des modules
 
 ### Objectif
@@ -408,14 +426,14 @@ qu'après validation de la compatibilité et des usages.
 | CPV-02 | A8.1/A8.2 | Parité des composants |
 | CPV-03 | A8.1/A8.2 | Tests de refus des mutations |
 | CPV-04 | A8.3 | Sauvegarde et restauration |
-| CPV-05 | A8.3/A9.2 | Manifestes et provenance |
+| CPV-05 | A8.3/A8.6/A9.2 | Manifestes et provenance |
 | CPV-06 | A8.4 | Tests de projection et fermeture |
-| CPV-07 | A8.5 | Comparaison prévisualisation/livraison |
+| CPV-07 | A8.5/A8.6 | Comparaison prévisualisation/livraison |
 | CPV-08 | A9.1 | Graphe et inventaire des modules |
 | CPV-09 | A9.2/A9.3 | Recettes des six modes |
-| CPV-10 | A9.3 | Génération hors ligne |
+| CPV-10 | A8.6/A9.3 | Génération hors ligne |
 | CPV-11 | A8.1/A8.2 | Cycle de vie et parité historique |
-| CPV-12 | A8.4/A9.2 | Tests négatifs sur les artefacts |
+| CPV-12 | A8.4/A8.6/A9.2 | Tests négatifs sur les artefacts |
 
 ## 17. Risques et réponses
 
@@ -453,7 +471,7 @@ dans le suivi, sans être transformés en succès supposés.
 La mise à jour documentaire A8.0 ne constitue pas
 une implémentation des nouvelles fonctionnalités.
 
-## État d'avancement après A8.1
+## Historique de qualification après A8.1 (ne décrit plus le chantier courant)
 
 <!-- S14.3-A8.1-CLOSURE -->
 
@@ -475,7 +493,7 @@ Voir l'architecture 80 et les rapports
 A8.1-VIEWER-SMOKE et
 A8.1-VIEWER-CONSOLIDATED.
 
-A8.2 devient le prochain lot de développement.
+À cette étape historique, A8.2 devient le prochain lot de développement.
 
 Son périmètre est regroupé autour de :
 
@@ -501,7 +519,7 @@ Son périmètre est regroupé autour de :
 Les critères de validation existants sont
 conservés.
 
-Les lots A8.3 à A10 restent inchangés.
+À cette date historique, les lots A8.3 à A10 restaient inchangés ; le plan courant introduit désormais A8.6.
 
 La composition sélective des modules
 n'est pas considérée comme réalisée.

@@ -477,8 +477,10 @@ function offlineBootstrap(resources,profile){
 
   const profile=${JSON.stringify(profile)};
 
-  const directory=
-    new URL('.',location.href).pathname;
+  // about:srcdoc is used only for the isolated publication preview.
+  const base=location.protocol==='about:'?
+    'https://standalone.invalid/StandardisationRadarChart/radar.html':location.href;
+  const directory=new URL('.',base).pathname;
 
   function resourceName(url){
 
@@ -559,7 +561,7 @@ function offlineBootstrap(resources,profile){
 
     const url=new URL(
       reference,
-      location.href
+      base
     );
 
     if(
@@ -635,7 +637,7 @@ function offlineBootstrap(resources,profile){
 </script>`;
 }
 
-async function generate(profile,filename){
+async function generate(profile,filename,viewerTemplate=null){
 
   let scripts=0;
   let styles=0;
@@ -894,6 +896,15 @@ async function generate(profile,filename){
     'Script externe restant'
   );
 
+  // The Viewer template is generated first from the common application.
+  // It is a non-executed base64 resource, embedded only in the Creator.
+  if(profile==='viewer'){
+    html=html.replace(head,match=>match+'\n<!--RADAR-PUBLICATION-PAYLOAD-->');
+  }else{
+    assert.ok(viewerTemplate,'Missing Viewer template');
+    html=html.replace(/<\/head>/i,match=>'<script type="application/json" id="radar-viewer-template">'+Buffer.from(viewerTemplate,'utf8').toString('base64')+'</script>\n'+match);
+  }
+
   const file=join(
     output,
     filename
@@ -932,13 +943,14 @@ async function generate(profile,filename){
 }
 
 await generate(
-  'creator',
-  'standardization-radar-creator.html'
+  'viewer',
+  'standardization-radar-viewer.html'
 );
 
 await generate(
-  'viewer',
-  'standardization-radar-viewer.html'
+  'creator',
+  'standardization-radar-creator.html',
+  readFileSync(join(output,'standardization-radar-viewer.html'),'utf8')
 );
 
 console.log(

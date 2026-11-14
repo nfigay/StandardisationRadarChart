@@ -36,3 +36,20 @@ la validation fonctionnelle dans un navigateur.
 
 Le déploiement GitHub Actions et le site publié doivent être
 vérifiés après le push.
+
+## Qualification S14.3 — état au 14 novembre 2026
+
+| Lot | Tests complets | Preuve réelle |
+|---|---:|---|
+| A8.2 | 532 | pilot-a82, source 0b14a41, gh-pages ed814d6, huit assets contrôlés |
+| A8.3 | 552 | commit local 94aef3e, deux définitions chargées dans Chrome |
+| A8.4 | 568 | projection interne générée et ouverte dans le Viewer ; preuve 05 |
+| A8.5-R1 | 585 | démarrage rev-1 et recette Publisher/Viewer 9/9 ; preuve 06 |
+
+Les avertissements classiques Vite/CommonJS ne sont pas des échecs ; ils restent
+à traiter dans la modularisation. La recette A8.4 n'a pas affiché une fiche ISO
+projetée (jeu manuel). A8.5/A8.6 : vérifier changement de langue, conservation
+source, sélection et fiche ISO, préchargement réel du fichier téléchargé,
+fonctionnement hors connexion et absence de métadonnées d'auteur. Les tests
+statiques/VM ne démontrent pas la fidélité graphique ni la non-divulgation
+de secrets écrits dans un champ autorisé. Aucun résultat distant supposé.

@@ -211,3 +211,24 @@ Cette section **précise** les exigences REQ existantes ; elle ne constitue ni u
 5. Tests caméra après resize W2UI, sélection et restauration, sans mutation de position.
 
 Aucune de ces validations n'a été exécutée dans DOC-P6 ; leur statut demeure **à vérifier**.
+
+## S14.3 — Précision normative de publication autonome (14 novembre 2026)
+
+Au titre de DEC-019 et CPV-01 à CPV-12, la production d'une publication
+comprend la projection des connaissances **et** l'assemblage du Viewer avec
+ses composants logiciels et ses données. Le destinataire de l'HTML autonome
+ouvre un fichier unique, sans Node.js, Vite, Git, Creator ni chargement JSON
+manuel. Le Viewer précharge le catalogue natif projeté. En HTTP, le paquet
+inclut les ressources de présentation et les données prévues par la définition.
+
+Une définition modifiable et une livraison immuable sont distinctes de la
+publication d'une révision métier. Les candidats de prévisualisation et les
+exports JSON ne sont pas des livraisons qualifiées. La qualification porte
+sur le périmètre réel, l'expérience navigateur, les octets et la provenance,
+l'absence de données d'auteur et la composition sélective.
+
+[Architecture 79](79-S14-3-COMMON-CREATOR-PUBLISHER-VIEWER.md),
+[83](83-S14-3-PUBLICATION-MODEL.md), [84](84-S14-3-NATIVE-PUBLICATION-PROJECTION.md),
+[85](85-S14-3-PUBLISHER-UI-AND-PREVIEW.md) et plan actualisé. REQ-BASE-04 :
+les nouvelles commandes et erreurs présentées utilisent i18next FR/EN ; les
+identifiants et données documentaires restent indépendants des libellés.

@@ -1143,7 +1143,7 @@
    void loadRssCache();
    return true;
  }
- function open(){if(!mount)initialize(root.document?.getElementById('standard-references-panel'));const layout=root.w2ui?.mainLayout;if(layout?.show)layout.show('bottom');if(layout?.sizeTo)layout.sizeTo('bottom',240);refresh();search?.focus();}
+ function open(){if(root.__radarPublishedPresentation?.references===false)throw Error('Publication references panel disabled');if(!mount)initialize(root.document?.getElementById('standard-references-panel'));const layout=root.w2ui?.mainLayout;if(layout?.show)layout.show('bottom');if(layout?.sizeTo)layout.sizeTo('bottom',240);refresh();search?.focus();}
  // Initialize the shared consultation UI without starting source services.
  function preparePublishedReferences(){
    bindLocale();
@@ -1160,6 +1160,7 @@
  }
  function openReferences(){
    root.__radarApplicationProfile?.require('radar.consult');
+   if(root.__radarPublishedPresentation?.references===false)throw Error('Publication references panel disabled');
    mode='references';
    const layout=root.w2ui?.mainLayout;
    layout?.show?.('bottom');layout?.sizeTo?.('bottom',240);

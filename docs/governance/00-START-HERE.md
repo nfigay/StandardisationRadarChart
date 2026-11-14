@@ -1,64 +1,18 @@
 # START HERE — Référentiel courant du projet
 
-<!-- S14.3-A8.1-CLOSURE -->
+<!-- S14.3-A8.5-CURRENT -->
 
-## Dernier état de réalisation — après A8.1
+## 1. État de référence — 14 novembre 2026
 
-Le dernier lot applicatif A8.1 a été validé :
+- Distribution publique A8.2 : `pilot-a82`, source `0b14a418b3e5a206a4611b8f6cd86887b5f8449d`, Pages `ed814d6da7d57dc2324ea26b68cea1659d0c227d` ; 532 tests.
+- A8.3 : commit local `94aef3e0c73b866dcceb5844044a1a93e106e299`, 552 tests ; définitions chargées dans Chrome.
+- A8.4 : 568 tests, construction et recette Creator → projection JSON → Viewer réussies ; qualification documentée dans architecture 84 et preuve 05.
+- A8.5-R1 : qualifiée pour le parcours Publisher → Viewer HTML, 585 tests et recette Chrome 9/9 ; preuve 06.
+- A8.6 : qualification du Viewer autonome préchargé et livraison traçable ; A9 : composition physique et autres modes.
 
-- 476 tests automatisés réussis ;
-- recette du Viewer commun dans Chrome ;
-- deux révisions natives navigables ;
-- coordonnées préservées ;
-- formulaire W2UI commun en lecture seule ;
-- commandes de mutation absentes des menus inspectés.
-
-La preuve architecturale courante est
-[Architecture 80](../architecture/80-S14-3-COMMON-APPLICATION-PROFILES.md).
-
-Le prochain développement est A8.2 :
-consultation des connaissances distribuées
-et cycle de vie commun du workspace.
-
-Les anciennes références de baseline dans
-ce document sont conservées pour leur
-valeur de traçabilité.
-
-Le commit courant doit être lu dans Git.
-
-La distribution publique reste celle
-de la baseline logicielle 6b969f3,
-sur gh-pages bf6472a.
-
-Ne pas confondre la réalisation source A8.1
-et une distribution publique du nouveau Viewer.
-
-
-
-<!-- S14.3-A8.0-R2-CONSOLIDATION -->
-
-## 1. État de référence
-
-- Date de consolidation : 2026-11-12.
-- Baseline logicielle : 6b969f3.
-- Baseline documentaire : d19b3cc.
-- Distribution publique : bf6472a.
-- Branche de développement : main.
-- Branche de distribution : gh-pages.
-- Tests de la baseline logicielle : 464 réussis.
-- Ressources HTTP positives contrôlées : 19.
-- Chantier courant : S14.3-A8.2.
-- Prochain chantier : S14.3-A8.2.
-
-Ces références identifient la baseline de convergence.
-Elles ne dispensent pas de contrôler le HEAD réel
-avant chaque intervention.
-
-Le rapport A8.0-R1 confirme que le référentiel
-documentaire d19b3cc est présent localement et
-sur origin/main.
-
-La branche gh-pages reste au commit bf6472a.
+Le HEAD et l'état de travail réels doivent être lus dans Git avant toute intervention.
+A8.2 reste la version publique jusqu'à décision et publication distinctes.
+Les états historiques plus bas ne sont pas la baseline courante.
 
 ## 2. Documents à lire en priorité
 
@@ -70,6 +24,8 @@ La branche gh-pages reste au commit bf6472a.
 6. [Matrice des exigences](../requirements/requirements.csv)
 7. [Spécification cible](../architecture/02-SPECIFICATION-CIBLE.md)
 8. [Architecture de distribution 77](../architecture/77-S14-3-DISTRIBUTION-GH-PAGES.md)
+9. [Modèle et projection 83/84](../architecture/83-S14-3-PUBLICATION-MODEL.md) — [projection](../architecture/84-S14-3-NATIVE-PUBLICATION-PROJECTION.md)
+10. [Publisher 85](../architecture/85-S14-3-PUBLISHER-UI-AND-PREVIEW.md) — [preuves A8.4](../evidence/05-A84-CREATOR-VIEWER-VALIDATION.md) — [preuve A8.5-R1](../evidence/06-A85-R1-PUBLISHER-VALIDATION.md)
 
 Les documents historiques restent des sources de
 preuve et de contexte.
@@ -191,38 +147,17 @@ et non une preuve de présence des fichiers attendus absents.
 
 ## 6. Prochain chantier autorisable
 
-S14.3-A8.1/A8.2 :
-
-- point d'entrée et initialisation configurables ;
-- profil Creator/Publisher ;
-- profil Viewer ;
-- registre de capacités ;
-- contrôles applicatifs des mutations ;
-- composants et actions communs ;
-- réutilisation du radar historique ;
-- navigation et consultation en lecture seule ;
-- cycle de vie partagé.
-
-Le premier résultat attendu est une application
-historique capable de fonctionner en profil
-Creator/Publisher ou Viewer.
-
-Aucun nouveau moteur de rendu radar ne doit être
-introduit pour réaliser ce premier résultat.
-
-Ce lot peut être transitoire quant à l'exclusion
-physique de certains modules legacy.
-
-Cette limite doit être explicitement documentée.
-
-Voir le plan de réalisation pour les livrables,
-dépendances et critères d'acceptation.
+A8.5-R1 : parcours Publisher et Viewer préchargé qualifiés (preuve 06).
+A8.6 : qualification de l'HTML autonome préchargé, contrôle d'intégrité des
+artefacts et enregistrement de la livraison. A9 : composition physique et
+modes Web, puis convergence. Voir le plan actualisé.
 
 ## 7. Suite de la réalisation
 
 - A8.3/A8.4 : modèle natif des publications
   et projection configurable des connaissances.
 - A8.5 : Publisher intégré et prévisualisation.
+- A8.6 : Viewer autonome préchargé et qualification des livraisons.
 - A9.1/A9.2 : sélection des modules et trois
   distributions Viewer.
 - A9.3 : trois distributions Creator/Publisher.
@@ -290,14 +225,12 @@ et non reprendre automatiquement une ancienne
 
 ## 10. Session handoff
 
-- Dernière baseline logicielle : 6b969f3.
-- Baseline documentaire de convergence : d19b3cc.
-- Distribution publique : bf6472a.
-- Dernière validation logicielle : 464/464 tests.
-- Exigences nouvelles : CPV-01 à CPV-12.
-- Qualification navigateur : partiellement ouverte.
-- Action suivante : réaliser A8.2.
-- Modification applicative A8.0 : aucune.
+- Référence publique : A8.2 (0b14a41 / ed814d6).
+- Référence locale avant A8.4 : A8.3 (94aef3e).
+- Dernière validation réelle : 585/585 et recette Chrome A8.5-R1 9/9.
+- Action suivante : A8.6, livraison traçable et recette hors connexion.
+- Fournir l'instantané Git et les rapports complets ; ne pas reconstruire les sources à l'aveugle.
+- Aucun push ni nouvelle publication sans étape dédiée.
 
 ## 11. Historique antérieur
 

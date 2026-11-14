@@ -63,3 +63,14 @@ Un contrôle non applicable doit être justifié.
 
 Une étape transitoire ne doit pas être déclarée conforme
 à une exigence de distribution finale non encore réalisée.
+
+## Contrôles complémentaires A8.5/A8.6
+
+- [ ] Vérifier le commit/instantané exact et les empreintes avant installation.
+- [ ] Contrôler les nouveaux libellés et la conservation des saisies FR ↔ EN.
+- [ ] Vérifier l'ouverture directe du Viewer HTML préchargé sans import JSON ni outils externes.
+- [ ] Vérifier que le modèle Viewer préconstruit n'embarque pas de catalogue d'auteur ; le Creator seul contient ce modèle pour assemblage.
+- [ ] Comparer la projection, la prévisualisation et les données effectivement embarquées ; vérifier les octets et la provenance de la livraison distinctement.
+- [ ] Vérifier que la prévisualisation ne remplace pas le workspace source.
+- [ ] Ne créer une PublicationRelease qualifiée qu'après les contrôles d'artefacts applicables.
+- [ ] Mettre à jour l'état courant, la conception, les décisions, les exigences et les preuves ; préserver les baselines historiques.

@@ -62,3 +62,20 @@ Le groupe racine est permanent. Les groupes imbriqués peuvent être ajoutés au
 ## S14-Z — Gestion des sources et publication GitHub Pages
 
 La gestion des sources présente une commande principale de synchronisation du catalogue distribué. Les fonctions locales/import/journal/RSS sont réservées au panneau d’administration avancée. Les résultats structurés de synchronisation distinguent `unchanged`, `updated`, `not-published` et `error`. Le catalogue ISO reste stocké dans IndexedDB, servi par un service HTTPS distinct du build GitHub Pages. Voir `59-S14-Z-GESTION-SOURCES-PUBLICATION.md` pour les dépendances, la validation et les décisions ouvertes.
+
+## S14.3 — Consultation dans un Viewer de publication
+
+Le Creator continue d'explorer le corpus global et peut intégrer une référence
+ISO avec son instantané documentaire dans le catalogue natif (architecture 82).
+La définition A8.3 contrôle l'inclusion de l'instantané ; la projection A8.4
+sélectionne les standards des révisions retenues et la liste positive des
+champs ISO. Le Viewer consulte ces données embarquées, sans installation du
+corpus ISO ni accès à la source d'auteur. La présentation peut masquer le
+panneau des références indépendamment de la politique d'inclusion des données ;
+masquer un panneau n'est pas une suppression des octets.
+
+La recette documentaire de publication doit inclure au moins un instantané
+ISO (A8.4 Chrome utilisait deux déclarations manuelles), vérifier la fiche,
+la recherche dans le sous-ensemble et l'absence de corpus global. La navigation
+hiérarchique ICS/TC/SC du sous-ensemble reste un chantier ouvert ; ne pas la
+confondre avec la navigation du corpus global Creator.

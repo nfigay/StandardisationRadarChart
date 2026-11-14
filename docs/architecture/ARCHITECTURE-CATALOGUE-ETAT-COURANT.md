@@ -65,3 +65,19 @@ La modification visuelle de l’AST est réalisée par `__radarIsoAdvancedQuery.
 ## S14-Z — Gestion des sources et publication GitHub Pages
 
 La gestion des sources présente une commande principale de synchronisation du catalogue distribué. Les fonctions locales/import/journal/RSS sont réservées au panneau d’administration avancée. Les résultats structurés de synchronisation distinguent `unchanged`, `updated`, `not-published` et `error`. Le catalogue ISO reste stocké dans IndexedDB, servi par un service HTTPS distinct du build GitHub Pages. Voir `59-S14-Z-GESTION-SOURCES-PUBLICATION.md` pour les dépendances, la validation et les décisions ouvertes.
+
+## Mise à jour A8.2–A8.5 (14 novembre 2026)
+
+Le corpus ISO distribué (génération 2026-11-09) reste distinct du catalogue
+métier natif. A8.2 intègre une copie documentaire bornée et sourcée par standard
+(`extensions.isoDocument`) dans le catalogue métier ; voir architecture 82.
+Le Creator autonome embarque le corpus global, le Viewer commun n'en charge
+pas et consulte uniquement les références de son catalogue natif. Le corpus
+local IndexedDB n'est pas une source nécessaire au destinataire d'une publication.
+
+A8.4 projette seulement les standards référencés et les attributs documentaires
+autorisés ; l'option ISO exclut ou inclut leur copie documentaire. Voir 84.
+Le Viewer préchargé visé en A8.6 contient le catalogue natif projeté, pas le
+corpus global. Navigation documentaire par ICS/TC/SC du sous-ensemble et
+simplification générale du gestionnaire des sources demeurent à réaliser.
+Les observations S14-W antérieures restent historiques.
