@@ -29,7 +29,25 @@
         nativeEvent.preventDefault();
       },true);
     }
-    tree=new root.w2sidebar({box:mount,name:'radarWorkspaceTree',nodes:[],onClick:function(e){
+    // Shared native workspace commands, independent of revision deletion.
+    var french=String(root.i18next?.language||'fr').toLowerCase().startsWith('fr');
+    var commands=root.__radarApplicationProfile?.allows('catalog.open')===false?'':
+      '<div style="display:flex;flex-wrap:wrap;gap:4px;padding:6px;border-bottom:1px solid #ddd">'+
+      '<button type="button" class="w2ui-btn" data-workspace-action="open">'+(french?'Ouvrir / Remplacer':'Open / Replace')+'</button>'+
+      '<button type="button" class="w2ui-btn" data-workspace-action="close">'+(french?'Fermer':'Close')+'</button>'+
+      '<button type="button" class="w2ui-btn" data-workspace-action="references">'+(french?'Références':'References')+'</button></div>';
+    mount.addEventListener?.('click',function(event){
+      var button=event.target?.closest?.('[data-workspace-action]');
+      if(!button)return;
+      event.preventDefault();
+      var action=button.dataset.workspaceAction,api=root.__radarCatalogUI;
+      try{
+        if(action==='open')api.openFile({replace:true});
+        if(action==='close')Promise.resolve(api.requestClose(hooks.graph())).catch(err=>root.w2alert(err.message));
+        if(action==='references')root.__radarStandardsPanel.openReferences();
+      }catch(err){root.w2alert(err.message);}
+    });
+    tree=new root.w2sidebar({box:mount,name:'radarWorkspaceTree',topHTML:commands,nodes:[],onClick:function(e){
       var id=e.target||e.detail?.target;
       var node=tree.get(id);
       if(!node || !node.workspaceGroup)return; // folder clicks only expand/collapse
@@ -217,6 +235,16 @@
     if(!s.radars.length)sources=sources.filter(x=>x!==s);
     refresh();return {removed:targets.map(x=>x.group)};
   }
-  root.__radarWorkspaceExplorer=Object.freeze({initialize,loadASD,addCatalog,draftAdded,activate,remove,refresh,
+  function releaseCatalog(groups){
+    root.__radarApplicationProfile?.require('catalog.open');
+    var catalogs=sources.filter(x=>x.kind==='catalog');
+    if(catalogs.length!==1||JSON.stringify(catalogs[0].radars.map(x=>x.group).sort())!==JSON.stringify(groups.slice().sort()))
+      fail('catalog release mapping mismatch');
+    sources=sources.filter(x=>x!==catalogs[0]);
+    if(groups.includes(active))active=null;
+    refresh();
+  }
+  root.__radarWorkspaceExplorer=Object.freeze({
+    graph:function(){return hooks?.graph?.()||null;},releaseCatalog:releaseCatalog,initialize,loadASD,addCatalog,draftAdded,activate,remove,refresh,
     status:function(){return {activeGroup:active,sources:sources.map(s=>({id:s.id,kind:s.kind,groups:s.radars.map(r=>r.group),unassignedCount:s.unassignedCount||0}))};}});
 })(window);

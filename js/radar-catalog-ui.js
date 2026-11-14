@@ -202,6 +202,7 @@
     prepare(catalog,{registered:adapter.status(),initialised:session.status().groups,nextIndex:count});
     var summary=load(catalog,toolbar);
     persistence.remember(catalog,summary);
+    persistence.markNew();
     explorer.addCatalog(catalog,summary);
     refreshCommonRevisionLabels();
     toolbar.set('item2',{selected:summary.revisions[0].menuId});
@@ -224,7 +225,84 @@
       if(item){toolbar.set('item2',{selected:item.id});toolbar.refresh('item2');}
     },function(group){return root.__radarCatalogAdapter.getRevision(group);});
   }
-  function openFile() {
+  // A8.2 native workspace lifecycle. No IndexedDB operation belongs here.
+  var closingCatalog=false,fileOperation=false;
+  function workspaceGraph(){
+    var graph=root.__radarWorkspaceExplorer?.graph?.();
+    if(!graph)error('workspace graph unavailable');
+    return graph;
+  }
+  function workspaceStatus(graph){
+    var p=root.__radarCatalogPersistence;
+    var opened=p?.status?.().importedCatalogs===1;
+    return {opened:opened,dirty:!!opened&&p.isDirty(graph),viewer:!!root.__radarApplicationProfile?.viewer};
+  }
+  function message(fr,en){return String(root.i18next?.language||'fr').toLowerCase().startsWith('fr')?fr:en;}
+  function closePlan(graph){
+    var persistence=root.__radarCatalogPersistence,adapter=root.__radarCatalogAdapter;
+    var session=root.__radarRevisionSession,explorer=root.__radarWorkspaceExplorer;
+    var sources=explorer.status().sources,groups=Object.values(registry);
+    var key=x=>JSON.stringify(x.slice().sort());
+    if(sources.length!==1 || sources[0].kind!=='catalog' || !groups.length ||
+       key(adapter.status())!==key(groups) || key(sources[0].groups)!==key(groups))
+      error('catalog workspace mapping mismatch');
+    var active=session.status().activeGroup;
+    if(active!==null && !groups.includes(active))error('another graph is active');
+    if(!graph?.elements || !session.releaseCatalog || !adapter.releaseCatalog ||
+       !explorer.releaseCatalog || !persistence.closeCatalog)error('catalog close services unavailable');
+    var toolbar=root.w2ui?.toolbar,item=toolbar?.get('item2');
+    if(!item||!Array.isArray(item.items))error('workgroup menu unavailable');
+    return {persistence,adapter,session,explorer,groups,toolbar,item};
+  }
+  async function closeCatalog(graph,decision,confirmExport){
+    root.__radarApplicationProfile?.require('catalog.open');
+    if(closingCatalog)error('catalog closing already in progress');
+    var state=workspaceStatus(graph);
+    if(!state.opened)return {action:'empty'};
+    if(decision==='cancel')return {action:'cancelled'};
+    if(!['close','discard','save'].includes(decision))error('invalid close decision');
+    if(state.dirty&&decision==='close')error('unsaved modifications require an explicit decision');
+    var plan=closePlan(graph);
+    closingCatalog=true;
+    try{
+      if(state.dirty&&decision==='save'){
+        if(typeof confirmExport!=='function')error('export confirmation required');
+        await plan.persistence.download(graph);
+        // A user may cancel the download or decline the confirmation.
+        if(!await confirmExport()){
+          plan.persistence.markNew();return {action:'cancelled'};
+        }
+        if(plan.persistence.isDirty(graph))error('workspace changed during export; retry close');
+        // Recheck all mappings after the asynchronous export.
+        plan=closePlan(graph);
+      }
+      var menuIds=new Set(Object.keys(registry));
+      plan.session.releaseCatalog(graph,plan.groups);
+      plan.adapter.releaseCatalog(plan.groups);
+      plan.toolbar.set('item2',{items:plan.item.items.filter(x=>!menuIds.has(x.id)),selected:null});
+      plan.toolbar.refresh('item2');
+      for(var key of Object.keys(registry))delete registry[key];
+      plan.persistence.closeCatalog();plan.explorer.releaseCatalog(plan.groups);
+      root.__radarStandardsPanel?.resetWorkspace?.();
+      root.__radarViewportSync?.();
+      return {action:'closed',groups:plan.groups.length};
+    }finally{closingCatalog=false;}
+  }
+  async function requestClose(graph){
+    graph=graph||workspaceGraph();
+    var state=workspaceStatus(graph);
+    if(!state.opened)return {action:'empty'};
+    if(!state.dirty)return closeCatalog(graph,'close');
+    if(root.confirm(message('Le catalogue contient des modifications. Les exporter avant de fermer ?',
+      'The catalog contains unsaved changes. Export before closing?'))){
+      return closeCatalog(graph,'save',()=>root.confirm(message('Le fichier JSON a-t-il été enregistré ? Confirmez pour fermer.',
+        'Has the JSON file been saved? Confirm to close.')));
+    }
+    if(root.confirm(message('Abandonner les modifications et fermer ? Annuler conserve votre travail.',
+      'Discard changes and close? Cancel keeps your work.'))){return closeCatalog(graph,'discard');}
+    return {action:'cancelled'};
+  }
+  function openFile(options={}) {
     root.__radarApplicationProfile?.require("catalog.open");
     var picker = document.createElement('input');
     picker.type = 'file'; picker.accept = '.json,application/json'; picker.style.display = 'none';
@@ -233,6 +311,8 @@
       var file = picker.files && picker.files[0];
       picker.remove();
       if (!file) return;
+      if(fileOperation||closingCatalog){root.w2alert('Catalog operation already in progress');return;}
+      fileOperation=true;
       try {
         if (file.size > LIMIT_BYTES) error('file exceeds 10 MB');
         var text = await file.text();
@@ -242,6 +322,14 @@
         if (!integrity) error('artifact verification module unavailable');
         var verified = await integrity.inspect(catalog);
         var current = root.__radarCatalogPersistence?.status?.();
+        if(options.replace===true && current?.importedCatalogs===1){
+          // Validate the complete incoming catalog before asking to close.
+          prepare(verified.catalog,{registered:root.__radarCatalogAdapter.status(),
+            initialised:root.__radarRevisionSession.status().groups,nextIndex:count});
+          var closed=await requestClose(workspaceGraph());
+          if(closed.action!=='closed')return;
+          current=root.__radarCatalogPersistence.status();
+        }
         if (current?.importedCatalogs || root.__radarWorkspaceExplorer?.status?.().sources?.length) {
           if (current?.catalogId && verified.manifest?.catalogId === current.catalogId) {
             if (current.importDigest && verified.digest === current.importDigest)
@@ -254,11 +342,12 @@
         root.__radarCatalogPersistence.remember(verified.catalog, summary, verified.manifest, verified.digest);
         refreshRadarLabels();
         root.__radarWorkspaceExplorer?.addCatalog?.(verified.catalog, summary);
+        root.__radarStandardsPanel?.refresh?.();
         openRevisionPicker();
       } catch (e) {
         console.error('Catalog load rejected:', e);
         root.w2alert('Catalog rejected: ' + e.message);
-      }
+      }finally{fileOperation=false;}
     }, {once:true});
     picker.click();
   }
@@ -306,7 +395,8 @@
     });
     if(changed){root.w2ui.toolbar.set('item2',{items:next});root.w2ui.toolbar.refresh('item2');}
   }
-  root.__radarCatalogUI = Object.freeze({ refreshRadarLabels:refreshRadarLabels,openRevisionPicker:openRevisionPicker, unregister:unregister, prepare:prepare, load:load, openFile:openFile,
+  root.__radarCatalogUI = Object.freeze({
+    closeCatalog:closeCatalog,requestClose:requestClose,workspaceStatus:workspaceStatus, refreshRadarLabels:refreshRadarLabels,openRevisionPicker:openRevisionPicker, unregister:unregister, prepare:prepare, load:load, openFile:openFile,
     isReadOnly:isReadOnly, afterSelect:afterSelect, createOrOpenDraft:createOrOpenDraft, transitionActiveRevision:transitionActiveRevision, createNewCatalog:createNewCatalog,
     resolve:function(id) { return has(registry,id) ? registry[id] : null; },
     status:function() { return { count:Object.keys(registry).length, entries:Object.keys(registry).map(function(k){return {menuId:k,group:registry[k]};}) }; }

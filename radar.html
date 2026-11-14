@@ -118,6 +118,11 @@
     </style>
     <script>
         window.addEventListener('beforeunload', function (event) {
+      // A8.2: a Viewer or a clean native workspace need not warn.
+      if(window.__radarApplicationProfile?.viewer)return;
+      if(window.__radarCatalogPersistence?.status?.().importedCatalogs===1 &&
+        !window.__radarCatalogPersistence.isDirty(window.__radarWorkspaceExplorer?.graph?.()))return;
+
             // Cancel the event to trigger the confirmation dialog
             event.preventDefault();
 

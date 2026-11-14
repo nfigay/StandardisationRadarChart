@@ -37,7 +37,8 @@
       origin:{system:'StandardisationRadarChart',organizationId:catalog.organizations?.[0]?.organizationId||null},
       lineage:{parentArtifactId:null}
     };
-    imports.push({source: clone(catalog), mapping: clone(summary.revisions), manifest:sourceManifest, importDigest:importDigest||null});
+    imports.push({source:clone(catalog),mapping:clone(summary.revisions),manifest:sourceManifest,
+      importDigest:importDigest||null,savedCanonical:canonical(catalog)});
     return imports.length;
   }
   // Explicit draft creation is part of the same imported catalog, not a parallel store.
@@ -278,6 +279,23 @@
     result.radarRevisions.push.apply(result.radarRevisions,additions);
     return result;
   }
+  // A8.2: compare portable business state, not selection/viewport state.
+  function isDirty(graph){
+    if(root.__radarApplicationProfile?.viewer || !imports.length)return false;
+    if(imports.length!==1 || imports[0].savedCanonical===null)return true;
+    try{return canonical(build(graph))!==imports[0].savedCanonical;}
+    catch(_){return true;}
+  }
+  function markNew(){
+    root.__radarApplicationProfile?.require('catalog.create');
+    if(imports.length!==1)fail('exactly one catalog required');
+    imports[0].savedCanonical=null;
+  }
+  function closeCatalog(){
+    root.__radarApplicationProfile?.require('catalog.open');
+    if(imports.length!==1)fail('exactly one catalog required');
+    imports.length=0;
+  }
   async function buildArtifact(graph) {
     if(imports.length!==1)fail('exactly one catalog required');
     var integrity=root.__radarArtifactIntegrity;
@@ -285,6 +303,7 @@
     return integrity.wrap(build(graph),imports[0].manifest);
   }
   async function download(graph) {
+    var owner=imports[0];
     var data=await buildArtifact(graph), json=JSON.stringify(data,null,2)+'\n';
     var blob=new Blob([json],{type:'application/json;charset=utf-8'});
     var url=URL.createObjectURL(blob);
@@ -292,6 +311,9 @@
       var a=document.createElement('a'); a.href=url; a.download='radar-catalog-edited.json';
       document.body.appendChild(a); a.click(); a.remove();
     } finally { setTimeout(function(){URL.revokeObjectURL(url);},1000); }
+    // Download dispatched, not a filesystem receipt. Compare the exact exported
+    // snapshot: concurrent changes remain dirty.
+    if(imports[0]===owner)owner.savedCanonical=canonical(data.artifact.data);
     return {revisions:data.artifact.data.radarRevisions.length,bytes:blob.size,digest:data.proof.digest};
   }
   /* S14-K-R3 administrative metadata */
@@ -345,7 +367,8 @@
   function renameRevisionLabel(id,value){return rename('revision',id,value);}
   function getRadarName(id){return getDisplay('radar',id);}
   function getRevisionLabel(id){return getDisplay('revision',id);}
-  root.__radarCatalogPersistence=Object.freeze({renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
+  root.__radarCatalogPersistence=Object.freeze({
+    isDirty:isDirty,markNew:markNew,closeCatalog:closeCatalog,renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
     registerDraft:registerDraft,removeGroup:removeGroup, ownsRevision:ownsRevision, transitionRevision:transitionRevision,
     validateCreation:validateCreation,commitCreation:commitCreation,
     listStandardsForDraft:listStandardsForDraft, listReferenceRecords:listReferenceRecords, declareLocalReference:declareLocalReference, status:function(){return {importedCatalogs:imports.length,

@@ -480,6 +480,12 @@
    finally{isoLoading=false;refresh();}
  }
  function referenceRows(term){
+   if(root.__radarApplicationProfile?.viewer){
+     if(root.__radarCatalogPersistence?.status?.().importedCatalogs!==1)return [];
+     const query=norm(String(term||''));
+     return root.__radarCatalogPersistence.listReferenceRecords().filter(r=>
+       !query||norm([r.standardId,r.name,r.issuer,r.designation,r.editionDesignation,r.sourceName,r.verification].filter(Boolean).join(' ')).includes(query));
+   }
    try{return root.__radarStandardRegistry?.records(term,1000)||[];}
    catch(e){if(status)status.textContent=e.message;return [];}
  }
@@ -646,6 +652,7 @@
  }
 
  function refresh(){
+   if(root.__radarApplicationProfile?.viewer)mode='references';
    if(!grid)return;
    detailColumn.text=tr('detailColumn');
    const term=search?.value||'';
@@ -728,7 +735,8 @@
      ];
      const found=referenceRows(term);
      grid.records=found.map((r,i)=>({recid:r.standardId||String(i+1),standardId:str(r.standardId),designation:str(r.designation),name:str(r.name),edition:str(r.editionDesignation),verification:str(r.verification)}));
-     if(status)status.textContent=`${found.length} référence(s) locales — synchronisation ISO Open Data à venir`;
+                   grid.total=grid.records.length;grid.buffered=grid.records.length;
+       if(status)status.textContent=found.length+(root.__radarApplicationProfile?.viewer?' référence(s) publiée(s)':' référence(s) du catalogue métier');
    }
    const nav=mount?.querySelector('[data-iso-window-navigator]');if(nav)nav.style.display=windowedActive&&['ics','committees','iso-list'].includes(mode)?'inline-flex':'none';
    if(status&&localSyncMessage)status.textContent+=' · '+localSyncMessage;
@@ -844,6 +852,8 @@
    loading=false;refresh();
  }
  function initialize(node,getGraph){
+   const nativeOnly=!!root.__radarApplicationProfile?.viewer;
+   if(nativeOnly){root.__radarApplicationProfile.require('radar.consult');mode='references';}
    registerI18n();
    graphProvider=typeof getGraph==='function'?getGraph:null;
    if(!node||!root.document)return false;
@@ -1043,6 +1053,14 @@
      try{root.__radarCatalogCreateForm.open(graphProvider?.(),'existing',selected);}
      catch(e){status.textContent=e.message;}
    });
+   if(nativeOnly){
+     preparePublishedReferences();
+     const label=d.createElement('span');
+     label.textContent=String(root.i18next?.language||'fr').startsWith('fr')?'Références publiées':'Published references';
+     bar.replaceChildren(label,search);
+     return true; // no global ISO, RSS or changes initialization in Viewer
+   }
+   // Creator startup retains the R5 optional-source contract.
    bindLocale();updateStaticLabels();refresh();
    void loadIcs();
    void loadIsoCache().then(async()=>{
@@ -1076,5 +1094,32 @@
    return true;
  }
  function open(){if(!mount)initialize(root.document?.getElementById('standard-references-panel'));const layout=root.w2ui?.mainLayout;if(layout?.show)layout.show('bottom');if(layout?.sizeTo)layout.sizeTo('bottom',240);refresh();search?.focus();}
- root.__radarStandardsPanel=Object.freeze({initialize,refresh,open,icsTree,enrichedIcsTree});
+ // Initialize the shared consultation UI without starting source services.
+ function preparePublishedReferences(){
+   bindLocale();
+   updateStaticLabels();
+   refresh();
+ }
+ function resetWorkspace(){
+   selected=null;windowToken++;windowHistory=[null];windowPosition=0;windowBasePosition=0;windowNext=null;
+   if(search)search.value='';
+   refresh();
+ }
+ function openReferences(){
+   root.__radarApplicationProfile?.require('radar.consult');
+   mode='references';
+   const layout=root.w2ui?.mainLayout;
+   layout?.show?.('bottom');layout?.sizeTo?.('bottom',240);
+   if(!mount){
+     let node=root.document?.getElementById('standard-references-panel');
+     if(!node&&layout?.html){
+       layout.html('bottom','<div id="standard-references-panel" style="height:100%"></div>');
+       node=root.document?.getElementById('standard-references-panel');
+     }
+     if(!node)throw Error('Standards panel unavailable');
+     root.__radarStandardsPanel.initialize(node,()=>root.__radarWorkspaceExplorer?.graph?.());
+   }
+   refresh();search?.focus();
+ }
+ root.__radarStandardsPanel=Object.freeze({initialize,refresh,open,openReferences,resetWorkspace,icsTree,enrichedIcsTree});
 })(window);
