@@ -176,6 +176,7 @@
                         en: "🇬🇧 English",
                         files: "Files",
                         newcatalog: "New catalog and working radar",
+                        catalogForm: {"catalogName": "Catalog name", "organizationName": "Organization name", "portfolioName": "Portfolio name", "radarName": "First radar name", "required": "{{label}}: a value is required.", "created": "Catalog created: {{title}}. Use Files → Save JSON catalog to download it.", "failed": "Catalog creation failed. See the console for technical details.", "draftRequired": "This action requires a working draft.", "readOnly": "This revision is read-only. Radar tools → Create / Open Working Radar.", "protectedConfirm": "Revision {{status}}: its content is protected.\nCreate or open a new working draft to continue?\nThe current publication will remain unchanged.", "status": {"published": "Published", "archived": "Archived", "draft": "Draft"}},
                         loadcatalogjson: "Open JSON catalog",
                         savecatalogjson: "Save JSON catalog",
                         createdraft: "Create / Open Working Radar",
@@ -307,6 +308,7 @@
                         en: "🇬🇧 English",
                         files: "Fichiers",
                         newcatalog: "Nouveau catalogue et radar de travail",
+                        catalogForm: {"catalogName": "Nom du catalogue", "organizationName": "Nom de l’organisation", "portfolioName": "Nom du portefeuille", "radarName": "Nom du premier radar", "required": "{{label}} : valeur obligatoire.", "created": "Catalogue créé : {{title}}. Utilisez Fichiers → Sauvegarder le catalogue JSON pour le télécharger.", "failed": "Création du catalogue impossible. Consultez la console pour les détails techniques.", "draftRequired": "Cette action nécessite un brouillon.", "readOnly": "Cette révision est en lecture seule. Outils du radar → Créer / ouvrir un radar de travail.", "protectedConfirm": "Révision {{status}} : son contenu est protégé.\nCréer ou ouvrir un nouveau brouillon pour poursuivre ?\nLa publication actuelle restera inchangée.", "status": {"published": "Publiée", "archived": "Archivée", "draft": "Brouillon"}},
                         loadcatalogjson: "Ouvrir un catalogue JSON",
                         savecatalogjson: "Sauvegarder le catalogue JSON",
                         createdraft: "Créer / ouvrir un radar de travail",
@@ -911,14 +913,12 @@
         // Canceling any prompt leaves the workspace unchanged.
         function handleNewCatalog() {
             if (!window.__radarApplicationProfile.allows('catalog.create')) return;
-            const labels = i18next.language?.startsWith('fr')
-                ? ['Nom du catalogue', "Nom de l'organisation", 'Nom du portefeuille', 'Nom du premier radar']
-                : ['Catalog name', 'Organization name', 'Portfolio name', 'First radar name'];
+            const labels = ['catalogName','organizationName','portfolioName','radarName'].map(key => i18next.t('menu.catalogForm.'+key));
             const values = [];
             for (const label of labels) {
                 const value = window.prompt(label);
                 if (value === null) return;
-                if (!value.trim()) { w2alert(label + ' : valeur obligatoire'); return; }
+                if (!value.trim()) { w2alert(i18next.t('menu.catalogForm.required',{label})); return; }
                 values.push(value);
             }
             try {
@@ -927,10 +927,10 @@
                     portfolioName: values[2], radarTitle: values[3]
                 }, w2ui.toolbar, cy, drawSelectedWorkgroup);
                 console.log('New catalog:', result);
-                w2alert('Catalog created in memory: ' + result.catalogTitle + '. Use Files → Save JSON catalog to download it.');
+                w2alert(i18next.t('menu.catalogForm.created',{title:result.catalogTitle}));
             } catch (error) {
                 console.error('New catalog rejected:', error);
-                w2alert('New catalog rejected: ' + error.message);
+                w2alert(i18next.t('menu.catalogForm.failed'));
             }
         }
 
@@ -1249,16 +1249,14 @@
             const group = window.__radarRevisionSession?.status?.().activeGroup;
             const revision = window.__radarCatalogAdapter?.getRevision?.(group);
             if (!revision || revision.status === 'draft') {
-                w2alert('Cette action nécessite une révision de travail (draft).');
+                w2alert(i18next.t('menu.catalogForm.draftRequired'));
                 return;
             }
             if (typeof window.confirm !== 'function') {
-                w2alert('Cette révision est en lecture seule. Outils du radar → Créer / ouvrir un radar de travail.');
+                w2alert(i18next.t('menu.catalogForm.readOnly'));
                 return;
             }
-            if (window.confirm('Révision ' + revision.status + ' : son contenu est protégé.\n' +
-                'Créer ou ouvrir une NOUVELLE révision draft pour poursuivre le travail ?\n' +
-                'La publication actuelle restera inchangée.')) {
+            if (window.confirm(i18next.t('menu.catalogForm.protectedConfirm',{status:i18next.t('menu.catalogForm.status.'+revision.status),interpolation:{escapeValue:false}}))) {
                 handleCreateOrOpenDraft();
             }
         }
@@ -1402,7 +1400,7 @@
                         window.__radarCatalogCreateForm.open(cy, event.target.endsWith('createstandardblip') ? 'new' : 'existing');
                     } catch (error) {
                         console.error('Catalog creation form rejected:', error);
-                        w2alert(error.message);
+                        w2alert(window.__radarCatalogCreateForm.errorMessage(error));
                     }
                     break;
                 case 'radartools:modeLocked':

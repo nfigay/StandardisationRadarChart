@@ -237,7 +237,16 @@
     var opened=p?.status?.().importedCatalogs===1;
     return {opened:opened,dirty:!!opened&&p.isDirty(graph),viewer:!!root.__radarApplicationProfile?.viewer};
   }
-  function message(fr,en){return String(root.i18next?.language||'fr').toLowerCase().startsWith('fr')?fr:en;}
+  var workspaceMessages={
+    fr:{workspaceExportBeforeClose:'Le catalogue contient des modifications. Les exporter avant de fermer ?',workspaceConfirmExport:'Le fichier JSON a-t-il été enregistré ? Confirmez pour fermer.',workspaceDiscardChanges:'Abandonner les modifications et fermer ? Annuler conserve votre travail.',workspaceBusy:'Une opération sur le catalogue est déjà en cours.'},
+    en:{workspaceExportBeforeClose:'The catalog contains unsaved changes. Export before closing?',workspaceConfirmExport:'Has the JSON file been saved? Confirm to close.',workspaceDiscardChanges:'Discard changes and close? Cancel keeps your work.',workspaceBusy:'A catalog operation is already in progress.'}
+  };
+  function workspaceMessage(key){
+    var instance=root.i18next;
+    for(var lang of ['fr','en'])instance?.addResourceBundle?.(lang,'translation',{menu:workspaceMessages[lang]},true,true);
+    var fallback=workspaceMessages.fr[key];
+    return instance?.t?.('menu.'+key,{defaultValue:fallback})||fallback;
+  }
   function closePlan(graph){
     var persistence=root.__radarCatalogPersistence,adapter=root.__radarCatalogAdapter;
     var session=root.__radarRevisionSession,explorer=root.__radarWorkspaceExplorer;
@@ -293,13 +302,10 @@
     var state=workspaceStatus(graph);
     if(!state.opened)return {action:'empty'};
     if(!state.dirty)return closeCatalog(graph,'close');
-    if(root.confirm(message('Le catalogue contient des modifications. Les exporter avant de fermer ?',
-      'The catalog contains unsaved changes. Export before closing?'))){
-      return closeCatalog(graph,'save',()=>root.confirm(message('Le fichier JSON a-t-il été enregistré ? Confirmez pour fermer.',
-        'Has the JSON file been saved? Confirm to close.')));
+    if(root.confirm(workspaceMessage('workspaceExportBeforeClose'))){
+      return closeCatalog(graph,'save',()=>root.confirm(workspaceMessage('workspaceConfirmExport')));
     }
-    if(root.confirm(message('Abandonner les modifications et fermer ? Annuler conserve votre travail.',
-      'Discard changes and close? Cancel keeps your work.'))){return closeCatalog(graph,'discard');}
+    if(root.confirm(workspaceMessage('workspaceDiscardChanges'))){return closeCatalog(graph,'discard');}
     return {action:'cancelled'};
   }
   function openFile(options={}) {
@@ -311,7 +317,7 @@
       var file = picker.files && picker.files[0];
       picker.remove();
       if (!file) return;
-      if(fileOperation||closingCatalog){root.w2alert('Catalog operation already in progress');return;}
+      if(fileOperation||closingCatalog){root.w2alert(workspaceMessage('workspaceBusy'));return;}
       fileOperation=true;
       try {
         if (file.size > LIMIT_BYTES) error('file exceeds 10 MB');

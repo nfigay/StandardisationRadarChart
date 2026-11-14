@@ -17,6 +17,28 @@
   function entry(source,group) {return source.radars.find(r=>r.group===group)||null;}
   function getSource(id) { return sources.find(s=>s.id===id)||null; }
   function find(group) { for(var s of sources) { var r=entry(s,group); if(r)return {source:s,radar:r}; } return null; }
+  var workspaceLabels={
+    fr:{workspaceOpenReplace:'Ouvrir / Remplacer',workspaceClose:'Fermer',workspaceReferences:'Références'},
+    en:{workspaceOpenReplace:'Open / Replace',workspaceClose:'Close',workspaceReferences:'References'}
+  };
+  function registerWorkspaceI18n(){
+    for(var lang of ['fr','en'])root.i18next?.addResourceBundle?.(lang,'translation',{menu:workspaceLabels[lang]},true,true);
+  }
+  function workspaceCommands(){
+    if(root.__radarApplicationProfile?.allows('catalog.open')===false)return '';
+    var buttons=[['open','workspaceOpenReplace'],['close','workspaceClose'],['references','workspaceReferences']];
+    return '<div style="display:flex;flex-wrap:wrap;gap:4px;padding:6px;border-bottom:1px solid #ddd">'+buttons.map(function(pair){
+      return '<button type="button" class="w2ui-btn" data-workspace-action="'+pair[0]+'" data-workspace-i18n="'+pair[1]+'">'+safe(tr(pair[1],workspaceLabels.fr[pair[1]]))+'</button>';
+    }).join('')+'</div>';
+  }
+  function updateWorkspaceLabels(){
+    if(!tree)return;
+    tree.topHTML=workspaceCommands();
+    for(var button of mount?.querySelectorAll?.('[data-workspace-i18n]')||[]){
+      var key=button.dataset.workspaceI18n;
+      button.textContent=tr(key,workspaceLabels.fr[key]);
+    }
+  }
   function initialize(args) {
     if(tree)fail('already initialized');
     if(!args || !args.mount || typeof args.select!=='function' || typeof args.graph!=='function')fail('missing hooks');
@@ -29,13 +51,9 @@
         nativeEvent.preventDefault();
       },true);
     }
-    // Shared native workspace commands, independent of revision deletion.
-    var french=String(root.i18next?.language||'fr').toLowerCase().startsWith('fr');
-    var commands=root.__radarApplicationProfile?.allows('catalog.open')===false?'':
-      '<div style="display:flex;flex-wrap:wrap;gap:4px;padding:6px;border-bottom:1px solid #ddd">'+
-      '<button type="button" class="w2ui-btn" data-workspace-action="open">'+(french?'Ouvrir / Remplacer':'Open / Replace')+'</button>'+
-      '<button type="button" class="w2ui-btn" data-workspace-action="close">'+(french?'Fermer':'Close')+'</button>'+
-      '<button type="button" class="w2ui-btn" data-workspace-action="references">'+(french?'Références':'References')+'</button></div>';
+    // A8.2: use the shared i18next menu bundle for workspace commands.
+    registerWorkspaceI18n();
+    var commands=workspaceCommands();
     mount.addEventListener?.('click',function(event){
       var button=event.target?.closest?.('[data-workspace-action]');
       if(!button)return;
@@ -61,6 +79,7 @@
       // Browser-native event is used only to position the context menu.
       showRemovalMenu(node.workspaceSource,node.workspaceGroup||null,original);
     }});
+    root.i18next?.on?.('languageChanged',updateWorkspaceLabels);
     refresh();return tree;
   }
   function nodes() {
@@ -121,7 +140,9 @@
       // W2UI versions can retain selected even after unselecting a removed node.
       if(tree.selected===oldSelection)tree.selected=null;
     }
+    tree.topHTML=workspaceCommands();
     tree.nodes=[]; tree.add(nextNodes);tree.refresh();
+    updateWorkspaceLabels();
     if(active){ var selected=tree.get('radar_'+active.replace(/[^a-zA-Z0-9_-]/g,'_'));if(selected)tree.select(selected.id); }
   }
   function loadASD(groups) {

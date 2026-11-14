@@ -5,8 +5,19 @@
   fr:{select:'Sélectionner une révision',revision:'Révision',choose:'Choisir une révision',show:'Afficher la révision',cancel:'Annuler',draft:'Brouillon',published:'Publiée',archived:'Archivée',noVersion:'Sans version',confirmPublish:'Publier cette révision ? Les blips seront figés.',confirmArchive:'Archiver cette révision publiée ? Elle restera consultable et exportable.',confirmDraft:'Créer ou ouvrir une révision de travail ?',remember:'Exportez ensuite le catalogue JSON pour conserver le changement.',missing:'Sélectionnez une révision.',failed:'Opération impossible',onlyDraft:'La publication est possible uniquement depuis un brouillon.',onlyPublished:'L’archivage est possible uniquement depuis une révision publiée.',draftCreated:'Révision de travail créée',draftOpened:'Révision de travail ouverte',draftFailure:'Création de la révision refusée',noRevision:'Sélectionnez d’abord une révision du catalogue.'},
   en:{select:'Select revision',revision:'Revision',choose:'Choose a revision',show:'Show revision',cancel:'Cancel',draft:'Draft',published:'Published',archived:'Archived',noVersion:'No version',confirmPublish:'Publish this revision? Its blips will be frozen.',confirmArchive:'Archive this published revision? It will remain viewable and exportable.',confirmDraft:'Create or open a working draft?',remember:'Export the JSON catalog afterwards to preserve the change.',missing:'Select a revision.',failed:'Operation failed',onlyDraft:'Only a draft revision can be published.',onlyPublished:'Only a published revision can be archived.',draftCreated:'Working draft created',draftOpened:'Working draft opened',draftFailure:'Draft creation rejected',noRevision:'Select a catalog revision first.'}
  };
- function lang(){return String(root.i18next?.language||'fr').toLowerCase().startsWith('fr')?'fr':'en';}
- function t(key){return dict[lang()][key]||key;}
+ let registeredI18n=null;
+ function t(key){
+  const instance=root.i18next;
+  if(instance?.addResourceBundle && registeredI18n!==instance){
+   for(const language of ['fr','en'])instance.addResourceBundle(language,'translation',{menu:{revisionDialogs:dict[language]}},true,true);
+   registeredI18n=instance;
+  }
+  const language=String(instance?.resolvedLanguage||instance?.language||'fr').toLowerCase().split('-')[0];
+  const fallback=(dict[language]||dict.en)[key]||key;
+  const full='menu.revisionDialogs.'+key;
+  const value=instance?.t?.(full,{defaultValue:fallback});
+  return !value||value===full?fallback:value;
+ }
  function revisionName(revision,index){
   const named=root.__radarCatalogPersistence?.getRevisionLabel?.(revision.revisionId);
   return named || (Number.isInteger(index)&&index>=0?'r'+(index+1):revision.revisionId);
