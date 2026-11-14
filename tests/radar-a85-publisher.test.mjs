@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {readFileSync} from 'node:fs';
-import {randomUUID,webcrypto} from 'node:crypto';
+import {randomUUID,webcrypto,createHash} from 'node:crypto';
 const src=f=>readFileSync(new URL('../'+f,import.meta.url),'utf8');
 const plain=x=>JSON.parse(JSON.stringify(x));
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
@@ -38,8 +38,8 @@ async function setup({viewer=false,source=null,template=false,preview=false}={})
  const location={search:viewer?'?profile=viewer'+(preview?'&publicationPreview=1':''):'',origin:'https://radar.test',protocol:'https:',href:'https://radar.test/radar.html'+(viewer?'?profile=viewer':'')};
  const root={document,location,URLSearchParams,URL:class extends URL{static createObjectURL(blob){downloads.push({blob});return 'blob:test';}static revokeObjectURL(){}},Blob,crypto:{randomUUID,subtle:webcrypto.subtle},btoa,atob,console:{info(){},error(){}},i18next:await locale(),confirm:()=>true,w2alert:m=>alerts.push(m),w2ui:{toolbar},setTimeout:()=>1,clearTimeout(){},addEventListener(k,fn){(events.get(k)||events.set(k,[]).get(k)).push(fn);},removeEventListener(k,fn){events.set(k,(events.get(k)||[]).filter(x=>x!==fn));},w2sidebar:function(o){this.topHTML=o.topHTML;this.nodes=o.nodes;this.add=n=>{this.nodes=n;};this.refresh=()=>{};this.get=()=>null;this.select=()=>{};this.unselect=()=>{};},__radarRevisionDialogs:{openPicker(){}},changeLanguage(lang){return this.i18next.changeLanguage(lang);}};
  root.parent=preview?{postMessage(data,origin){messages.push({data,origin});}}:root;
- const ctx=vm.createContext({window:root,document,TextEncoder,TextDecoder,Blob,URL:root.URL,setTimeout:root.setTimeout,clearTimeout:root.clearTimeout,console:root.console,structuredClone});
- for(const name of ['radar-application-profile','radar-artifact-integrity','radar-publication-model','radar-publication-projection','radar-publication-viewer','radar-publication-ui','radar-revision-session','radar-catalog-adapter','radar-catalog-persistence','radar-catalog-ui','radar-workspace-explorer'])vm.runInContext(src('js/'+name+'.js'),ctx,{filename:name+'.js'});
+ const ctx=vm.createContext({window:root,document,TextEncoder,TextDecoder,Uint8Array,Blob,URL:root.URL,setTimeout:root.setTimeout,clearTimeout:root.clearTimeout,console:root.console,structuredClone});
+ for(const name of ['radar-application-profile','radar-artifact-integrity','radar-publication-model','radar-publication-projection','radar-publication-viewer','radar-publication-delivery','radar-publication-ui','radar-revision-session','radar-catalog-adapter','radar-catalog-persistence','radar-catalog-ui','radar-workspace-explorer'])vm.runInContext(src('js/'+name+'.js'),ctx,{filename:name+'.js'});
  const p=root.__radarCatalogPersistence,ui=root.__radarCatalogUI,e=root.__radarWorkspaceExplorer,adapter=root.__radarCatalogAdapter,session=root.__radarRevisionSession,v=root.__radarPublicationViewer;
  e.initialize({mount:{addEventListener(){}},graph:()=>graph,select(group){session.select(graph,group,()=>{graph.elements().remove();graph.add(adapter.project(group).nodes);});ui.afterSelect(group,graph);}});
  if(source){const summary=ui.load(source,toolbar);p.remember(source,summary);e.addCatalog(source,summary);e.activate(summary.revisions[0].group);}
@@ -69,3 +69,60 @@ test('standalone generator builds Viewer first and embeds template only in Creat
 // that this was the cause of the observed Chrome session.
 test('startup final selection follows presentation refresh, not an intervening selection',async()=>{const {payload}=await projection();const y=await setup({viewer:true});const change=y.root.changeLanguage;y.root.changeLanguage=async function(lang){await change.call(this,lang);y.e.activate(y.adapter.status()[1]);};assert.equal(y.v.startupStatus(),null);await y.v.load(payload);const boot=y.v.startupStatus();assert.equal(boot.ok,true);assert.equal(boot.expectedRevisionId,'rev0');assert.equal(boot.activeRevisionId,'rev0');assert.equal(boot.sessionGroup,boot.expectedGroup);assert.equal(boot.explorerGroup,boot.expectedGroup);assert.equal(y.session.status().activeGroup,boot.expectedGroup);assert.equal(y.graph.nodes().jsons()[0].data.radarchart.revisionId,'rev0');});
 test('startup receipt remains detached and unchanged after subsequent navigation',async()=>{const {payload}=await projection();const y=await setup({viewer:true});await y.v.load(payload);const original=plain(y.v.startupStatus());const changed=y.v.startupStatus();changed.ok=false;changed.activeRevisionId='fake';y.e.activate(y.adapter.status()[1]);assert.equal(y.adapter.getRevision(y.session.status().activeGroup).revisionId,'rev1');assert.deepEqual(plain(y.v.startupStatus()),original);assert.equal(original.ok,true);assert.equal(original.activeRevisionId,'rev0');});
+
+
+// A8.6 — same native services and actual repository JSZip, byte-level checks.
+const CODE='0123456789abcdef0123456789abcdef01234567';
+const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+function installDelivery(x){
+  const module={exports:{}};
+  vm.runInNewContext(src('lib/jszip.min.js'),{module,exports:module.exports,Buffer,Uint8Array,ArrayBuffer,TextEncoder,TextDecoder,setTimeout,clearTimeout,setImmediate,console});
+  x.root.JSZip=module.exports;
+  x.root.__radarStandalone={profile:'creator',sourceCommit:CODE};
+  const proof={schemaVersion:1,codeCommit:CODE,templateSha256:hash(x.htmlTemplate),templateBytes:Buffer.byteLength(x.htmlTemplate),modules:['js/radar.js','standalone:offline-bootstrap']};
+  const node=new Node('script');node.id='radar-viewer-template-proof';node.textContent=Buffer.from(JSON.stringify(proof)).toString('base64');x.body.appendChild(node);
+  return {proof,node};
+}
+async function deliveryFixture(){const x=await setup({source:fixture(),template:true});const d=x.p.createPublicationDefinition(configuration());const info=installDelivery(x);return {x,d,...info};}
+test('A8.6 actual ZIP bytes and both entries match ledger; no private source data; history survives reopening',async()=>{
+ const {x,d}=await deliveryFixture();const result=await x.p.generateStandalonePublication(x.graph,d.definitionId,1);
+ const bytes=new Uint8Array(await result.blob.arrayBuffer());const zip=await x.root.JSZip.loadAsync(bytes,{checkCRC32:true});
+ assert.deepEqual(Object.keys(zip.files).sort(),['manifest.json','viewer.html']);
+ const manifest=JSON.parse(await zip.file('manifest.json').async('string')),html=await zip.file('viewer.html').async('string');
+ assert.equal(manifest.releaseId,result.release.releaseId);assert.equal(manifest.codeCommit,CODE);assert.deepEqual(manifest.revisionIds,['rev0','rev1']);
+ assert.doesNotMatch(JSON.stringify(manifest),/PRIVATE_|catalogId|catalogDigest|definitionId/);
+ const embedded=x.v.decode(html.match(/id="radar-publication-payload">([^<]+)<\/script>/)[1]);assert.doesNotMatch(JSON.stringify(embedded),/PRIVATE_|publications|sourceDigest|definitionId/);
+ assert.equal(await x.root.__radarArtifactIntegrity.digest(embedded.catalog),manifest.projectionDigest);
+ const release=x.p.publicationState().releases[0];assert.equal(release.releaseId,result.release.releaseId);assert.equal(release.artifacts.length,3);assert.ok(release.validation.checks.includes('download-blob-sha256'));
+ for(const a of release.artifacts){const b=a.path===result.filename?bytes:await zip.file(a.path).async('uint8array');assert.equal(a.bytes,b.byteLength);assert.equal(a.sha256,hash(b));}
+ assert.equal(x.p.isDirty(x.graph),true);result.release.definition.configuration.name='fake';assert.equal(x.p.publicationState().releases[0].definition.configuration.name,'Internal');
+ const reopened=await setup({source:x.p.build(x.graph)});assert.equal(reopened.p.publicationState().releases[0].releaseId,release.releaseId);
+});
+test('A8.6 rejects tampered template and mismatched or working-tree code provenance without ledger change',async()=>{
+ const {x,d,proof,node}=await deliveryFixture();const template=x.document.getElementById('radar-viewer-template');const original=template.textContent;
+ template.textContent=Buffer.from(x.htmlTemplate+'tamper').toString('base64');await assert.rejects(x.p.generateStandalonePublication(x.graph,d.definitionId,1),/template byte integrity/);template.textContent=original;
+ x.root.__radarStandalone.sourceCommit=CODE+'+working-tree';await assert.rejects(x.p.generateStandalonePublication(x.graph,d.definitionId,1),/uncommitted or mismatched/);x.root.__radarStandalone.sourceCommit=CODE;
+ node.textContent=Buffer.from(JSON.stringify({...proof,codeCommit:'f'.repeat(40)})).toString('base64');await assert.rejects(x.p.generateStandalonePublication(x.graph,d.definitionId,1),/uncommitted or mismatched/);
+ assert.equal(x.p.publicationState().releases.length,0);
+});
+test('A8.6 stale definition, external packaging, Viewer and corrupt ZIP rejected without release',async()=>{
+ const {x,d}=await deliveryFixture();await assert.rejects(x.p.generateStandalonePublication(x.graph,d.definitionId,2),/stale/);
+ const plan=await x.p.preparePublicationRelease(x.graph,d.definitionId,1,'standalone');await assert.rejects(x.p.recordPublicationRelease(x.graph,plan,{codeCommit:CODE,modules:['js/radar.js'],artifacts:[{path:'viewer.html',sha256:'a'.repeat(64),bytes:1}],checks:['template-byte-sha256']}),/reserved byte verification/);
+ const orig=x.root.JSZip.loadAsync;x.root.JSZip.loadAsync=async()=>({files:{unexpected:{} }});await assert.rejects(x.p.generateStandalonePublication(x.graph,d.definitionId,1),/ZIP inventory/);x.root.JSZip.loadAsync=orig;
+ const cfg=configuration();cfg.packaging.data='external';x.p.updatePublicationDefinition(d.definitionId,1,cfg);await assert.rejects(x.p.generateStandalonePublication(x.graph,d.definitionId,2),/embedded data/);
+ const y=await setup({viewer:true});await assert.rejects(y.p.generateStandalonePublication(y.graph,d.definitionId,1),/capability denied/);assert.equal(x.p.publicationState().releases.length,0);
+});
+test('A8.6 concurrent definition change during byte verification aborts before ledger mutation',async()=>{
+ const {x,d}=await deliveryFixture();const orig=x.root.JSZip.loadAsync;let changed=false;
+ x.root.JSZip.loadAsync=async function(...args){if(!changed){changed=true;const cfg=configuration();cfg.name='Changed during assembly';x.p.updatePublicationDefinition(d.definitionId,1,cfg);}return orig.apply(this,args);};
+ await assert.rejects(x.p.generateStandalonePublication(x.graph,d.definitionId,1),/workspace changed/);assert.equal(x.p.publicationState().releases.length,0);
+});
+test('A8.6 actual Publisher generates one ZIP and exposes retry without second release',async()=>{
+ const {x}=await deliveryFixture();const panel=x.root.__radarPublicationUI.open(x.graph);button(panel,'Générer une livraison ZIP').click();
+ for(let i=0;i<100&&x.p.publicationState().releases.length===0;i++)await new Promise(r=>setTimeout(r,10));await flush();
+ assert.equal(x.p.publicationState().releases.length,1);const filename=x.downloads.find(d=>d.filename)?.filename;assert.match(filename,/^radar-publication-[a-f0-9-]{36}\.zip$/);
+ button(panel,'Retélécharger la dernière livraison générée').click();await flush();assert.equal(x.downloads.filter(d=>d.filename===filename).length,2);assert.equal(x.p.publicationState().releases.length,1);
+});
+test('A8.6 build embeds provenance only in Creator and omits new authoring ZIP components from standalone Viewer',()=>{
+ const gen=src('scripts/build-common-standalone.mjs');assert.match(gen,/id="radar-viewer-template-proof"/);assert.match(gen,/templateSha256:createHash\('sha256'\)/);assert.match(gen,/profile==='viewer'&&\['lib\/jszip.min.js','js\/radar-publication-delivery.js'\]/);
+});

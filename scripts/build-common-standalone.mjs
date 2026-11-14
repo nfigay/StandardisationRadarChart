@@ -1,6 +1,7 @@
 import {execFileSync} from 'node:child_process';
 const sourceCommit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 import assert from 'node:assert/strict';
+import {assertPagesProvenance} from './pages-build-provenance.mjs';
 
 import {
   readFileSync,
@@ -31,6 +32,9 @@ const root=resolve(
 );
 
 const output=process.env.PILOT_DIR;
+
+// A complete commit claim requires the actual fresh committed Pages bytes.
+if(/^[a-f0-9]{40}$/.test(sourceCommit))assertPagesProvenance(process.cwd(),sourceCommit);
 
 assert.ok(output);
 
@@ -637,7 +641,9 @@ function offlineBootstrap(resources,profile){
 </script>`;
 }
 
-async function generate(profile,filename,viewerTemplate=null){
+async function generate(profile,filename,viewerTemplate=null,viewerProof=null){
+
+  const modules=new Set(['standalone:offline-bootstrap']);
 
   let scripts=0;
   let styles=0;
@@ -695,6 +701,8 @@ async function generate(profile,filename,viewerTemplate=null){
           const asset=resolveAsset(src);
 
           owner=asset.name;
+
+          if(profile==='viewer'&&['lib/jszip.min.js','js/radar-publication-delivery.js'].includes(owner))return '';
 
           if(type==='module'){
 
@@ -755,6 +763,7 @@ async function generate(profile,filename,viewerTemplate=null){
         }
 
         scripts++;
+        modules.add(owner==='radar.html'?'radar.html:inline-script-'+scripts:owner);
 
         return '<script'+
           (type
@@ -901,8 +910,8 @@ async function generate(profile,filename,viewerTemplate=null){
   if(profile==='viewer'){
     html=html.replace(head,match=>match+'\n<!--RADAR-PUBLICATION-PAYLOAD-->');
   }else{
-    assert.ok(viewerTemplate,'Missing Viewer template');
-    html=html.replace(/<\/head>/i,match=>'<script type="application/json" id="radar-viewer-template">'+Buffer.from(viewerTemplate,'utf8').toString('base64')+'</script>\n'+match);
+    assert.ok(viewerTemplate&&viewerProof,'Missing Viewer template and provenance');
+    html=html.replace(/<\/head>/i,match=>'<script type="application/json" id="radar-viewer-template">'+Buffer.from(viewerTemplate,'utf8').toString('base64')+'</script>\n'+'<script type="application/json" id="radar-viewer-template-proof">'+Buffer.from(JSON.stringify(viewerProof),'utf8').toString('base64')+'</script>\n'+match);
   }
 
   const file=join(
@@ -940,9 +949,10 @@ async function generate(profile,filename,viewerTemplate=null){
         .digest('hex')
     },null,2)
   );
+  return {schemaVersion:1,codeCommit:sourceCommit,templateSha256:createHash('sha256').update(html).digest('hex'),templateBytes:bytes,modules:[...modules].sort()};
 }
 
-await generate(
+const viewerProof=await generate(
   'viewer',
   'standardization-radar-viewer.html'
 );
@@ -950,7 +960,8 @@ await generate(
 await generate(
   'creator',
   'standardization-radar-creator.html',
-  readFileSync(join(output,'standardization-radar-viewer.html'),'utf8')
+  readFileSync(join(output,'standardization-radar-viewer.html'),'utf8'),
+  viewerProof
 );
 
 console.log(

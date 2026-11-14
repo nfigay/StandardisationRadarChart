@@ -566,20 +566,49 @@
   }
   // This is a ledger boundary for the future generator. Evidence is reported,
   // not independently verified; actual artifact validation belongs to A8.4/A9.
-  async function recordPublicationRelease(graph,plan,evidence){
+  async function recordPublicationReleaseWithIdentity(graph,plan,evidence,identity){
     var owner=publicationOwner(),model=publicationModel(),before=canonical(build(graph));
     if(!plan?.definition||!evidence||typeof evidence!=='object'||Array.isArray(evidence)||Object.keys(evidence).length!==4||!['codeCommit','modules','artifacts','checks'].every(k=>own(evidence,k)))fail('invalid publication generation evidence');
     var input=clone(plan),report=clone(evidence);
     var current=await preparePublicationRelease(graph,input.definition.definitionId,input.definition.version,input.mode);
     if(publicationOwner()!==owner||canonical(build(graph))!==before||!eq(input,current))fail('stale publication generation plan');
     var state=model.state(owner.source);
-    var release=model.release({releaseId:publicationId('release_'),createdAt:new Date().toISOString(),definition:current.definition,
+    var release=model.release({releaseId:identity.releaseId,createdAt:identity.createdAt,definition:current.definition,
       source:{...current.source,codeCommit:report.codeCommit},resolvedRevisionIds:current.resolvedRevisionIds,resolvedRevisions:current.resolvedRevisions,mode:current.mode,
       modules:report.modules,artifacts:report.artifacts,validation:{status:'reported-passed',checks:report.checks}});
     state.releases.push(release);commitPublicationState(owner,state);return clone(release);
   }
+  // Reserved checks may only be recorded by the actual byte-generating path.
+  var byteChecks=['template-byte-sha256','native-projection-digest','exact-viewer-composition','embedded-payload-roundtrip','zip-inventory-crc-sha256','download-blob-sha256'];
+  async function recordPublicationRelease(graph,plan,evidence){
+    publicationOwner();
+    if(Array.isArray(evidence?.checks)&&evidence.checks.some(c=>byteChecks.includes(c)))fail('reserved byte verification evidence');
+    return recordPublicationReleaseWithIdentity(graph,plan,evidence,{releaseId:publicationId('release_'),createdAt:new Date().toISOString()});
+  }
+  // A8.6: assemble and validate real bytes before the native ledger is mutated.
+  // No authoring data enters the public manifest; the full snapshot stays here.
+  async function generateStandalonePublication(graph,id,expectedVersion){
+    var owner=publicationOwner(),before=canonical(build(graph)),delivery=root.__radarPublicationDelivery,v=root.__radarPublicationViewer;
+    if(!delivery||!v)fail('standalone publication delivery unavailable');
+    var plan=await preparePublicationRelease(graph,id,expectedVersion,'standalone');
+    if(plan.definition.configuration.packaging.data!=='embedded')fail('standalone delivery requires embedded data');
+    var projection=await preparePublicationProjection(graph,id,expectedVersion);
+    if(projection.report.sourceDigest!==plan.source.catalogDigest||!eq(projection.report.revisionIds,plan.resolvedRevisionIds)||publicationOwner()!==owner||canonical(build(graph))!==before)fail('publication generation inputs changed');
+    var identity={releaseId:publicationId('release_'),createdAt:new Date().toISOString()};
+    var result=await delivery.assemble({template:v.template(),templateProof:delivery.proof(),standalone:root.__radarStandalone,payload:v.payload(projection.catalog,projection.report,plan.definition.configuration.presentation),...identity});
+    if(publicationOwner()!==owner||canonical(build(graph))!==before)fail('publication workspace changed during delivery');
+    if(!eq(result.evidence.checks,byteChecks.slice(0,-1)))fail('unexpected byte verification evidence');
+    // Construct the exact downloadable Blob before recording, not after.
+    var blob=new root.Blob([result.bytes],{type:'application/zip'});
+    var zipArtifact=result.evidence.artifacts.find(a=>a.path===result.filename);
+    if(blob.size!==result.bytes.byteLength||!zipArtifact||await delivery.sha256(new Uint8Array(await blob.arrayBuffer()))!==zipArtifact.sha256)fail('publication ZIP Blob integrity mismatch');
+    if(publicationOwner()!==owner||canonical(build(graph))!==before)fail('publication workspace changed during Blob verification');
+    result.evidence.checks.push('download-blob-sha256');
+    var release=await recordPublicationReleaseWithIdentity(graph,plan,result.evidence,identity);
+    return {release,manifest:clone(result.manifest),filename:result.filename,blob};
+  }
   root.__radarCatalogPersistence=Object.freeze({
-    preparePublicationProjection:preparePublicationProjection,downloadPublicationProjection:downloadPublicationProjection,
+    generateStandalonePublication:generateStandalonePublication,preparePublicationProjection:preparePublicationProjection,downloadPublicationProjection:downloadPublicationProjection,
     publicationState:publicationState,createPublicationDefinition:createPublicationDefinition,updatePublicationDefinition:updatePublicationDefinition,removePublicationDefinition:removePublicationDefinition,resolvePublicationDefinition:resolvePublicationDefinition,preparePublicationRelease:preparePublicationRelease,recordPublicationRelease:recordPublicationRelease,assertCanRemoveGroups:assertCanRemoveGroups,
     isDirty:isDirty,markNew:markNew,closeCatalog:closeCatalog,importIsoReference:importIsoReference,renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
     registerDraft:registerDraft,removeGroup:removeGroup, ownsRevision:ownsRevision, transitionRevision:transitionRevision,

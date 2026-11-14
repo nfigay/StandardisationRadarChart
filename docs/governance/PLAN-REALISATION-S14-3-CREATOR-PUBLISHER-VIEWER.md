@@ -280,8 +280,8 @@ pour les fonctions de base et sans import manuel du JSON. La construction
 prépare le modèle Viewer ; le navigateur assemble uniquement projection et
 configuration minimale avec ce modèle, sans compilation arbitraire.
 
-Le candidat A8.5 prépare cette composition, sans enregistrer de livraison.
-A8.6 qualifie la parité prévisualisation/HTML téléchargé, la fermeture,
+A8.5-R1 est qualifiée pour la génération et consultation (preuve 06), sans enregistrement de livraison. A8.6 candidat ajoute le ZIP vérifié (viewer.html et manifest.json) et l'historique natif ; voir architecture 86.
+La recette A8.6 qualifie la parité prévisualisation/HTML téléchargé, la fermeture,
 les octets, la provenance de code et de données, l'absence d'administration
 et le fonctionnement hors ligne réel. Enregistrement d'une PublicationRelease
 seulement après contrôle des preuves d'artefacts. Les ressources historiques

@@ -53,3 +53,5 @@ source, sélection et fiche ISO, préchargement réel du fichier téléchargé,
 fonctionnement hors connexion et absence de métadonnées d'auteur. Les tests
 statiques/VM ne démontrent pas la fidélité graphique ni la non-divulgation
 de secrets écrits dans un champ autorisé. Aucun résultat distant supposé.
+
+A8.6 candidat : vérification des octets du modèle, HTML, manifeste et ZIP, registre natif. Recette locale hors connexion et réimport du catalogue requis ; voir architecture 86.

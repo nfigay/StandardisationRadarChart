@@ -4,10 +4,12 @@ import {
 } from 'node:fs';
 import {resolve, join, dirname, isAbsolute, sep} from 'node:path';
 import {spawnSync} from 'node:child_process';
+import {sourceState,writePagesProvenance} from './pages-build-provenance.mjs';
 
 const root=process.cwd();
 const output=resolve(root,'.radarchart-build/pages');
 const catalog=resolve(root,'catalog-distribution');
+const buildSource=sourceState(root);
 
 function fail(message){
   console.error('PAGES BUILD ERROR:',message);
@@ -104,4 +106,6 @@ run([
   '--strict'
 ]);
 
+const provenance=writePagesProvenance(root,buildSource);
+console.log('Pages provenance:',JSON.stringify(provenance));
 console.log('S14.1 COMPLETE PAGES BUILD: OK');
