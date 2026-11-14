@@ -37,7 +37,8 @@
       origin:{system:'StandardisationRadarChart',organizationId:catalog.organizations?.[0]?.organizationId||null},
       lineage:{parentArtifactId:null}
     };
-    imports.push({source: clone(catalog), mapping: clone(summary.revisions), manifest:sourceManifest, importDigest:importDigest||null});
+    imports.push({source:clone(catalog),mapping:clone(summary.revisions),manifest:sourceManifest,
+      importDigest:importDigest||null,savedCanonical:canonical(catalog)});
     return imports.length;
   }
   // Explicit draft creation is part of the same imported catalog, not a parallel store.
@@ -91,8 +92,77 @@
       return {standardId:s.standardId,name:s.name,issuer:r.issuer||null,
         designation:r.designation||null,editionDesignation:r.editionDesignation||null,
         sourceName:r.sourceName||null,sourceUrl:r.sourceUrl||null,
-        verification:r.verification||'unknown',origin:r.origin||'legacy'};
+        verification:r.verification||'unknown',origin:r.origin||'legacy',
+        ...(s.extensions?.isoDocument?{isoDocument:clone(s.extensions.isoDocument)}:{})};
     });
+  }
+  // A8.2 lot 2: explicit, portable snapshot of an installed ISO deliverable.
+  // No source payload supplied by the caller; only the installed generation is trusted.
+  function isoText(value){
+    return typeof value==='string'?value.trim():typeof value==='number'&&Number.isFinite(value)?String(value):'';
+  }
+  function isoTexts(value){
+    return Array.isArray(value)?Array.from(new Set(value.map(isoText).filter(Boolean))):[];
+  }
+  function isoLanguages(value){
+    if(!value||typeof value!=='object'||Array.isArray(value))return {};
+    return Object.fromEntries(Object.entries(value).filter(([key,val])=>/^[a-zA-Z]{2,8}(?:-[a-zA-Z0-9]{2,8})*$/.test(key)&&typeof val==='string'&&val.trim()).map(([key,val])=>[key,val.trim()]));
+  }
+  function isoDesignation(value){return isoText(value).normalize('NFKC').replace(/\s+/g,' ').toUpperCase();}
+  function isoSnapshot(item,id,release){
+    var reference=isoText(item.reference);
+    if(!reference)fail('ISO deliverable has no reference');
+    var titles=isoLanguages(item.titleI18n),scopes=isoLanguages(item.scopeI18n);
+    return {
+      schemaVersion:1,source:'ISO Open Data',release:release,id:id,reference:reference,
+      title:titles.fr||titles.en||isoText(item.title)||reference,
+      titleI18n:titles,scopeI18n:scopes,scope:isoText(item.scope),
+      icsCodes:isoTexts(item.icsCodes),ownerCommittee:isoText(item.ownerCommittee),
+      currentStage:isoText(item.currentStage),edition:isoText(item.edition),
+      publicationDate:isoText(item.publicationDate),deliverableType:isoText(item.deliverableType),
+      supplementType:isoText(item.supplementType),languages:isoTexts(item.languages),
+      pages:isoText(item.pages),replaces:isoTexts(item.replaces),replacedBy:isoTexts(item.replacedBy)
+    };
+  }
+  async function importIsoReference(id){
+    if(root.__radarApplicationProfile?.viewer)fail('Viewer cannot import ISO references');
+    root.__radarApplicationProfile?.require('catalog.declareReference');
+    if(imports.length!==1)fail('exactly one imported catalog required');
+    if(typeof id!=='string'||!/^[a-zA-Z0-9._-]{1,160}$/.test(id))fail('invalid ISO deliverable identifier');
+    var owner=imports[0],provider=root.__radarIsoWindowed;
+    if(!provider?.current||!provider?.get)fail('installed ISO catalogue required');
+    var active=await provider.current();
+    var release=isoText(active?.summary?.release);
+    if(!active?.generation||!release||!active.summary?.datasets?.deliverables)
+      fail('installed ISO catalogue required');
+    var item=await provider.get({type:'deliverables',id:id});
+    var after=await provider.current();
+    if(imports.length!==1||imports[0]!==owner)fail('workspace changed during ISO selection');
+    if(after?.generation!==active.generation||after?.summary?.release!==active.summary.release)
+      fail('ISO catalogue changed during selection; retry');
+    if(!item||String(item.id)!==id||item.generation!==active.generation||item.type!=='deliverables')
+      fail('ISO deliverable not found in active generation');
+    var document=isoSnapshot(item,id,release),standards=owner.source.standards;
+    if(!Array.isArray(standards))fail('missing standards array');
+    var matches=standards.filter(s=>s.extensions?.isoDocument?.source==='ISO Open Data'&&s.extensions.isoDocument.id===id);
+    if(matches.length>1)fail('ambiguous ISO identity in catalog');
+    if(matches.length===1){
+      // Never refresh a stored snapshot implicitly: published references may use it.
+      return {action:'existing',standardId:matches[0].standardId,reference:matches[0].extensions.isoDocument.reference};
+    }
+    var key=isoDesignation(document.reference),standardId='iso-deliverable:'+id;
+    if(standards.some(s=>s.standardId===standardId))fail('ISO standardId collision');
+    // Exact designation collisions require explicit reconciliation, not silent promotion
+    // of a manual declaration to an ISO-verified record.
+    if(standards.some(s=>[s.extensions?.referenceDeclaration?.designation,s.extensions?.isoDocument?.reference,s.name].some(value=>isoDesignation(value)===key)))
+      fail('same designation already exists; reconcile the existing reference before importing');
+    var standard={standardId:standardId,name:document.reference,extensions:{
+      referenceDeclaration:{issuer:'ISO',designation:document.reference,editionDesignation:document.edition||null,
+        sourceName:'ISO Open Data',origin:'iso-open-data',verification:'source-verified'},
+      isoDocument:document
+    }};
+    owner.source.standards=standards.concat([standard]);
+    return {action:'imported',standardId:standardId,reference:document.reference};
   }
   // A locally declared record is NOT a verified SDO publication.
   // No revision/blip is created or modified by this operation.
@@ -278,6 +348,23 @@
     result.radarRevisions.push.apply(result.radarRevisions,additions);
     return result;
   }
+  // A8.2: compare portable business state, not selection/viewport state.
+  function isDirty(graph){
+    if(root.__radarApplicationProfile?.viewer || !imports.length)return false;
+    if(imports.length!==1 || imports[0].savedCanonical===null)return true;
+    try{return canonical(build(graph))!==imports[0].savedCanonical;}
+    catch(_){return true;}
+  }
+  function markNew(){
+    root.__radarApplicationProfile?.require('catalog.create');
+    if(imports.length!==1)fail('exactly one catalog required');
+    imports[0].savedCanonical=null;
+  }
+  function closeCatalog(){
+    root.__radarApplicationProfile?.require('catalog.open');
+    if(imports.length!==1)fail('exactly one catalog required');
+    imports.length=0;
+  }
   async function buildArtifact(graph) {
     if(imports.length!==1)fail('exactly one catalog required');
     var integrity=root.__radarArtifactIntegrity;
@@ -285,6 +372,7 @@
     return integrity.wrap(build(graph),imports[0].manifest);
   }
   async function download(graph) {
+    var owner=imports[0];
     var data=await buildArtifact(graph), json=JSON.stringify(data,null,2)+'\n';
     var blob=new Blob([json],{type:'application/json;charset=utf-8'});
     var url=URL.createObjectURL(blob);
@@ -292,6 +380,9 @@
       var a=document.createElement('a'); a.href=url; a.download='radar-catalog-edited.json';
       document.body.appendChild(a); a.click(); a.remove();
     } finally { setTimeout(function(){URL.revokeObjectURL(url);},1000); }
+    // Download dispatched, not a filesystem receipt. Compare the exact exported
+    // snapshot: concurrent changes remain dirty.
+    if(imports[0]===owner)owner.savedCanonical=canonical(data.artifact.data);
     return {revisions:data.artifact.data.radarRevisions.length,bytes:blob.size,digest:data.proof.digest};
   }
   /* S14-K-R3 administrative metadata */
@@ -345,7 +436,8 @@
   function renameRevisionLabel(id,value){return rename('revision',id,value);}
   function getRadarName(id){return getDisplay('radar',id);}
   function getRevisionLabel(id){return getDisplay('revision',id);}
-  root.__radarCatalogPersistence=Object.freeze({renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
+  root.__radarCatalogPersistence=Object.freeze({
+    isDirty:isDirty,markNew:markNew,closeCatalog:closeCatalog,importIsoReference:importIsoReference,renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
     registerDraft:registerDraft,removeGroup:removeGroup, ownsRevision:ownsRevision, transitionRevision:transitionRevision,
     validateCreation:validateCreation,commitCreation:commitCreation,
     listStandardsForDraft:listStandardsForDraft, listReferenceRecords:listReferenceRecords, declareLocalReference:declareLocalReference, status:function(){return {importedCatalogs:imports.length,

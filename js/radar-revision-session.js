@@ -73,7 +73,17 @@
     delete revisions[group];
   }
   function beforeExternalReplace(graph) { capture(graph); activeGroup = null; }
+  function releaseCatalog(graph,groups){
+    root.__radarApplicationProfile?.require('catalog.open');
+    if(!Array.isArray(groups))throw Error('Invalid catalog groups');
+    if(activeGroup!==null && groups.includes(activeGroup)){
+      graph.elements().remove();activeGroup=null;
+    }
+    for(var group of groups)delete revisions[group];
+    return {released:groups.length};
+  }
   root.__radarRevisionSession = Object.freeze({
+    releaseCatalog:releaseCatalog,
     select: select, capture: capture, adoptLoaded: adoptLoaded, removeGroup: removeGroup,
     exportGroup: function (graph, group) {
       assertGroup(group);

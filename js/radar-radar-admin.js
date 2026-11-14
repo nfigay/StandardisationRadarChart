@@ -5,7 +5,19 @@
   fr:{rename:'Renommer le radar',renameRevision:'Nommer la révision',radar:'Nom du radar',revision:'Libellé de la révision',save:'Enregistrer',cancel:'Annuler',empty:'Le nom ne peut pas être vide.',long:'Le nom ne doit pas dépasser 120 caractères.',missing:'Sélectionnez une révision du radar.',export:'Exportez le catalogue JSON pour conserver le nom.',failed:'Renommage impossible'},
   en:{rename:'Rename radar',renameRevision:'Name revision',radar:'Radar name',revision:'Revision label',save:'Save',cancel:'Cancel',empty:'Name cannot be empty.',long:'Name must not exceed 120 characters.',missing:'Select a radar revision.',export:'Export the JSON catalog to preserve the name.',failed:'Unable to rename radar'}
  };
- const t=key=>(dict[String(root.i18next?.language||'fr').startsWith('fr')?'fr':'en'][key]||key);
+ let registeredI18n=null;
+ function t(key){
+  const instance=root.i18next;
+  if(instance?.addResourceBundle && registeredI18n!==instance){
+   for(const language of ['fr','en'])instance.addResourceBundle(language,'translation',{menu:{radarAdmin:dict[language]}},true,true);
+   registeredI18n=instance;
+  }
+  const language=String(instance?.resolvedLanguage||instance?.language||'fr').toLowerCase().split('-')[0];
+  const fallback=(dict[language]||dict.en)[key]||key;
+  const full='menu.radarAdmin.'+key;
+  const value=instance?.t?.(full,{defaultValue:fallback});
+  return !value||value===full?fallback:value;
+ }
  function open(kind){
     root.__radarApplicationProfile?.require("radar.rename");
   const isRevision=kind==='revision';

@@ -24,6 +24,12 @@
    return treeIndex;
  }
  const isoStrings={fr:{"filterIcs":"Filtre ICS","filterCommittee":"Filtre TC/SC","sortLabel":"Trier par","sortReferenceAsc":"Référence A → Z","sortReferenceDesc":"Référence Z → A","sortTitleAsc":"Titre A → Z","sortTitleDesc":"Titre Z → A","sortEnglishAsc":"Titre anglais A → Z","sortEnglishDesc":"Titre anglais Z → A","sortStageAsc":"Stade A → Z","sortStageDesc":"Stade Z → A","windowAuto":"défilement automatique","windowScopeAll":"Toutes les normes","windowScopeDescendants":"sous-groupes inclus","windowNumber":"Fenêtre {{number}}","windowLoading":"chargement…","windowEmpty":"aucune norme","windowRange":"normes {{from}}–{{to}}","windowMore":"suite disponible","windowEnd":"fin des résultats","windowCatalogueTotal":"{{total}} normes au catalogue","modeChanges":"Évolutions ISO","changesLoad":"Charger les évolutions","changesSearch":"Référence, champ, changement…","changesFrom":"Depuis","changesTo":"Vers","changesKind":"Évolution","changesFields":"Champs modifiés","changesMissing":"Absente du nouveau jeu (retrait non confirmé)","changesAdded":"Nouvelle dans le jeu","changesChanged":"Métadonnées modifiées","changesEmpty":"Aucun journal publié. Comparer deux releases ISO pour produire des évolutions.","distributedSync":"Synchroniser le catalogue distribué","distributedPrompt":"Adresse du service de catalogues (URL)","distributedError":"Synchronisation du catalogue échouée","detail":"Détails","showStandards":"Afficher les normes","detailColumn":"Fiche","close":"Fermer","formTitle":"Fiche ISO","formTab":"Fiche de la norme","rawTab":"Métadonnées originales","reference":"Référence","titleFr":"Titre français","titleEn":"Titre anglais","otherLanguages":"Autres titres","scopeFr":"Description française","scopeEn":"Description anglaise","otherScopes":"Autres descriptions","ics":"Codes ICS","committee":"Comité TC / SC","stage":"Stade ISO","edition":"Édition","publicationDate":"Date de publication","deliverableType":"Type de livrable","supplementType":"Type de supplément","languages":"Langues","pages":"Pages","replaces":"Remplace","replacedBy":"Remplacée par","sourceData":"Toutes les métadonnées ISO","grpIdentification":"Identification","grpTitles":"Titres","grpDescriptions":"Descriptions / périmètre","grpClassification":"Classification et organisation","grpLifecycle":"Cycle de vie","grpRelations":"Relations entre éditions","grpRaw":"Champs bruts (consultation)","colIcs":"Code ICS","colLabel":"Libellé","colEnglishLabel":"Libellé anglais","colTC":"TC / SC","colTCRef":"TC / SC / Référence","colDescription":"Description","colRef":"Référence","colTitle":"Titre","colEnglishTitle":"Titre anglais","colStage":"Stade","colEdition":"Édition","colProvenance":"Provenance","modeIcs":"ICS et normes","modeCommittees":"Comités TC / SC","modeIsoList":"Normes ISO","modeReferences":"Références locales","refresh":"Actualiser","sync":"Charger catalogue ISO","add":"Ajouter au radar","import":"Importer JSONL","searchIcs":"ICS, titre, description, référence…","searchCommittees":"TC/SC, titre, description, norme…","searchIso":"Norme ISO, texte anglais, ICS, comité, stade…","searchLocal":"Numéro, titre, édition…","searchAccessible":"Rechercher dans le catalogue sélectionné","missingReference":"Identifiant ISO {{id}} — référence absente du cache","noCategory":"Sans catégorie ICS connue dans le catalogue","readOnlyUnavailable":"Le formulaire w2ui (w2form) est indisponible.","modeRss":"Actualités RSS","rssSync":"Actualiser RSS local","rssFeed":"Flux","rssDate":"Date","rssOpen":"Consulter","rssEmpty":"Aucun RSS en cache. Ajouter des flux avec tools/sync-iso-rss.mjs et exécuter la synchronisation.","rssSearch":"RSS, actualités, références…"},en:{"filterIcs":"ICS filter","filterCommittee":"TC/SC filter","sortLabel":"Sort by","sortReferenceAsc":"Reference A → Z","sortReferenceDesc":"Reference Z → A","sortTitleAsc":"Title A → Z","sortTitleDesc":"Title Z → A","sortEnglishAsc":"English title A → Z","sortEnglishDesc":"English title Z → A","sortStageAsc":"Stage A → Z","sortStageDesc":"Stage Z → A","windowAuto":"automatic scrolling","windowScopeAll":"All standards","windowScopeDescendants":"including subgroups","windowNumber":"Window {{number}}","windowLoading":"loading…","windowEmpty":"no standards","windowRange":"standards {{from}}–{{to}}","windowMore":"more available","windowEnd":"end of results","windowCatalogueTotal":"{{total}} standards in catalogue","modeChanges":"ISO changes","changesLoad":"Load changes","changesSearch":"Reference, field, change…","changesFrom":"From","changesTo":"To","changesKind":"Change","changesFields":"Changed fields","changesMissing":"Missing from new snapshot (withdrawal unconfirmed)","changesAdded":"New in snapshot","changesChanged":"Metadata changed","changesEmpty":"No published journal. Compare two ISO releases to generate changes.","distributedSync":"Sync distributed catalogue","distributedPrompt":"Catalogue service URL","distributedError":"Catalogue sync failed","detail":"Details","showStandards":"Show standards","detailColumn":"Details","close":"Close","formTitle":"ISO record","formTab":"Standard details","rawTab":"Original metadata","reference":"Reference","titleFr":"French title","titleEn":"English title","otherLanguages":"Other titles","scopeFr":"French description","scopeEn":"English description","otherScopes":"Other descriptions","ics":"ICS codes","committee":"Responsible TC / SC","stage":"ISO stage","edition":"Edition","publicationDate":"Publication date","deliverableType":"Deliverable type","supplementType":"Supplement type","languages":"Languages","pages":"Pages","replaces":"Replaces","replacedBy":"Replaced by","sourceData":"All ISO source metadata","grpIdentification":"Identification","grpTitles":"Titles","grpDescriptions":"Descriptions / scope","grpClassification":"Classification and organization","grpLifecycle":"Lifecycle","grpRelations":"Relationships between editions","grpRaw":"Raw source fields (read-only)","colIcs":"ICS code","colLabel":"Label","colEnglishLabel":"English label","colTC":"TC / SC","colTCRef":"TC / SC / Reference","colDescription":"Description","colRef":"Reference","colTitle":"Title","colEnglishTitle":"English title","colStage":"Stage","colEdition":"Edition","colProvenance":"Provenance","modeIcs":"ICS and standards","modeCommittees":"Technical committees TC / SC","modeIsoList":"ISO standards","modeReferences":"Local references","refresh":"Refresh","sync":"Load ISO catalogue","add":"Add to radar","import":"Import JSONL","searchIcs":"ICS, title, description, reference…","searchCommittees":"TC/SC, title, description, standard…","searchIso":"ISO standard, English text, ICS, committee, stage…","searchLocal":"Number, title, edition…","searchAccessible":"Search the selected catalogue","missingReference":"ISO identifier {{id}} — reference missing from cache","noCategory":"No known ICS category in catalogue","readOnlyUnavailable":"The w2ui form (w2form) is unavailable.","modeRss":"RSS updates","rssSync":"Refresh local RSS","rssFeed":"Feed","rssDate":"Date","rssOpen":"Open","rssEmpty":"No RSS cached. Add feeds using tools/sync-iso-rss.mjs and synchronize.","rssSearch":"RSS, news, references…"}};
+ Object.assign(isoStrings.fr,{storedTab:'Métadonnées conservées',storedData:'Copie documentaire conservée',grpStored:'Copie documentaire (consultation)'});
+ Object.assign(isoStrings.en,{storedTab:'Stored metadata',storedData:'Stored document snapshot',grpStored:'Document snapshot (read-only)'});
+ Object.assign(isoStrings.fr,{publishedReferences:'Références publiées',addToCatalog:'Ajouter au catalogue',viewReferences:'Voir les références',referenceAlreadyPresent:'Déjà présente dans le catalogue',referenceIntegrated:'Référence intégrée au catalogue',documentSnapshot:'Copie documentaire',publishedReferenceCount:'{{count}} référence(s) publiée(s)',nativeReferenceCount:'{{count}} référence(s) du catalogue métier'});
+ Object.assign(isoStrings.en,{publishedReferences:'Published references',addToCatalog:'Add to catalog',viewReferences:'View references',referenceAlreadyPresent:'Already in catalog',referenceIntegrated:'Reference added to catalog',documentSnapshot:'Document snapshot',publishedReferenceCount:'{{count}} published reference(s)',nativeReferenceCount:'{{count}} business catalog reference(s)'});
+ Object.assign(isoStrings.fr,{addFromReferences:'Intégrez d’abord la norme au catalogue, puis utilisez la vue Références.',selectReference:'Sélectionnez une référence.',selectDraft:'Sélectionnez un brouillon pour ajouter un blip.'});
+ Object.assign(isoStrings.en,{addFromReferences:'Add the standard to the catalog first, then use the References view.',selectReference:'Select a reference.',selectDraft:'Select a draft to add a blip.'});
  function registerI18n(){
    const instance=root.i18next;
    if(!instance?.addResourceBundle)return;
@@ -54,6 +60,7 @@
  const asLines=v=>str(v).replace(/\r\n/g,'\n');
  const preview=v=>escapeHtml(asLines(v).slice(0,280)).replace(/\n/g,'<br>');
  const detailColumn={field:'detail',text:tr('detailColumn'),size:'82px',sortable:false,render:r=>r.kind==='standard'?{html:'<button type=\"button\" data-iso-detail=\"'+escapeHtml(r.isoId)+'\">'+escapeHtml(tr('detail'))+'</button>'}:''};
+ const nativeIsoDetailColumn={field:'detail',text:tr('detailColumn'),size:'82px',sortable:false,render:r=>r.isoDocument?{html:'<button type="button" data-native-iso-detail="'+escapeHtml(r.standardId)+'">'+escapeHtml(tr('detail'))+'</button>'}:''};
  const findDeliverable=id=>isoDeliverables.find(x=>str(x.id)===str(id));
  const findCommittee=id=>isoCommittees.find(x=>str(x.id)===str(id));
  /* S14-L3: one navigation index derived from the existing IndexedDB cache. */
@@ -305,7 +312,7 @@
 
  function showDetail(record){
    const d=root.document;
-   const item=record.kind==='standard'?(record.isoItem||findDeliverable(record.isoId)):record.kind==='committee'?findCommittee(record.committeeId):null;
+   const item=record.nativeReference?record.isoItem:record.kind==='standard'?(record.isoItem||findDeliverable(record.isoId)):record.kind==='committee'?findCommittee(record.committeeId):null;
    if(!d||!item)return;
    activeDetailRecord={...record};
    if(typeof root.w2form!=='function'){
@@ -323,6 +330,32 @@
    const wrapper=d.createElement('div');wrapper.style.cssText='height:100%;display:flex;flex-direction:column;min-height:0';
    const header=d.createElement('div');header.style.cssText='flex:none;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 16px;border-bottom:1px solid #ddd';
    const heading=d.createElement('strong');heading.textContent=item.reference||tr('formTitle');heading.style.cssText='font:600 18px Arial,sans-serif';header.appendChild(heading);
+   if(record.nativeReference){
+     const provenance=d.createElement('span');
+     provenance.textContent=(tr('documentSnapshot')+' — ')+String(item.source||'')+' · '+String(item.release||'');
+     header.appendChild(provenance);
+   }
+   // This is a separate business command: the ISO form itself stays read-only.
+   if(!record.nativeReference&&record.kind==='standard'&&windowedActive&&
+      !root.__radarApplicationProfile?.viewer&&root.__radarApplicationProfile?.allows('catalog.declareReference')===true&&
+      root.__radarCatalogPersistence?.status?.().importedCatalogs===1){
+     const use=d.createElement('button');use.type='button';use.className='w2ui-btn';
+     use.textContent=tr('addToCatalog');
+     const feedback=d.createElement('span');feedback.setAttribute('role','status');
+     use.addEventListener('click',async()=>{
+       use.disabled=true;
+       try{
+         const result=await root.__radarCatalogPersistence.importIsoReference(String(record.isoId));
+         feedback.textContent=tr(result.action==='existing'?'referenceAlreadyPresent':'referenceIntegrated');
+         refresh();
+       }catch(error){feedback.textContent=String(error?.message||error);}
+       finally{use.disabled=false;}
+     });
+     const browse=d.createElement('button');browse.type='button';browse.className='w2ui-btn';
+     browse.textContent=tr('viewReferences');
+     browse.addEventListener('click',()=>{dialog.close();openReferences();});
+     header.appendChild(use);header.appendChild(browse);header.appendChild(feedback);
+   }
    const close=d.createElement('button');close.type='button';close.textContent=tr('close');close.className='w2ui-btn';header.appendChild(close);wrapper.appendChild(header);
    const container=d.createElement('div');container.style.cssText='flex:1;min-height:0;overflow:hidden';wrapper.appendChild(container);dialog.appendChild(wrapper);d.body.appendChild(dialog);
    if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
@@ -330,9 +363,9 @@
    const list=v=>Array.isArray(v)?v.map(x=>typeof x==='object'?JSON.stringify(x):String(x)).join(', '):v==null?'':typeof v==='object'?JSON.stringify(v):String(v);
    const localized=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{};
    const titles=localized(item.titleI18n),scopes=localized(item.scopeI18n);
-   const resolveRelations=ids=>Array.isArray(ids)?ids.map(id=>findDeliverable(id)?.reference||tr('missingReference',{id})).join('\n'):'';
+   const resolveRelations=ids=>Array.isArray(ids)?ids.map(id=>record.nativeReference?String(id):findDeliverable(id)?.reference||tr('missingReference',{id})).join('\n'):'';
    const recordData={
-     reference:item.reference||'',titleFr:line(titles.fr||item.title),titleEn:line(titles.en),
+     reference:item.reference||'',titleFr:line(titles.fr||(titles.en?'':item.title)),titleEn:line(titles.en),
      scopeFr:line(scopes.fr),scopeEn:line(scopes.en||item.scope),
      ics:list(item.icsCodes),committee:list(item.ownerCommittee),stage:list(item.currentStage),
      edition:list(item.edition),publicationDate:list(item.publicationDate),
@@ -348,6 +381,9 @@
    function field(name,label,type='text',group='',page=0,height=0){
      const html={label:tr(name),span:8,page,attr:type==='textarea'?('readonly style="width:96%;height:'+height+'px;resize:vertical;white-space:pre-wrap"'):'readonly style="width:96%"'};
      if(group)html.group=tr(group);
+     if(record.nativeReference&&name==='sourceData'){
+       html.label=tr('storedData');html.group=tr('grpStored');
+     }
      fields.push({field:name,type,html});
    }
    field('reference','Référence','text','grpIdentification');
@@ -374,7 +410,7 @@
    let form;
    try{
      form=new root.w2form({name,style:'border:0;background:transparent',
-       tabs:[{id:'details',text:tr('formTab')},{id:'raw',text:tr('rawTab')}],
+       tabs:[{id:'details',text:tr('formTab')},record.nativeReference?{id:'raw',text:tr('storedTab')}:{id:'raw',text:tr('rawTab')}],
        fields,record:recordData,actions:{}});
      form.render(container);
    }catch(e){dialog.remove();if(status)status.textContent='Erreur d’ouverture w2form : '+e.message;return;}
@@ -480,6 +516,16 @@
    finally{isoLoading=false;refresh();}
  }
  function referenceRows(term){
+   if(root.__radarApplicationProfile?.viewer||root.__radarCatalogPersistence?.status?.().importedCatalogs===1){
+     if(root.__radarCatalogPersistence?.status?.().importedCatalogs!==1)return [];
+     const query=norm(String(term||''));
+     return root.__radarCatalogPersistence.listReferenceRecords().filter(r=>{
+       const doc=r.isoDocument;
+       return !query||norm([r.standardId,r.name,r.issuer,r.designation,r.editionDesignation,r.sourceName,r.verification,
+         doc?.title,...Object.values(doc?.titleI18n||{}),doc?.scope,...Object.values(doc?.scopeI18n||{}),
+         ...(Array.isArray(doc?.icsCodes)?doc.icsCodes:[]),doc?.ownerCommittee,doc?.currentStage,doc?.release].filter(Boolean).join(' ')).includes(query);
+     });
+   }
    try{return root.__radarStandardRegistry?.records(term,1000)||[];}
    catch(e){if(status)status.textContent=e.message;return [];}
  }
@@ -646,8 +692,9 @@
  }
 
  function refresh(){
+   if(root.__radarApplicationProfile?.viewer)mode='references';
    if(!grid)return;
-   detailColumn.text=tr('detailColumn');
+   detailColumn.text=tr('detailColumn');nativeIsoDetailColumn.text=tr('detailColumn');
    const term=search?.value||'';
    if(search)search.placeholder=mode==='ics'?tr('searchIcs'):mode==='committees'?tr('searchCommittees'):mode==='iso-list'?tr('searchIso'):mode==='rss'?tr('rssSearch'):mode==='changes'?tr('changesSearch'):tr('searchLocal');
    if(mode==='ics'||mode==='committees'){
@@ -721,14 +768,17 @@
    } else {
      refreshSidebar();
      grid.columns=[
-       {field:'designation',text:tr('colRef'),size:'150px',sortable:true},
-       {field:'name',text:tr('colTitle'),size:'45%',sortable:true},
-       {field:'edition',text:tr('colEdition'),size:'90px',sortable:true},
-       {field:'verification',text:tr('colProvenance'),size:'160px',sortable:true}
+       {field:'designation',text:tr('colRef'),size:'170px',sortable:true,render:r=>({html:escapeHtml(r.designation)})},
+       {field:'name',text:tr('colTitle'),size:'40%',sortable:true,render:r=>({html:escapeHtml(r.name)})},
+       {field:'edition',text:tr('colEdition'),size:'90px',sortable:true,render:r=>({html:escapeHtml(r.edition)})},
+       {field:'verification',text:tr('colProvenance'),size:'160px',sortable:true,render:r=>({html:escapeHtml(r.verification)})},
+       nativeIsoDetailColumn
      ];
      const found=referenceRows(term);
-     grid.records=found.map((r,i)=>({recid:r.standardId||String(i+1),standardId:str(r.standardId),designation:str(r.designation),name:str(r.name),edition:str(r.editionDesignation),verification:str(r.verification)}));
-     if(status)status.textContent=`${found.length} référence(s) locales — synchronisation ISO Open Data à venir`;
+     grid.clear(true);
+     grid.records=found.map((r,i)=>({recid:r.standardId||String(i+1),standardId:str(r.standardId),designation:str(r.designation||r.name),name:str(r.isoDocument?.title||r.name),edition:str(r.editionDesignation),verification:str(r.verification),isoDocument:r.isoDocument||null}));
+                   grid.total=grid.records.length;grid.buffered=grid.records.length;
+       if(status)status.textContent=tr(root.__radarApplicationProfile?.viewer?'publishedReferenceCount':'nativeReferenceCount',{count:found.length});
    }
    const nav=mount?.querySelector('[data-iso-window-navigator]');if(nav)nav.style.display=windowedActive&&['ics','committees','iso-list'].includes(mode)?'inline-flex':'none';
    if(status&&localSyncMessage)status.textContent+=' · '+localSyncMessage;
@@ -844,6 +894,8 @@
    loading=false;refresh();
  }
  function initialize(node,getGraph){
+   const nativeOnly=!!root.__radarApplicationProfile?.viewer;
+   if(nativeOnly){root.__radarApplicationProfile.require('radar.consult');mode='references';}
    registerI18n();
    graphProvider=typeof getGraph==='function'?getGraph:null;
    if(!node||!root.document)return false;
@@ -1028,6 +1080,13 @@
    }else grid.render(target);
    target.addEventListener('scroll',onWindowGridScroll,true);
    target.addEventListener('click',e=>{const rss=e.target?.closest?.('[data-rss-open]');if(rss){const url=rss.getAttribute('data-rss-open');try{const u=new URL(url);if(u.protocol==='https:'&&u.hostname.endsWith('.iso.org'))root.open(u.href,'_blank','noopener,noreferrer');}catch(_){/* invalid url */}return;}
+     const nativeButton=e.target?.closest?.('[data-native-iso-detail]');
+     if(nativeButton){
+       const id=nativeButton.getAttribute('data-native-iso-detail');
+       const row=referenceRows('').find(r=>r.standardId===id);
+       if(row?.isoDocument)showDetail({kind:'standard',isoId:row.isoDocument.id,isoItem:row.isoDocument,nativeReference:true});
+       return;
+     }
      const btn=e.target?.closest?.('[data-iso-detail]');if(!btn)return;
      const id=btn.getAttribute('data-iso-detail');const record={kind:'standard',isoId:id};
      if(windowedActive&&root.__radarIsoWindowed?.get){root.__radarIsoWindowed.get({type:'deliverables',id}).then(item=>{if(item)showDetail({...record,isoItem:item});else showDetail(record);}).catch(err=>{if(status)status.textContent=err.message;});}
@@ -1035,14 +1094,23 @@
    });
    let isoSearchDebounce=null;search.addEventListener('input',()=>{if(isoSearchDebounce)clearTimeout(isoSearchDebounce);if(mode!=='iso-list'){isoSearchDebounce=setTimeout(()=>{isoSearchDebounce=null;refresh();},180);return;}isoSearchDebounce=setTimeout(()=>{isoSearchDebounce=null;refresh();},180);});reload.addEventListener('click',()=>{if(mode==='ics')loadIcs(true);loadIsoCache();});
    add.addEventListener('click',()=>{
-     if(mode!=='references'){status.textContent='Les normes ISO en cache sont consultables ; leur rapprochement au registre et leur création de blips seront traités dans le prochain lot. Pour ajouter un blip, utiliser « Références locales ». ';return;}
-     if(!selected){status.textContent='Sélectionner une référence.';return;}
+     if(mode!=='references'){status.textContent=tr('addFromReferences');return;}
+     if(!selected){status.textContent=tr('selectReference');return;}
      const group=root.__radarRevisionSession?.status?.().activeGroup;
      const revision=root.__radarCatalogAdapter?.getRevision?.(group);
-     if(!revision||revision.status!=='draft'){status.textContent='Sélectionner une révision draft pour ajouter un blip.';return;}
+     if(!revision||revision.status!=='draft'){status.textContent=tr('selectDraft');return;}
      try{root.__radarCatalogCreateForm.open(graphProvider?.(),'existing',selected);}
-     catch(e){status.textContent=e.message;}
+     catch(e){status.textContent=root.__radarCatalogCreateForm.errorMessage(e);}
    });
+   if(nativeOnly){
+     preparePublishedReferences();
+     const label=d.createElement('span');
+     label.dataset.isoTranslation='publishedReferences';
+     label.textContent=tr('publishedReferences');
+     bar.replaceChildren(label,search);
+     return true; // no global ISO, RSS or changes initialization in Viewer
+   }
+   // Creator startup retains the R5 optional-source contract.
    bindLocale();updateStaticLabels();refresh();
    void loadIcs();
    void loadIsoCache().then(async()=>{
@@ -1076,5 +1144,37 @@
    return true;
  }
  function open(){if(!mount)initialize(root.document?.getElementById('standard-references-panel'));const layout=root.w2ui?.mainLayout;if(layout?.show)layout.show('bottom');if(layout?.sizeTo)layout.sizeTo('bottom',240);refresh();search?.focus();}
- root.__radarStandardsPanel=Object.freeze({initialize,refresh,open,icsTree,enrichedIcsTree});
+ // Initialize the shared consultation UI without starting source services.
+ function preparePublishedReferences(){
+   bindLocale();
+   updateStaticLabels();
+   refresh();
+ }
+ function resetWorkspace(){
+   const detail=root.document?.getElementById('iso-standard-detail-dialog');
+   if(detail){detail.close?.();detail.remove();}
+   activeDetailRecord=null;
+   selected=null;windowToken++;windowHistory=[null];windowPosition=0;windowBasePosition=0;windowNext=null;
+   if(search)search.value='';
+   refresh();
+ }
+ function openReferences(){
+   root.__radarApplicationProfile?.require('radar.consult');
+   mode='references';
+   const layout=root.w2ui?.mainLayout;
+   layout?.show?.('bottom');layout?.sizeTo?.('bottom',240);
+   if(!mount){
+     let node=root.document?.getElementById('standard-references-panel');
+     if(!node&&layout?.html){
+       layout.html('bottom','<div id="standard-references-panel" style="height:100%"></div>');
+       node=root.document?.getElementById('standard-references-panel');
+     }
+     if(!node)throw Error('Standards panel unavailable');
+     root.__radarStandardsPanel.initialize(node,()=>root.__radarWorkspaceExplorer?.graph?.());
+   }
+   const button=mount?.querySelector('[data-catalog-mode="references"]');
+   if(button)button.click();else refresh();
+   search?.focus();
+ }
+ root.__radarStandardsPanel=Object.freeze({initialize,refresh,open,openReferences,resetWorkspace,icsTree,enrichedIcsTree});
 })(window);

@@ -56,7 +56,15 @@
       };
     }), edges: [] };
   }
+  function releaseCatalog(groups){
+    root.__radarApplicationProfile?.require('catalog.open');
+    if(!Array.isArray(groups)||JSON.stringify(groups.slice().sort())!==JSON.stringify(Object.keys(registered).sort()))
+      fail('catalog release requires all registered groups');
+    for(var group of groups)delete registered[group];
+    return {released:groups.length};
+  }
   root.__radarCatalogAdapter = Object.freeze({
+    releaseCatalog:releaseCatalog,
     register: register, unregister:function(g) {
     root.__radarApplicationProfile?.require("workspace.remove");
       if(!own(registered,g))fail('cannot remove unknown group: '+g);

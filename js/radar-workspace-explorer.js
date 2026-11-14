@@ -17,6 +17,28 @@
   function entry(source,group) {return source.radars.find(r=>r.group===group)||null;}
   function getSource(id) { return sources.find(s=>s.id===id)||null; }
   function find(group) { for(var s of sources) { var r=entry(s,group); if(r)return {source:s,radar:r}; } return null; }
+  var workspaceLabels={
+    fr:{workspaceOpenReplace:'Ouvrir / Remplacer',workspaceClose:'Fermer',workspaceReferences:'Références'},
+    en:{workspaceOpenReplace:'Open / Replace',workspaceClose:'Close',workspaceReferences:'References'}
+  };
+  function registerWorkspaceI18n(){
+    for(var lang of ['fr','en'])root.i18next?.addResourceBundle?.(lang,'translation',{menu:workspaceLabels[lang]},true,true);
+  }
+  function workspaceCommands(){
+    if(root.__radarApplicationProfile?.allows('catalog.open')===false)return '';
+    var buttons=[['open','workspaceOpenReplace'],['close','workspaceClose'],['references','workspaceReferences']];
+    return '<div style="display:flex;flex-wrap:wrap;gap:4px;padding:6px;border-bottom:1px solid #ddd">'+buttons.map(function(pair){
+      return '<button type="button" class="w2ui-btn" data-workspace-action="'+pair[0]+'" data-workspace-i18n="'+pair[1]+'">'+safe(tr(pair[1],workspaceLabels.fr[pair[1]]))+'</button>';
+    }).join('')+'</div>';
+  }
+  function updateWorkspaceLabels(){
+    if(!tree)return;
+    tree.topHTML=workspaceCommands();
+    for(var button of mount?.querySelectorAll?.('[data-workspace-i18n]')||[]){
+      var key=button.dataset.workspaceI18n;
+      button.textContent=tr(key,workspaceLabels.fr[key]);
+    }
+  }
   function initialize(args) {
     if(tree)fail('already initialized');
     if(!args || !args.mount || typeof args.select!=='function' || typeof args.graph!=='function')fail('missing hooks');
@@ -29,7 +51,21 @@
         nativeEvent.preventDefault();
       },true);
     }
-    tree=new root.w2sidebar({box:mount,name:'radarWorkspaceTree',nodes:[],onClick:function(e){
+    // A8.2: use the shared i18next menu bundle for workspace commands.
+    registerWorkspaceI18n();
+    var commands=workspaceCommands();
+    mount.addEventListener?.('click',function(event){
+      var button=event.target?.closest?.('[data-workspace-action]');
+      if(!button)return;
+      event.preventDefault();
+      var action=button.dataset.workspaceAction,api=root.__radarCatalogUI;
+      try{
+        if(action==='open')api.openFile({replace:true});
+        if(action==='close')Promise.resolve(api.requestClose(hooks.graph())).catch(err=>root.w2alert(err.message));
+        if(action==='references')root.__radarStandardsPanel.openReferences();
+      }catch(err){root.w2alert(err.message);}
+    });
+    tree=new root.w2sidebar({box:mount,name:'radarWorkspaceTree',topHTML:commands,nodes:[],onClick:function(e){
       var id=e.target||e.detail?.target;
       var node=tree.get(id);
       if(!node || !node.workspaceGroup)return; // folder clicks only expand/collapse
@@ -43,6 +79,7 @@
       // Browser-native event is used only to position the context menu.
       showRemovalMenu(node.workspaceSource,node.workspaceGroup||null,original);
     }});
+    root.i18next?.on?.('languageChanged',updateWorkspaceLabels);
     refresh();return tree;
   }
   function nodes() {
@@ -103,7 +140,9 @@
       // W2UI versions can retain selected even after unselecting a removed node.
       if(tree.selected===oldSelection)tree.selected=null;
     }
+    tree.topHTML=workspaceCommands();
     tree.nodes=[]; tree.add(nextNodes);tree.refresh();
+    updateWorkspaceLabels();
     if(active){ var selected=tree.get('radar_'+active.replace(/[^a-zA-Z0-9_-]/g,'_'));if(selected)tree.select(selected.id); }
   }
   function loadASD(groups) {
@@ -217,6 +256,16 @@
     if(!s.radars.length)sources=sources.filter(x=>x!==s);
     refresh();return {removed:targets.map(x=>x.group)};
   }
-  root.__radarWorkspaceExplorer=Object.freeze({initialize,loadASD,addCatalog,draftAdded,activate,remove,refresh,
+  function releaseCatalog(groups){
+    root.__radarApplicationProfile?.require('catalog.open');
+    var catalogs=sources.filter(x=>x.kind==='catalog');
+    if(catalogs.length!==1||JSON.stringify(catalogs[0].radars.map(x=>x.group).sort())!==JSON.stringify(groups.slice().sort()))
+      fail('catalog release mapping mismatch');
+    sources=sources.filter(x=>x!==catalogs[0]);
+    if(groups.includes(active))active=null;
+    refresh();
+  }
+  root.__radarWorkspaceExplorer=Object.freeze({
+    graph:function(){return hooks?.graph?.()||null;},releaseCatalog:releaseCatalog,initialize,loadASD,addCatalog,draftAdded,activate,remove,refresh,
     status:function(){return {activeGroup:active,sources:sources.map(s=>({id:s.id,kind:s.kind,groups:s.radars.map(r=>r.group),unassignedCount:s.unassignedCount||0}))};}});
 })(window);
