@@ -540,6 +540,30 @@
     });
     return {definition:d,source:{catalogId:owner.manifest.catalogId,catalogDigest:digest},resolvedRevisionIds:ids,resolvedRevisions:records,mode:mode};
   }
+  // A8.4: read-only authoring operation; the projected native catalog is a
+  // detached artifact. No release ledger entry and no saved-baseline change.
+  async function preparePublicationProjection(graph,id,expectedVersion){
+    var owner=publicationOwner(),d=resolvePublicationDefinition(id).definition;
+    if(d.version!==expectedVersion)fail('stale publication definition version');
+    var projection=root.__radarPublicationProjection,integrity=root.__radarArtifactIntegrity;
+    if(!projection||!integrity?.digest)fail('publication projection module unavailable');
+    var before=canonical(build(graph)),source=publicationSource(graph);
+    var result=projection.project(source,d.configuration);
+    projection.verify(source,d.configuration,result.catalog);
+    var sourceDigest=await integrity.digest(source),projectionDigest=await integrity.digest(result.catalog);
+    if(publicationOwner()!==owner||canonical(build(graph))!==before)fail('publication workspace changed during projection');
+    return {catalog:result.catalog,report:{...result.report,definitionId:d.definitionId,definitionVersion:d.version,sourceDigest,projectionDigest,canonicalization:'sorted-json-v1'}};
+  }
+  async function downloadPublicationProjection(graph,id,expectedVersion){
+    var result=await preparePublicationProjection(graph,id,expectedVersion);
+    var json=JSON.stringify(result.catalog,null,2)+'\n';
+    var blob=new Blob([json],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob);
+    try{
+      var a=document.createElement('a');a.href=url;a.download='radar-publication-'+result.report.projectionDigest.slice(0,12)+'.json';
+      document.body.appendChild(a);a.click();a.remove();
+    }finally{setTimeout(function(){URL.revokeObjectURL(url);},1000);}
+    return {...result.report,filename:'radar-publication-'+result.report.projectionDigest.slice(0,12)+'.json'};
+  }
   // This is a ledger boundary for the future generator. Evidence is reported,
   // not independently verified; actual artifact validation belongs to A8.4/A9.
   async function recordPublicationRelease(graph,plan,evidence){
@@ -555,6 +579,7 @@
     state.releases.push(release);commitPublicationState(owner,state);return clone(release);
   }
   root.__radarCatalogPersistence=Object.freeze({
+    preparePublicationProjection:preparePublicationProjection,downloadPublicationProjection:downloadPublicationProjection,
     publicationState:publicationState,createPublicationDefinition:createPublicationDefinition,updatePublicationDefinition:updatePublicationDefinition,removePublicationDefinition:removePublicationDefinition,resolvePublicationDefinition:resolvePublicationDefinition,preparePublicationRelease:preparePublicationRelease,recordPublicationRelease:recordPublicationRelease,assertCanRemoveGroups:assertCanRemoveGroups,
     isDirty:isDirty,markNew:markNew,closeCatalog:closeCatalog,importIsoReference:importIsoReference,renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
     registerDraft:registerDraft,removeGroup:removeGroup, ownsRevision:ownsRevision, transitionRevision:transitionRevision,
