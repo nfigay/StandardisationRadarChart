@@ -23,3 +23,7 @@ A8.6 est candidat jusqu'à recette utilisateur du ZIP, comparaison du hash local
 ## Preuve de construction locale
 
 La construction Pages écrit hors du site `.radarchart-build/pages-provenance.json` : commit, état propre et empreinte des chemins/tailles/SHA-256 de tous les fichiers émis. La construction autonome avec commit complet refuse une source Git modifiée, des entrées logicielles non suivies ou un build Pages périmé/altéré. Les données ISO locales restent des ressources de construction, distinctes de la provenance du code. Cette preuve locale ne remplace pas une signature ni une construction reproductible indépendante.
+
+## A8.6-R1 — Consultation centrée sur le radar
+
+La recette utilisateur a identifié un menu d'import et un arbre de catalogue encore présents dans le Viewer publié. Le correctif R1 distingue contexte publié et Viewer générique ; fiche radar dans le panneau gauche, sélection de radars uniquement lorsque nécessaire, une révision publiée retenue par radar. Aucun import/remplacement du périmètre embarqué. Les contrats de livraison, provenance et registre ci-dessus sont conservés. Voir [86-R1](86-R1-S14-3-RADAR-CENTRIC-PUBLISHED-VIEWER.md) et [preuve 07](../evidence/07-A86-R1-RADAR-VIEWER-CANDIDATE.md). La qualification navigateur et ZIP réel reste ouverte.

@@ -56,12 +56,25 @@
     CAPABILITIES
   );
 
+  // Embedded payload precedes this script in the autonomous build. HTTP
+  // preview declares its context before any user-facing menu is constructed.
+  let publication=viewer && (!!root.document?.getElementById?.('radar-publication-payload') ||
+    params.get('publicationPreview')==='1');
+  let publicationInitialized=false, initializingPublication=false;
   function allows(capability){
-    return enabled.has(capability);
+    return enabled.has(capability) && !(publication && capability==='catalog.open');
+  }
+  // Synchronous, one-shot bootstrap after payload/digest verification. The
+  // ordinary import UI remains denied even during this internal registration.
+  function initializePublication(register){
+    if(!viewer || !valid || publicationInitialized || initializingPublication || typeof register!=='function')
+      throw Error('Publication Viewer initialization denied');
+    publication=true;publicationInitialized=true;initializingPublication=true;
+    try{return register();}finally{initializingPublication=false;}
   }
 
   function requireCapability(capability){
-    if(!allows(capability)){
+    if(!allows(capability) && !(initializingPublication && capability==='catalog.open')){
       const error=new Error(
         'Application capability denied: '+capability
       );
@@ -84,6 +97,8 @@
   function allowsMenu(action){
     if(!viewer)return true;
 
+    if(publication && (action==='radartools' || action==='radartools:selectcatalogrevision'))return false;
+
     if(viewerMenuActions.has(action)){
       return allows(viewerMenuActions.get(action));
     }
@@ -103,7 +118,7 @@
 
     if(action==='item2' ||
        action.startsWith('item2:'))
-      return allows('radar.navigate');
+      return !publication && allows('radar.navigate');
 
     return false;
   }
@@ -200,8 +215,10 @@
   const api=Object.freeze({
     name,
     viewer,
+    get published(){return publication;},
+    initializePublication,
     valid,
-    capabilities:Object.freeze([...enabled]),
+    get capabilities(){return Object.freeze([...enabled].filter(allows));},
     allows,
     require:requireCapability,
     allowsMenu,

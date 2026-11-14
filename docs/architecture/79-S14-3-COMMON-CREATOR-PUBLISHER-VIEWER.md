@@ -584,3 +584,7 @@ champs textuels autorisés ni de protection du code livré contre inspection.
 Le [plan de réalisation](../governance/PLAN-REALISATION-S14-3-CREATOR-PUBLISHER-VIEWER.md)
 porte l'état courant et les portes de qualification ; les documents de lot
 restent les contrats et preuves détaillés.
+
+### A8.6-R1 — unité de consultation
+
+Le catalogue est l'unité de gestion du Creator, le radar retenu l'unité de consultation du Viewer publié. Une publication courante est un radar ou une collection, avec une seule révision publiée par radar ; l'utilisateur du Publisher choisit la révision à diffuser si plusieurs sont publiées. La fiche descriptive remplace l'arbre de catalogue du panneau left, le sélecteur n'apparaît que pour une collection. Le périmètre embarqué est fixe et non remplaçable. Le Viewer générique reste l'outil d'échange de catalogues JSON, distinct de cette expérience. Le moteur et la projection native restent communs ; voir [86-R1](86-R1-S14-3-RADAR-CENTRIC-PUBLISHED-VIEWER.md).

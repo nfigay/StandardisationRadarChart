@@ -395,3 +395,10 @@ Une affirmation de validation doit correspondre
 - Les nouvelles commandes, aides et erreurs utilisateur DOIVENT utiliser les ressources i18next FR/EN existantes, avec actualisation dynamique sans perte de saisie lorsque le composant reste ouvert. Conserver les identifiants techniques et les erreurs de contrat métier.
 - Avant développement, partir d'un instantané exact des sources et tests ou d'un commit vérifié ; ne pas transformer un fichier inconnu par approximation. Les analyses AST (Acorn, ESLint) constituent un chantier de contrôle architectural, pas un prérequis bloquant du Publisher.
 - Les rapports d'inspection navigateur doivent copier un JSON complet ; les scripts Bash/Node produisent un rapport, `pbcopy` et ouverture TextEdit. Les preuves, propositions, réalisations et qualifications restent distinctes.
+
+## G22 — Unité de consultation de la publication courante (A8.6-R1)
+
+- Le Viewer publié n'est pas un gestionnaire de catalogue. Dans le layout commun, fiche radar dans left et sélecteur de radar seulement pour une collection ; centre et panneau droit conservés. Aucun import, remplacement ou choix de révisions historiques ; services et UI doivent appliquer les mêmes restrictions.
+- Le Publisher retient une seule révision publiée par radar. En cas de plusieurs révisions éligibles, choix explicite, pas de préférence implicite pour la plus récente. Ne jamais inventer une applicabilité ou une date d'effet.
+- Les fiches et références proviennent uniquement de la projection approuvée. Références filtrées selon le radar actif ; actualiser ou fermer les détails obsolètes. Les descriptions privées de définition ne sont pas des métadonnées publiques du radar.
+- Le Viewer générique conserve ses capacités d'ouverture de catalogue. Les permissions effectives du contexte publié priment sur les capacités de compatibilité du schéma de définition v1. Contrat 86-R1.

@@ -12,6 +12,7 @@
   function payload(catalog,report,presentation){
     if(!keys(presentation,['title','language','references'])||typeof presentation.title!=='string'||!presentation.title.trim()||presentation.title.length>200||!['fr','en'].includes(presentation.language)||typeof presentation.references!=='boolean')fail('invalid presentation');
     if(!catalog||catalog.schemaVersion!=='1.0.0'||catalog.title!==presentation.title||!Array.isArray(catalog.radarRevisions)||!catalog.radarRevisions.length||catalog.radarRevisions.some(r=>r.status!=='published')||Object.prototype.hasOwnProperty.call(catalog.extensions||{},'publications'))fail('published native projection required');
+    if(new Set(catalog.radarRevisions.map(r=>r.radarId)).size!==catalog.radarRevisions.length)fail('one published revision per radar required');
     if(!/^[a-f0-9]{64}$/.test(report?.projectionDigest||''))fail('invalid projection digest');
     return clone({schemaVersion:1,presentation,catalog,projectionDigest:report.projectionDigest});
   }
@@ -47,13 +48,19 @@
     if(!p||!ui||!explorer||!explorer.graph()||!root.w2ui?.toolbar)fail('Viewer not ready');
     if(p.status().importedCatalogs||explorer.status().sources.length||root.__radarPublishedPresentation)fail('workspace already open');
     const data=validate(value);
-    profile.assertCatalog(data.catalog);
     if(await root.__radarArtifactIntegrity.digest(data.catalog)!==data.projectionDigest)fail('projection digest mismatch');
     if(p.status().importedCatalogs||explorer.status().sources.length||root.__radarPublishedPresentation)fail('workspace changed');
-    const summary=ui.load(data.catalog,root.w2ui.toolbar);
-    p.remember(data.catalog,summary,{format:'StandardisationRadarChart',schemaVersion:'1.0.0',catalogId:'publication_'+data.projectionDigest,artifactId:'projection_'+data.projectionDigest,origin:{system:'StandardisationRadarChart',organizationId:data.catalog.organizations[0]?.organizationId||null},lineage:{parentArtifactId:null}},data.projectionDigest);
-    Object.defineProperty(root,'__radarPublishedPresentation',{value:Object.freeze(clone(data.presentation)),writable:false,configurable:false});
-    explorer.addCatalog(data.catalog,summary);
+    const summary=profile.initializePublication(()=>{
+      profile.assertCatalog(data.catalog);
+      const summary=ui.load(data.catalog,root.w2ui.toolbar);
+      p.remember(data.catalog,summary,{format:'StandardisationRadarChart',schemaVersion:'1.0.0',catalogId:'publication_'+data.projectionDigest,artifactId:'projection_'+data.projectionDigest,origin:{system:'StandardisationRadarChart',organizationId:data.catalog.organizations[0]?.organizationId||null},lineage:{parentArtifactId:null}},data.projectionDigest);
+      Object.defineProperty(root,'__radarPublishedPresentation',{value:Object.freeze(clone(data.presentation)),writable:false,configurable:false});
+      explorer.addCatalog(data.catalog,summary);
+      return summary;
+    });
+    // Direct service loads also transition existing generic menu instances.
+    root.w2ui.mainMenu?.remove?.('files','radartools');
+    root.w2ui.toolbar.hide?.('item2');
     ui.refreshRadarLabels();
     // A8.5-R1: presentation and all synchronous refreshes precede the final
     // initial selection. Record startup separately from later user navigation.

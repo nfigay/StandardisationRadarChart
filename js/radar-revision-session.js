@@ -72,7 +72,10 @@
     }
     delete revisions[group];
   }
-  function beforeExternalReplace(graph) { capture(graph); activeGroup = null; }
+  function beforeExternalReplace(graph) {
+    root.__radarApplicationProfile?.require('graph.import');
+    capture(graph); activeGroup = null;
+  }
   function releaseCatalog(graph,groups){
     root.__radarApplicationProfile?.require('catalog.open');
     if(!Array.isArray(groups))throw Error('Invalid catalog groups');

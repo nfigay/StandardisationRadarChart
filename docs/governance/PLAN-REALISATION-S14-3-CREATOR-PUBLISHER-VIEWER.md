@@ -83,6 +83,7 @@ indicatives, à confirmer lors de chaque lot.
 | A8.3/A8.4 | Modèle persistant et projection native qualifiés | 83-84 |
 | A8.5 | Publisher intégré et prévisualisation réelle ; qualifié pour le parcours 9/9 | 85 |
 | A8.6 | Viewer HTML préchargé généré depuis le Creator ; qualification et livraison | 86 |
+| A8.6-R1 | Viewer publié centré radar, fiche gauche, périmètre figé et qualification | 86-R1 |
 | A9.1/A9.2 | Composition sélective et trois modes Viewer | 87-88 |
 | A9.3 | Trois distributions du Creator/Publisher | 89 |
 | A10 | Qualification de bout en bout et substitution du prototype | 90 |
@@ -286,6 +287,10 @@ les octets, la provenance de code et de données, l'absence d'administration
 et le fonctionnement hors ligne réel. Enregistrement d'une PublicationRelease
 seulement après contrôle des preuves d'artefacts. Les ressources historiques
 et les modules inutiles seront réduits en A9.1. Les modes Web restent A9.2.
+
+### A8.6-R1 — Finalisation avant release
+
+Constat de la recette : le Viewer livré présente encore l'import JSON et l'arbre du catalogue. Décision : consultation d'un radar ou d'une collection figée avec une seule révision publiée par radar. Fiche descriptive dans le panneau left, sélecteur seulement si collection, références du radar actif, aucun import/remplacement ni sélection historique. Le moteur et les formats natifs sont conservés. Le Viewer générique reste distinct. Vérifier la parité prévisualisation, candidat et ZIP réel, la synchronisation de la fiche et la non-régression Creator. CPV-13/14/15 ; [architecture 86-R1](../architecture/86-R1-S14-3-RADAR-CENTRIC-PUBLISHED-VIEWER.md) et [preuve 07](../evidence/07-A86-R1-RADAR-VIEWER-CANDIDATE.md). Qualification complète et publication restent des portes distinctes ; A8.2 publique inchangée.
 
 ## 12. A9.1 — Composition sélective des modules
 

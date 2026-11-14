@@ -232,3 +232,11 @@ l'absence de données d'auteur et la composition sélective.
 [85](85-S14-3-PUBLISHER-UI-AND-PREVIEW.md) et plan actualisé. REQ-BASE-04 :
 les nouvelles commandes et erreurs présentées utilisent i18next FR/EN ; les
 identifiants et données documentaires restent indépendants des libellés.
+
+### REQ-CPV — Viewer de publication centré sur le radar (A8.6-R1)
+
+- CPV-13 : consultation d'un radar ou d'une collection de radars embarqués ; le périmètre ne peut être remplacé par l'import d'un catalogue. Viewer générique distinct, avec import conservé.
+- CPV-14 : fiche descriptive du radar dans le panneau gauche, sélecteur uniquement pour une collection, une révision publiée par radar ; choix explicite en cas d'ambiguïté, sans déduire une date d'application de la version.
+- CPV-15 : cohérence radar actif, titre, fiche, détail de blip et références projetées ; mêmes restrictions et présentation en prévisualisation et livraison. Conservation du layout W2UI et du moteur SVG/Cytoscape.
+
+Contrat détaillé : [86-R1](86-R1-S14-3-RADAR-CENTRIC-PUBLISHED-VIEWER.md). Qualification non close.

@@ -8,7 +8,7 @@
 - A8.3 : commit local `94aef3e0c73b866dcceb5844044a1a93e106e299`, 552 tests ; définitions chargées dans Chrome.
 - A8.4 : 568 tests, construction et recette Creator → projection JSON → Viewer réussies ; qualification documentée dans architecture 84 et preuve 05.
 - A8.5-R1 : qualifiée pour le parcours Publisher → Viewer HTML, 585 tests et recette Chrome 9/9 ; preuve 06.
-- A8.6 : candidat, génération ZIP vérifiée et registre de livraison ; recette hors connexion et persistance à qualifier. A9 : composition physique et autres modes.
+- A8.6 : candidat, génération ZIP vérifiée et registre de livraison. A8.6-R1 : correctif candidat Viewer centré sur le radar (fiche dans left, périmètre figé, une révision par radar) ; recette navigateur, ZIP réel, hors connexion et persistance à qualifier. A9 : composition physique et autres modes.
 
 Le HEAD et l'état de travail réels doivent être lus dans Git avant toute intervention.
 A8.2 reste la version publique jusqu'à décision et publication distinctes.
@@ -34,6 +34,7 @@ En cas de contradiction sur la séparation Creator,
 Publisher et Viewer, la décision S14.3-A8.0 prévaut.
 
 11. [Livraison autonome 86](../architecture/86-S14-3-STANDALONE-PUBLICATION-DELIVERY.md)
+12. [Viewer publié centré sur le radar 86-R1](../architecture/86-R1-S14-3-RADAR-CENTRIC-PUBLISHED-VIEWER.md) — [preuve 07 et recette](../evidence/07-A86-R1-RADAR-VIEWER-CANDIDATE.md)
 
 ## 3. Mission du produit
 

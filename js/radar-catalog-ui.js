@@ -219,6 +219,7 @@
   // Explicit, visible selection of imported revisions. Selection still routes
   // through the existing workspace/session hooks; no automatic activation.
   function openRevisionPicker() {
+    if(root.__radarApplicationProfile?.published)error('published radar selection uses the descriptive panel');
     var groups=root.__radarCatalogAdapter?.status?.() || [];
     if(!groups.length)error('no imported revision available');
     if(!root.__radarWorkspaceExplorer?.activate)error('workspace selection unavailable');
@@ -303,6 +304,7 @@
     }finally{closingCatalog=false;}
   }
   async function requestClose(graph){
+    root.__radarApplicationProfile?.require('catalog.open');
     graph=graph||workspaceGraph();
     var state=workspaceStatus(graph);
     if(!state.opened)return {action:'empty'};

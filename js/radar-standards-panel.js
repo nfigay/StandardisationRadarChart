@@ -519,7 +519,11 @@
    if(root.__radarApplicationProfile?.viewer||root.__radarCatalogPersistence?.status?.().importedCatalogs===1){
      if(root.__radarCatalogPersistence?.status?.().importedCatalogs!==1)return [];
      const query=norm(String(term||''));
+     const active=root.__radarApplicationProfile?.published
+       ?root.__radarCatalogAdapter?.getRevision?.(root.__radarRevisionSession?.status?.().activeGroup):null;
+     const allowed=root.__radarApplicationProfile?.published?new Set((active?.blips||[]).map(b=>b.standardId)):null;
      return root.__radarCatalogPersistence.listReferenceRecords().filter(r=>{
+       if(allowed&&!allowed.has(r.standardId))return false;
        const doc=r.isoDocument;
        return !query||norm([r.standardId,r.name,r.issuer,r.designation,r.editionDesignation,r.sourceName,r.verification,
          doc?.title,...Object.values(doc?.titleI18n||{}),doc?.scope,...Object.values(doc?.scopeI18n||{}),

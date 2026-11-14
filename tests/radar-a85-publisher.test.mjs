@@ -30,9 +30,10 @@ const find=(n,fn)=>{const v=all(n).find(fn);assert.ok(v,'missing node');return v
 const tag=(n,name)=>find(n,x=>x.tag===name);
 const named=(n,name)=>find(n,x=>x.name===name);
 const button=(n,text)=>find(n,x=>x.tag==='button'&&x.textContent===text);
-async function setup({viewer=false,source=null,template=false,preview=false}={}){
+async function setup({viewer=false,source=null,template=false,preview=false,embedded=null}={}){
  const body=new Node('body'),events=new Map(),messages=[],alerts=[],downloads=[];
  const document={body,title:'Initial',createElement(name){const n=new Node(name);if(name==='a')n.click=()=>downloads.push({href:n.href,filename:n.download});return n;},getElementById(id){return all(body).find(n=>n.id===id)||null;}};
+ if(embedded){const node=new Node('script');node.id='radar-publication-payload';node.textContent=Buffer.from(JSON.stringify(embedded)).toString('base64');body.appendChild(node);}
  const graph={elements:()=>({jsons:()=>structuredClone(elements),remove:()=>{elements=[];}}),nodes:()=>({jsons:()=>structuredClone(elements),grabify(){},ungrabify(){}}),add:nodes=>{elements.push(...structuredClone(nodes));}};let elements=[];
  const toolbar={items:[],get(id){return id==='item2'?{items:this.items}:id==='item4'?{selected:'grabon'}:null;},set(id,o){if(id==='item2'&&o.items)this.items=o.items;},refresh(){}};
  const location={search:viewer?'?profile=viewer'+(preview?'&publicationPreview=1':''):'',origin:'https://radar.test',protocol:'https:',href:'https://radar.test/radar.html'+(viewer?'?profile=viewer':'')};
@@ -41,12 +42,13 @@ async function setup({viewer=false,source=null,template=false,preview=false}={})
  const ctx=vm.createContext({window:root,document,TextEncoder,TextDecoder,Uint8Array,Blob,URL:root.URL,setTimeout:root.setTimeout,clearTimeout:root.clearTimeout,console:root.console,structuredClone});
  for(const name of ['radar-application-profile','radar-artifact-integrity','radar-publication-model','radar-publication-projection','radar-publication-viewer','radar-publication-delivery','radar-publication-ui','radar-revision-session','radar-catalog-adapter','radar-catalog-persistence','radar-catalog-ui','radar-workspace-explorer'])vm.runInContext(src('js/'+name+'.js'),ctx,{filename:name+'.js'});
  const p=root.__radarCatalogPersistence,ui=root.__radarCatalogUI,e=root.__radarWorkspaceExplorer,adapter=root.__radarCatalogAdapter,session=root.__radarRevisionSession,v=root.__radarPublicationViewer;
- e.initialize({mount:{addEventListener(){}},graph:()=>graph,select(group){session.select(graph,group,()=>{graph.elements().remove();graph.add(adapter.project(group).nodes);});ui.afterSelect(group,graph);}});
+ const mount=new Node('div');mount.id='workspace-explorer';body.appendChild(mount);
+ e.initialize({mount,graph:()=>graph,select(group){session.select(graph,group,()=>{graph.elements().remove();graph.add(adapter.project(group).nodes);});ui.afterSelect(group,graph);}});
  if(source){const summary=ui.load(source,toolbar);p.remember(source,summary);e.addCatalog(source,summary);e.activate(summary.revisions[0].group);}
  const htmlTemplate='<!DOCTYPE html><html><head><!--RADAR-PUBLICATION-PAYLOAD--><script>const requested=["viewer"];window.__radarStandalone={profile:"viewer"};</script></head><body></body></html>';
  if(template){const n=new Node('script');n.id='radar-viewer-template';n.textContent=Buffer.from(htmlTemplate,'utf8').toString('base64');body.appendChild(n);}
  function fire(k,event){for(const fn of events.get(k)||[])fn(event);}
- return {root,document,body,p,ui,e,adapter,session,v,graph,htmlTemplate,alerts,messages,downloads,fire,events};
+ return {root,document,body,mount,p,ui,e,adapter,session,v,graph,htmlTemplate,alerts,messages,downloads,fire,events};
 }
 async function projection(){const x=await setup({source:fixture()});const d=x.p.createPublicationDefinition(configuration());const r=await x.p.preparePublicationProjection(x.graph,d.definitionId,1);return {x,d,r,payload:x.v.payload(r.catalog,r.report,d.configuration.presentation)};}
 test('Publisher options show published revisions only and configuration keeps machine IDs',async()=>{const x=await setup();const a=x.root.__radarPublicationUI;const opts=a.options(fixture());assert.deepEqual(plain(opts.revisions.map(r=>r.value)),['rev0','rev1']);const c=a.readConfiguration({name:' N ',description:'',audience:' A ',audienceOrganizations:['org'],selection:'allPublishedForRadars',revisions:['rev0'],radars:['radar1'],organizations:['org'],portfolios:['port'],title:'T',language:'en',references:false,modes:['standalone'],data:'embedded',iso:true,assessments:false});assert.deepEqual(plain(c.scope.revisionIds),[]);assert.deepEqual(plain(c.scope.radarIds),['radar1']);assert.equal(c.name,'N');assert.equal(c.presentation.references,false);});
@@ -125,4 +127,66 @@ test('A8.6 actual Publisher generates one ZIP and exposes retry without second r
 });
 test('A8.6 build embeds provenance only in Creator and omits new authoring ZIP components from standalone Viewer',()=>{
  const gen=src('scripts/build-common-standalone.mjs');assert.match(gen,/id="radar-viewer-template-proof"/);assert.match(gen,/templateSha256:createHash\('sha256'\)/);assert.match(gen,/profile==='viewer'&&\['lib\/jszip.min.js','js\/radar-publication-delivery.js'\]/);
+});
+
+// A8.6-R1 — the same native projection has a dedicated consultation UI.
+test('published collection replaces the tree with a localized radar card and switches without a revision picker',async()=>{
+ const {payload}=await projection(),y=await setup({viewer:true});
+ const genericPanel=y.document.getElementById('radar-published-radar-panel');assert.equal(genericPanel.hidden,true);
+ await y.v.load(payload);const profile=y.root.__radarApplicationProfile;
+ assert.equal(profile.published,true);assert.equal(profile.allows('catalog.open'),false);assert.equal(profile.allowsToolbar('item2:catrev_1'),false);
+ assert.equal(y.mount.children[0].hidden,true);assert.equal(genericPanel.hidden,false);
+ assert.match(genericPanel.textContent,/Radar 0/);assert.match(genericPanel.textContent,/Organisation/);assert.match(genericPanel.textContent,/Portefeuille/);
+ assert.match(genericPanel.textContent,/Published version/);assert.match(genericPanel.textContent,/1.0.0/);
+ let selector=y.document.getElementById('radar-published-selector');assert.equal(selector.children.length,2);selector.value=y.adapter.status()[1];selector.emit('change');
+ assert.match(genericPanel.textContent,/Radar 1/);assert.equal(y.session.status().activeGroup,y.adapter.status()[1]);
+ assert.equal(y.document.getElementById('radar-published-selector').value,y.adapter.status()[1]);
+ await y.root.changeLanguage('fr');assert.match(genericPanel.textContent,/Version publiée/);assert.match(genericPanel.textContent,/Radar à consulter/);
+ assert.equal(y.e.status().activeGroup,y.adapter.status()[1]);
+});
+test('single radar has no selector; publication name, native labels and reference policy are honored',async()=>{
+ const source=fixture();source.extensions.administration={radarNames:{radar1:'Nom public <img>'},revisionLabels:{rev0:'Référence V1'}};
+ const x=await setup({source}),c=configuration();c.scope.revisionIds=['rev0'];c.presentation.references=false;
+ const def=x.p.createPublicationDefinition(c),r=await x.p.preparePublicationProjection(x.graph,def.definitionId,1),payload=x.v.payload(r.catalog,r.report,c.presentation);
+ const y=await setup({viewer:true,embedded:payload}),profile=y.root.__radarApplicationProfile;
+ assert.equal(profile.published,true);assert.equal(profile.allowsMenu('files'),false);assert.equal(profile.allowsMenu('radartools:selectcatalogrevision'),false);
+ assert.throws(()=>y.ui.openFile(),/catalog.open/);y.fire('load',{});await new Promise(r=>setTimeout(r,20));
+ const panel=y.document.getElementById('radar-published-radar-panel');assert.equal(y.v.startupStatus().ok,true);
+ assert.equal(y.document.getElementById('radar-published-selector'),null);assert.match(panel.textContent,/Nom public <img>/);assert.match(panel.textContent,/Référence V1/);
+ assert.ok(!all(panel).some(n=>n.tag==='button'));assert.equal(y.adapter.status().length,1);
+});
+test('published workspace cannot be replaced, closed or extended by normal services',async()=>{
+ const {payload}=await projection(),y=await setup({viewer:true,preview:true});const profile=y.root.__radarApplicationProfile;
+ assert.equal(profile.published,true);assert.throws(()=>y.ui.load(payload.catalog,y.root.w2ui.toolbar),/catalog.open/);
+ await y.v.load(payload);const before=plain(y.e.status());
+ assert.throws(()=>y.ui.openFile(),/catalog.open/);assert.throws(()=>y.ui.load(payload.catalog,y.root.w2ui.toolbar),/catalog.open/);
+ assert.throws(()=>y.p.remember(payload.catalog,{revisions:[]}),/catalog.open/);assert.throws(()=>y.adapter.register('foreign',payload.catalog.radarRevisions[0]),/catalog.open/);
+ assert.throws(()=>y.e.addCatalog(payload.catalog,{revisions:[]}),/catalog.open/);assert.throws(()=>y.e.releaseCatalog(y.adapter.status()),/catalog.open/);
+ assert.throws(()=>y.p.closeCatalog(),/catalog.open/);await assert.rejects(y.ui.closeCatalog(y.graph,'close'),/catalog.open/);await assert.rejects(y.ui.requestClose(y.graph),/catalog.open/);
+ assert.throws(()=>y.e.activate('foreign'),/not loaded/);assert.throws(()=>y.session.beforeExternalReplace(y.graph),/graph.import/);assert.throws(()=>y.ui.openRevisionPicker(),/descriptive panel/);
+ assert.throws(()=>profile.initializePublication(()=>{}),/denied/);assert.deepEqual(plain(y.e.status()),before);
+});
+test('generic Viewer keeps import and tree; current publications reject ambiguous published revisions without guessing latest',async()=>{
+ const y=await setup({viewer:true,source:{...fixture(),radarRevisions:fixture().radarRevisions.slice(0,2)}});
+ assert.equal(y.root.__radarApplicationProfile.published,false);assert.equal(y.root.__radarApplicationProfile.allows('catalog.open'),true);
+ assert.equal(y.document.getElementById('radar-published-radar-panel').hidden,true);
+ const source=fixture();source.radarRevisions[2].status='published';const x=await setup({source,template:true});
+ const c=configuration();c.scope.revisionIds=['rev0','rev2'];const def=x.p.createPublicationDefinition(c);
+ await assert.rejects(x.p.preparePublicationProjection(x.graph,def.definitionId,1),/one published revision per radar/i);
+ const raw=x.root.__radarPublicationProjection.project(source,c);assert.equal(raw.report.radarCount,1);assert.equal(raw.report.revisionIds.length,2);
+ const digest=await x.root.__radarArtifactIntegrity.digest(raw.catalog);assert.throws(()=>x.v.payload(raw.catalog,{projectionDigest:digest},c.presentation),/one published revision per radar/);
+ assert.equal(x.p.publicationState().releases.length,0);
+});
+test('malformed embedded publication stays locked before and after boot failure',async()=>{
+ const {payload}=await projection(),bad=plain(payload);bad.catalog.standards[0].name='tampered';
+ const y=await setup({viewer:true,embedded:bad});assert.equal(y.root.__radarApplicationProfile.allows('catalog.open'),false);
+ y.fire('load',{});await new Promise(r=>setTimeout(r,20));assert.equal(y.p.status().importedCatalogs,0);assert.equal(y.v.startupStatus(),null);
+ assert.equal(y.root.__radarApplicationProfile.allows('catalog.open'),false);assert.throws(()=>y.ui.openFile(),/catalog.open/);
+});
+test('publication editor refuses two revisions of one radar with localized explanation',async()=>{
+ const source=fixture();source.radarRevisions[2].status='published';const x=await setup({source});const c=configuration();c.scope.revisionIds=['rev0'];x.p.createPublicationDefinition(c);
+ const panel=x.root.__radarPublicationUI.open(x.graph);button(panel,'Modifier').click();await flush();
+ const second=all(panel).find(n=>n.name==='revisions'&&n.value==='rev2');assert.ok(second);second.checked=true;
+ tag(panel,'form').emit('submit');await flush();assert.match(panel.textContent,/Plusieurs révisions publiées pour un radar/);
+ assert.deepEqual(plain(x.p.publicationState().definitions[0].configuration.scope.revisionIds),['rev0']);
 });

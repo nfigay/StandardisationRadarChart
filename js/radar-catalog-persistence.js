@@ -549,6 +549,10 @@
     if(!projection||!integrity?.digest)fail('publication projection module unavailable');
     var before=canonical(build(graph)),source=publicationSource(graph);
     var result=projection.project(source,d.configuration);
+    if(result.report.radarCount!==result.report.revisionIds.length){
+      const error=Error('One published revision per radar required; select an explicit revision');
+      error.publisherKey='ambiguousRadar';throw error;
+    }
     projection.verify(source,d.configuration,result.catalog);
     var sourceDigest=await integrity.digest(source),projectionDigest=await integrity.digest(result.catalog);
     if(publicationOwner()!==owner||canonical(build(graph))!==before)fail('publication workspace changed during projection');

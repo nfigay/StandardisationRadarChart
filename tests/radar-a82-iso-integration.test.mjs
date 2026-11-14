@@ -68,3 +68,15 @@ test('published and global ISO details use distinct translated labels and source
     lookups=0;
   }
 });
+
+test('published Viewer references follow the active radar, not the entire projection; generic Viewer is unchanged',()=>{
+  const x=setup({viewer:true,standards:[{standardId:'a',name:'Reference A'},{standardId:'b',name:'Reference B'}]});
+  let group='g0';x.root.__radarApplicationProfile.published=true;
+  x.root.__radarRevisionSession.status=()=>({activeGroup:group});
+  x.root.__radarCatalogAdapter={getRevision:g=>g==='g0'?{blips:[{standardId:'a'},{standardId:'a'}]}:g==='g1'?{blips:[{standardId:'b'}]}:null};
+  const q=query(x.root);
+  assert.deepEqual(plain(q('').map(r=>r.standardId)),['a']);assert.equal(q('Reference B').length,0);
+  group='g1';assert.deepEqual(plain(q('').map(r=>r.standardId)),['b']);
+  group=null;assert.equal(q('').length,0);
+  x.root.__radarApplicationProfile.published=false;assert.deepEqual(plain(q('').map(r=>r.standardId)),['a','b']);
+});
