@@ -6,7 +6,7 @@
   const d = root.document;
   const wording = {
     fr: {
-      manage: 'Catalogue ISO', title: 'Catalogue de normalisation', catalogue: 'Catalogue installé', check: 'Vérifier les mises à jour',
+      manage: 'Sources ISO', title: 'Sources du catalogue ISO', references: 'Voir les références du catalogue métier', nativeHint: 'Les notices intégrées et les déclarations locales sont conservées dans le catalogue JSON, indépendamment des sources ISO.', catalogue: 'Catalogue installé', check: 'Vérifier les mises à jour',
       advanced: 'Administration avancée', close: 'Fermer', source: 'Source de distribution', release: 'Publication',
       deliverables: 'Normes et projets', committees: 'Comités TC/SC', ics: 'Classifications ICS',
       changes: 'Journal des évolutions', rss: 'Actualités RSS', unknown: 'Non renseigné', unavailable: 'Non disponible',
@@ -20,7 +20,7 @@
       warning: 'Aucune donnée ne sera téléchargée depuis ISO directement par cette commande.'
     },
     en: {
-      manage: 'ISO catalogue', title: 'Standards catalogue', catalogue: 'Installed catalogue', check: 'Check for updates',
+      manage: 'ISO sources', title: 'ISO catalogue sources', references: 'View business catalogue references', nativeHint: 'Integrated records and local declarations are stored in the JSON catalogue, independently of ISO sources.', catalogue: 'Installed catalogue', check: 'Check for updates',
       advanced: 'Advanced administration', close: 'Close', source: 'Distribution source', release: 'Release',
       deliverables: 'Standards and projects', committees: 'Committees TC/SC', ics: 'ICS classifications',
       changes: 'Change journal', rss: 'RSS updates', unknown: 'Unknown', unavailable: 'Unavailable',
@@ -34,7 +34,7 @@
       warning: 'This command does not download data directly from ISO.'
     }
   };
-  const state = {bar:null, modal:null, result:null};
+  const state = {bar:null, modal:null, result:null,onKey:null};
   const lang = () => /^en\b/i.test(root.i18next?.resolvedLanguage || root.i18next?.language || 'fr') ? 'en' : 'fr';
   const t = key => wording[lang()][key] || key;
   function node(tag, parent, label, styles) {
@@ -99,6 +99,7 @@
   }
   function dismiss() {
     state.modal?.remove(); state.modal=null;
+    if(state.onKey){d.removeEventListener?.('keydown',state.onKey);state.onKey=null;}
   }
 
   // S14.2-B2 — Purely informational help for the main catalogue window.
@@ -471,6 +472,7 @@
   }
 
   function open() {
+    root.__radarApplicationProfile?.require('catalog.admin');
     dismiss();
     const shade=node('div',d.body,undefined,'position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box');
     state.modal=shade;
@@ -483,6 +485,11 @@
     node('strong',dialog,t('catalogue'));
     const summary=node('div',dialog,undefined,'padding:9px 0 13px');
     const hint=node('p',dialog,t('informational'),'color:#666;font-size:12px');
+    node('p',dialog,t('nativeHint'),'color:#555;font-size:12px');
+    if(typeof root.__radarStandardsPanel?.openReferences==='function'){
+      const references=node('button',dialog,t('references'),'padding:6px 9px;cursor:pointer');references.type='button';
+      references.addEventListener('click',()=>{dismiss();root.__radarStandardsPanel.openReferences();});
+    }
     const button=node('button',dialog,t('check'),'display:block;background:#215b8c;color:white;padding:10px 15px;border:0;border-radius:4px;cursor:pointer;margin:14px 0');
     button.type='button';
     const note=node('div',dialog,t('warning'),'padding:8px 0;color:#555;font-size:12px');
@@ -537,8 +544,8 @@
       b.addEventListener('click',()=>{if (!activateCommand(op))log.textContent=t('unavailable');else log.textContent=t('technical')+': '+t(key);});
     }
     renderDataExplanation(dialog);
-    const onKey=e=>{if(e.key==='Escape'){dismiss();d.removeEventListener('keydown',onKey);}};
-    d.addEventListener('keydown',onKey);
+    state.onKey=e=>{if(e.key==='Escape')dismiss();};
+    d.addEventListener('keydown',state.onKey);
     close.focus();
     void renderStatus(summary);
   }
@@ -555,6 +562,7 @@
     return true;
   }
   root.__radarS14Z=Object.freeze({open,decorate,snapshot});
+  root.i18next?.on?.('languageChanged',()=>{const button=state.bar?.querySelector('[data-s14-z-manage]');if(button)button.textContent=t('manage');});
   if (!decorate()) {
     const observer=new root.MutationObserver(()=>{if(decorate())observer.disconnect();});
     observer.observe(d.documentElement,{childList:true,subtree:true});

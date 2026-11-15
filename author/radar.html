@@ -24,6 +24,8 @@
     <script src="./js/radar-radar-admin.js"></script>
     <script src="./js/radar-catalog-ui.js"></script>
     <script src="./js/radar-standard-registry.js"></script>
+    <script src="./js/radar-standard-sources.js"></script>
+    <script src="./js/radar-standard-source-dialog.js"></script>
     <script src="./js/radar-iso-open-data.js"></script>
     <script src="./js/radar-iso-rss.js"></script>
     <script src="./js/radar-catalog-atomic.js"></script>
@@ -1323,7 +1325,7 @@
                     catch(error) { console.error('Radar administrative edit rejected:',error); w2alert(error.message); }
                     break;
                 case 'radartools:standardregistry':
-                    try { window.__radarStandardsPanel.open(); }
+                    try { window.__radarStandardsPanel.openReferences(); }
                     catch(error) { console.error('Standard registry rejected:',error); w2alert(error.message); }
                     break;
                 case 'radartools:createdraft':

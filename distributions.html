@@ -52,26 +52,36 @@ small {color:#64748b}
 <body>
 <h1>Standardization Radar Chart</h1>
 <p>Distributions du Créateur et du Client.</p>
-<small>Livraison issue du commit 894ae2a</small>
+<small>Livraison issue du commit 545ed53</small>
 
 <section>
-<h2>Version A8.6 — application commune</h2>
+<h2>Version A8.7 — application commune</h2>
 <p>Creator et Viewer partagent le radar, les références et la navigation.
-Le Creator édite les catalogues natifs et intègre les notices ISO ; le Viewer
-consulte les catalogues publiés sans corpus ISO global.</p>
+Le Creator édite les catalogues natifs et intègre les références ISO, RFC Editor,
+W3C et les déclarations locales. Les références utilisées sont protégées ; les
+notices inutilisées peuvent être supprimées, actualisées ou réconciliées selon
+leur source. Le Viewer publié consulte les références embarquées sans acquisition
+externe ni corpus ISO global.</p>
 <p><a href="radar.html">Creator en ligne</a> ·
 <a href="radar.html?profile=viewer">Viewer en ligne</a></p>
-<p><a href="https://github.com/nfigay/StandardisationRadarChart/releases/tag/pilot-a86">Release A8.6 et fichiers autonomes</a> ·
-<a href="https://github.com/nfigay/StandardisationRadarChart/releases/download/pilot-a86/standardization-radar-creator.html">Télécharger Creator</a> ·
-<a href="https://github.com/nfigay/StandardisationRadarChart/releases/download/pilot-a86/standardization-radar-viewer.html">Télécharger Viewer</a></p>
-<p><a href="https://github.com/nfigay/StandardisationRadarChart/releases/tag/pilot-a82">Release historique A8.2</a></p>
+<p><a href="https://github.com/nfigay/StandardisationRadarChart/releases/tag/pilot-a87">Release A8.7 et fichiers autonomes</a> ·
+<a href="https://github.com/nfigay/StandardisationRadarChart/releases/download/pilot-a87/standardization-radar-creator.html">Télécharger Creator</a> ·
+<a href="https://github.com/nfigay/StandardisationRadarChart/releases/download/pilot-a87/standardization-radar-viewer.html">Télécharger Viewer</a></p>
+<p><a href="https://github.com/nfigay/StandardisationRadarChart/releases/tag/pilot-a86">Release précédente A8.6</a> ·
+<a href="https://github.com/nfigay/StandardisationRadarChart/releases/tag/pilot-a82">Release historique A8.2</a></p>
+<p><small>Format natif 1.0.0 conservé. Les acquisitions RFC/W3C sont facultatives
+et explicites ; leur disponibilité dépend des services distants. La réconciliation
+ISO et les migrations automatiques entre éditions ne sont pas incluses.</small></p>
+<p lang="en"><small>A8.7 adds multi-source references (ISO, RFC Editor, W3C and
+local declarations), reference lifecycle protection and portable published Viewers.
+Native catalog format 1.0.0 is retained. External acquisition is explicit and optional.</small></p>
 <p><small>Les trois variantes du Client indépendant ci-dessous sont conservées pour compatibilité. La convergence des six distributions de l’application commune reste en cours.</small></p>
 </section>
 
 <div class="grid">
 <section>
 <h2>Créateur</h2>
-<p>Édition des radars, catalogue ISO,
+<p>Édition des radars, références multi-sources,
 gestion des révisions et publication.</p>
 <a class="action" href="author/radar.html">
 Ouvrir le Créateur

@@ -316,7 +316,7 @@
     const manage=root.document.createElement('button');state.manage=manage;manage.type='button';manage.dataset.isoManageSources='true';manage.className='w2ui-btn';manage.addEventListener('click',openManager);
     const search=bar.querySelector('input[type="search"]');if(search?.nextSibling)bar.insertBefore(manage,search.nextSibling);else bar.appendChild(manage);
     bar.addEventListener('click',event=>{const btn=event.target?.closest?.('[data-catalog-mode]');if(!btn)return;state.mode=btn.dataset.catalogMode;updateVisible();});
-    bar.dataset.isoSourceManagerReady='1';updateVisible();
+    bar.dataset.isoSourceManagerReady='1';updateVisible();root.__radarS14Z?.decorate?.();
   }
   root.__radarStandardsPanel=Object.freeze({...previous,__sourceManagerInstalled:true,initialize(...args){const result=previous.initialize.apply(previous,args);if(result!==false)decorate(args[0]);return result;}});
   registerTranslations();
