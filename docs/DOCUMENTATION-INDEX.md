@@ -138,3 +138,9 @@ S15-A/R1 est consolidé localement (`af248ca643c14b0b2391370c0f9dce305df2d47e`) 
 - [Architecture de qualification](architecture/91-S15-D-END-TO-END-QUALIFICATION.md)
 - [Qualification finale](evidence/14-S15-D-FINAL-VALIDATION.md)
 - [Manifeste des preuves](evidence/s15-d/manifest.json)
+
+## A8.7-RC — Préparation de release
+
+- [Notes de release A8.7](RELEASE-A87.md)
+- [Architecture de préparation](architecture/92-A87-RELEASE-PREPARATION.md)
+- [Preuves fonctionnelles S15-D](evidence/14-S15-D-FINAL-VALIDATION.md)

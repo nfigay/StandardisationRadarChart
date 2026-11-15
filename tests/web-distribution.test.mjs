@@ -150,14 +150,15 @@ test('ressources : fichier local manquant detecte',()=>{
   }
 });
 
- test('portail A8.6 : liens de release, anciennes versions et entrées en ligne',()=>{
+test('portail A8.7 : release, archives, sources et entrées en ligne',()=>{
   const html=portal('f7939c3');
-  assert.match(html,/Version A8\.6/);
+  assert.ok(html.includes('Version A8.7'));
   for(const profile of ['creator','viewer']){
-    assert.ok(html.includes('releases/download/pilot-a86/standardization-radar-'+profile+'.html'));
+    assert.ok(html.includes('releases/download/pilot-a87/standardization-radar-'+profile+'.html'));
   }
-  assert.ok(html.includes('releases/tag/pilot-a86'));
-  assert.ok(html.includes('releases/tag/pilot-a82'));
+  for(const tag of ['pilot-a87','pilot-a86','pilot-a82'])assert.ok(html.includes('releases/tag/'+tag));
+  for(const term of ['RFC Editor','W3C','déclarations locales','Format natif 1.0.0','réconciliation'])assert.ok(html.includes(term));
   assert.ok(html.includes('radar.html?profile=viewer'));
+  assert.ok(!html.includes('releases/download/pilot-a86/'));
   assert.ok(!html.includes('releases/download/pilot-a82/'));
 });

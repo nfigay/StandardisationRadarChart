@@ -571,3 +571,20 @@ portail, notes de release, reconstruction finale.
 
 A8.6 reste la release publique stable.
 DEC-009 et DEC-010 restent ouvertes.
+
+## A8.7-RC — Préparation de release
+
+15 novembre 2026 : préparation du candidat A8.7.
+
+Le moteur S15-C et la qualification S15-D sont
+consolidés. Le portail, les notes de release et
+le harnais unifié sont préparés.
+
+La qualification du candidat doit être réexécutée
+depuis son propre commit.
+
+Les accès RFC/W3C depuis l’origine GitHub Pages
+font l’objet d’une qualification explicite.
+
+Aucune publication distante à cette étape.
+A8.6 reste la distribution publique stable.
