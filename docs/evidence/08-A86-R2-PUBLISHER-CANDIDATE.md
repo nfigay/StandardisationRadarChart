@@ -9,11 +9,15 @@ Node 22.16.0 : Publisher 31/31, dont deux nouveaux cas R2 et adaptation du test 
 ## Recette du candidat
 
 1. Charger `catalogue-publications-a86-r1.json` dans le Creator autonome reconstruit. Vérifier le catalogue et les publications existantes.
-2. Radar unique : Prévisualiser dans le Viewer puis cliquer Ouvrir la prévisualisation dans un nouvel onglet. Vérifier démarrage sans arbre/édition, fiche A, Références du radar, notice ISO synthétique et Détails. Vérifier titre, portée, FR/EN. Fermer l'onglet, puis prévisualisation dans le Creator. Aucune livraison ajoutée.
-3. Collection : même parcours, A puis B puis A ; références du radar actif uniquement, ISO A consultable. Comparer au Viewer HTML candidat et au Viewer extrait du ZIP, hors connexion. Si l'onglet Blob ne démarre pas, relever navigateur, console et URL ; ne pas qualifier sur la seule base du candidat téléchargé.
+2. Radar unique : Prévisualiser dans le Viewer puis cliquer Télécharger la prévisualisation HTML. Ouvrir le fichier téléchargé depuis le Finder (file://, pas blob:null). Vérifier démarrage sans arbre/édition, fiche A, Références du radar, notice ISO synthétique et Détails. Vérifier titre, portée, FR/EN. Fermer le fichier ouvert, puis la prévisualisation dans le Creator. Aucune livraison ajoutée.
+3. Collection : même parcours, A puis B puis A ; références du radar actif uniquement, ISO A consultable. Comparer au Viewer HTML candidat et au Viewer extrait du ZIP, hors connexion. Si le fichier local ne démarre pas ou si ISO échoue, relever navigateur, console et URL. Ne pas qualifier avant réussite du parcours corrigé.
 4. Générer une première livraison avec motif « Première diffusion de test ». Déplier L001 : UUID, révisions, commit, empreintes, ZIP, motif. Retélécharger dans le même dialogue ; comparer les SHA-256 des ZIP et le nombre d'entrées.
 5. Demander une seconde génération identique, refuser la confirmation : aucune entrée. Recommencer et confirmer avec motif « Régénération volontaire » : L002, nouvel UUID, Viewer identique, même hash HTML, ZIP distinct. Modifier la présentation (titre) via la définition, sauvegarder, générer : L003, définition modifiée, Viewer différent. Aucun changement artificiel du contenu métier.
 6. Exporter le catalogue JSON sous un nouveau nom, fermer puis rouvrir ; fiches, motifs et différences conservés. Aucun bouton de retéléchargement d'anciennes livraisons sans Blob. Charger aussi un catalogue R1 existant sans motif : historique lisible, motif non renseigné.
 7. Vérifier le Viewer générique, le Creator, les deux langues, le parcours HTTP en iframe si disponible, l'absence de motif privé dans le payload/manifeste, et la provenance du pilote. Relever commit, navigateur, contrôles, anomalies. Pas de push/tag automatique.
 
 Statut : candidat à qualifier, pas release publique. Workspace reporté. Voir architecture 86-R2.
+
+## H1 — retour navigateur R2
+
+Commit R2 `4d74c6083eee02ffc9180e04b502394b16ae15f3` : utilisateur confirme 602/602, zéro échec, skip ou todo. Installation et build vérifiés. Recette Blob échouée : deux Invalid URL et WebCrypto SHA-256 unavailable sur blob:null. H1 remplace la navigation par le téléchargement du même HTML, ouvert ensuite en file://. Test VM adapté au contexte file:// et à l’attribut download ; aucun contournement cryptographique. Suite attendue inchangée 602. Recette réelle H1 obligatoire ; aucun push.

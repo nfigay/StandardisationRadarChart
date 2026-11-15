@@ -30,4 +30,5 @@ La recette utilisateur a identifié un menu d'import et un arbre de catalogue en
 
 ## Actualisation R2
 
-Voir [architecture 86-R2](86-R2-S14-3-PUBLICATION-CONFIGURATION-AND-PREVIEW.md) : historique détaillé et comparaison des octets Viewer, motif optionnel privé, réutilisation du registre natif et prévisualisation autonome en onglet. Aucun changement de format ZIP/manifeste public. Le ZIP n'est pas stocké dans le catalogue ; Workspace reporté.
+Voir [architecture 86-R2](86-R2-S14-3-PUBLICATION-CONFIGURATION-AND-PREVIEW.md) : historique détaillé et comparaison des octets Viewer, motif optionnel privé, réutilisation du registre natif et prévisualisation autonome par téléchargement HTML (H1), sans navigation Blob. Aucun changement de format ZIP/manifeste public. Le ZIP n'est pas stocké dans le catalogue ; Workspace reporté.
+Actualisation A8.6-R2-H1 : baseline R2 validée 602/602 sur Mac, navigation blob:null en échec navigateur (URL relative et WebCrypto). Correctif : téléchargement du HTML de prévisualisation puis ouverture locale, contrôles d’intégrité inchangés. Recette navigateur encore requise. Workspace reporté.

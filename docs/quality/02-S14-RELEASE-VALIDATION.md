@@ -62,4 +62,5 @@ Source A8.6 `c73653c` : 593 tests validés dans le rapport local. Correctif R1 :
 
 ## A8.6-R2
 
-Candidat à qualifier selon preuve 08 : 31 tests Publisher, 597 tests exécutables sans Vite, 602 attendus sur installation complète. Refaire le build Pages/standalone et la recette d'onglet Blob ISO, comparaison historique, confirmation de répétition, réouverture JSON et retéléchargement sans mutation. Ne pas annoncer la correction ISO acquise avant la recette. Aucun push automatique.
+Candidat à qualifier selon preuve 08 : 31 tests Publisher, 597 tests exécutables sans Vite, 602 attendus sur installation complète. Refaire le build Pages/standalone et la recette ISO du HTML de prévisualisation téléchargé et ouvert localement (H1), comparaison historique, confirmation de répétition, réouverture JSON et retéléchargement sans mutation. Ne pas annoncer la correction ISO acquise avant la recette. Aucun push automatique.
+Actualisation A8.6-R2-H1 : baseline R2 validée 602/602 sur Mac, navigation blob:null en échec navigateur (URL relative et WebCrypto). Correctif : téléchargement du HTML de prévisualisation puis ouverture locale, contrôles d’intégrité inchangés. Recette navigateur encore requise. Workspace reporté.
