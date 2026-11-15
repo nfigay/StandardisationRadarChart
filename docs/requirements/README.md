@@ -67,3 +67,7 @@ livraison qualifiée. CPV-10 vise explicitement la génération dans le Creator
 sans outil de développement et l'ouverture directe du Viewer préchargé.
 Voir [preuve 05](../evidence/05-A84-CREATOR-VIEWER-VALIDATION.md) et le plan.
 Les lignes historiques REQ restent conservées.
+
+## Clôture documentaire A8.6
+
+La matrice comporte désormais 66 exigences (49 historiques et 17 CPV). Les chiffres et états initiaux des sections précédentes sont historiques. [Revue A8.6](A86-RECONCILIATION.md) : toutes les lignes examinées, `gap_status=assessed` indique une revue documentaire, pas une conformité ; `in_progress` désigne une couverture partielle. Les statuts d'approbation sont conservés. Les tests de la release (603) n'impliquent pas la validation automatique de toutes les exigences cibles. Les références de commit identifient la baseline examinée ou une preuve historique. Les preuves d’implémentation et de qualification complète restent distinctes.

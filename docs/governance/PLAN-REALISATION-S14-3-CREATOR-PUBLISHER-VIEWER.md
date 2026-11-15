@@ -1,5 +1,11 @@
 # Plan de réalisation — S14.3 Creator/Publisher et Viewers
 
+## 0. Décision de clôture A8.6 — 15 novembre 2026
+
+A8.6 est réalisée, qualifiée et publiée (tag pilot-a86, 603 tests, preuves 09 et 10). Le présent plan conserve les lots historiques et les cibles A9/A10 comme éléments de conception, non comme séquence obligatoire. Les anciens états « candidat », « à qualifier » ou « A8.2 publique » sont datés et ne décrivent pas la situation courante.
+
+Priorité suivante : gestion des standards et sources, création/édition des radars et blips, consultation et visualisation ; périmètre à arbitrer avant implémentation. Workspace persistant et convergence SPM, prévisualisation sans téléchargement et composition physique avancée restent reportés. Aucun engagement de calendrier ou de numéro de lot. Voir [AS-IS](../architecture/ARCHITECTURE-AS-IS-A86.md) et [publication](../evidence/10-A86-PUBLICATION.md).
+
 ## 1. Référence et statut
 
 Ce plan remplace la trajectoire qui prévoyait de
@@ -33,7 +39,7 @@ La qualification navigateur complète du Client reste ouverte.
 
 À cette baseline historique, les trois modes du Creator/Publisher restent à réaliser.
 
-**État courant au 14 novembre 2026 :** A8.2 publique 0b14a41/ed814d6 (532 tests) ; A8.3 locale 94aef3e (552 tests) ; A8.4 qualifiée (568 tests et recette Creator/Viewer). A8.5-R1 qualifiée pour le parcours Publisher/Viewer HTML (585 tests, 9/9, preuve 06) ; A8.6 puis A9 à qualifier.
+**État historique au 14 novembre 2026 :** A8.2 publique 0b14a41/ed814d6 (532 tests) ; A8.3 locale 94aef3e (552 tests) ; A8.4 qualifiée (568 tests et recette Creator/Viewer). A8.5-R1 qualifiée pour le parcours Publisher/Viewer HTML (585 tests, 9/9, preuve 06) ; A8.6 puis A9 à qualifier.
 
 Le Creator historique demeure la référence fonctionnelle
 pour la migration de l'interface et du moteur commun.

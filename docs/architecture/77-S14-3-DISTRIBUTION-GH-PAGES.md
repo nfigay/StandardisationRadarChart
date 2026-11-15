@@ -221,3 +221,7 @@ dans le build Createur est exigee en CI.
 La construction locale et la construction CI
 utilisent le meme mecanisme de copie des ressources
 Vite, sans correction manuelle des artefacts.
+
+## Actualisation A8.6 publiée
+
+Le portail et les applications Web sont servis depuis gh-pages, tandis que les HTML autonomes sont joints à une GitHub Release. L'interface `/releases` est générée par GitHub, pas par le build du site. Voir [architecture 87 — mécanismes de distribution](87-A86-DISTRIBUTION-RELEASES-PAGES.md) pour la chaîne exacte, les commandes et les baselines. Les trois variantes cibles ne sont pas déclarées toutes qualifiées par la publication A8.6.

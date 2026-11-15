@@ -25,3 +25,7 @@ Décision utilisateur du 15 novembre : reporter Workspace persistant, stockage b
 ## Finalisation A8.6 — clarification de la consultation
 
 H1 a été qualifié dans Safari en file:// (602 tests, 11 contrôles fonctionnels, commit `9c3bc4fa99aff37592661f5f4519d81d3f624052`). Le parcours de prévisualisation H1 et le téléchargement candidat étaient redondants. Le Creator autonome expose désormais une seule action « Consulter le Viewer candidat (HTML) » : téléchargement direct du même HTML, sans manifeste ni écriture du registre ; ouverture locale par l’utilisateur. Pas de navigation Blob. Le bouton de prévisualisation est réservé au Creator HTTP sans template embarqué (iframe existante). La livraison ZIP et ses garanties restent inchangées. Une vraie prévisualisation temporaire sans fichier local est reportée ; aucune modification de Workspace.
+
+## Clôture de réalisation
+
+La recette H1 puis Final confirme la consultation ISO et les parcours de publication ; 11/11 et 6/6 contrôles, preuves 09/10. Les réserves « à confirmer » des sections historiques sont levées pour les scénarios testés en Safari. La cause iframe initiale reste inconnue ; la prévisualisation autonome sans téléchargement reste reportée. La publication logicielle A8.6 ne rend pas les publications métier privées accessibles publiquement.

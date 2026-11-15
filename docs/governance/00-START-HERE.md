@@ -2,19 +2,21 @@
 
 <!-- S14.3-A8.5-CURRENT -->
 
-## 1. État de référence — 14 novembre 2026
+## 1. État courant — 15 novembre 2026
 
-- Distribution publique A8.2 : `pilot-a82`, source `0b14a418b3e5a206a4611b8f6cd86887b5f8449d`, Pages `ed814d6da7d57dc2324ea26b68cea1659d0c227d` ; 532 tests.
-- A8.3 : commit local `94aef3e0c73b866dcceb5844044a1a93e106e299`, 552 tests ; définitions chargées dans Chrome.
-- A8.4 : 568 tests, construction et recette Creator → projection JSON → Viewer réussies ; qualification documentée dans architecture 84 et preuve 05.
-- A8.5-R1 : qualifiée pour le parcours Publisher → Viewer HTML, 585 tests et recette Chrome 9/9 ; preuve 06.
-- A8.6 : candidat, génération ZIP vérifiée et registre de livraison. A8.6-R1 : correctif candidat Viewer centré sur le radar (fiche dans left, périmètre figé, une révision par radar) ; recette navigateur, ZIP réel, hors connexion et persistance à qualifier. A9 : composition physique et autres modes.
+- A8.6 publique : [pilot-a86](https://github.com/nfigay/StandardisationRadarChart/releases/tag/pilot-a86).
+- Application qualifiée : `f7939c362cd9343cd92b6087235b8a29d2c06765` ; 602 tests, recette H1 11/11 et Final 6/6.
+- Commit de release : `894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55` ; 603 tests réussis, 0 échec.
+- Pages : `d24d7ef448be374528c725dbcb6845175aebda03` ; [portail public](https://nfigay.github.io/StandardisationRadarChart/distributions.html).
+- Publication distante réussie, artefacts vérifiés ; recette navigateur des distributions publiques encore à enregistrer.
+- Prochaine priorité : enrichissements métier (standards, sources, création et consultation des radars). Aucun nouveau lot numéroté imposé.
+- Workspace persistant, convergence SPM, composition physique avancée et prévisualisation autonome sans téléchargement reportés.
 
-Le HEAD et l'état de travail réels doivent être lus dans Git avant toute intervention.
-A8.2 reste la version publique jusqu'à décision et publication distinctes.
-Les états historiques plus bas ne sont pas la baseline courante.
+Lire le HEAD réel et l'état de travail avant modification. Le tag publié reste immuable ; main évolue indépendamment. Les états antérieurs ci-dessous sont historiques, non des instructions courantes.
 
-## 2. Documents à lire en priorité
+Références courantes : [architecture AS-IS](../architecture/ARCHITECTURE-AS-IS-A86.md), [inventaire documentaire](../DOCUMENTATION-INDEX.md), [publication effective](../evidence/10-A86-PUBLICATION.md), [distribution](../architecture/87-A86-DISTRIBUTION-RELEASES-PAGES.md), [revue des exigences](../requirements/A86-RECONCILIATION.md).
+
+## 2. Documents à lire en priorité (compléments historiques et contrats)
 
 1. [Architecture commune 79](../architecture/79-S14-3-COMMON-CREATOR-PUBLISHER-VIEWER.md)
 2. [Guidelines Creator/Publisher et Viewer](GUIDELINES-CREATOR-PUBLISHER-VIEWER.md)

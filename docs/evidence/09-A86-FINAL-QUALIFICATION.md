@@ -9,3 +9,7 @@ Rapport A86-R2-H1-FINAL-FUNCTIONAL-RECIPE, commit `9c3bc4fa99aff37592661f5f4519d
 Les preuves sont les rapports transmis par l'utilisateur, pas une exécution navigateur dans l'environnement de préparation. Le commit de release ajoute uniquement documentation, portail et test du portail. Les artefacts sont reconstruits à partir de ce commit, et la provenance est vérifiée. Publication distante et recette Pages restent distinctes.
 
 Limites acceptées : consultation autonome par téléchargement HTML ; ZIP non archivés dans le catalogue ; Workspace/SPM reportés. La distribution Client historique et le PLM sont conservés. Tag proposé : `pilot-a86` (continuité de `pilot-a82`).
+
+## Suite de la qualification
+
+Le tag proposé est devenu la release publiée `pilot-a86`. Voir [preuve 10 — publication effective](10-A86-PUBLICATION.md) pour les identifiants distants, les 603 tests et la distinction entre publication et recette publique.

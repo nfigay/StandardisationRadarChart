@@ -506,6 +506,13 @@
               "uniqueItems": true
             }
           }
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000,
+          "description": "Optional private delivery reason; non-empty and already trimmed. Runtime also enforces its length in UTF-16 code units.",
+          "pattern": "^\\S(?:[\\s\\S]*\\S)?$"
         }
       }
     }

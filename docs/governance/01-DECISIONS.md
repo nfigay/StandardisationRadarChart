@@ -160,3 +160,9 @@ Décision de finalisation : un seul téléchargement candidat HTML dans le Creat
 ## A8.6 — qualification finale et préparation de publication (2026-11-15)
 
 Baseline applicative `f7939c362cd9343cd92b6087235b8a29d2c06765` : 602 tests et recette finale 6/6, après H1 11/11. Voir `docs/evidence/09-A86-FINAL-QUALIFICATION.md`. Publication préparée avec le tag `pilot-a86`, portail actualisé, anciens liens et Client conservés. Aucun statut publié avant contrôle distant. Workspace et convergence SPM reportés. Consultation autonome HTML acceptée.
+
+## A8.6-DOC — clôture documentaire (15 novembre 2026)
+
+Constat de publication : `pilot-a86`, `894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55`, Pages `d24d7ef448be374528c725dbcb6845175aebda03`. Les preuves 09/10 distinguent qualification locale et contrôle public. La consolidation ne modifie ni le logiciel ni le tag. La prochaine priorité métier et les reports actés dans DEC-019 restent valables. L'architecture AS-IS décrit le produit livré ; la spécification cible conserve ses exigences et arbitrages ouverts. GitHub Releases (artefacts versionnés) et GitHub Pages (site statique) sont deux canaux distincts ; voir architecture 87. Aucun changement de SPM ni nouveau format Workspace.
+
+Règle de collaboration : les opérations de développement et de validation fournissent un rapport JSON affiché, conservé dans un fichier et copié via pbcopy si disponible ; un échec de copie ne vaut pas échec technique de l'opération. Les scripts doivent préserver les diagnostics d'échec. Les décisions proposées restent distinctes des réalisations et preuves.

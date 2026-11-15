@@ -240,3 +240,7 @@ identifiants et données documentaires restent indépendants des libellés.
 - CPV-15 : cohérence radar actif, titre, fiche, détail de blip et références projetées ; mêmes restrictions et présentation en prévisualisation et livraison. Conservation du layout W2UI et du moteur SVG/Cytoscape.
 
 Contrat détaillé : [86-R1](86-R1-S14-3-RADAR-CENTRIC-PUBLISHED-VIEWER.md). Qualification non close.
+
+## Repère de lecture A8.6 (15 novembre 2026)
+
+Ce document demeure une spécification TO-BE candidate pour ses exigences non arbitrées. Il ne constitue pas une attestation globale de réalisation. La baseline publiée est décrite dans [AS-IS A8.6](ARCHITECTURE-AS-IS-A86.md). La [matrice des exigences](../requirements/requirements.csv) et sa [revue](../requirements/A86-RECONCILIATION.md) distinguent couverture observée et qualification complète. Les précisions CPV-13 à CPV-17 sont définies dans les architectures 86-R1/86-R2. Le report du Workspace persistant ne supprime pas les objectifs métier de la cible.

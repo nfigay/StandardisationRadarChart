@@ -73,3 +73,7 @@ H1 `9c3bc4f` : 602 tests, 11/11 contrôles Safari, zéro anomalie restante. Apr�
 ## A8.6 — qualification finale et préparation de publication (2026-11-15)
 
 Baseline applicative `f7939c362cd9343cd92b6087235b8a29d2c06765` : 602 tests et recette finale 6/6, après H1 11/11. Voir `docs/evidence/09-A86-FINAL-QUALIFICATION.md`. Publication préparée avec le tag `pilot-a86`, portail actualisé, anciens liens et Client conservés. Aucun statut publié avant contrôle distant. Workspace et convergence SPM reportés. Consultation autonome HTML acceptée.
+
+## Clôture A8.6 — publication effective
+
+603/603 tests sur Mac pour le commit de release `894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55`. Les 602 tests de la baseline applicative et les recettes Safari H1 11/11 et Final 6/6 sont documentés dans [preuve 09](../evidence/09-A86-FINAL-QUALIFICATION.md). Le rapport de publication fourni par l'utilisateur confirme le push source/tag, la vérification des assets distants et le push Pages `d24d7ef448be374528c725dbcb6845175aebda03`. Voir [preuve 10](../evidence/10-A86-PUBLICATION.md). Le démarrage des distributions publiques dans un navigateur n'est pas attesté par ce rapport et reste à enregistrer. Aucun nouveau test applicatif n'est revendiqué pour A8.6-DOC.
