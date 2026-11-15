@@ -11,6 +11,12 @@
     <script src="./js/radar-revision-session.js"></script>
     <script src="./js/radar-catalog-adapter.js"></script>
     <script src="./js/radar-artifact-integrity.js"></script>
+    <script src="./js/radar-publication-model.js"></script>
+    <script src="./js/radar-publication-projection.js"></script>
+    <script src="./js/radar-publication-viewer.js"></script>
+    <script src="./lib/jszip.min.js"></script>
+    <script src="./js/radar-publication-delivery.js"></script>
+    <script src="./js/radar-publication-ui.js"></script>
     <script src="./js/radar-catalog-persistence.js"></script>
     <script src="./js/radar-catalog-creation.js"></script>
     <script src="./js/radar-catalog-create-form.js"></script>
@@ -505,7 +511,7 @@
         })
 
         function changeLanguage(lang) {
-            i18next.changeLanguage(lang, () => {
+            return i18next.changeLanguage(lang, () => {
                 updateToolbarTranslations();
                 // S14-K-R4: reproject statuses and revision labels on language switch.
                 window.__radarWorkspaceExplorer?.refresh?.();
@@ -1386,7 +1392,7 @@
                             w2alert(window.__radarRevisionDialogs.t('remember'));
                         } catch(error) {
                             console.error('Revision lifecycle rejected:',error);
-                            w2alert(window.__radarRevisionDialogs.t('failed')+': '+error.message);
+                            w2alert(error.code==='PUBLICATION_SCOPE_CONFLICT'?window.__radarRevisionDialogs.t('publicationScopeConflict'):window.__radarRevisionDialogs.t('failed')+': '+error.message);
                         }
                     });
                     break;

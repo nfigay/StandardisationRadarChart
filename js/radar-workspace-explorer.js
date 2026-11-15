@@ -8,6 +8,7 @@
   var active=null;
   var tree=null;
   var mount=null;
+  var treeHost=null, publishedPanel=null;
   var serial=0;
   var hooks=null;
   var owns=Object.prototype.hasOwnProperty;
@@ -18,20 +19,23 @@
   function getSource(id) { return sources.find(s=>s.id===id)||null; }
   function find(group) { for(var s of sources) { var r=entry(s,group); if(r)return {source:s,radar:r}; } return null; }
   var workspaceLabels={
-    fr:{workspaceOpenReplace:'Ouvrir / Remplacer',workspaceClose:'Fermer',workspaceReferences:'Références'},
-    en:{workspaceOpenReplace:'Open / Replace',workspaceClose:'Close',workspaceReferences:'References'}
+    fr:{workspaceOpenReplace:'Ouvrir / Remplacer',workspaceClose:'Fermer',workspaceReferences:'Références',workspacePublications:'Publications'},
+    en:{workspaceOpenReplace:'Open / Replace',workspaceClose:'Close',workspaceReferences:'References',workspacePublications:'Publications'}
   };
   function registerWorkspaceI18n(){
     for(var lang of ['fr','en'])root.i18next?.addResourceBundle?.(lang,'translation',{menu:workspaceLabels[lang]},true,true);
   }
   function workspaceCommands(){
     if(root.__radarApplicationProfile?.allows('catalog.open')===false)return '';
-    var buttons=[['open','workspaceOpenReplace'],['close','workspaceClose'],['references','workspaceReferences']];
+    var buttons=[['open','workspaceOpenReplace'],['close','workspaceClose']];
+    if(root.__radarPublishedPresentation?.references!==false)buttons.push(['references','workspaceReferences']);
+    if(root.__radarApplicationProfile?.allows('publication.create')&&root.__radarPublicationUI)buttons.push(['publications','workspacePublications']);
     return '<div style="display:flex;flex-wrap:wrap;gap:4px;padding:6px;border-bottom:1px solid #ddd">'+buttons.map(function(pair){
       return '<button type="button" class="w2ui-btn" data-workspace-action="'+pair[0]+'" data-workspace-i18n="'+pair[1]+'">'+safe(tr(pair[1],workspaceLabels.fr[pair[1]]))+'</button>';
     }).join('')+'</div>';
   }
   function updateWorkspaceLabels(){
+    if(root.__radarApplicationProfile?.published){renderPublishedPanel();return;}
     if(!tree)return;
     tree.topHTML=workspaceCommands();
     for(var button of mount?.querySelectorAll?.('[data-workspace-i18n]')||[]){
@@ -63,9 +67,21 @@
         if(action==='open')api.openFile({replace:true});
         if(action==='close')Promise.resolve(api.requestClose(hooks.graph())).catch(err=>root.w2alert(err.message));
         if(action==='references')root.__radarStandardsPanel.openReferences();
+        if(action==='publications')root.__radarPublicationUI.open(hooks.graph());
       }catch(err){root.w2alert(err.message);}
     });
-    tree=new root.w2sidebar({box:mount,name:'radarWorkspaceTree',topHTML:commands,nodes:[],onClick:function(e){
+    // W2UI owns only its dedicated child; its refresh cannot overwrite the
+    // published metadata panel. Keep the original layout/mount unchanged.
+    if(mount.appendChild && root.document?.createElement){
+      treeHost=root.document.createElement('div');
+      Object.assign(treeHost.style,{width:'100%',height:'100%'});
+      mount.appendChild(treeHost);
+      publishedPanel=root.document.createElement('section');
+      publishedPanel.id='radar-published-radar-panel';publishedPanel.hidden=true;
+      Object.assign(publishedPanel.style,{height:'100%',overflow:'auto',boxSizing:'border-box',padding:'12px',fontFamily:'system-ui,sans-serif',fontSize:'13px',overflowWrap:'anywhere'});
+      mount.appendChild(publishedPanel);
+    }
+    tree=new root.w2sidebar({box:treeHost||mount,name:'radarWorkspaceTree',topHTML:commands,nodes:[],onClick:function(e){
       var id=e.target||e.detail?.target;
       var node=tree.get(id);
       if(!node || !node.workspaceGroup)return; // folder clicks only expand/collapse
@@ -81,6 +97,45 @@
     }});
     root.i18next?.on?.('languageChanged',updateWorkspaceLabels);
     refresh();return tree;
+  }
+  function renderPublishedPanel(){
+    if(!publishedPanel)return;
+    const published=!!root.__radarApplicationProfile?.published;
+    treeHost.hidden=published;treeHost.style.display=published?'none':'';publishedPanel.hidden=!published;
+    if(!published)return;
+    const d=root.document,fr=String(root.i18next?.language||'fr').toLowerCase().startsWith('fr');
+    const t=(a,b)=>fr?a:b;
+    const add=(parent,tag,text)=>{const n=d.createElement(tag);if(text!==undefined)n.textContent=String(text);parent.appendChild(n);return n;};
+    const list=sources.flatMap(s=>s.radars);
+    const hit=find(active)|| (list.length?find(list[0].group):null);
+    publishedPanel.replaceChildren();
+    const title=add(publishedPanel,'p',root.__radarPublishedPresentation?.title||t('Publication','Publication'));
+    title.style.fontWeight='600';
+    if(!hit){add(publishedPanel,'p',t('Chargement de la publication…','Loading publication…'));return;}
+    const name=r=>{const rev=root.__radarCatalogAdapter.getRevision(r.group);return root.__radarCatalogPersistence?.getRadarName?.(rev.radarId)||rev.title||rev.radarId;};
+    if(list.length>1){
+      const label=add(publishedPanel,'label',t('Radar à consulter','Radar to consult'));
+      const select=add(label,'select');select.id='radar-published-selector';select.setAttribute('aria-label',t('Radar à consulter','Radar to consult'));
+      Object.assign(select.style,{display:'block',width:'100%',height:'auto',margin:'5px 0 12px'});
+      for(const r of list){const o=add(select,'option',name(r)+' — '+r.orgLabel);o.value=r.group;}
+      select.value=hit.radar.group;select.addEventListener('change',()=>activate(select.value));
+    }
+    const r=root.__radarCatalogAdapter.getRevision(hit.radar.group);
+    const radarName=name(hit.radar);
+    const svgTitle=d.getElementById('svgTitle');
+    if(svgTitle){svgTitle.textContent=radarName;svgTitle.setAttribute('x','0');svgTitle.setAttribute('text-anchor','middle');}
+    const heading=add(publishedPanel,'h2',radarName);Object.assign(heading.style,{fontSize:'17px',margin:'10px 0'});
+    const dl=add(publishedPanel,'dl');
+    function field(label,value){if(value==null||value==='')return;const dt=add(dl,'dt',label);dt.style.fontWeight='600';const dd=add(dl,'dd',value);Object.assign(dd.style,{margin:'3px 0 12px',whiteSpace:'pre-wrap'});}
+    field(t('Organisation','Organization'),hit.radar.orgLabel);
+    field(t('Portefeuille','Portfolio'),hit.radar.portfolioLabel);
+    field(t('Version publiée','Published version'),r.version);
+    field(t('Révision','Revision'),root.__radarCatalogPersistence?.getRevisionLabel?.(r.revisionId)||r.revisionId);
+    field(t('Références positionnées','Positioned references'),new Set(r.blips.map(b=>b.standardId)).size);
+    if(root.__radarPublishedPresentation?.references!==false){
+      const b=add(publishedPanel,'button',t('Références du radar','Radar references'));b.type='button';b.className='w2ui-btn';
+      b.addEventListener('click',()=>root.__radarStandardsPanel.openReferences());
+    }
   }
   function nodes() {
     return sources.map(function(s) {
@@ -125,6 +180,7 @@
       var statuses=language==='fr'?{draft:'Brouillon',published:'Publiée',archived:'Archivée'}:{draft:'Draft',published:'Published',archived:'Archived'};
       radar.label=[number,custom&&custom!==number?custom:null,version||null,statuses[revision.status]||revision.status].filter(Boolean).join(' — ');
     }
+    if(root.__radarApplicationProfile?.published){renderPublishedPanel();return;}
     if(!tree)return;
     // The previous selected node may have been deleted from the workspace.
     // Clear stale W2UI selection before rebuilding, rather than retaining
@@ -175,11 +231,12 @@
     if(!catalog||!Array.isArray(catalog.radarRevisions)||!summary||!Array.isArray(summary.revisions)||summary.revisions.length!==catalog.radarRevisions.length)fail('invalid catalog mapping');
     var id='catalog_'+(++serial);
     var orgs=new Map((catalog.organizations||[]).map(o=>[o.organizationId,o]));
+    var portfolios=new Map((catalog.portfolios||[]).map(p=>[p.portfolioId,p]));
     var radars=summary.revisions.map(function(m,i){
       var r=catalog.radarRevisions[i],org=orgs.get(r.ownerOrganizationId);
       return {key:m.group.replace(/[^a-zA-Z0-9_-]/g,'_'),group:m.group,
         label:(r.title||r.radarId)+' — '+r.status+' '+(r.version||''),status:r.status,
-        orgId:r.ownerOrganizationId,orgLabel:org?.name||org?.title||r.ownerOrganizationId};
+        orgId:r.ownerOrganizationId,orgLabel:org?.name||org?.title||r.ownerOrganizationId,portfolioLabel:portfolios.get(r.portfolioId)?.name||r.portfolioId};
     });
     sources.push({id:id,kind:'catalog',label:catalog.title||catalog.name||'JSON catalog '+serial,radars:radars});
     refresh();return id;
@@ -201,9 +258,20 @@
   function activate(group) {
     var hit=find(group);
     if(!hit)fail('radar is not loaded in workspace');
+    const changed=active!==group;
     hooks.select(group);
     active=group;
-    if(tree){var selected=tree.get('radar_'+hit.radar.key);if(selected)tree.select(selected.id);}
+    if(root.__radarApplicationProfile?.published){
+      renderPublishedPanel();
+      if(changed){
+        // Do not leave the previous radar's blip form or ISO detail visible.
+        root.w2ui?.blipForm?.destroy?.();
+        root.w2ui?.mainLayout?.html?.('right','');
+        if(root.__radarStandardsPanel?.resetWorkspace)root.__radarStandardsPanel.resetWorkspace();
+        else root.__radarStandardsPanel?.refresh?.();
+      }
+    }
+    else if(tree){var selected=tree.get('radar_'+hit.radar.key);if(selected)tree.select(selected.id);}
     return {group:group};
   }
   function showRemovalMenu(sourceId,group,mouse) {
@@ -218,8 +286,15 @@
       .select(function(ev){if((ev.detail?.item?.id||ev.detail?.id)==='remove')confirmRemove(sourceId,group);});
   }
   function confirmRemove(sourceId,group) {
-    if(root.w2confirm)root.w2confirm(tr('removeConfirm','Delete selected in-memory content?')).yes(()=>remove(sourceId,group));
-    else remove(sourceId,group);
+    function confirmed(){
+      try{return remove(sourceId,group);}catch(error){
+        if(error.code!=='PUBLICATION_SCOPE_CONFLICT')throw error;
+        root.console?.error?.('Publication scope conflict:',error);
+        root.w2alert(root.__radarRevisionDialogs.t('publicationScopeConflict'));
+      }
+    }
+    if(root.w2confirm)root.w2confirm(tr('removeConfirm','Delete selected in-memory content?')).yes(confirmed);
+    else confirmed();
   }
   function remove(sourceId,group) {
     root.__radarApplicationProfile?.require("workspace.remove");
@@ -242,6 +317,7 @@
     if(!root.__radarRevisionSession?.removeGroup)fail('session removal not installed');
     if(s.kind==='catalog'&&(!root.__radarCatalogPersistence?.removeGroup||!root.__radarCatalogUI?.unregister))
       fail('catalog removal hooks unavailable');
+    if(s.kind==='catalog')root.__radarCatalogPersistence.assertCanRemoveGroups?.(targets.map(r=>r.group));
     // Each group is removed from model, persistence, catalog UI, and session.
     for(var r of targets) {
       if(s.kind==='catalog'){

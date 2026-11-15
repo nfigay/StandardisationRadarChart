@@ -12,6 +12,11 @@
   function escapeHTML(x) { return String(x).replace(/[&<>"']/g, function(c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function prepare(catalog, state) {
     root.__radarApplicationProfile?.assertCatalog(catalog);
+    // Validate authoring metadata before registering any revision or replacing a workspace.
+    if(catalog?.extensions && has(catalog.extensions,'publications')){
+      if(!root.__radarPublicationModel)error('publication model unavailable');
+      root.__radarPublicationModel.state(catalog);
+    }
     if (!catalog || !Array.isArray(catalog.radarRevisions) || !catalog.radarRevisions.length) error('radarRevisions must be a nonempty array');
     if (!Array.isArray(catalog.organizations) || !Array.isArray(catalog.standards) || !Array.isArray(catalog.portfolios)) error('organizations, standards and portfolios arrays required');
     var orgs = new Set(catalog.organizations.map(function(o) { return o.organizationId; }));
@@ -214,6 +219,7 @@
   // Explicit, visible selection of imported revisions. Selection still routes
   // through the existing workspace/session hooks; no automatic activation.
   function openRevisionPicker() {
+    if(root.__radarApplicationProfile?.published)error('published radar selection uses the descriptive panel');
     var groups=root.__radarCatalogAdapter?.status?.() || [];
     if(!groups.length)error('no imported revision available');
     if(!root.__radarWorkspaceExplorer?.activate)error('workspace selection unavailable');
@@ -298,6 +304,7 @@
     }finally{closingCatalog=false;}
   }
   async function requestClose(graph){
+    root.__radarApplicationProfile?.require('catalog.open');
     graph=graph||workspaceGraph();
     var state=workspaceStatus(graph);
     if(!state.opened)return {action:'empty'};

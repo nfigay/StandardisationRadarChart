@@ -10,6 +10,7 @@
   function nonempty(x) { return typeof x === 'string' && x.trim().length > 0; }
   function own(x, k) { return Object.prototype.hasOwnProperty.call(x, k); }
   function register(group, revision) {
+    root.__radarApplicationProfile?.require('catalog.open');
     root.__radarApplicationProfile?.assertRevision(revision);
     if (!nonempty(group)) fail('group must be non-empty');
     if (own(registered, group)) fail('group already registered: ' + group);

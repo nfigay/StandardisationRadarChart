@@ -1,7 +1,7 @@
 {
   "format": "standardisation-radar-web-site",
   "version": 1,
-  "sourceCommit": "0b14a41",
+  "sourceCommit": "894ae2a",
   "files": [
     {
       "path": ".nojekyll",
@@ -315,8 +315,8 @@
     },
     {
       "path": "author/js/radar-application-profile.js",
-      "bytes": 4483,
-      "sha256": "8fcb00fba00e754d7939306c4ce4a33ff3cfa39fd352a359d8bd94dee14b037f"
+      "bytes": 5879,
+      "sha256": "1263406f3456ee145db80f75e4097b8d5261fa3848b78c087e39677fc3fdfcb3"
     },
     {
       "path": "author/js/radar-artifact-integrity.js",
@@ -325,8 +325,8 @@
     },
     {
       "path": "author/js/radar-catalog-adapter.js",
-      "bytes": 4414,
-      "sha256": "dbcebc7e3400329914f84f21c3798809ed2e6cd5d0d4d6447541b424ef87a677"
+      "bytes": 4475,
+      "sha256": "b1fc8513f9cd9853748805dfe17d4526038c21a1421cfd4860a00ad434d88f74"
     },
     {
       "path": "author/js/radar-catalog-atomic.js",
@@ -360,13 +360,13 @@
     },
     {
       "path": "author/js/radar-catalog-persistence.js",
-      "bytes": 26026,
-      "sha256": "1bf6bf95292b4cc39b41a00ab9847e15530f05f0ac3678c155a6b7e07fe54d44"
+      "bytes": 39996,
+      "sha256": "816713ef5975ac2cff39e812c5459a9790357c4ed86820e7b2d0285e299d0bc8"
     },
     {
       "path": "author/js/radar-catalog-ui.js",
-      "bytes": 24647,
-      "sha256": "90fda52d28e941e53d70a46615279f82a3f3fa07fa009d576e88d468a7a717f4"
+      "bytes": 25120,
+      "sha256": "334de87b88df0020990a4b6b7eecf7cbf43d892a658c55423e1e8b0f11a71038"
     },
     {
       "path": "author/js/radar-iso-advanced-query.js",
@@ -434,19 +434,44 @@
       "sha256": "474ad527edd6418a6ca22909b2a883a4f27f667fba46d9d36551f60456f08829"
     },
     {
+      "path": "author/js/radar-publication-delivery.js",
+      "bytes": 5590,
+      "sha256": "7e0e432f288c1555cf952b3cc0ba855c70d19c97bd1fcf572c83ac999544cd5f"
+    },
+    {
+      "path": "author/js/radar-publication-model.js",
+      "bytes": 11470,
+      "sha256": "1b92cdf446e93051dd9b96f59cc6e7578519efee31ea2d274151954e03a67cfa"
+    },
+    {
+      "path": "author/js/radar-publication-projection.js",
+      "bytes": 7282,
+      "sha256": "b235bdacc5130d4c13868f98888806d63afc58bdb3acebcb13df7ba06a35bcdf"
+    },
+    {
+      "path": "author/js/radar-publication-ui.js",
+      "bytes": 30819,
+      "sha256": "11dbc416bb9934732344a6cfaa2ffecae24c3212fa5f3fb2c6e1d3f124b9fa1f"
+    },
+    {
+      "path": "author/js/radar-publication-viewer.js",
+      "bytes": 7578,
+      "sha256": "9edd9b517ce4aaaf5735e431f9cd4dfe7ed07e992e6e4fde7993523c57a0479b"
+    },
+    {
       "path": "author/js/radar-radar-admin.js",
       "bytes": 3834,
       "sha256": "5960c9c5dbd7fc587624ad04bcd9559181af4c6e1bd7dfc8fb5d6d6a78439104"
     },
     {
       "path": "author/js/radar-revision-dialogs.js",
-      "bytes": 5371,
-      "sha256": "67b412313c7ca3687303d00c7b86bacfa50779ebc472bfafecf3b6824b808386"
+      "bytes": 5675,
+      "sha256": "7802b24b568752cbe509c3385f8a06ae2a66b23760d216b0e28abaa8ee333412"
     },
     {
       "path": "author/js/radar-revision-session.js",
-      "bytes": 3994,
-      "sha256": "d154e490b3b43e9de1c377a92114c86e37d604420377b0b5c7cd8f2ec68bfabc"
+      "bytes": 4061,
+      "sha256": "c1bf39d8634f8b1651a89fef57dca77f0a20191a651a928022db3e3726daa39f"
     },
     {
       "path": "author/js/radar-s14-q-diagnostic.js",
@@ -480,13 +505,13 @@
     },
     {
       "path": "author/js/radar-standards-panel.js",
-      "bytes": 86183,
-      "sha256": "4c3f58abdd004e70e4748c44639499edaa8bc5249708900799bac1867a409cae"
+      "bytes": 86753,
+      "sha256": "2b3bab3a14c6fd67259bdfdc57a902c1ebc8315761b2960f340396cf8e32f648"
     },
     {
       "path": "author/js/radar-workspace-explorer.js",
-      "bytes": 15452,
-      "sha256": "6fd25605c63859158d5ab57905c14bf767434696418c92544bfe9142aa2c5d59"
+      "bytes": 20849,
+      "sha256": "67fec0689a731639a48cf43e538a51fe4e4b86692aca670137d7b137019d459d"
     },
     {
       "path": "author/js/radar.js",
@@ -910,8 +935,8 @@
     },
     {
       "path": "author/radar.html",
-      "bytes": 113199,
-      "sha256": "3ea52386fe05bbf878868e006c531575fa1b2306871ed6819386aa71e231c413"
+      "bytes": 113661,
+      "sha256": "47a04be06b7a848f0e18aa7ad9b26a7436dac6e2910bf553973cadc8e514357b"
     },
     {
       "path": "author/src/domain/roadmap-published-projection.mjs",
@@ -1160,13 +1185,13 @@
     },
     {
       "path": "distributions.html",
-      "bytes": 3610,
-      "sha256": "68e99bd4b1b8040d827d35e257e984c70ec201e9023631e1f1404a8e19cb9245"
+      "bytes": 3716,
+      "sha256": "57f5b209f8d93c95b1c845e18f698789daa543313fa04a912653e6c2d4c8bca8"
     },
     {
       "path": "distributions.json",
       "bytes": 1644,
-      "sha256": "5c7ea17334b1a65821a8809373aa658439dc825266d6bb0e4c5f68304f08f789"
+      "sha256": "52520781187a31e5ff14b5b5c5de4723f4e762d9c0723de267dc0b52e571e4a7"
     },
     {
       "path": "ICS.csv",
@@ -1225,8 +1250,8 @@
     },
     {
       "path": "js/radar-application-profile.js",
-      "bytes": 4483,
-      "sha256": "8fcb00fba00e754d7939306c4ce4a33ff3cfa39fd352a359d8bd94dee14b037f"
+      "bytes": 5879,
+      "sha256": "1263406f3456ee145db80f75e4097b8d5261fa3848b78c087e39677fc3fdfcb3"
     },
     {
       "path": "js/radar-artifact-integrity.js",
@@ -1235,8 +1260,8 @@
     },
     {
       "path": "js/radar-catalog-adapter.js",
-      "bytes": 4414,
-      "sha256": "dbcebc7e3400329914f84f21c3798809ed2e6cd5d0d4d6447541b424ef87a677"
+      "bytes": 4475,
+      "sha256": "b1fc8513f9cd9853748805dfe17d4526038c21a1421cfd4860a00ad434d88f74"
     },
     {
       "path": "js/radar-catalog-atomic.js",
@@ -1270,13 +1295,13 @@
     },
     {
       "path": "js/radar-catalog-persistence.js",
-      "bytes": 26026,
-      "sha256": "1bf6bf95292b4cc39b41a00ab9847e15530f05f0ac3678c155a6b7e07fe54d44"
+      "bytes": 39996,
+      "sha256": "816713ef5975ac2cff39e812c5459a9790357c4ed86820e7b2d0285e299d0bc8"
     },
     {
       "path": "js/radar-catalog-ui.js",
-      "bytes": 24647,
-      "sha256": "90fda52d28e941e53d70a46615279f82a3f3fa07fa009d576e88d468a7a717f4"
+      "bytes": 25120,
+      "sha256": "334de87b88df0020990a4b6b7eecf7cbf43d892a658c55423e1e8b0f11a71038"
     },
     {
       "path": "js/radar-iso-advanced-query.js",
@@ -1344,19 +1369,44 @@
       "sha256": "474ad527edd6418a6ca22909b2a883a4f27f667fba46d9d36551f60456f08829"
     },
     {
+      "path": "js/radar-publication-delivery.js",
+      "bytes": 5590,
+      "sha256": "7e0e432f288c1555cf952b3cc0ba855c70d19c97bd1fcf572c83ac999544cd5f"
+    },
+    {
+      "path": "js/radar-publication-model.js",
+      "bytes": 11470,
+      "sha256": "1b92cdf446e93051dd9b96f59cc6e7578519efee31ea2d274151954e03a67cfa"
+    },
+    {
+      "path": "js/radar-publication-projection.js",
+      "bytes": 7282,
+      "sha256": "b235bdacc5130d4c13868f98888806d63afc58bdb3acebcb13df7ba06a35bcdf"
+    },
+    {
+      "path": "js/radar-publication-ui.js",
+      "bytes": 30819,
+      "sha256": "11dbc416bb9934732344a6cfaa2ffecae24c3212fa5f3fb2c6e1d3f124b9fa1f"
+    },
+    {
+      "path": "js/radar-publication-viewer.js",
+      "bytes": 7578,
+      "sha256": "9edd9b517ce4aaaf5735e431f9cd4dfe7ed07e992e6e4fde7993523c57a0479b"
+    },
+    {
       "path": "js/radar-radar-admin.js",
       "bytes": 3834,
       "sha256": "5960c9c5dbd7fc587624ad04bcd9559181af4c6e1bd7dfc8fb5d6d6a78439104"
     },
     {
       "path": "js/radar-revision-dialogs.js",
-      "bytes": 5371,
-      "sha256": "67b412313c7ca3687303d00c7b86bacfa50779ebc472bfafecf3b6824b808386"
+      "bytes": 5675,
+      "sha256": "7802b24b568752cbe509c3385f8a06ae2a66b23760d216b0e28abaa8ee333412"
     },
     {
       "path": "js/radar-revision-session.js",
-      "bytes": 3994,
-      "sha256": "d154e490b3b43e9de1c377a92114c86e37d604420377b0b5c7cd8f2ec68bfabc"
+      "bytes": 4061,
+      "sha256": "c1bf39d8634f8b1651a89fef57dca77f0a20191a651a928022db3e3726daa39f"
     },
     {
       "path": "js/radar-s14-q-diagnostic.js",
@@ -1390,13 +1440,13 @@
     },
     {
       "path": "js/radar-standards-panel.js",
-      "bytes": 86183,
-      "sha256": "4c3f58abdd004e70e4748c44639499edaa8bc5249708900799bac1867a409cae"
+      "bytes": 86753,
+      "sha256": "2b3bab3a14c6fd67259bdfdc57a902c1ebc8315761b2960f340396cf8e32f648"
     },
     {
       "path": "js/radar-workspace-explorer.js",
-      "bytes": 15452,
-      "sha256": "6fd25605c63859158d5ab57905c14bf767434696418c92544bfe9142aa2c5d59"
+      "bytes": 20849,
+      "sha256": "67fec0689a731639a48cf43e538a51fe4e4b86692aca670137d7b137019d459d"
     },
     {
       "path": "js/radar.js",
@@ -1820,13 +1870,13 @@
     },
     {
       "path": "radar.html",
-      "bytes": 113199,
-      "sha256": "3ea52386fe05bbf878868e006c531575fa1b2306871ed6819386aa71e231c413"
+      "bytes": 113661,
+      "sha256": "47a04be06b7a848f0e18aa7ad9b26a7436dac6e2910bf553973cadc8e514357b"
     },
     {
       "path": "release-manifest.json",
-      "bytes": 34478,
-      "sha256": "da62e3398f8534b463cdd16f0bd5d290b98656f2671ea275f76e16ef136e3be9"
+      "bytes": 35406,
+      "sha256": "95e2f828728af1bc623ceb38d2519e5b33a41a849bac59c919a5610e4d742785"
     },
     {
       "path": "src/domain/roadmap-published-projection.mjs",

@@ -519,7 +519,11 @@
    if(root.__radarApplicationProfile?.viewer||root.__radarCatalogPersistence?.status?.().importedCatalogs===1){
      if(root.__radarCatalogPersistence?.status?.().importedCatalogs!==1)return [];
      const query=norm(String(term||''));
+     const active=root.__radarApplicationProfile?.published
+       ?root.__radarCatalogAdapter?.getRevision?.(root.__radarRevisionSession?.status?.().activeGroup):null;
+     const allowed=root.__radarApplicationProfile?.published?new Set((active?.blips||[]).map(b=>b.standardId)):null;
      return root.__radarCatalogPersistence.listReferenceRecords().filter(r=>{
+       if(allowed&&!allowed.has(r.standardId))return false;
        const doc=r.isoDocument;
        return !query||norm([r.standardId,r.name,r.issuer,r.designation,r.editionDesignation,r.sourceName,r.verification,
          doc?.title,...Object.values(doc?.titleI18n||{}),doc?.scope,...Object.values(doc?.scopeI18n||{}),
@@ -1143,7 +1147,7 @@
    void loadRssCache();
    return true;
  }
- function open(){if(!mount)initialize(root.document?.getElementById('standard-references-panel'));const layout=root.w2ui?.mainLayout;if(layout?.show)layout.show('bottom');if(layout?.sizeTo)layout.sizeTo('bottom',240);refresh();search?.focus();}
+ function open(){if(root.__radarPublishedPresentation?.references===false)throw Error('Publication references panel disabled');if(!mount)initialize(root.document?.getElementById('standard-references-panel'));const layout=root.w2ui?.mainLayout;if(layout?.show)layout.show('bottom');if(layout?.sizeTo)layout.sizeTo('bottom',240);refresh();search?.focus();}
  // Initialize the shared consultation UI without starting source services.
  function preparePublishedReferences(){
    bindLocale();
@@ -1160,6 +1164,7 @@
  }
  function openReferences(){
    root.__radarApplicationProfile?.require('radar.consult');
+   if(root.__radarPublishedPresentation?.references===false)throw Error('Publication references panel disabled');
    mode='references';
    const layout=root.w2ui?.mainLayout;
    layout?.show?.('bottom');layout?.sizeTo?.('bottom',240);
