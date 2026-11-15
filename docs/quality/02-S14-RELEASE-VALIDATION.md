@@ -68,3 +68,8 @@ Actualisation A8.6-R2-H1 : baseline R2 validée 602/602 sur Mac, navigation blob
 ### A8.6 finalisation
 
 H1 `9c3bc4f` : 602 tests, 11/11 contrôles Safari, zéro anomalie restante. Après simplification de la consultation HTML, exécuter la suite complète et la recette delta de la preuve 08 avant toute publication. Ne pas assimiler cette qualification à un push ou à une diffusion.
+
+
+## A8.6 — qualification finale et préparation de publication (2026-11-15)
+
+Baseline applicative `f7939c362cd9343cd92b6087235b8a29d2c06765` : 602 tests et recette finale 6/6, après H1 11/11. Voir `docs/evidence/09-A86-FINAL-QUALIFICATION.md`. Publication préparée avec le tag `pilot-a86`, portail actualisé, anciens liens et Client conservés. Aucun statut publié avant contrôle distant. Workspace et convergence SPM reportés. Consultation autonome HTML acceptée.

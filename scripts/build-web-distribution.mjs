@@ -284,7 +284,7 @@ export function verify(directory){
   };
 }
 
-function portal(commit){
+export function portal(commit){
   const variants=contract(commit).variants;
 
   const labels={
@@ -371,15 +371,16 @@ small {color:#64748b}
 <small>Livraison issue du commit ${commit}</small>
 
 <section>
-<h2>Version pilote A8.2 — application commune</h2>
+<h2>Version A8.6 — application commune</h2>
 <p>Creator et Viewer partagent le radar, les références et la navigation.
 Le Creator édite les catalogues natifs et intègre les notices ISO ; le Viewer
 consulte les catalogues publiés sans corpus ISO global.</p>
 <p><a href="radar.html">Creator en ligne</a> ·
 <a href="radar.html?profile=viewer">Viewer en ligne</a></p>
-<p><a href="https://github.com/nfigay/StandardisationRadarChart/releases/tag/pilot-a82">Release pilote A8.2 et fichiers autonomes</a> ·
-<a href="https://github.com/nfigay/StandardisationRadarChart/releases/download/pilot-a82/standardization-radar-creator.html">Télécharger Creator</a> ·
-<a href="https://github.com/nfigay/StandardisationRadarChart/releases/download/pilot-a82/standardization-radar-viewer.html">Télécharger Viewer</a></p>
+<p><a href="https://github.com/nfigay/StandardisationRadarChart/releases/tag/pilot-a86">Release A8.6 et fichiers autonomes</a> ·
+<a href="https://github.com/nfigay/StandardisationRadarChart/releases/download/pilot-a86/standardization-radar-creator.html">Télécharger Creator</a> ·
+<a href="https://github.com/nfigay/StandardisationRadarChart/releases/download/pilot-a86/standardization-radar-viewer.html">Télécharger Viewer</a></p>
+<p><a href="https://github.com/nfigay/StandardisationRadarChart/releases/tag/pilot-a82">Release historique A8.2</a></p>
 <p><small>Les trois variantes du Client indépendant ci-dessous sont conservées pour compatibilité. La convergence des six distributions de l’application commune reste en cours.</small></p>
 </section>
 

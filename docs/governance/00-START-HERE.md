@@ -334,3 +334,8 @@ Actualisation A8.6-R2-H1 : baseline R2 validée 602/602 sur Mac, navigation blob
 ## Finalisation A8.6 — décision du 15 novembre
 
 H1 `9c3bc4f` qualifié par 602 tests et 11 contrôles Safari. Unifier la consultation HTML autonome (un bouton, pas de livraison), conserver le ZIP distinct ; recette delta avant publication. La vraie prévisualisation autonome sans téléchargement et le Workspace restent reportés. A8.2 reste publique tant que la release A8.6 n’est pas publiée.
+
+
+## A8.6 — qualification finale et préparation de publication (2026-11-15)
+
+Baseline applicative `f7939c362cd9343cd92b6087235b8a29d2c06765` : 602 tests et recette finale 6/6, après H1 11/11. Voir `docs/evidence/09-A86-FINAL-QUALIFICATION.md`. Publication préparée avec le tag `pilot-a86`, portail actualisé, anciens liens et Client conservés. Aucun statut publié avant contrôle distant. Workspace et convergence SPM reportés. Consultation autonome HTML acceptée.

@@ -14,7 +14,8 @@ import {
   contract,
   inventory,
   verifyInventory,
-  checkEntry
+  checkEntry,
+  portal
 } from '../scripts/build-web-distribution.mjs';
 
 test('six variantes, deux produits, trois modes',()=>{
@@ -147,4 +148,16 @@ test('ressources : fichier local manquant detecte',()=>{
       force:true
     });
   }
+});
+
+ test('portail A8.6 : liens de release, anciennes versions et entrées en ligne',()=>{
+  const html=portal('f7939c3');
+  assert.match(html,/Version A8\.6/);
+  for(const profile of ['creator','viewer']){
+    assert.ok(html.includes('releases/download/pilot-a86/standardization-radar-'+profile+'.html'));
+  }
+  assert.ok(html.includes('releases/tag/pilot-a86'));
+  assert.ok(html.includes('releases/tag/pilot-a82'));
+  assert.ok(html.includes('radar.html?profile=viewer'));
+  assert.ok(!html.includes('releases/download/pilot-a82/'));
 });

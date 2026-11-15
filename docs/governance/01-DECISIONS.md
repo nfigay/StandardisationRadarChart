@@ -155,3 +155,8 @@ Actualisation A8.6-R2-H1 : baseline R2 validée 602/602 sur Mac, navigation blob
 ### A8.6 — consultation autonome et livraison distinctes
 
 Décision de finalisation : un seul téléchargement candidat HTML dans le Creator autonome, sans registre ni manifeste ; prévisualisation HTTP conservée ; livraison ZIP enregistrée distincte. H1 qualifié (602 tests et 11 contrôles). Prévisualisation autonome sans fichier à reprendre ultérieurement.
+
+
+## A8.6 — qualification finale et préparation de publication (2026-11-15)
+
+Baseline applicative `f7939c362cd9343cd92b6087235b8a29d2c06765` : 602 tests et recette finale 6/6, après H1 11/11. Voir `docs/evidence/09-A86-FINAL-QUALIFICATION.md`. Publication préparée avec le tag `pilot-a86`, portail actualisé, anciens liens et Client conservés. Aucun statut publié avant contrôle distant. Workspace et convergence SPM reportés. Consultation autonome HTML acceptée.
