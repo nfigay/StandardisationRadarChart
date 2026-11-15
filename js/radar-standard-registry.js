@@ -31,6 +31,7 @@
     "required": "Renseignez le titre, l’organisme et la désignation.",
     "long": "Un champ dépasse 200 caractères.",
     "https": "L’URL source doit utiliser HTTPS.",
+    "duplicate": "Cette référence existe déjà : sélectionnez la notice existante.",
     "uuid": "Générateur d’identifiants sécurisé indisponible.",
     "select": "Sélectionnez une référence.",
     "draft": "Sélectionnez un brouillon du catalogue.",
@@ -61,6 +62,7 @@
     "required": "Enter the title, issuer and designation.",
     "long": "A field exceeds 200 characters.",
     "https": "The source URL must use HTTPS.",
+    "duplicate": "This reference already exists: select the existing record.",
     "uuid": "Secure ID generator unavailable.",
     "select": "Select a reference.",
     "draft": "Select a catalog draft.",
@@ -82,7 +84,7 @@
     return fallback.replace(/\{\{(\w+)\}\}/g,(_,name)=>String(options?.[name]??''));
   }
  function fail(message){throw Error('Standard registry: '+message);}
- var errorKeys={'title, issuer and designation required':'required','field exceeds 200 characters':'long','source URL must use HTTPS':'https','secure UUID unavailable':'uuid','sélectionner une référence':'select','sélectionner une révision draft du catalogue':'draft'};
+ var errorKeys={'Catalog persistence: reference already declared; select the existing reference':'duplicate','reference already declared; select the existing reference':'duplicate','title, issuer and designation required':'required','field exceeds 200 characters':'long','source URL must use HTTPS':'https','secure UUID unavailable':'uuid','sélectionner une référence':'select','sélectionner une révision draft du catalogue':'draft'};
  function errorMessage(error){var key=errorKeys[String(error?.message||error).replace(/^Standard registry: /,'')];if(!key)root.console?.error?.('Standard registry rejected',error);return t(key||'failed');}
  function verification(value){return t(['unknown','unverified','source-verified'].includes(value)?value:'unknown');}
  function str(v){return typeof v==='string'&&!!v.trim();}
@@ -96,7 +98,7 @@
    var q=clean(query,200).toLocaleLowerCase();
    var n=Number.isInteger(limit)&&limit>0?Math.min(limit,100):50;
    return api().listReferenceRecords().filter(function(s){return (
-    [s.standardId,s.name,s.issuer,s.designation,s.sourceName,s.verification].join(' ').toLocaleLowerCase().includes(q)
+    [s.standardId,s.name,s.issuer,s.designation,s.editionDesignation,s.sourceName,s.sourceUrl,s.origin,s.verification].join(' ').toLocaleLowerCase().includes(q)
    );}).slice(0,n);
  }
  function declare(fields){
@@ -123,7 +125,10 @@
    });
  }
  function el(d,tag,text){var e=d.createElement(tag);if(text!=null)e.textContent=text;return e;}
- function open(graph){
+ var activeClose=null;
+ function close(){activeClose?.();}
+ function open(graph,options={}){
+   root.__radarApplicationProfile?.require('catalog.declareReference');
    var p=api();
    if(p.status().importedCatalogs!==1)fail('import one JSON catalog first');
    var d=root.document;if(!d)fail('document unavailable');
@@ -134,12 +139,14 @@
    var localeBindings=[];
    function bind(node,property,key){function update(){node[property]=t(key);}localeBindings.push(update);update();return node;}
    function translated(tag,key){return bind(el(d,tag),'textContent',key);}
-   function closeRegister(){root.i18next?.off?.('languageChanged',refreshLanguage);overlay.remove();}
-   var heading=translated('h2','title');heading.style.margin='0 0 10px';panel.appendChild(heading);
+   function closeRegister(){root.i18next?.off?.('languageChanged',refreshLanguage);overlay.remove();if(activeClose===closeRegister)activeClose=null;}
+   activeClose=closeRegister;
+   var declarationOnly=options.declaration===true;
+   var heading=translated('h2',declarationOnly?'declare':'title');heading.style.margin='0 0 10px';panel.appendChild(heading);
    var caption=translated('p','caption');panel.appendChild(caption);
-   var search=el(d,'input');search.type='search';bind(search,'placeholder','search');localeBindings.push(function(){search.setAttribute('aria-label',t('searchLabel'));});search.setAttribute('aria-label',t('searchLabel'));panel.appendChild(search);
-   var results=el(d,'div');results.style.margin='12px 0';results.style.maxHeight='220px';results.style.overflowY='auto';panel.appendChild(results);
-   var selected=el(d,'p',t('none'));panel.appendChild(selected);
+   var search=el(d,'input');search.type='search';bind(search,'placeholder','search');localeBindings.push(function(){search.setAttribute('aria-label',t('searchLabel'));});search.setAttribute('aria-label',t('searchLabel'));if(!declarationOnly)panel.appendChild(search);
+   var results=el(d,'div');results.style.margin='12px 0';results.style.maxHeight='220px';results.style.overflowY='auto';if(!declarationOnly)panel.appendChild(results);
+   var selected=el(d,'p',t('none'));if(!declarationOnly)panel.appendChild(selected);
    var picked=null,pickedRecord=null,lastSaved=null,lastError=null,projectError=null;
    function updateSelection(){
      var value=pickedRecord?(pickedRecord.designation||pickedRecord.name)+' — '+pickedRecord.name+' / '+verification(pickedRecord.verification):picked;
@@ -149,6 +156,7 @@
    function refreshLanguage(){localeBindings.forEach(function(update){update();});render();updateSelection();if(lastError)msg.textContent=errorMessage(lastError);else if(lastSaved)msg.textContent=t('saved',{id:lastSaved});if(projectError)projectMsg.textContent=projectMessage(projectError);}
 
    function render(){
+     if(declarationOnly)return;
      results.replaceChildren();
      var found=records(search.value,50);
      if(!found.length)results.appendChild(el(d,'p',t('empty')));
@@ -160,26 +168,36 @@
      });
    }
    search.addEventListener('input',render);
-   var details=el(d,'details');var summary=translated('summary','declare');details.appendChild(summary);
+   var details=el(d,'details');details.open=options.declaration===true;var summary=translated('summary','declare');details.appendChild(summary);
    var form=el(d,'form');Object.assign(form.style,{display:'grid',gap:'7px',padding:'8px 0'});
    function field(key,label,required){
      var wrap=el(d,'label');wrap.appendChild(translated('span',label));wrap.style.display='grid';
-     var input=el(d,'input');input.type='text';input.name=key;input.maxLength=key==='sourceUrl'?500:200;input.required=!!required;
+     var input=el(d,'input');input.type='text';input.name=key;input.maxLength=key==='sourceUrl'?500:key==='editionDesignation'?100:200;input.required=!!required;
      input.style.height='32px';input.style.boxSizing='border-box';wrap.appendChild(input);form.appendChild(wrap);return input;
    }
    var inputs={name:field('name','name',true),issuer:field('issuer','issuer',true),designation:field('designation','designation',true),editionDesignation:field('editionDesignation','editionDesignation',false),sourceName:field('sourceName','sourceName',false),sourceUrl:field('sourceUrl','sourceUrl',false)};
    var save=translated('button','save');save.type='submit';form.appendChild(save);
    var msg=el(d,'p');msg.setAttribute('role','alert');form.appendChild(msg);
-   form.addEventListener('submit',function(ev){ev.preventDefault();try{
-     var values={};Object.keys(inputs).forEach(function(k){values[k]=inputs[k].value;});
-     var r=declare(values);picked=r.standardId;pickedRecord=null;lastSaved=r.standardId;lastError=null;msg.textContent=t('saved',{id:r.standardId});
+   form.addEventListener('submit',function(ev){
+     ev.preventDefault();if(activeClose!==closeRegister)return;var r;
+     try{
+       var values={};Object.keys(inputs).forEach(function(k){values[k]=inputs[k].value;});
+       r=declare(values);
+     }catch(e){lastSaved=null;lastError=e;msg.textContent=errorMessage(e);return;}
+     picked=r.standardId;pickedRecord=null;lastSaved=r.standardId;lastError=null;msg.textContent=t('saved',{id:r.standardId});
+     // The catalogue has committed successfully. UI refresh failures must not be reported as declaration failures.
+     if(declarationOnly&&typeof options.onDeclared==='function'){
+       try{options.onDeclared(r);closeRegister();}
+       catch(e){root.console?.error?.('Reference declared; refresh failed',e);}
+       return;
+     }
      form.reset();render();updateSelection();
-   }catch(e){lastSaved=null;lastError=e;msg.textContent=errorMessage(e);}});
-   details.appendChild(form);panel.appendChild(details);
+   });
+   if(declarationOnly)panel.appendChild(form);else{details.appendChild(form);panel.appendChild(details);}
    var actions=el(d,'div');Object.assign(actions.style,{display:'flex',gap:'8px',marginTop:'14px'});
    var project=translated('button','project');project.type='button';
    var projectMsg=el(d,'span');projectMsg.setAttribute('role','status');
-   project.addEventListener('click',function(){try{
+   project.addEventListener('click',function(){if(activeClose!==closeRegister)return;try{
      if(!picked)fail('sélectionner une référence');
      var group=root.__radarRevisionSession?.status?.().activeGroup;
      var r=root.__radarCatalogAdapter?.getRevision?.(group);
@@ -187,8 +205,8 @@
      root.__radarCatalogCreateForm.open(graph,'existing',picked);closeRegister();
    }catch(e){projectError=e;projectMsg.textContent=projectMessage(e);}});
    var close=translated('button','close');close.type='button';close.addEventListener('click',closeRegister);
-   actions.appendChild(project);actions.appendChild(close);panel.appendChild(actions);panel.appendChild(projectMsg);
-   overlay.appendChild(panel);d.body.appendChild(overlay);render();root.i18next?.on?.('languageChanged',refreshLanguage);search.focus();return overlay;
+   if(!declarationOnly)actions.appendChild(project);actions.appendChild(close);panel.appendChild(actions);if(!declarationOnly)panel.appendChild(projectMsg);
+   overlay.appendChild(panel);d.body.appendChild(overlay);render();root.i18next?.on?.('languageChanged',refreshLanguage);(declarationOnly?inputs.name:search).focus();return overlay;
  }
- root.__radarStandardRegistry=Object.freeze({records:records,declare:declare,open:open});
+ root.__radarStandardRegistry=Object.freeze({records:records,declare:declare,open:open,close:close});
 })(window);

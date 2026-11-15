@@ -181,6 +181,13 @@
       fail('invalid unverified local reference');
     if(source.standards.some(function(s){return s.standardId===standard.standardId;}))
       fail('duplicate standardId');
+    // Exact declared identity only; never infer equivalence from names or source labels.
+    if(source.standards.some(function(s){
+      var d=s.extensions?.referenceDeclaration;
+      return d && isoDesignation(d.issuer)===isoDesignation(r.issuer) &&
+        isoDesignation(d.designation)===isoDesignation(r.designation) &&
+        (isoDesignation(d.editionDesignation)===isoDesignation(r.editionDesignation) || !!s.extensions?.isoDocument);
+    })) fail('reference already declared; select the existing reference');
     var record=clone({standardId:standard.standardId,name:standard.name,
       extensions:{referenceDeclaration:r}});
     source.standards=source.standards.concat([record]);

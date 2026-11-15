@@ -24,7 +24,7 @@ test('synchronisation automatique seulement si empreinte non déjà chargée',()
 });
 test('l’import existant et les trois vues restent disponibles',()=>{
  assert.match(panel,/Importer JSONL/);
- for(const x of ['ICS et normes','Comités TC \/ SC','Références locales'])assert.ok(panel.includes(x));
+ for(const x of ['ICS et normes','Comités TC \/ SC','Références du catalogue'])assert.ok(panel.includes(x));
 });
 test('échec rapide si le dépôt cible est invalide, sans réseau',()=>{
  const temp=mkdtempSync(join(tmpdir(),'iso-s14c-test-'));

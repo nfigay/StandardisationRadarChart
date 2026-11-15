@@ -39,13 +39,13 @@ test('A8.2 viewer draft rejection preserves published workspace',async()=>{const
 test('A8.2 viewer native reference query uses published data only, never registry fallback',()=>{
   const x=setup(true);x.open(fixture('one','published'));
   const text=readFileSync(new URL('../js/radar-standards-panel.js',import.meta.url),'utf8');
-  const start=text.indexOf('function referenceRows(term)'),end=text.indexOf('function updateModeButtons()',start);assert.ok(start>=0&&end>start);
+  const start=text.indexOf('function referenceRows('),end=text.indexOf('function updateModeButtons()',start);assert.ok(start>=0&&end>start);
   const context=vm.createContext({root:x.window,norm:v=>String(v).toLowerCase()});
   x.window.__radarStandardRegistry={records(){throw Error('Forbidden global access');}};
   vm.runInContext(text.slice(start,end)+'\nthis.query=referenceRows;',context);
   assert.equal(context.query('9001').length,1);assert.equal(context.query('missing').length,0);assert.equal(context.query('')[0].standardId,'s');
 });
-test('A8.2 Viewer panel returns before global source startup',()=>{const text=readFileSync(new URL('../js/radar-standards-panel.js',import.meta.url),'utf8');const start=text.indexOf('function initialize(node,getGraph)'),end=text.indexOf('void loadIcs();',start);assert.ok(start>=0&&end>start);const code=text.slice(start,end);assert.match(code,/nativeOnly/);assert.match(code,/bar\.replaceChildren\(label,search\);\s*return true;/);
+test('A8.2 Viewer panel returns before global source startup',()=>{const text=readFileSync(new URL('../js/radar-standards-panel.js',import.meta.url),'utf8');const start=text.indexOf('function initialize(node,getGraph)'),end=text.indexOf('void loadIcs();',start);assert.ok(start>=0&&end>start);const code=text.slice(start,end);assert.match(code,/nativeOnly/);assert.match(code,/bar\.replaceChildren\(label,search,nativeOriginFilter\);\s*return true;/);
   const creatorStart=text.indexOf('bindLocale();updateStaticLabels();refresh();',start);
   const viewerReturn=text.indexOf('return true; // no global ISO',start);
   assert.ok(viewerReturn>=0&&creatorStart>viewerReturn&&creatorStart<end);

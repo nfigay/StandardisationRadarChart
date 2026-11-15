@@ -2,6 +2,8 @@
 
 Entrée : [START HERE](governance/00-START-HERE.md). Pour l’état effectivement réalisé, lire [AS-IS](architecture/ARCHITECTURE-AS-IS-A86.md), [distribution](architecture/87-A86-DISTRIBUTION-RELEASES-PAGES.md), [preuve de publication](evidence/10-A86-PUBLICATION.md) et [revue exigences](requirements/A86-RECONCILIATION.md). La [spécification cible](architecture/02-SPECIFICATION-CIBLE.md) et les décisions adoptées définissent les objectifs ; les documents de lots restent des traces datées. Une référence historique n’est pas une instruction actuelle. Cet inventaire recense les fichiers présents dans la reconstruction de la baseline et le delta documentaire ; il ne prétend pas avoir réécrit ou requalifié chaque document historique.
 
+Le candidat S15-A est un delta métier distinct de la release A8.6 ; voir [architecture et contrat](architecture/88-S15-A-REFERENCES-SOURCES.md) et [validation](evidence/11-S15-A-CANDIDATE-VALIDATION.md).
+
 | Fichier | Rôle |
 |---|---|
 | [DOCUMENTATION-INDEX.md](DOCUMENTATION-INDEX.md) | Référence courante / registre |
@@ -89,6 +91,7 @@ Entrée : [START HERE](governance/00-START-HERE.md). Pour l’état effectivemen
 | [architecture/86-R2-S14-3-PUBLICATION-CONFIGURATION-AND-PREVIEW.md](architecture/86-R2-S14-3-PUBLICATION-CONFIGURATION-AND-PREVIEW.md) | Architecture de lot / étude ; lire avec AS-IS |
 | [architecture/86-S14-3-STANDALONE-PUBLICATION-DELIVERY.md](architecture/86-S14-3-STANDALONE-PUBLICATION-DELIVERY.md) | Architecture de lot / étude ; lire avec AS-IS |
 | [architecture/87-A86-DISTRIBUTION-RELEASES-PAGES.md](architecture/87-A86-DISTRIBUTION-RELEASES-PAGES.md) | Référence courante / registre |
+| [architecture/88-S15-A-REFERENCES-SOURCES.md](architecture/88-S15-A-REFERENCES-SOURCES.md) | Delta architecture et contrat S15-A candidat |
 | [architecture/ARCHITECTURE-AS-IS-A86.md](architecture/ARCHITECTURE-AS-IS-A86.md) | Référence courante / registre |
 | [architecture/ARCHITECTURE-CATALOGUE-ETAT-COURANT.md](architecture/ARCHITECTURE-CATALOGUE-ETAT-COURANT.md) | Architecture de lot / étude ; lire avec AS-IS |
 | [architecture/CONCEPTION-CONSULTATION-ISO.md](architecture/CONCEPTION-CONSULTATION-ISO.md) | Architecture de lot / étude ; lire avec AS-IS |
@@ -104,6 +107,7 @@ Entrée : [START HERE](governance/00-START-HERE.md). Pour l’état effectivemen
 | [evidence/08-A86-R2-PUBLISHER-CANDIDATE.md](evidence/08-A86-R2-PUBLISHER-CANDIDATE.md) | Preuve historique / source archivée |
 | [evidence/09-A86-FINAL-QUALIFICATION.md](evidence/09-A86-FINAL-QUALIFICATION.md) | Preuve historique / source archivée |
 | [evidence/10-A86-PUBLICATION.md](evidence/10-A86-PUBLICATION.md) | Preuve historique / source archivée |
+| [evidence/11-S15-A-CANDIDATE-VALIDATION.md](evidence/11-S15-A-CANDIDATE-VALIDATION.md) | Preuve de préparation et recette candidat |
 | [evidence/release-a86/RELEASE-NOTES.md](evidence/release-a86/RELEASE-NOTES.md) | Preuve historique / source archivée |
 | [evidence/release-a86/publish.mjs](evidence/release-a86/publish.mjs) | Preuve historique / source archivée |
 | [governance/00-START-HERE.md](governance/00-START-HERE.md) | Référence courante / registre |

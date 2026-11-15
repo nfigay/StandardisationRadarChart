@@ -1,0 +1,52 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>S15-A-R1 isolated browser regression</title>
+<link rel="stylesheet" href="../css/w2ui.min.css">
+<style>body{margin:0} #standard-references-panel{width:100%;height:240px;box-sizing:border-box}</style>
+<script src="../lib/jquery.min.js"></script>
+<script src="../lib/w2ui.min.js"></script>
+<script src="../lib/i18next.min.js"></script>
+<script>i18next.init({lng:"fr",fallbackLng:"fr",resources:{fr:{translation:{}},en:{translation:{}}},initImmediate:false});</script>
+<script src="../js/radar-application-profile.js"></script>
+<script src="../js/radar-publication-model.js"></script>
+<script src="../js/radar-catalog-persistence.js"></script>
+<script src="../js/radar-standard-registry.js"></script>
+<script src="../js/radar-iso-tree-index.js"></script>
+<script src="../js/radar-iso-sidebar-index.js"></script>
+<script src="../js/radar-standards-panel.js"></script>
+<script src="../js/radar-iso-toolbar.js"></script>
+<script src="../js/radar-s14-z-sources.js"></script>
+</head><body><div id="standard-references-panel"></div><pre id="result">pending</pre>
+<script>
+(async()=>{
+ const report={operation:'S15-A-R1-BROWSER',checks:[],errors:[],ok:false};
+ const errors=[];window.addEventListener('error',e=>errors.push(e.message));window.addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));
+ const assert=(condition,message)=>{if(!condition)throw Error(message)};
+ const check=(name,fn)=>{try{const detail=fn();report.checks.push({name,ok:true,detail});}catch(e){report.checks.push({name,ok:false,error:e.message});throw e;}};
+ try{
+  // Reuse the actual global select rule from the application, including the legacy 150px height.
+  const html=await(await fetch('../radar.html')).text();const rule=html.match(/select\s*\{[^}]*\}/)?.[0];assert(rule,'Application select rule not found');
+  const style=document.createElement('style');style.textContent=rule;document.head.appendChild(style);
+  const store=window.__radarCatalogPersistence;
+  report.browser=navigator.userAgent;
+  const catalog={schemaVersion:'1.0.0',title:'Disposable browser fixture',organizations:[],portfolios:[],standards:[{standardId:'legacy',name:'Historical reference'},{standardId:'legacy2',name:'Second historical reference'}],assessments:[],radarRevisions:[{schemaVersion:"1.0.0",revisionId:"pub",radarId:"rad",status:"published",blips:[]}]};
+  store.remember(catalog,{revisions:[{group:"g0",revisionId:"pub"}]});
+  // Optional source boundary only: no network acquisition and no persistent ISO store.
+  window.__radarIsoWindowed={current:async()=>({generation:'fixture',summary:{release:'fixture',datasets:{deliverables:{count:0}}}}),page:async()=>({records:[],next:null})};
+  window.__radarStandardsPanel.initialize(document.getElementById('standard-references-panel'),()=>null);
+  window.__radarStandardsPanel.openReferences();
+  await new Promise(r=>setTimeout(r,300));
+  const g=window.w2ui.standardReferencesGrid, f=document.querySelector('[data-native-origin-filter]');
+  check('compact filter and grid height',()=>{const a=f.getBoundingClientRect(),b=g.box.getBoundingClientRect();assert(a.height>=26&&a.height<=34,'Origin filter height: '+a.height);assert(b.height>=100,'Grid height: '+b.height);assert(a.width<=200,'Origin filter width: '+a.width);assert(f.parentElement.contains(document.querySelector('#standard-references-panel input[type=search]')),'Origin filter outside toolbar');return {filterHeight:a.height,filterWidth:a.width,gridHeight:b.height};});
+  if(!window.__radarApplicationProfile.viewer){
+   check('actual declaration and visible complete grid',()=>{document.querySelector('[data-native-declare]').click();const d=document.querySelector('#standard-reference-register');assert(d,'Declaration dialog missing');const values={name:'HTTP Semantics',issuer:'IETF',designation:'RFC 9110',editionDesignation:'2022',sourceName:'RFC Editor',sourceUrl:'https://www.rfc-editor.org/rfc/rfc9110'};for(const [key,value] of Object.entries(values))d.querySelector(`[name="${key}"]`).value=value;d.querySelector('form').requestSubmit();assert(!document.querySelector('#standard-reference-register'),'Declaration not closed');const row=store.listReferenceRecords().find(r=>r.designation==='RFC 9110');assert(row,'Reference missing from persistence');assert(g.records.length===3,'Other rows hidden after declaration');assert(g.getSelection().includes(row.standardId),'Created row not selected');assert(g.getCellEditable(g.get(row.standardId,true),0)===null,'Native reference is editable');assert(document.querySelector('#standard-references-panel input[type=search]').value==='','Search not reset');return {id:row.standardId,records:g.records.length};});
+  }
+  check('real W2UI sorting with missing historical fields',()=>{const fields=g.columns.filter(c=>c.sortable).map(c=>c.field);for(const field of fields){g.sort(field,'asc');g.sort(field,'desc');assert(g.records.length===(window.__radarApplicationProfile.viewer?2:3),'Rows lost on sort '+field);}return {fields,directions:2,records:g.records.length};});
+  check('origin filter preserves catalog',()=>{f.value='legacy';f.dispatchEvent(new Event('change'));assert(g.records.length===2,'Legacy filter');f.value='all';f.dispatchEvent(new Event('change'));assert(g.records.length===(window.__radarApplicationProfile.viewer?2:3),'All filter');return {catalog:store.listReferenceRecords().length,grid:g.records.length};});
+  await i18next.changeLanguage('en');
+  check('English UI and historical metadata',()=>{assert(f.options[0].textContent==='All origins','English filter');assert(f.getAttribute('aria-label')==='Origin','English accessible label');assert(g.columns.find(c=>c.field==='issuer').text==='Issuer','English column');assert(document.querySelector('#standard-references-panel input[type=search]').placeholder.includes('issuer'),'English search');assert(g.records.some(r=>r.name==='Historical reference'),'Metadata changed');if(!window.__radarApplicationProfile.viewer){assert(document.querySelector('[data-catalog-mode="references"]').textContent==='Catalog references','English tab');document.querySelector('[data-native-declare]').click();const d=document.querySelector('#standard-reference-register');assert(d.textContent.includes('Declare'),'English dialog');d.querySelector('[name="name"]').value='Retain me';}return {language:i18next.language};});
+  await i18next.changeLanguage('fr');
+  check('French UI restored without losing form data',()=>{assert(f.options[0].textContent==='Toutes les provenances','French filter');assert(document.querySelector('#standard-references-panel input[type=search]').placeholder.includes('organisme'),'French search');assert(g.columns.find(c=>c.field==='issuer').text==='Organisme','French column');if(!window.__radarApplicationProfile.viewer){const d=document.querySelector('#standard-reference-register');assert(d.textContent.includes('Déclarer'),'French dialog');assert(d.querySelector('[name="name"]').value==='Retain me','Saisie perdue');window.__radarStandardRegistry.close();}return {language:i18next.language};});
+  check('profile controls',()=>{const creator=!window.__radarApplicationProfile.viewer;assert(!!document.querySelector('[data-native-declare]')===creator,'Declaration role');if(creator){assert(document.querySelector('[data-iso-translation=advancedSearch]').style.display==='none','ISO advanced search visible in native view');assert(document.querySelector('[data-iso-more-filters]').style.display==='none','ISO filters visible in native view');assert(document.querySelectorAll('[data-s14-z-manage]').length===1,'Sources control not unique');}else assert(!document.querySelector('[data-s14-z-manage]'),'Viewer sources control');return {creator};});
+  check('no runtime errors',()=>{assert(!errors.length,errors.join('; '));return errors;});report.ok=true;
+ }catch(e){report.errors.push(e.stack||e.message);}finally{document.getElementById('result').textContent=JSON.stringify(report);document.body.dataset.finished='true';}
+})();
+</script></body></html>

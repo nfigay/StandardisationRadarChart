@@ -9,7 +9,8 @@
 - Commit de release : `894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55` ; 603 tests réussis, 0 échec.
 - Pages : `d24d7ef448be374528c725dbcb6845175aebda03` ; [portail public](https://nfigay.github.io/StandardisationRadarChart/distributions.html).
 - Publication distante réussie, artefacts vérifiés ; recette navigateur des distributions publiques encore à enregistrer.
-- Prochaine priorité : enrichissements métier (standards, sources, création et consultation des radars). Aucun nouveau lot numéroté imposé.
+- Baseline documentaire S15 : `2695a6ef64cf338129f9ce0eb4f163dd495db1bf`.
+- Candidat métier **S15-A** : [architecture et contrat](../architecture/88-S15-A-REFERENCES-SOURCES.md), [validation et recette](../evidence/11-S15-A-CANDIDATE-VALIDATION.md). Références ISO/non-ISO, sources et création de blips ; intégration locale et qualification à confirmer, aucune publication S15.
 - Workspace persistant, convergence SPM, composition physique avancée et prévisualisation autonome sans téléchargement reportés.
 
 Lire le HEAD réel et l'état de travail avant modification. Le tag publié reste immuable ; main évolue indépendamment. Les états antérieurs ci-dessous sont historiques, non des instructions courantes.

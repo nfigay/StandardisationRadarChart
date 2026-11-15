@@ -41,6 +41,8 @@ test('server-side cursor predicate and tree projection share AST',()=>{
  assert.match(tree,/after:cursor,search:query,advancedQuery,icsFilter/);
  assert.match(panel,/advancedQuery:advancedCurrent\(\)/);
  assert.match(panel,/advancedRevision/);
- assert.match(panel,/advancedButton\.textContent='Recherche avancée…'/);
+ assert.match(panel,/advancedButton\.textContent=tr\('advancedSearch'\)/);
+ assert.match(panel,/advancedSearch:'Recherche avancée…'/);
+ assert.match(panel,/advancedSearch:'Advanced search…'/);
  assert.doesNotMatch(panel,/^import\s/m);
 });

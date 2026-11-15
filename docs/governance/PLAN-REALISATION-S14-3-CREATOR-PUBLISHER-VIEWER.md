@@ -539,3 +539,8 @@ n'est pas considérée comme réalisée.
 
 Finaliser la consultation ISO dans la prévisualisation autonome et rendre explicites les configurations de livraison à partir du registre existant. Candidat R2 : comparaison de SHA-256 du Viewer, comparaison des métadonnées historiques, motif optionnel, prévisualisation HTML téléchargée (H1), qualification navigateur et suite complète 602 attendue. Puis préparer la release GitHub/Pages sur acceptation explicite. Priorité suivante : fonctionnalités métier Radar Chart (standards/sources, blips, consultation). Le Workspace persistant et la convergence SPM sont reportés ; aucun numéro de lot futur réservé. Voir architecture 86-R2 et preuve 08.
 Actualisation A8.6-R2-H1 : baseline R2 validée 602/602 sur Mac, navigation blob:null en échec navigateur (URL relative et WebCrypto). Correctif : téléchargement du HTML de prévisualisation puis ouverture locale, contrôles d’intégrité inchangés. Recette navigateur encore requise. Workspace reporté.
+
+
+## S15-A — reprise métier depuis A8.6-DOC
+
+La release publique A8.6 est maintenue (603 tests de release, preuve 10). Le candidat S15-A reprend les références natives, la déclaration locale, les sources ISO et le moteur de création existants : parcours commun, contrôle des doublons déclaratifs, fiches natives FR/EN et projection inchangée. Voir [architecture et contrat](../architecture/88-S15-A-REFERENCES-SOURCES.md) et [preuve/recette](../evidence/11-S15-A-CANDIDATE-VALIDATION.md). Candidat non publié ; qualification Mac et navigateur requise. DEC-009 demeure ouverte, sources non-ISO externes et édition/suppression de notices à instruire ; Workspace, SPM et prévisualisation avancée restent reportés.
