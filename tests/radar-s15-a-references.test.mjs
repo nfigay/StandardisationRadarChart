@@ -8,7 +8,7 @@ const source = name => readFileSync(new URL('../js/'+name+'.js', import.meta.url
 const plain = value => JSON.parse(JSON.stringify(value));
 const modules = ['radar-application-profile','radar-publication-model','radar-publication-projection',
   'radar-catalog-persistence','radar-standard-registry','radar-catalog-creation',
-  'radar-catalog-create-form','radar-standards-panel','radar-iso-toolbar'];
+  'radar-catalog-create-form','radar-standard-sources','radar-standard-source-dialog','radar-standards-panel','radar-iso-toolbar'];
 const manualFields = {name:'Example protocol',issuer:'IETF',designation:'RFC 9999',editionDesignation:'1',sourceName:'Example source',sourceUrl:'https://internal.example/reference'};
 const isoItem = {id:'62085',type:'deliverables',generation:'g1',reference:'ISO 9001:2015',title:'Quality management',titleI18n:{en:'Quality management'},scopeI18n:{en:'Requirements'},edition:5,icsCodes:['03.120.10'],ownerCommittee:'ISO/TC 176'};
 const revision = (revisionId,status,radarId='rad') => ({schemaVersion:'1.0.0',revisionId,radarId,status,ownerOrganizationId:'o',portfolioId:'p',title:radarId,version:'1.0.0',blips:[]});
@@ -59,7 +59,7 @@ function environment({viewer=false,published=false,initial=null,activeGroup='g1'
     __radarCatalogAdapter:{getRevision:g=>model.radarRevisions[Number(String(g).slice(1))]},
     __radarIsoWindowed:{async current(){reads.iso++;return {generation:'g1',summary:{release:'2026-11-09',datasets:{deliverables:{count:1}}}};},async page(){reads.iso++;return {records:[],next:null};},async get(){reads.iso++;return plain(isoItem);}},
     fetch:async()=>{reads.fetch++;return {ok:false};},setTimeout,clearTimeout};
-  const ctx=createContext({window:root,URL,console,setTimeout,clearTimeout});
+  const ctx=createContext({window:root,URL,console,setTimeout,clearTimeout,AbortSignal,TextDecoder});
   for(const name of modules)runInContext(source(name),ctx,{filename:name+'.js'});
   const store=root.__radarCatalogPersistence,registry=root.__radarStandardRegistry,panel=root.__radarStandardsPanel;
   function open(data){model=data;store.remember(data,{revisions:data.radarRevisions.map((r,i)=>({group:'g'+i,revisionId:r.revisionId}))});}
@@ -167,3 +167,18 @@ test('S15-A reuses a single ISO sources manager and returns to native references
   assert.equal(x.query('[data-iso-translation="advancedSearch"]').textContent,'Advanced search…');
   x.query('[data-catalog-mode="rss"]').click();assert.equal(x.query('[data-iso-translation="advancedSearch"]').style.display,'');
  });
+
+test('S15-B Creator source dialog, dated W3C selection, i18n and existing blip engine',async()=>{
+  const x=environment();await x.initialize();const base='https://api.w3.org/specifications',stamp='2026-11-15T00:00:00.000Z';
+  const api=x.root.__radarStandardSources,link=api.w3cLink({href:base+'/json-ld11',title:'JSON-LD 1.1'}),version=api.w3cRecord({uri:'https://www.w3.org/TR/2020/REC-json-ld11-20200716/',date:'2020-07-16',title:'JSON-LD 1.1',status:'Recommendation'},'json-ld11');
+  x.root.fetch=async url=>new Response(JSON.stringify({schemaVersion:1,sourceId:'w3c',acquiredAt:stamp,...(url.endsWith('w3c-json-ld11.json')?{shortname:'json-ld11',payload:[version]}:{payload:[link]})}));
+  x.query('[data-standard-sources]').click();const d=x.query('#standard-source-dialog'),sel=d.querySelector('[data-source-picker]');sel.value='w3c';sel.emit('change');d.querySelector('[data-source-load]').click();
+  await new Promise(r=>setImmediate(r));d.querySelector('[data-source-result="json-ld11"]').click();await new Promise(r=>setImmediate(r));
+  d.querySelector('[data-source-result="json-ld11:20200716"]').click();assert.ok(d.querySelector('[data-source-integrate]'));
+  x.root.i18next.switch('en');assert.match(d.textContent,/Standardization sources/);assert.equal(d.querySelector('[data-source-integrate]').textContent,'Add to catalog');
+  d.querySelector('[data-source-integrate]').click();assert.equal(x.root.document.getElementById('standard-source-dialog'),null);const id='w3c-tr:json-ld11:20200716';assert.ok(ids(x.grid).includes(id));assert.equal(x.grid.selection,id);
+  x.query('[data-iso-translation="add"]').click();const form=x.query('#catalog-create-dialog');assert.equal(form.querySelectorAll('select').find(n=>n.name==='standardId').value,id);
+  form.querySelectorAll('input').find(n=>n.name==='label').value='W3C blip';form.querySelectorAll('select').find(n=>n.name==='ring').value='Adopted';form.querySelectorAll('select').find(n=>n.name==='quadrant').value='Available';form.querySelector('form').emit('submit');
+  const data=x.store.build(x.graph);assert.equal(data.radarRevisions[1].blips[0].standardId,id);assert.equal(data.radarRevisions[0].blips.length,0);
+  x.query('[data-standard-sources]').click();x.panel.resetWorkspace();x.open(catalog());assert.equal(x.root.document.getElementById('standard-source-dialog'),null);
+});

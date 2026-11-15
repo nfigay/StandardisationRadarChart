@@ -15,3 +15,6 @@
 
 # Temporary logs
 *.log
+
+# Optional documentary source snapshots (never published by default)
+/standard-source-cache/

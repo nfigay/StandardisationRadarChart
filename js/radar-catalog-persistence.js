@@ -94,7 +94,8 @@
         designation:r.designation||null,editionDesignation:r.editionDesignation||null,
         sourceName:r.sourceName||null,sourceUrl:r.sourceUrl||null,
         verification:r.verification||'unknown',origin:r.origin||'legacy',
-        ...(s.extensions?.isoDocument?{isoDocument:clone(s.extensions.isoDocument)}:{})};
+        ...(s.extensions?.isoDocument?{isoDocument:clone(s.extensions.isoDocument)}:{}),
+        ...(s.extensions?.externalDocument?{externalDocument:clone(s.extensions.externalDocument)}:{})};
     });
   }
   // A8.2 lot 2: explicit, portable snapshot of an installed ISO deliverable.
@@ -165,6 +166,46 @@
     owner.source.standards=standards.concat([standard]);
     return {action:'imported',standardId:standardId,reference:document.reference};
   }
+  // S15-B: explicit integration of one selected publication from the active source generation.
+  // The caller supplies a source identity, never arbitrary verified metadata.
+  function externalCollision(record, declaration) {
+    var r=record.extensions?.referenceDeclaration||{}, doc=record.extensions?.externalDocument;
+    var a=isoDesignation(r.designation||(!record.extensions?.referenceDeclaration?record.name:'')), b=isoDesignation(declaration.designation);
+    if (!a||!b)return false;
+    var rfc=/^RFC\s*0*([1-9]\d*)$/;
+    var ma=rfc.exec(a),mb=rfc.exec(b);
+    if(ma&&mb&&ma[1]===mb[1]&&(doc?.sourceId==='rfc-editor'||declaration.origin==='rfc-editor'))return true;
+    if(isoDesignation(r.issuer)!==isoDesignation(declaration.issuer)||a!==b)return false;
+    if(doc?.sourceId==='w3c'||declaration.origin==='w3c'){
+      var left=isoDesignation(r.editionDesignation),right=isoDesignation(declaration.editionDesignation);
+      // Unknown/ambiguous editions require reconciliation; explicit different dates may coexist.
+      return !left||!right||left===right||(!/^\d{4}-\d\d-\d\d$/.test(left)||!/^\d{4}-\d\d-\d\d$/.test(right));
+    }
+    return false;
+  }
+  function importSourceReference(sourceId,key,generation) {
+    if(root.__radarApplicationProfile?.viewer)fail('Viewer cannot import source references');
+    root.__radarApplicationProfile?.require('catalog.declareReference');
+    if(imports.length!==1)fail('exactly one imported catalog required');
+    if(!['rfc-editor','w3c'].includes(sourceId))fail('unsupported source reference');
+    var provider=root.__radarStandardSources;
+    if(!provider?.selected)fail('standard source provider unavailable');
+    var doc=provider.selected(sourceId,key,generation);
+    if(doc.schemaVersion!==1||doc.sourceId!==sourceId||doc.key!==key||!doc.title||!doc.designation||!doc.issuer||!doc.edition||!doc.url)fail('invalid source publication');
+    var source=imports[0].source,standards=source.standards;
+    if(!Array.isArray(standards))fail('missing standards array');
+    var matches=standards.filter(s=>s.extensions?.externalDocument?.sourceId===sourceId&&s.extensions.externalDocument.key===key);
+    if(matches.length>1)fail('ambiguous external source identity');
+    if(matches.length===1)return {action:'existing',standardId:matches[0].standardId,reference:matches[0].extensions.referenceDeclaration.designation};
+    var id=sourceId==='rfc-editor'?'rfc:'+key:'w3c-tr:'+key;
+    if(standards.some(s=>s.standardId===id))fail('external standardId collision');
+    var declaration={issuer:doc.issuer,designation:doc.designation,editionDesignation:doc.edition,
+      sourceName:sourceId==='rfc-editor'?'RFC Editor':'W3C API',sourceUrl:doc.url,origin:sourceId,verification:'source-verified'};
+    if(standards.some(s=>externalCollision(s,declaration)))fail('source reference conflicts with an existing declaration; reconcile before importing');
+    var record={standardId:id,name:doc.title,extensions:{referenceDeclaration:declaration,externalDocument:clone(doc)}};
+    source.standards=standards.concat([record]);
+    return {action:'imported',standardId:id,reference:doc.designation};
+  }
   // A locally declared record is NOT a verified SDO publication.
   // No revision/blip is created or modified by this operation.
   function declareLocalReference(standard) {
@@ -184,7 +225,7 @@
     // Exact declared identity only; never infer equivalence from names or source labels.
     if(source.standards.some(function(s){
       var d=s.extensions?.referenceDeclaration;
-      return d && isoDesignation(d.issuer)===isoDesignation(r.issuer) &&
+      return externalCollision(s,r) || d && isoDesignation(d.issuer)===isoDesignation(r.issuer) &&
         isoDesignation(d.designation)===isoDesignation(r.designation) &&
         (isoDesignation(d.editionDesignation)===isoDesignation(r.editionDesignation) || !!s.extensions?.isoDocument);
     })) fail('reference already declared; select the existing reference');
@@ -624,7 +665,7 @@
   root.__radarCatalogPersistence=Object.freeze({
     generateStandalonePublication:generateStandalonePublication,preparePublicationProjection:preparePublicationProjection,downloadPublicationProjection:downloadPublicationProjection,
     publicationState:publicationState,createPublicationDefinition:createPublicationDefinition,updatePublicationDefinition:updatePublicationDefinition,removePublicationDefinition:removePublicationDefinition,resolvePublicationDefinition:resolvePublicationDefinition,preparePublicationRelease:preparePublicationRelease,recordPublicationRelease:recordPublicationRelease,assertCanRemoveGroups:assertCanRemoveGroups,
-    isDirty:isDirty,markNew:markNew,closeCatalog:closeCatalog,importIsoReference:importIsoReference,renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
+    isDirty:isDirty,markNew:markNew,closeCatalog:closeCatalog,importIsoReference:importIsoReference,importSourceReference:importSourceReference,renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
     registerDraft:registerDraft,removeGroup:removeGroup, ownsRevision:ownsRevision, transitionRevision:transitionRevision,
     validateCreation:validateCreation,commitCreation:commitCreation,
     listStandardsForDraft:listStandardsForDraft, listReferenceRecords:listReferenceRecords, declareLocalReference:declareLocalReference, status:function(){return {importedCatalogs:imports.length,

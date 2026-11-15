@@ -8,7 +8,7 @@
   var dict={
   "fr": {
     "title": "Références normatives",
-    "caption": "Registre du catalogue JSON local — aucune connexion ni vérification automatique auprès des SDO.",
+    "caption": "Registre du catalogue JSON — cette déclaration manuelle ne vérifie pas les informations auprès des organismes.",
     "search": "Rechercher : désignation, organisme, titre…",
     "searchLabel": "Rechercher une référence",
     "none": "Sélection : aucune",
@@ -39,7 +39,7 @@
   },
   "en": {
     "title": "Standard references",
-    "caption": "Local JSON catalog register — no connection or automatic verification with SDOs.",
+    "caption": "JSON catalog register — this manual declaration does not verify information with standards organizations.",
     "search": "Search: designation, issuer, title…",
     "searchLabel": "Search references",
     "none": "Selection: none",

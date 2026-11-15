@@ -43,8 +43,10 @@
    if(instance?.t){const value=instance.t('isoPanel.'+key,{...options,defaultValue:fallback});if(value&&value!=='isoPanel.'+key)return value;}
    return fallback.replace(/\{\{(\w+)\}\}/g,(_,k)=>String(options?.[k]??''));
  }
- Object.assign(isoStrings.fr,{advancedSearch:'Recherche avancée…',advancedTitle:'Combiner des critères ET / OU / NON avec des parenthèses',moreFilters:'Filtres et tri',declareLocal:'Déclarer une référence',declaredFeedback:'Référence locale enregistrée (non vérifiée). Vous pouvez l’ajouter au brouillon actif.',nativeAll:'Toutes les provenances',nativeTitle:'Fiche de référence',nativeIssuer:'Organisme',nativeSource:'Source déclarée',nativeUrl:'URL source',nativeOrigin:'Origine',nativeId:'Identifiant',nativeUnknown:'Inconnu',nativeManual:'Déclaration locale',nativeIso:'ISO Open Data',nativeLegacy:'Historique',nativeUnverified:'Non vérifiée',nativeVerified:'Issue de la source'});
- Object.assign(isoStrings.en,{advancedSearch:'Advanced search…',advancedTitle:'Combine AND / OR / NOT criteria with parentheses',moreFilters:'Filters and sorting',declareLocal:'Declare a reference',declaredFeedback:'Local reference saved (unverified). You can add it to the active draft.',nativeAll:'All origins',nativeTitle:'Reference details',nativeIssuer:'Issuer',nativeSource:'Declared source',nativeUrl:'Source URL',nativeOrigin:'Origin',nativeId:'Identifier',nativeUnknown:'Unknown',nativeManual:'Local declaration',nativeIso:'ISO Open Data',nativeLegacy:'Legacy',nativeUnverified:'Unverified',nativeVerified:'Source verified'});
+ Object.assign(isoStrings.fr,{advancedSearch:'Recherche avancée…',advancedTitle:'Combiner des critères ET / OU / NON avec des parenthèses',moreFilters:'Filtres et tri',declareLocal:'Déclarer une référence',declaredFeedback:'Référence locale enregistrée (non vérifiée). Vous pouvez l’ajouter au brouillon actif.',nativeAll:'Toutes les provenances',nativeTitle:'Fiche de référence',nativeIssuer:'Organisme',nativeSource:'Source documentaire',nativeUrl:'URL source',nativeOrigin:'Origine',nativeId:'Identifiant',nativeUnknown:'Inconnu',nativeManual:'Déclaration locale',nativeIso:'ISO Open Data',nativeLegacy:'Historique',nativeUnverified:'Non vérifiée',nativeVerified:'Issue de la source'});
+ Object.assign(isoStrings.en,{advancedSearch:'Advanced search…',advancedTitle:'Combine AND / OR / NOT criteria with parentheses',moreFilters:'Filters and sorting',declareLocal:'Declare a reference',declaredFeedback:'Local reference saved (unverified). You can add it to the active draft.',nativeAll:'All origins',nativeTitle:'Reference details',nativeIssuer:'Issuer',nativeSource:'Documentary source',nativeUrl:'Source URL',nativeOrigin:'Origin',nativeId:'Identifier',nativeUnknown:'Unknown',nativeManual:'Local declaration',nativeIso:'ISO Open Data',nativeLegacy:'Legacy',nativeUnverified:'Unverified',nativeVerified:'Source verified'});
+ Object.assign(isoStrings.fr,{standardSources:'Sources de standardisation',nativeRfc:'RFC Editor',nativeW3c:'W3C API',nativeDocumentStatus:'Statut documentaire',nativeAcquired:'Acquisition',externalAdded:'Référence intégrée au catalogue.',externalExisting:'Référence déjà présente ; notice sélectionnée.'});
+ Object.assign(isoStrings.en,{standardSources:'Standardization sources',nativeRfc:'RFC Editor',nativeW3c:'W3C API',nativeDocumentStatus:'Document status',nativeAcquired:'Acquired',externalAdded:'Reference added to catalog.',externalExisting:'Reference already present; record selected.'});
  registerI18n();
  let activeDetailRecord=null,activeDetailCleanup=null;
  let localeSubscribed=false;
@@ -418,7 +420,8 @@
    field('sourceData','Toutes les métadonnées ISO','textarea','grpRaw',1,440);
    if(local){
      fields.length=0;
-     recordData={nativeId:String(local.standardId||''),reference:String(local.designation||''),colTitle:String(local.name||''),nativeIssuer:String(local.issuer||''),edition:String(local.editionDesignation||''),nativeSource:String(local.sourceName||''),nativeUrl:String(local.sourceUrl||''),nativeOrigin:tr(({manual:'nativeManual','iso-open-data':'nativeIso',legacy:'nativeLegacy'})[local.origin]||'nativeUnknown'),colProvenance:tr(({unverified:'nativeUnverified','source-verified':'nativeVerified'})[local.verification]||'nativeUnknown')};
+     recordData={nativeId:String(local.standardId||''),reference:String(local.designation||''),colTitle:String(local.name||''),nativeIssuer:String(local.issuer||''),edition:String(local.editionDesignation||''),nativeSource:String(local.sourceName||''),nativeUrl:String(local.sourceUrl||''),nativeOrigin:tr(({manual:'nativeManual','iso-open-data':'nativeIso',legacy:'nativeLegacy','rfc-editor':'nativeRfc',w3c:'nativeW3c'})[local.origin]||'nativeUnknown'),colProvenance:tr(({unverified:'nativeUnverified','source-verified':'nativeVerified'})[local.verification]||'nativeUnknown')};
+     if(local.externalDocument){recordData.nativeDocumentStatus=String(local.externalDocument.status||'');recordData.nativeAcquired=String(local.externalDocument.acquiredAt||'');}
      for(const key of Object.keys(recordData))field(key,key,key==='nativeUrl'?'textarea':'text','',0,60);
    }
    const name='isoStandardReadOnlyForm';
@@ -549,7 +552,7 @@
        const doc=r.isoDocument;
        return !query||norm([r.standardId,r.name,r.issuer,r.designation,r.editionDesignation,r.sourceName,r.sourceUrl,r.origin,r.verification,
          doc?.title,...Object.values(doc?.titleI18n||{}),doc?.scope,...Object.values(doc?.scopeI18n||{}),
-         ...(Array.isArray(doc?.icsCodes)?doc.icsCodes:[]),doc?.ownerCommittee,doc?.currentStage,doc?.release].filter(Boolean).join(' ')).includes(query);
+         ...(Array.isArray(doc?.icsCodes)?doc.icsCodes:[]),doc?.ownerCommittee,doc?.currentStage,doc?.release,r.externalDocument?.status,r.externalDocument?.stream].filter(Boolean).join(' ')).includes(query);
      });
    }
    try{return root.__radarStandardRegistry?.records(term,1000)||[];}
@@ -561,6 +564,7 @@
    const isoFilters=mount?.querySelector('[data-iso-more-filters]');if(isoFilters)isoFilters.style.display=mode==='references'?'none':'';
    if(nativeOriginFilter)nativeOriginFilter.style.display=mode==='references'?'':'none';
    const declareButton=mount?.querySelector('[data-native-declare]');if(declareButton)declareButton.style.display=mode==='references'?'':'none';
+   const sourcesButton=mount?.querySelector('[data-standard-sources]');if(sourcesButton){sourcesButton.style.display=mode==='references'?'':'none';sourcesButton.disabled=root.__radarCatalogPersistence?.status?.().importedCatalogs!==1||root.__radarApplicationProfile?.allows('catalog.declareReference')!==true;}
    for(const btn of mount?.querySelectorAll('[data-catalog-mode]')||[]){
      const active=btn.dataset.catalogMode===mode;
      btn.setAttribute('aria-pressed',String(active));btn.style.fontWeight=active?'bold':'normal';
@@ -1071,6 +1075,16 @@
    const rssReload=d.createElement('button');rssReload.type='button';rssReload.textContent=tr('rssSync');rssReload.dataset.isoTranslation='rssSync';rssReload.addEventListener('click',()=>loadRssCache(true));bar.appendChild(rssReload);
    const add=d.createElement('button');add.type='button';add.textContent=tr('add');add.dataset.isoTranslation='add';bar.appendChild(add);
    if(!nativeOnly){
+     // Optional documentary sources are consulted only on explicit user action.
+     const sourceButton=d.createElement('button');sourceButton.type='button';sourceButton.style.display='none';sourceButton.dataset.standardSources='true';sourceButton.dataset.isoTranslation='standardSources';sourceButton.textContent=tr('standardSources');
+     sourceButton.addEventListener('click',()=>{
+       root.__radarStandardSourceDialog?.open({openIso(){mount.querySelector('[data-catalog-mode="iso-list"]')?.click();},openIsoAdmin:root.__radarApplicationProfile?.allows('catalog.admin')?()=>root.__radarS14Z?.open?.():null,onIntegrated(result){
+         mode='references';nativeOriginFilter.value='all';search.value='';refresh();
+         const index=grid.records.findIndex(r=>r.standardId===result.standardId);
+         if(index>=0){grid.select?.(result.standardId);selected=result.standardId;grid.scrollIntoView?.(index,null,true);}
+         if(status)status.textContent=tr(result.action==='existing'?'externalExisting':'externalAdded');
+       }});
+     });bar.appendChild(sourceButton);
      const declareButton=d.createElement('button');declareButton.type='button';declareButton.style.display='none';declareButton.dataset.nativeDeclare='true';declareButton.dataset.isoTranslation='declareLocal';declareButton.textContent=tr('declareLocal');
      declareButton.addEventListener('click',()=>{
        try{root.__radarStandardRegistry.open(graphProvider?.(),{declaration:true,onDeclared(result){
@@ -1083,7 +1097,7 @@
      });bar.appendChild(declareButton);
    }
    nativeOriginFilter=d.createElement('select');nativeOriginFilter.style.cssText='box-sizing:border-box;width:190px;min-width:0;max-width:100%;height:30px;min-height:30px;max-height:30px;margin:0;padding:2px 5px;flex:0 0 auto;align-self:center';nativeOriginFilter.size=1;nativeOriginFilter.style.display=mode==='references'?'':'none';nativeOriginFilter.setAttribute('aria-label',tr('nativeOrigin'));nativeOriginFilter.dataset.nativeOriginFilter='true';
-   for(const [value,key] of [['all','nativeAll'],['iso-open-data','nativeIso'],['manual','nativeManual'],['legacy','nativeLegacy']]){const option=d.createElement('option');option.value=value;option.dataset.isoTranslation=key;option.textContent=tr(key);nativeOriginFilter.appendChild(option);}
+   for(const [value,key] of [['all','nativeAll'],['iso-open-data','nativeIso'],['manual','nativeManual'],['rfc-editor','nativeRfc'],['w3c','nativeW3c'],['legacy','nativeLegacy']]){const option=d.createElement('option');option.value=value;option.dataset.isoTranslation=key;option.textContent=tr(key);nativeOriginFilter.appendChild(option);}
    nativeOriginFilter.value='all';nativeOriginFilter.addEventListener('change',refresh);bar.insertBefore(nativeOriginFilter,advancedButton);
    // The selected tab determines the ISO dataset; no redundant oversized select.
    const importButton=d.createElement('button');importButton.type='button';importButton.textContent=tr('import');importButton.dataset.isoTranslation='import';importButton.dataset.isoImport='true';
@@ -1204,6 +1218,7 @@
  }
  function resetWorkspace(){
    root.__radarStandardRegistry?.close?.();
+   root.__radarStandardSourceDialog?.close?.();
    activeDetailCleanup?.();
    activeDetailRecord=null;
    selected=null;windowToken++;windowHistory=[null];windowPosition=0;windowBasePosition=0;windowNext=null;

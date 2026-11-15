@@ -10,7 +10,8 @@
 - Pages : `d24d7ef448be374528c725dbcb6845175aebda03` ; [portail public](https://nfigay.github.io/StandardisationRadarChart/distributions.html).
 - Publication distante réussie, artefacts vérifiés ; recette navigateur des distributions publiques encore à enregistrer.
 - Baseline documentaire S15 : `2695a6ef64cf338129f9ce0eb4f163dd495db1bf`.
-- Candidat métier **S15-A** : [architecture et contrat](../architecture/88-S15-A-REFERENCES-SOURCES.md), [validation et recette](../evidence/11-S15-A-CANDIDATE-VALIDATION.md). Références ISO/non-ISO, sources et création de blips ; intégration locale et qualification à confirmer, aucune publication S15.
+- Lot métier **S15-A/R1** consolidé sur `feature/s15-standards-sources` : `af248ca643c14b0b2391370c0f9dce305df2d47e`. [architecture et contrat](../architecture/88-S15-A-REFERENCES-SOURCES.md), [validation et recette](../evidence/11-S15-A-CANDIDATE-VALIDATION.md). Références ISO/non-ISO, sources et création de blips ; 615 tests Node et 15 contrôles Chrome réussis, aucune publication S15.
+- Candidat **S15-B** : [sources externes et contrats](../architecture/89-S15-B-STANDARD-SOURCES.md), [qualification](../evidence/12-S15-B-CANDIDATE-VALIDATION.md). RFC Editor, W3C, ISO réutilisé ; qualification Mac à confirmer.
 - Workspace persistant, convergence SPM, composition physique avancée et prévisualisation autonome sans téléchargement reportés.
 
 Lire le HEAD réel et l'état de travail avant modification. Le tag publié reste immuable ; main évolue indépendamment. Les états antérieurs ci-dessous sont historiques, non des instructions courantes.

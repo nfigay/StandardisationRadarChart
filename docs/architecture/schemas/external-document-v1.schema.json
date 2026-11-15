@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "S15-B external documentary reference v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "sourceId", "key", "issuer", "designation", "title", "edition", "status", "stream", "url", "acquiredAt"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "sourceId": {"enum": ["rfc-editor", "w3c"]},
+    "key": {"type": "string", "minLength": 1},
+    "issuer": {"type": "string", "minLength": 1},
+    "designation": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "edition": {"type": "string", "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$"},
+    "status": {"type": ["string", "null"]},
+    "stream": {"type": ["string", "null"]},
+    "url": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "acquiredAt": {"type": "string", "format": "date-time"}
+  },
+  "allOf": [
+    {"if": {"properties": {"sourceId": {"const": "rfc-editor"}}}, "then": {"properties": {"key": {"pattern": "^[1-9][0-9]{0,5}$"}, "url": {"pattern": "^https://www\\.rfc-editor\\.org/rfc/rfc[1-9][0-9]{0,5}$"}, "edition": {"pattern": "^\\d{4}(-\\d{2})?$"}}}},
+    {"if": {"properties": {"sourceId": {"const": "w3c"}}}, "then": {"properties": {"key": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]{0,149}:[0-9]{8}$"}, "issuer": {"const": "W3C"}, "edition": {"format": "date", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"}, "url": {"pattern": "^https://www\\.w3\\.org/TR/[0-9]{4}/"}, "status": {"type": "string", "minLength": 1}, "stream": {"type": "null"}}}}
+  ]
+}
