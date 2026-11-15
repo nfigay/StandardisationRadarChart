@@ -64,3 +64,7 @@ Source A8.6 `c73653c` : 593 tests validés dans le rapport local. Correctif R1 :
 
 Candidat à qualifier selon preuve 08 : 31 tests Publisher, 597 tests exécutables sans Vite, 602 attendus sur installation complète. Refaire le build Pages/standalone et la recette ISO du HTML de prévisualisation téléchargé et ouvert localement (H1), comparaison historique, confirmation de répétition, réouverture JSON et retéléchargement sans mutation. Ne pas annoncer la correction ISO acquise avant la recette. Aucun push automatique.
 Actualisation A8.6-R2-H1 : baseline R2 validée 602/602 sur Mac, navigation blob:null en échec navigateur (URL relative et WebCrypto). Correctif : téléchargement du HTML de prévisualisation puis ouverture locale, contrôles d’intégrité inchangés. Recette navigateur encore requise. Workspace reporté.
+
+### A8.6 finalisation
+
+H1 `9c3bc4f` : 602 tests, 11/11 contrôles Safari, zéro anomalie restante. Après simplification de la consultation HTML, exécuter la suite complète et la recette delta de la preuve 08 avant toute publication. Ne pas assimiler cette qualification à un push ou à une diffusion.

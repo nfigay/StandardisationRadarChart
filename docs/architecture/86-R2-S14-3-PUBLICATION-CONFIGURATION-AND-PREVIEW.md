@@ -21,3 +21,7 @@ En Creator autonome, le bouton prépare exactement le HTML composé pour le cand
 ## Report Workspace
 
 Décision utilisateur du 15 novembre : reporter Workspace persistant, stockage binaire et convergence SPM pour privilégier les évolutions métier et la release. SPM possède un projet ChatGPT dédié et son contrat de collaboration ; aucune modification de SPM n'est décidée ici. Les acquis analysés (baseline SPM `47e4c97551856e85bf35702ad96e4c15d9e80ccc`) concernent identité, snapshot, sauvegarde vérifiée, transitions et activation transactionnelle. La généralisation des ressources binaires reste à étudier. Le registre natif et les manifestes A8.6 devront rester réutilisables. Aucun nouveau format Workspace ni dépendance SPM introduits.
+
+## Finalisation A8.6 — clarification de la consultation
+
+H1 a été qualifié dans Safari en file:// (602 tests, 11 contrôles fonctionnels, commit `9c3bc4fa99aff37592661f5f4519d81d3f624052`). Le parcours de prévisualisation H1 et le téléchargement candidat étaient redondants. Le Creator autonome expose désormais une seule action « Consulter le Viewer candidat (HTML) » : téléchargement direct du même HTML, sans manifeste ni écriture du registre ; ouverture locale par l’utilisateur. Pas de navigation Blob. Le bouton de prévisualisation est réservé au Creator HTTP sans template embarqué (iframe existante). La livraison ZIP et ses garanties restent inchangées. Une vraie prévisualisation temporaire sans fichier local est reportée ; aucune modification de Workspace.

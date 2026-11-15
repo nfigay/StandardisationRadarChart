@@ -151,3 +151,7 @@ révisé. Ne clôture ni CPV-05/07/08/09/10/12 ni DEC-009/010.
 
 **ADOPTED-PRINCIPLE** : report du Workspace persistant et de la convergence SPM à un jalon ultérieur non numéroté ; priorité à la maturation métier et à la distribution. Le catalogue JSON reste la persistance métier. Les livraisons doivent être explicables à partir du registre historique ; une répétition à Viewer identique est signalée, le retéléchargement ne mute pas le registre. La génération ne vaut ni sauvegarde physique vérifiée ni diffusion. La navigation Blob R2 est rejetée après échec navigateur ; H1 télécharge le HTML de prévisualisation pour ouverture locale. Voir architecture 86-R2 et preuve 08.
 Actualisation A8.6-R2-H1 : baseline R2 validée 602/602 sur Mac, navigation blob:null en échec navigateur (URL relative et WebCrypto). Correctif : téléchargement du HTML de prévisualisation puis ouverture locale, contrôles d’intégrité inchangés. Recette navigateur encore requise. Workspace reporté.
+
+### A8.6 — consultation autonome et livraison distinctes
+
+Décision de finalisation : un seul téléchargement candidat HTML dans le Creator autonome, sans registre ni manifeste ; prévisualisation HTTP conservée ; livraison ZIP enregistrée distincte. H1 qualifié (602 tests et 11 contrôles). Prévisualisation autonome sans fichier à reprendre ultérieurement.

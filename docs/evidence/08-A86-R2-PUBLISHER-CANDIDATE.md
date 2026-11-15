@@ -21,3 +21,25 @@ Statut : candidat à qualifier, pas release publique. Workspace reporté. Voir a
 ## H1 — retour navigateur R2
 
 Commit R2 `4d74c6083eee02ffc9180e04b502394b16ae15f3` : utilisateur confirme 602/602, zéro échec, skip ou todo. Installation et build vérifiés. Recette Blob échouée : deux Invalid URL et WebCrypto SHA-256 unavailable sur blob:null. H1 remplace la navigation par le téléchargement du même HTML, ouvert ensuite en file://. Test VM adapté au contexte file:// et à l’attribut download ; aucun contournement cryptographique. Suite attendue inchangée 602. Recette réelle H1 obligatoire ; aucun push.
+
+## Qualification H1 — rapport utilisateur
+
+Commit `9c3bc4fa99aff37592661f5f4519d81d3f624052`, pilote `StandardizationRadarChart-Pilot-A86-R2-H1.LhljBe`, Safari, 602/602, zéro échec. Démarrage local file:// : contexte sécurisé, WebCrypto SHA-256, présentation publiée, aucun échec du diagnostic. Rapport A86-R2-H1-FINAL-FUNCTIONAL-RECIPE :
+
+- Fiche détaillée ISO consultable
+- Navigation entre les radars de la collection
+- Synchronisation des références avec le radar actif
+- Prévisualisation sans création de livraison
+- Création d’une livraison avec motif
+- Historique détaillé : révisions, commit, empreintes
+- Détection d’un Viewer identique
+- Annulation sans nouvelle livraison
+- Retéléchargement sans modification de l’historique
+- Modification de configuration détectée
+- Historique et motifs conservés après réouverture du JSON
+
+Aucun contrôle restant ni observation. H1 qualifié, non publié.
+
+## Finalisation — recette delta
+
+Dans le Creator autonome, vérifier un seul bouton « Consulter le Viewer candidat (HTML) », le téléchargement du HTML, ouverture file:// et détails ISO ; historique inchangé. Vérifier que « Créer une nouvelle livraison ZIP » reste distinct et fonctionnel. En HTTP le bouton « Prévisualiser dans le Viewer » demeure. Vérifier FR/EN. Le candidat final doit être reconstruit et testé avant diffusion ; aucune publication automatique.
