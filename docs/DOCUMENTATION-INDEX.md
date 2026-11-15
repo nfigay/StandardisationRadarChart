@@ -132,3 +132,9 @@ S15-A/R1 est consolidé localement (`af248ca643c14b0b2391370c0f9dce305df2d47e`) 
 | [requirements/A86-RECONCILIATION.md](requirements/A86-RECONCILIATION.md) | Référence courante / registre |
 | [requirements/README.md](requirements/README.md) | Référence courante / registre |
 | [requirements/requirements.csv](requirements/requirements.csv) | Référence courante / registre |
+
+## S15-D — Qualification intégrale
+
+- [Architecture de qualification](architecture/91-S15-D-END-TO-END-QUALIFICATION.md)
+- [Qualification finale](evidence/14-S15-D-FINAL-VALIDATION.md)
+- [Manifeste des preuves](evidence/s15-d/manifest.json)

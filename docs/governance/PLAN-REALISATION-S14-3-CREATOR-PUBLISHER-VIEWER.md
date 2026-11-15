@@ -552,3 +552,22 @@ Candidat : adaptateurs RFC Editor et W3C, intégration explicite des notices dat
 ## S15-C — cycle de vie protégé
 
 Candidat : inventaire conservateur des dépendances stockées et de session, suppression explicite sans cascade, comparaison et actualisation RFC/W3C et réconciliation exacte des notices inutilisées avec conservation de l’identifiant local. Révisions publiées et notices utilisées inchangées ; projection inchangée. Voir [architecture et contrats](../architecture/90-S15-C-REFERENCE-LIFECYCLE.md) et [qualification](../evidence/13-S15-C-CANDIDATE-VALIDATION.md). DEC-009/010 restent ouvertes. Qualification Mac à réaliser. S15-D : recette intégrale, distributions et préparation de release.
+
+## S15-D — Qualification intégrale
+
+15 novembre 2026 : scénario intégral S15 qualifié.
+
+Baseline fonctionnelle : 03474a66da02f57bcf5184b605b994ca5bc06c99.
+
+645/645 tests Node.js ; 53/53 contrôles navigateur
+de composants ; 60/60 contrôles finaux S15-D.
+
+Creator Web et autonome, Publisher, téléchargements
+HTML/ZIP et Viewer autonome qualifiés.
+
+Prochaine étape : préparation de la release A8.7,
+qualification de l’accès RFC/W3C en contexte public,
+portail, notes de release, reconstruction finale.
+
+A8.6 reste la release publique stable.
+DEC-009 et DEC-010 restent ouvertes.

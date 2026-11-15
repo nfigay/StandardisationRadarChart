@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "operation": "S15-D-QUALIFICATION-EVIDENCE",
+  "qualifiedCommit": "03474a66da02f57bcf5184b605b994ca5bc06c99",
+  "qualificationDate": "2026-11-15",
+  "complete": true,
+  "reports": {
+    "R2": {
+      "path": "docs/evidence/s15-d/r2.json",
+      "originalSha256": "b18dd56fe6e1e45d3be95e9dd7eaab4169d4f67420ee9004a27308a991061e7b",
+      "archivedSha256": "cf21265133fd1b337990c9f63a30aad99fecaaf4219e7f7a319a1fe2bb5af384",
+      "redaction": "absolute user home replaced by $HOME"
+    },
+    "R3": {
+      "path": "docs/evidence/s15-d/r3.json",
+      "originalSha256": "61092e74cf04465315420b5c980d647445110c32c9242f3b28cb80ebad409537",
+      "archivedSha256": "2d2de6e888a8af5c76490be699777614ddc089d1cde2f34ea9c3bdd5783e891c",
+      "redaction": "absolute user home replaced by $HOME"
+    },
+    "R4": {
+      "path": "docs/evidence/s15-d/r4.json",
+      "originalSha256": "97f3035d9253f618b46f904a98960e841eaeab791a20e96f76c5c8eee61a31fe",
+      "archivedSha256": "e0f2dcbf2093cf5348eab85d266b943c8f9d52c3efe838e0a4f500ae5aec843e",
+      "redaction": "absolute user home replaced by $HOME"
+    }
+  },
+  "scripts": {
+    "R2": {
+      "path": "tools/qualification/s15-d-r2.mjs",
+      "sha256": "09bc4c0c43445323cecc0d5ed2d02efd28f2fe80704430eb92683f652fc6a15e"
+    },
+    "R3": {
+      "path": "tools/qualification/s15-d-r3.mjs",
+      "sha256": "c6af7615d7824427d4c7021f00e207177f33c871f5f137e875e35667ed1fde5c"
+    },
+    "R4": {
+      "path": "tools/qualification/s15-d-r4.mjs",
+      "sha256": "964cae06deb7d97b361a40af363e4fc0a10c53d82a4a1994924422410c699e39"
+    }
+  },
+  "artifacts": {
+    "creator": {
+      "originalPath": "$HOME/Documents/S15-D-A87-28glRO/standalone/standardization-radar-creator.html",
+      "sha256": "b054288a48ce1d25d80ee02a0919f024715a857402723183f731799670d55e41",
+      "bytes": 41655574
+    },
+    "viewerTemplate": {
+      "originalPath": "$HOME/Documents/S15-D-A87-28glRO/standalone/standardization-radar-viewer.html",
+      "sha256": "d76911443334d5595f30c670f42ae2652cdd03253c04db065b8e4e2d09e77985",
+      "bytes": 8101841
+    },
+    "catalog": {
+      "originalPath": "$HOME/Documents/S15-D-A87-28glRO/catalogue-s15-d.json",
+      "sha256": "70fe3a6bc6d1a782e1f35c79cd5916c5af2212616e98a5bd17a76f7f5393718b",
+      "bytes": 16849
+    },
+    "candidate": {
+      "originalPath": "$HOME/Documents/S15-D-R3-IXGW9d/downloads/radar-viewer-candidate-a8ad9c4649f1.html",
+      "sha256": "c0846c8bad634c6fec54f6b0065177be382834880eadc6a3c1c7a3ca32109422",
+      "bytes": 8116025
+    },
+    "zip": {
+      "originalPath": "$HOME/Documents/S15-D-R3-IXGW9d/downloads/radar-publication-eff1ce85-0b4a-4512-986d-46a7cf561dd4.zip",
+      "sha256": "6d22436e8a9935ee2812ada5ee95db7843c0e9ca81a4145544ba51408e41c172",
+      "bytes": 3250996
+    }
+  },
+  "finalChecks": 60,
+  "inheritedChecks": 36,
+  "nodeTests": 645,
+  "componentBrowserChecks": 53,
+  "limitations": [
+    "Qualification of the documented scenario only",
+    "RFC and W3C official snapshots, not live Pages CORS",
+    "Historical pilot scripts are not a generic runner",
+    "Final A8.7 release commit must be rebuilt",
+    "Client runtime and legacy PLM not exhaustively tested"
+  ]
+}

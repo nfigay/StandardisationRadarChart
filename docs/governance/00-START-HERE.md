@@ -344,3 +344,22 @@ H1 `9c3bc4f` qualifié par 602 tests et 11 contrôles Safari. Unifier la consult
 ## A8.6 — qualification finale et préparation de publication (2026-11-15)
 
 Baseline applicative `f7939c362cd9343cd92b6087235b8a29d2c06765` : 602 tests et recette finale 6/6, après H1 11/11. Voir `docs/evidence/09-A86-FINAL-QUALIFICATION.md`. Publication préparée avec le tag `pilot-a86`, portail actualisé, anciens liens et Client conservés. Aucun statut publié avant contrôle distant. Workspace et convergence SPM reportés. Consultation autonome HTML acceptée.
+
+## S15-D — Qualification intégrale
+
+15 novembre 2026 : scénario intégral S15 qualifié.
+
+Baseline fonctionnelle : 03474a66da02f57bcf5184b605b994ca5bc06c99.
+
+645/645 tests Node.js ; 53/53 contrôles navigateur
+de composants ; 60/60 contrôles finaux S15-D.
+
+Creator Web et autonome, Publisher, téléchargements
+HTML/ZIP et Viewer autonome qualifiés.
+
+Prochaine étape : préparation de la release A8.7,
+qualification de l’accès RFC/W3C en contexte public,
+portail, notes de release, reconstruction finale.
+
+A8.6 reste la release publique stable.
+DEC-009 et DEC-010 restent ouvertes.

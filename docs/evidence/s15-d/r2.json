@@ -1,0 +1,752 @@
+{
+  "operation": "S15-D-A87-QUALIFICATION",
+  "startedAt": "2026-11-15T17:11:18.722Z",
+  "repository": "$HOME/git/StandardisationRadarChart",
+  "codeCommit": "03474a66da02f57bcf5184b605b994ca5bc06c99",
+  "checks": [
+    {
+      "name": "original-baseline",
+      "ok": true,
+      "detail": {
+        "branch": "feature/s15-standards-sources",
+        "head": "03474a66da02f57bcf5184b605b994ca5bc06c99",
+        "main": "2695a6ef64cf338129f9ce0eb4f163dd495db1bf",
+        "release": "894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55",
+        "tracked": ""
+      }
+    },
+    {
+      "name": "cache:rfc-editor.json",
+      "ok": true,
+      "detail": {
+        "file": "$HOME/git/StandardisationRadarChart/standard-source-cache/rfc-editor.json",
+        "expectedSha256": "0ba594f0ee30513957f9a84f28fd753e8cd751add352f655a4fd0d58b1d3c823",
+        "actualSha256": "0ba594f0ee30513957f9a84f28fd753e8cd751add352f655a4fd0d58b1d3c823"
+      }
+    },
+    {
+      "name": "cache:w3c.json",
+      "ok": true,
+      "detail": {
+        "file": "$HOME/git/StandardisationRadarChart/standard-source-cache/w3c.json",
+        "expectedSha256": "798653d01c5253328487cd908e70503501e89564fde2efe0b08db07588215026",
+        "actualSha256": "798653d01c5253328487cd908e70503501e89564fde2efe0b08db07588215026"
+      }
+    },
+    {
+      "name": "cache:w3c-json-ld11.json",
+      "ok": true,
+      "detail": {
+        "file": "$HOME/git/StandardisationRadarChart/standard-source-cache/w3c-json-ld11.json",
+        "expectedSha256": "48174cb440ae031f042cd87969553aa250f67a39e5cb5ce3b79e65a3f200c518",
+        "actualSha256": "48174cb440ae031f042cd87969553aa250f67a39e5cb5ce3b79e65a3f200c518"
+      }
+    },
+    {
+      "name": "cache:w3c-daml+oil-axioms.json",
+      "ok": true,
+      "detail": {
+        "file": "$HOME/git/StandardisationRadarChart/standard-source-cache/w3c-daml+oil-axioms.json",
+        "expectedSha256": "01360081cf7e4d8a44b6c018c0e2475b23fc630e7dacf0fd0af4961f87d21459",
+        "actualSha256": "01360081cf7e4d8a44b6c018c0e2475b23fc630e7dacf0fd0af4961f87d21459"
+      }
+    },
+    {
+      "name": "clone",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/clone.log",
+        "tail": "\nClonage dans '$HOME/Documents/S15-D-A87-28glRO/source'...\nfait.\n"
+      }
+    },
+    {
+      "name": "checkout",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/checkout.log",
+        "tail": "\nHEAD est maintenant sur 03474a6 S15-C: protect and manage reference lifecycle\n"
+      }
+    },
+    {
+      "name": "isolated-commit",
+      "ok": true,
+      "detail": "03474a66da02f57bcf5184b605b994ca5bc06c99"
+    },
+    {
+      "name": "node-version",
+      "ok": true,
+      "detail": "v22.23.5"
+    },
+    {
+      "name": "npm-install",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/npm-install.log",
+        "tail": "\nadded 13 packages in 2s\n\n"
+      }
+    },
+    {
+      "name": "npm-dependency-versions",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/npm-dependency-versions.log",
+        "tail": "mjs.org/nanoid/-/nanoid-3.3.20.tgz\",\n              \"overridden\": false\n            },\n            \"picocolors\": {\n              \"version\": \"1.1.1\",\n              \"resolved\": \"https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz\",\n              \"overridden\": false\n            },\n            \"source-map-js\": {\n              \"version\": \"1.2.2\",\n              \"resolved\": \"https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.2.tgz\",\n              \"overridden\": false\n            }\n          }\n        },\n        \"rollup\": {\n          \"version\": \"4.68.3\",\n          \"resolved\": \"https://registry.npmjs.org/rollup/-/rollup-4.68.3.tgz\",\n          \"overridden\": false,\n          \"dependencies\": {\n            \"@rollup/rollup-android-arm-eabi\": {},\n            \"@rollup/rollup-android-arm64\": {},\n            \"@rollup/rollup-android-x64\": {},\n            \"@rollup/rollup-darwin-arm64\": {\n              \"version\": \"4.68.3\",\n              \"resolved\": \"https://registry.npmjs.org/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.68.3.tgz\",\n              \"overridden\": false\n            },\n            \"@rollup/rollup-darwin-x64\": {},\n            \"@rollup/rollup-freebsd-arm64\": {},\n            \"@rollup/rollup-freebsd-x64\": {},\n            \"@rollup/rollup-linux-arm-gnueabihf\": {},\n            \"@rollup/rollup-linux-arm-musleabihf\": {},\n            \"@rollup/rollup-linux-arm64-gnu\": {},\n            \"@rollup/rollup-linux-arm64-musl\": {},\n            \"@rollup/rollup-linux-loong64-gnu\": {},\n            \"@rollup/rollup-linux-loong64-musl\": {},\n            \"@rollup/rollup-linux-ppc64-gnu\": {},\n            \"@rollup/rollup-linux-ppc64-musl\": {},\n            \"@rollup/rollup-linux-riscv64-gnu\": {},\n            \"@rollup/rollup-linux-riscv64-musl\": {},\n            \"@rollup/rollup-linux-s390x-gnu\": {},\n            \"@rollup/rollup-linux-x64-gnu\": {},\n            \"@rollup/rollup-linux-x64-musl\": {},\n            \"@rollup/rollup-openbsd-x64\": {},\n            \"@rollup/rollup-openharmony-arm64\": {},\n            \"@rollup/rollup-win32-arm64-msvc\": {},\n            \"@rollup/rollup-win32-ia32-msvc\": {},\n            \"@rollup/rollup-win32-x64-gnu\": {},\n            \"@rollup/rollup-win32-x64-msvc\": {},\n            \"@types/estree\": {\n              \"version\": \"1.0.10\",\n              \"resolved\": \"https://registry.npmjs.org/@types/estree/-/estree-1.0.10.tgz\",\n              \"overridden\": false\n            },\n            \"fsevents\": {}\n          }\n        },\n        \"sass-embedded\": {},\n        \"sass\": {},\n        \"stylus\": {},\n        \"sugarss\": {},\n        \"terser\": {},\n        \"tinyglobby\": {\n          \"version\": \"0.2.17\",\n          \"resolved\": \"https://registry.npmjs.org/tinyglobby/-/tinyglobby-0.2.17.tgz\",\n          \"overridden\": false,\n          \"dependencies\": {\n            \"fdir\": {\n              \"version\": \"6.5.0\"\n            },\n            \"picomatch\": {\n              \"version\": \"4.0.7\"\n            }\n          }\n        },\n        \"tsx\": {},\n        \"yaml\": {}\n      }\n    }\n  }\n}\n\n"
+      }
+    },
+    {
+      "name": "verify-source",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/verify-source.log",
+        "tail": "OK radar.html preserves its application script entry points\nOK radar.js is referenced by radar.html\nOK blips.js is referenced by radar.html\nOK W2UI dependency is referenced\nOK Cytoscape dependency is referenced\nOK D3 dependency is referenced\nOK exists: js/radar.js\nOK exists: js/blips.js\nOK exists: lib/w2ui.min.js\nOK exists: lib/cytoscape.min.js\nOK exists: lib/d3.min.js\nSOURCE CHECK COMPLETE: static only; Chrome behavior not verified\n\n"
+      }
+    },
+    {
+      "name": "node-tests",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/node-tests.log",
+        "tail": "0.583833\n  type: 'test'\n  ...\n# Subtest: rejects missing references\nok 630 - rejects missing references\n  ---\n  duration_ms: 0.060542\n  type: 'test'\n  ...\n# Subtest: preserves visual positions, rings and quadrants\nok 631 - preserves visual positions, rings and quadrants\n  ---\n  duration_ms: 0.118167\n  type: 'test'\n  ...\n# Subtest: excludes unrelated revisions and private attributes\nok 632 - excludes unrelated revisions and private attributes\n  ---\n  duration_ms: 0.082291\n  type: 'test'\n  ...\n# Subtest: client can read without ISO catalogue services\nok 633 - client can read without ISO catalogue services\n  ---\n  duration_ms: 0.214917\n  type: 'test'\n  ...\n# Subtest: client rejects additional unresolved references\nok 634 - client rejects additional unresolved references\n  ---\n  duration_ms: 0.072125\n  type: 'test'\n  ...\n# Subtest: six variantes, deux produits, trois modes\nok 635 - six variantes, deux produits, trois modes\n  ---\n  duration_ms: 1.103875\n  type: 'test'\n  ...\n# Subtest: inventaire : detection des modifications\nok 636 - inventaire : detection des modifications\n  ---\n  duration_ms: 3.123959\n  type: 'test'\n  ...\n# Subtest: ressources : resolution sous le prefixe Pages\nok 637 - ressources : resolution sous le prefixe Pages\n  ---\n  duration_ms: 0.886333\n  type: 'test'\n  ...\n# Subtest: ressources : fichier local manquant detecte\nok 638 - ressources : fichier local manquant detecte\n  ---\n  duration_ms: 0.360083\n  type: 'test'\n  ...\n# Subtest: portail A8.6 : liens de release, anciennes versions et entrées en ligne\nok 639 - portail A8.6 : liens de release, anciennes versions et entrées en ligne\n  ---\n  duration_ms: 0.244375\n  type: 'test'\n  ...\n# Subtest: synchronous classic script is loaded before radar.js and inline toolbar\nok 640 - synchronous classic script is loaded before radar.js and inline toolbar\n  ---\n  duration_ms: 0.655875\n  type: 'test'\n  ...\n# Subtest: classic bundle initializes synchronously and retains parity for real startup projection\nok 641 - classic bundle initializes synchronously and retains parity for real startup projection\n  ---\n  duration_ms: 2.602834\n  type: 'test'\n  ...\n# Subtest: legacy parity: normal, duplicate, missing and empty working groups\nok 642 - legacy parity: normal, duplicate, missing and empty working groups\n  ---\n  duration_ms: 2.182667\n  type: 'test'\n  ...\n# Subtest: legacy parity: numeric object-key ordering and non-mutation\nok 643 - legacy parity: numeric object-key ordering and non-mutation\n  ---\n  duration_ms: 0.298583\n  type: 'test'\n  ...\n# Subtest: legacy parity: exceptional keys\nok 644 - legacy parity: exceptional keys\n  ---\n  duration_ms: 0.306791\n  type: 'test'\n  ...\n# Subtest: Phase 3: synchronous generated classic entry before toolbar initialization\nok 645 - Phase 3: synchronous generated classic entry before toolbar initialization\n  ---\n  duration_ms: 0.106916\n  type: 'test'\n  ...\n1..645\n# tests 645\n# suites 0\n# pass 645\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 1056.208333\n\n"
+      }
+    },
+    {
+      "name": "node-test-count",
+      "ok": true,
+      "detail": {
+        "files": 100,
+        "tests": 645,
+        "pass": 645,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "name": "build",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/build.log",
+        "tail": "e\" attribute\n<script src=\"js/radar-iso-stream-distribution.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/radar-standards-panel.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/radar-iso-toolbar.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/radar-workspace-explorer.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/radar.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/cytoscape/RadarStyle.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/cytoscape/RadarStyle.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/d3.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/papaparse.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/uuid.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/index.umd.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/layout-base.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cose-base.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape-fcose.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape-undo-redo.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape-expand-collapse.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/popper.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape-popper.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/tippy-bundle.iife.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/w2ui.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/layout-base.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cola.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape-cola.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/dagre.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape-dagre.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/i18next.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"js/ics.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/radar-s14-z-sources.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n"
+      }
+    },
+    {
+      "name": "verify-build",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/verify-build.log",
+        "tail": "\n> verify:build\n> node scripts/verify-build.mjs local\n\nOK radar.html emitted\nOK legacy asset emitted: js/radar.js\nOK legacy asset emitted: js/blips.js\nOK legacy asset emitted: lib/w2ui.min.js\nOK legacy asset emitted: lib/cytoscape.min.js\nOK legacy asset emitted: lib/d3.min.js\nOK legacy radar reference retained\nOK legacy blips reference retained\nOK no independent index.html application entry\nBUILD CHECK COMPLETE: static artifact checks only; browser behavior not verified\n\n"
+      }
+    },
+    {
+      "name": "build-pages",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/build-pages.log",
+        "tail": "e\" attribute\n<script src=\"js/radar-iso-stream-distribution.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/radar-standards-panel.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/radar-iso-toolbar.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/radar-workspace-explorer.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/radar.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/cytoscape/RadarStyle.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/cytoscape/RadarStyle.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/d3.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/papaparse.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/uuid.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/index.umd.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/layout-base.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cose-base.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape-fcose.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape-undo-redo.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape-expand-collapse.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/popper.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape-popper.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/tippy-bundle.iife.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/w2ui.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/layout-base.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cola.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape-cola.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/dagre.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/cytoscape-dagre.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"lib/i18next.min.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"js/ics.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n<script src=\"./js/radar-s14-z-sources.js\"> in \"/radar.html\" can't be bundled without type=\"module\" attribute\n"
+      }
+    },
+    {
+      "name": "verify-pages",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/verify-pages.log",
+        "tail": "\n> verify:pages\n> node scripts/verify-build.mjs pages\n\nOK radar.html emitted\nOK legacy asset emitted: js/radar.js\nOK legacy asset emitted: js/blips.js\nOK legacy asset emitted: lib/w2ui.min.js\nOK legacy asset emitted: lib/cytoscape.min.js\nOK legacy asset emitted: lib/d3.min.js\nOK legacy radar reference retained\nOK legacy blips reference retained\nOK no independent index.html application entry\nOK GitHub Pages base emitted in HTML\nBUILD CHECK COMPLETE: static artifact checks only; browser behavior not verified\n\n"
+      }
+    },
+    {
+      "name": "pages-readiness",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/pages-readiness.log",
+        "tail": "{\n  \"operation\": \"S14-Z-PAGES-READINESS\",\n  \"output\": \"$HOME/Documents/S15-D-A87-28glRO/source/.radarchart-build/pages\",\n  \"errors\": [],\n  \"warnings\": [],\n  \"files\": {\n    \"radar.html\": true,\n    \"js/radar-s14-z-sources.js\": true,\n    \"js/radar-iso-windowed-db.js\": true,\n    \"lib/w2ui.min.js\": true\n  },\n  \"catalogEndpoint\": \"./catalog-distribution/\",\n  \"catalogFilesPublished\": true,\n  \"ok\": true\n}\n\n"
+      }
+    },
+    {
+      "name": "build-client",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/build-client.log",
+        "tail": "\n> build:client\n> node scripts/build-client.mjs\n\nvite v7.3.8 building client environment for production...\ntransforming...\n✓ 4 modules transformed.\nrendering chunks...\ncomputing gzip size...\n.radarchart-build/client/client.html                3.12 kB │ gzip: 1.46 kB\n.radarchart-build/client/assets/client-BUhUPRw_.js  6.17 kB │ gzip: 2.44 kB\n✓ built in 34ms\nCLIENT THREE MODES OK\n{\n  \"modes\": 3,\n  \"files\": 8,\n  \"entries\": {\n    \"standalone\": \"standalone/radar-client.html\",\n    \"bundled\": \"bundled/index.html\",\n    \"modules\": \"modules/index.html\"\n  },\n  \"standaloneBytes\": 9262,\n  \"bundledJavaScriptFiles\": 1,\n  \"nativeModules\": 2,\n  \"catalogueBundled\": false\n}\nCLIENT BUILD VALID\nEntry: client.html\nFiles: 8\nCatalogue bundled: false\nSHA-256 manifest: OK\nCLIENT BUILD VALID\nEntry: client.html\nFiles: 8\nCatalogue bundled: false\nSHA-256 manifest: OK\n\n"
+      }
+    },
+    {
+      "name": "verify-client",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/verify-client.log",
+        "tail": "\n> verify:client\n> node scripts/verify-client-build.mjs .radarchart-build/client\n\nCLIENT BUILD VALID\nEntry: client.html\nFiles: 8\nCatalogue bundled: false\nSHA-256 manifest: OK\n\n"
+      }
+    },
+    {
+      "name": "assemble-products",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/assemble-products.log",
+        "tail": "\n> assemble:products\n> node scripts/assemble-products.mjs assemble .radarchart-build/products $(git rev-parse --short HEAD)\n\nMULTI-PRODUCT ASSEMBLY OK\nCommit: 03474a6\nauthor: 187 files, 28828645 bytes\nclient: 9 files, 43628 bytes\n\n"
+      }
+    },
+    {
+      "name": "verify-products",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/verify-products.log",
+        "tail": "\n> verify:products\n> node scripts/assemble-products.mjs verify .radarchart-build/products\n\nMULTI-PRODUCT RELEASE VALID\nCommit: 03474a6\nauthor: 187 files, 28828645 bytes\nclient: 9 files, 43628 bytes\n\n"
+      }
+    },
+    {
+      "name": "prepare-pages-products",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/prepare-pages-products.log",
+        "tail": "PAGES MULTI-PRODUCT STAGING OK\nSource commit: 03474a6\nAuthor files: 187\nClient files: 9\n\n"
+      }
+    },
+    {
+      "name": "verify-pages-products",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/verify-pages-products.log",
+        "tail": "PAGES MULTI-PRODUCT VERIFIED\nSource commit: 03474a6\n\n"
+      }
+    },
+    {
+      "name": "build-dist",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/build-dist.log",
+        "tail": "\n> build:dist\n> node scripts/build-web-distribution.mjs build\n\nWEB DISTRIBUTION OK\n{\n  \"sourceCommit\": \"03474a6\",\n  \"files\": 388,\n  \"variants\": 6,\n  \"available\": 3\n}\n\n"
+      }
+    },
+    {
+      "name": "verify-dist",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/verify-dist.log",
+        "tail": "\n> verify:dist\n> node scripts/build-web-distribution.mjs verify\n\nWEB DISTRIBUTION OK\n{\n  \"sourceCommit\": \"03474a6\",\n  \"files\": 388,\n  \"variants\": 6,\n  \"available\": 3\n}\n\n"
+      }
+    },
+    {
+      "name": "build-common-standalone",
+      "ok": true,
+      "detail": {
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "log": "$HOME/Documents/S15-D-A87-28glRO/build-common-standalone.log",
+        "tail": "Dynamic classic script embedded: lib/cytoscape-cola.js\nDynamic classic script embedded: lib/cytoscape-dagre.js\n{\n  \"profile\": \"viewer\",\n  \"file\": \"$HOME/Documents/S15-D-A87-28glRO/standalone/standardization-radar-viewer.html\",\n  \"bytes\": 8101841,\n  \"scripts\": 62,\n  \"styles\": 2,\n  \"embeddedResources\": 2,\n  \"catalogDistributionEmbedded\": false,\n  \"sha256\": \"d76911443334d5595f30c670f42ae2652cdd03253c04db065b8e4e2d09e77985\"\n}\nDynamic classic script embedded: lib/cytoscape-cola.js\nDynamic classic script embedded: lib/cytoscape-dagre.js\n{\n  \"profile\": \"creator\",\n  \"file\": \"$HOME/Documents/S15-D-A87-28glRO/standalone/standardization-radar-creator.html\",\n  \"bytes\": 41655574,\n  \"scripts\": 64,\n  \"styles\": 2,\n  \"embeddedResources\": 7,\n  \"catalogDistributionEmbedded\": true,\n  \"sha256\": \"b054288a48ce1d25d80ee02a0919f024715a857402723183f731799670d55e41\"\n}\nDeux applications candidates construites.\n\n▲ [WARNING] The CommonJS \"module\" variable is treated as a global variable in an ECMAScript module and may not work as expected [commonjs-variable-in-esm]\n\n    .radarchart-build/pages/js/radar-iso-ics-extension.js:47:48:\n      47 │ ...='undefined'&&module.exports)module.exports=root.__radarIsoIcsE...\n         ╵                                 ~~~~~~\n\n  This file is considered to be an ECMAScript module because the enclosing \"package.json\" file sets the type of this file to \"module\":\n\n    package.json:4:10:\n      4 │   \"type\": \"module\",\n        ╵           ~~~~~~~~\n\n  Node's package format requires that CommonJS files in a \"type\": \"module\" package use the \".cjs\" file extension.\n\n▲ [WARNING] The CommonJS \"module\" variable is treated as a global variable in an ECMAScript module and may not work as expected [commonjs-variable-in-esm]\n\n    .radarchart-build/pages/js/radar-iso-catalog-client.js:48:48:\n      48 │ ...='undefined'&&module.exports)module.exports=root.__radarIsoCata...\n         ╵                                 ~~~~~~\n\n  This file is considered to be an ECMAScript module because the enclosing \"package.json\" file sets the type of this file to \"module\":\n\n    package.json:4:10:\n      4 │   \"type\": \"module\",\n        ╵           ~~~~~~~~\n\n  Node's package format requires that CommonJS files in a \"type\": \"module\" package use the \".cjs\" file extension.\n\n"
+      }
+    },
+    {
+      "name": "standalone-template-provenance",
+      "ok": true,
+      "detail": {
+        "codeCommit": "03474a66da02f57bcf5184b605b994ca5bc06c99",
+        "templateSha256": "d76911443334d5595f30c670f42ae2652cdd03253c04db065b8e4e2d09e77985",
+        "templateBytes": 8101841,
+        "modules": 61
+      }
+    },
+    {
+      "name": "standalone-resource-isolation",
+      "ok": true,
+      "detail": {
+        "creatorResources": 7,
+        "viewerResources": 2
+      }
+    },
+    {
+      "name": "pages-creator-startup",
+      "ok": true,
+      "detail": {
+        "profile": "creator",
+        "creator": true,
+        "graph": true,
+        "sources": [
+          "iso-open-data",
+          "rfc-editor",
+          "w3c"
+        ],
+        "nativeCount": 0,
+        "externalCacheReads": 0
+      }
+    },
+    {
+      "name": "pages-iso-installed",
+      "ok": true,
+      "detail": {
+        "startup": {
+          "status": "ready",
+          "release": "2026-11-09"
+        },
+        "release": "2026-11-09",
+        "reference": "ISO 10303-242:2014"
+      }
+    },
+    {
+      "name": "pages-native-v1-compatibility",
+      "ok": true,
+      "detail": {
+        "legacy": true,
+        "revision": "old-rev",
+        "closed": "closed"
+      }
+    },
+    {
+      "name": "pages-create-radar",
+      "ok": true,
+      "detail": {
+        "action": "created-catalog",
+        "group": "CATALOG_REVISION_1",
+        "revisionId": "revision_792d5f53-bd79-42e8-aa1c-53e147665a73",
+        "radarId": "radar_792d5f53-bd79-42e8-aa1c-53e147665a73",
+        "catalogTitle": "S15-D synthetic multi-source"
+      }
+    },
+    {
+      "name": "pages-import-and-reconcile",
+      "ok": true,
+      "detail": {
+        "iso": "iso-deliverable:57620",
+        "rfc": "rfc:9110",
+        "w3c": "w3c-tr:json-ld11:20200716",
+        "reconciled": "standard_ab096ea9-261c-47e7-b893-0aabf779fbb9",
+        "local": "standard_6da58c3d-fad2-4b69-9845-df10945b39cf",
+        "rfcCount": 9858,
+        "w3cCount": 1721,
+        "removed": "standard_67842799-d7e5-43b3-bd55-c3aa8a8cf081"
+      }
+    },
+    {
+      "name": "pages-create-blips-and-publish",
+      "ok": true,
+      "detail": {
+        "revisionId": "revision_792d5f53-bd79-42e8-aa1c-53e147665a73",
+        "blips": 5,
+        "protected": true,
+        "dependencies": [
+          {
+            "kind": "blip",
+            "revisionId": "revision_792d5f53-bd79-42e8-aa1c-53e147665a73",
+            "radarId": "radar_792d5f53-bd79-42e8-aa1c-53e147665a73",
+            "status": "published",
+            "blipId": "blip_b8cdebb2-7d4e-48f7-9ea5-768e07a63693",
+            "label": "S15-D 2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "pages-native-grid-and-language",
+      "ok": true,
+      "detail": {
+        "en": 5,
+        "fr": 5,
+        "language": "fr"
+      }
+    },
+    {
+      "name": "pages-export-and-close",
+      "ok": true,
+      "detail": {
+        "artifact": {
+          "manifest": {
+            "format": "StandardisationRadarChart",
+            "schemaVersion": "1.0.0",
+            "catalogId": "catalog_40a86357-a119-4d8d-a070-479626f0f53a",
+            "artifactId": "artifact_4dd95d6e-a782-4c1d-b53f-9e1313ca43fb",
+            "origin": {
+              "system": "StandardisationRadarChart",
+              "organizationId": "org_792d5f53-bd79-42e8-aa1c-53e147665a73"
+            },
+            "lineage": {
+              "parentArtifactId": null
+            }
+          },
+          "data": {
+            "schemaVersion": "1.0.0",
+            "title": "S15-D synthetic multi-source",
+            "organizations": [
+              {
+                "organizationId": "org_792d5f53-bd79-42e8-aa1c-53e147665a73",
+                "name": "Test organization"
+              }
+            ],
+            "portfolios": [
+              {
+                "portfolioId": "portfolio_792d5f53-bd79-42e8-aa1c-53e147665a73",
+                "ownerOrganizationId": "org_792d5f53-bd79-42e8-aa1c-53e147665a73",
+                "name": "Test portfolio"
+              }
+            ],
+            "standards": [
+              {
+                "standardId": "iso-deliverable:57620",
+                "name": "ISO 10303-242:2014",
+                "extensions": {
+                  "referenceDeclaration": {
+                    "issuer": "ISO",
+                    "designation": "ISO 10303-242:2014",
+                    "editionDesignation": "1",
+                    "sourceName": "ISO Open Data",
+                    "origin": "iso-open-data",
+                    "verification": "source-verified"
+                  },
+                  "isoDocument": {
+                    "schemaVersion": 1,
+                    "source": "ISO Open Data",
+                    "release": "2026-11-09",
+                    "id": "57620",
+                    "reference": "ISO 10303-242:2014",
+                    "title": "Systèmes d'automatisation industrielle et intégration — Représentation et échange de données de produits — Partie 242: Protocole d'application: Gestion des modèles 3D d'ingénierie",
+                    "titleI18n": {
+                      "en": "Industrial automation systems and integration — Product data representation and exchange — Part 242: Application protocol: Managed model-based 3D engineering",
+                      "fr": "Systèmes d'automatisation industrielle et intégration — Représentation et échange de données de produits — Partie 242: Protocole d'application: Gestion des modèles 3D d'ingénierie"
+                    },
+                    "scopeI18n": {
+                      "en": "ISO 10303-242:2014       \nspecifies the application protocol for\nManaged model based 3d engineering. \n\n\n\n\nThe following are within the scope of\nISO 10303-242:2014:\n\n\n\nproducts of automotive, aerospace and other mechanical manufacturers and of their suppliers,\nincluding parts, assemblies of parts, tools, assemblies of tools, and raw materials;\n\nengineering and product data for the purpose of long-term archiving and retrieval;\nproduct data management\n\nproduct definition data and configuration control data for managing large numbers of variants of products during the design\nphase;\n\ndata describing the changes that have occurred during the design phase, including tracking of the versions of a product and\nof the data related to the documentation of the change process;\n\nidentification of standard parts, based on international, national, or industrial standards;\nrelease and approval data for product data;\ndata that identify the supplier of a product and related contract information;\nproperties of parts or of tools;\nreferences to product documentation represented in a format other than those specified by ISO 10303;\nproduct manufacturing information, covering the design and manufacturing planning phase;\nidentification of physically realized parts or of tools, including assembly of physically realized products and recording\nof test results.\n\n\n\n\nprocess planning\n\nprocess plan information describing the relationships between parts and the tools used to manufacture them\nand to manage the relationships between intermediate stages of part or tool development.\n\n\n\n\nmechanical design\n\ndifferent types of geometry models, including:\n\n2D- and 3D-wireframe geometry model;\ngeometrically bounded surface geometry model;\ntopologically bounded surface geometry model;\nfaceted-boundary geometry model;\nboundary geometry model;\ncompound shape geometry model;\nconstructive solid geometry model;\nparametric and constrained geometry model;\n2D-sketch model;\n3D tessellated geometry model.\n\n\n\nrepresentation of the shape of parts or tools that is a combination of two or more of different types of geometry models;\ndata that pertains to the presentation of the shape of the product;\nrepresentation of portions of the shape of a part or a tool by manufacturing features;\ndata defining surface conditions;\ndimensional and geometrical tolerance data;\nquality criteria and inspection results of given three dimensional product shape data;\nproduct documentation as annotated 3D models and as drawings.\n\n\n\nkinematics\n\nsimulation data for the description of kinematic structures and motion.\n\n\n\ncomposite design\n\ndefinition of composite structural parts;\nthe association of the constituents of composite and metallic parts with the constituent shape model;\nthe depiction of composite laminate tables describing the material, stacking sequence and ply orientation;\n\n\nconstituents of the composite or a portion of the composite with a defined shape;\n\n\nthe identification of material specifications from internal and external sources and their properties for a specific operating\nenvironment."
+                    },
+                    "scope": "ISO 10303-242:2014       \nspecifies the application protocol for\nManaged model based 3d engineering. \n\n\n\n\nThe following are within the scope of\nISO 10303-242:2014:\n\n\n\nproducts of automotive, aerospace and other mechanical manufacturers and of their suppliers,\nincluding parts, assemblies of parts, tools, assemblies of tools, and raw materials;\n\nengineering and product data for the purpose of long-term archiving and retrieval;\nproduct data management\n\nproduct definition data and configuration control data for managing large numbers of variants of products during the design\nphase;\n\ndata describing the changes that have occurred during the design phase, including tracking of the versions of a product and\nof the data related to the documentation of the change process;\n\nidentification of standard parts, based on international, national, or industrial standards;\nrelease and approval data for product data;\ndata that identify the supplier of a product and related contract information;\nproperties of parts or of tools;\nreferences to product documentation represented in a format other than those specified by ISO 10303;\nproduct manufacturing information, covering the design and manufacturing planning phase;\nidentification of physically realized parts or of tools, including assembly of physically realized products and recording\nof test results.\n\n\n\n\nprocess planning\n\nprocess plan information describing the relationships between parts and the tools used to manufacture them\nand to manage the relationships between intermediate stages of part or tool development.\n\n\n\n\nmechanical design\n\ndifferent types of geometry models, including:\n\n2D- and 3D-wireframe geometry model;\ngeometrically bounded surface geometry model;\ntopologically bounded surface geometry model;\nfaceted-boundary geometry model;\nboundary geometry model;\ncompound shape geometry model;\nconstructive solid geometry model;\nparametric and constrained geometry model;\n2D-sketch model;\n3D tessellated geometry model.\n\n\n\nrepresentation of the shape of parts or tools that is a combination of two or more of different types of geometry models;\ndata that pertains to the presentation of the shape of the product;\nrepresentation of portions of the shape of a part or a tool by manufacturing features;\ndata defining surface conditions;\ndimensional and geometrical tolerance data;\nquality criteria and inspection results of given three dimensional product shape data;\nproduct documentation as annotated 3D models and as drawings.\n\n\n\nkinematics\n\nsimulation data for the description of kinematic structures and motion.\n\n\n\ncomposite design\n\ndefinition of composite structural parts;\nthe association of the constituents of composite and metallic parts with the constituent shape model;\nthe depiction of composite laminate tables describing the material, stacking sequence and ply orientation;\n\n\nconstituents of the composite or a portion of the composite with a defined shape;\n\n\nthe identification of material specifications from internal and external sources and their properties for a specific operating\nenvironment.",
+                    "icsCodes": [
+                      "25.040.40"
+                    ],
+                    "ownerCommittee": "ISO/TC 184/SC 4",
+                    "currentStage": "9599",
+                    "edition": "1",
+                    "publicationDate": "2014-12-01",
+                    "deliverableType": "IS",
+                    "supplementType": "",
+                    "languages": [
+                      "en"
+                    ],
+                    "pages": "",
+                    "replaces": [
+                      "20596",
+                      "43669",
+                      "44305",
+                      "34451",
+                      "20595"
+                    ],
+                    "replacedBy": [
+                      "66654"
+                    ]
+                  }
+                }
+              },
+              {
+                "standardId": "rfc:9110",
+                "name": "HTTP Semantics",
+                "extensions": {
+                  "referenceDeclaration": {
+                    "issuer": "IETF",
+                    "designation": "RFC 9110",
+                    "editionDesignation": "2022-06",
+                    "sourceName": "RFC Editor",
+                    "sourceUrl": "https://www.rfc-editor.org/rfc/rfc9110",
+                    "origin": "rfc-editor",
+                    "verification": "source-verified"
+                  },
+                  "externalDocument": {
+                    "schemaVersion": 1,
+                    "sourceId": "rfc-editor",
+                    "key": "9110",
+                    "issuer": "IETF",
+                    "designation": "RFC 9110",
+                    "title": "HTTP Semantics",
+                    "edition": "2022-06",
+                    "status": "INTERNET STANDARD",
+                    "stream": "IETF",
+                    "url": "https://www.rfc-editor.org/rfc/rfc9110",
+                    "acquiredAt": "2026-11-15T16:31:41.735Z"
+                  }
+                }
+              },
+              {
+                "standardId": "w3c-tr:json-ld11:20200716",
+                "name": "JSON-LD 1.1",
+                "extensions": {
+                  "referenceDeclaration": {
+                    "issuer": "W3C",
+                    "designation": "json-ld11",
+                    "editionDesignation": "2020-07-16",
+                    "sourceName": "W3C API",
+                    "sourceUrl": "https://www.w3.org/TR/2020/REC-json-ld11-20200716/",
+                    "origin": "w3c",
+                    "verification": "source-verified"
+                  },
+                  "externalDocument": {
+                    "schemaVersion": 1,
+                    "sourceId": "w3c",
+                    "key": "json-ld11:20200716",
+                    "issuer": "W3C",
+                    "designation": "json-ld11",
+                    "title": "JSON-LD 1.1",
+                    "edition": "2020-07-16",
+                    "status": "Recommendation",
+                    "stream": null,
+                    "url": "https://www.w3.org/TR/2020/REC-json-ld11-20200716/",
+                    "acquiredAt": "2026-11-15T16:31:51.137Z"
+                  }
+                }
+              },
+              {
+                "standardId": "standard_ab096ea9-261c-47e7-b893-0aabf779fbb9",
+                "name": "An Axiomatic Semantics for RDF, RDF-S, and DAML+OIL (March 2001)",
+                "extensions": {
+                  "referenceDeclaration": {
+                    "issuer": "W3C",
+                    "designation": "daml+oil-axioms",
+                    "editionDesignation": "2001-12-18",
+                    "sourceName": "W3C API",
+                    "sourceUrl": "https://www.w3.org/TR/2001/NOTE-daml+oil-axioms-20011218",
+                    "origin": "w3c",
+                    "verification": "source-verified"
+                  },
+                  "referenceReconciliation": {
+                    "schemaVersion": 1,
+                    "reconciledAt": "2026-11-15T17:12:21.756Z",
+                    "previousName": "PRIVATE_S15D_ORIGINAL",
+                    "previousDeclaration": {
+                      "designation": "daml+oil-axioms",
+                      "issuer": "W3C",
+                      "editionDesignation": "2001-12-18",
+                      "sourceName": "PRIVATE_S15D_SOURCE",
+                      "sourceUrl": null,
+                      "verification": "unverified",
+                      "origin": "manual",
+                      "declaredAt": "2026-11-15T17:12:21.756Z"
+                    }
+                  },
+                  "externalDocument": {
+                    "schemaVersion": 1,
+                    "sourceId": "w3c",
+                    "key": "daml+oil-axioms:20011218",
+                    "issuer": "W3C",
+                    "designation": "daml+oil-axioms",
+                    "title": "An Axiomatic Semantics for RDF, RDF-S, and DAML+OIL (March 2001)",
+                    "edition": "2001-12-18",
+                    "status": "Note",
+                    "stream": null,
+                    "url": "https://www.w3.org/TR/2001/NOTE-daml+oil-axioms-20011218",
+                    "acquiredAt": "2026-11-15T16:31:51.305Z"
+                  }
+                }
+              },
+              {
+                "standardId": "standard_6da58c3d-fad2-4b69-9845-df10945b39cf",
+                "name": "Internal test reference",
+                "extensions": {
+                  "referenceDeclaration": {
+                    "designation": "INTERNAL-1",
+                    "issuer": "Synthetic organization",
+                    "editionDesignation": "1",
+                    "sourceName": "Manual entry",
+                    "sourceUrl": null,
+                    "verification": "unverified",
+                    "origin": "manual",
+                    "declaredAt": "2026-11-15T17:12:21.756Z"
+                  }
+                }
+              }
+            ],
+            "assessments": [],
+            "radarRevisions": [
+              {
+                "schemaVersion": "1.0.0",
+                "revisionId": "revision_792d5f53-bd79-42e8-aa1c-53e147665a73",
+                "radarId": "radar_792d5f53-bd79-42e8-aa1c-53e147665a73",
+                "ownerOrganizationId": "org_792d5f53-bd79-42e8-aa1c-53e147665a73",
+                "portfolioId": "portfolio_792d5f53-bd79-42e8-aa1c-53e147665a73",
+                "status": "published",
+                "version": "0.1.0",
+                "title": "Multi-source radar",
+                "blips": [
+                  {
+                    "blipId": "blip_b3d56536-87cd-4329-812d-19b52bd1f86b",
+                    "standardId": "iso-deliverable:57620",
+                    "label": "S15-D 1",
+                    "ring": "Adopted",
+                    "quadrant": "Available",
+                    "position": {
+                      "x": 310,
+                      "y": 325
+                    },
+                    "assessmentId": null,
+                    "context": {},
+                    "extensions": {}
+                  },
+                  {
+                    "blipId": "blip_b8cdebb2-7d4e-48f7-9ea5-768e07a63693",
+                    "standardId": "rfc:9110",
+                    "label": "S15-D 2",
+                    "ring": "Adopted",
+                    "quadrant": "Available",
+                    "position": {
+                      "x": 322,
+                      "y": 337
+                    },
+                    "assessmentId": null,
+                    "context": {},
+                    "extensions": {}
+                  },
+                  {
+                    "blipId": "blip_76208b67-c4a9-49ab-b86d-a3185c138888",
+                    "standardId": "w3c-tr:json-ld11:20200716",
+                    "label": "S15-D 3",
+                    "ring": "Adopted",
+                    "quadrant": "Available",
+                    "position": {
+                      "x": 334,
+                      "y": 349
+                    },
+                    "assessmentId": null,
+                    "context": {},
+                    "extensions": {}
+                  },
+                  {
+                    "blipId": "blip_4c1cc117-de05-486e-9419-0eb97831bc8f",
+                    "standardId": "standard_ab096ea9-261c-47e7-b893-0aabf779fbb9",
+                    "label": "S15-D 4",
+                    "ring": "Adopted",
+                    "quadrant": "Available",
+                    "position": {
+                      "x": 346,
+                      "y": 361
+                    },
+                    "assessmentId": null,
+                    "context": {},
+                    "extensions": {}
+                  },
+                  {
+                    "blipId": "blip_f212f278-2cba-48ba-af0b-a394523d4f1f",
+                    "standardId": "standard_6da58c3d-fad2-4b69-9845-df10945b39cf",
+                    "label": "S15-D 5",
+                    "ring": "Adopted",
+                    "quadrant": "Available",
+                    "position": {
+                      "x": 358,
+                      "y": 373
+                    },
+                    "assessmentId": null,
+                    "context": {},
+                    "extensions": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "proof": {
+          "canonicalization": "sorted-json-v1",
+          "digestAlgorithm": "SHA-256",
+          "digest": "9271a1d3b12424bfe216265622fdaca0975150f48d4f994ced323846014fad6e",
+          "signature": null
+        }
+      }
+    },
+    {
+      "name": "standalone-creator-startup",
+      "ok": false,
+      "detail": "CDP timeout Page.navigate"
+    }
+  ],
+  "errors": [
+    "Error: CDP timeout Page.navigate\n    at Timeout._onTimeout (file://$HOME/Documents/S15-D-R2-recovery-PY9gcv/s15-d-r2.mjs:34:147)\n    at listOnTimeout (node:internal/timers:585:17)\n    at process.processTimers (node:internal/timers:521:7)"
+  ],
+  "committed": false,
+  "pushed": false,
+  "published": false,
+  "ok": false,
+  "artifacts": {
+    "creator": {
+      "path": "$HOME/Documents/S15-D-A87-28glRO/standalone/standardization-radar-creator.html",
+      "bytes": 41655574,
+      "sha256": "b054288a48ce1d25d80ee02a0919f024715a857402723183f731799670d55e41"
+    },
+    "viewerTemplate": {
+      "path": "$HOME/Documents/S15-D-A87-28glRO/standalone/standardization-radar-viewer.html",
+      "bytes": 8101841,
+      "sha256": "d76911443334d5595f30c670f42ae2652cdd03253c04db065b8e4e2d09e77985"
+    },
+    "distribution": "$HOME/Documents/S15-D-A87-28glRO/source/dist"
+  },
+  "catalogArtifact": {
+    "path": "$HOME/Documents/S15-D-A87-28glRO/catalogue-s15-d.json",
+    "sha256": "70fe3a6bc6d1a782e1f35c79cd5916c5af2212616e98a5bd17a76f7f5393718b",
+    "digest": "9271a1d3b12424bfe216265622fdaca0975150f48d4f994ced323846014fad6e"
+  },
+  "browserDiagnostics": {
+    "blocked": [],
+    "exceptions": [],
+    "consoleErrors": [],
+    "networkFailures": [],
+    "servedCaches": [
+      "rfc-editor.json",
+      "w3c.json",
+      "w3c-json-ld11.json",
+      "w3c-daml+oil-axioms.json"
+    ]
+  },
+  "finishedAt": "2026-11-15T17:13:21.845Z",
+  "reportPath": "$HOME/Documents/S15-D-A87-28glRO/S15-D-A87-QUALIFICATION.json",
+  "clipboard": {
+    "ok": true
+  }
+}
