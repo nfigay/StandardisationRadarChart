@@ -528,3 +528,7 @@ conservés.
 
 La composition sélective des modules
 n'est pas considérée comme réalisée.
+
+## Actualisation A8.6-R2 — 15 novembre 2026
+
+Finaliser la consultation ISO dans la prévisualisation autonome et rendre explicites les configurations de livraison à partir du registre existant. Candidat R2 : comparaison de SHA-256 du Viewer, comparaison des métadonnées historiques, motif optionnel, onglet dédié, qualification navigateur et suite complète 602 attendue. Puis préparer la release GitHub/Pages sur acceptation explicite. Priorité suivante : fonctionnalités métier Radar Chart (standards/sources, blips, consultation). Le Workspace persistant et la convergence SPM sont reportés ; aucun numéro de lot futur réservé. Voir architecture 86-R2 et preuve 08.

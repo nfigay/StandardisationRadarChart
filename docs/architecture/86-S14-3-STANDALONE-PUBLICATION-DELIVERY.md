@@ -27,3 +27,7 @@ La construction Pages écrit hors du site `.radarchart-build/pages-provenance.js
 ## A8.6-R1 — Consultation centrée sur le radar
 
 La recette utilisateur a identifié un menu d'import et un arbre de catalogue encore présents dans le Viewer publié. Le correctif R1 distingue contexte publié et Viewer générique ; fiche radar dans le panneau gauche, sélection de radars uniquement lorsque nécessaire, une révision publiée retenue par radar. Aucun import/remplacement du périmètre embarqué. Les contrats de livraison, provenance et registre ci-dessus sont conservés. Voir [86-R1](86-R1-S14-3-RADAR-CENTRIC-PUBLISHED-VIEWER.md) et [preuve 07](../evidence/07-A86-R1-RADAR-VIEWER-CANDIDATE.md). La qualification navigateur et ZIP réel reste ouverte.
+
+## Actualisation R2
+
+Voir [architecture 86-R2](86-R2-S14-3-PUBLICATION-CONFIGURATION-AND-PREVIEW.md) : historique détaillé et comparaison des octets Viewer, motif optionnel privé, réutilisation du registre natif et prévisualisation autonome en onglet. Aucun changement de format ZIP/manifeste public. Le ZIP n'est pas stocké dans le catalogue ; Workspace reporté.

@@ -325,3 +325,7 @@ Le rapport DOC-P0 communiqué par l'utilisateur établit que `docs/` est absent 
 **Prochaine étape métier :** arbitrage des contrats ISO (organisme/norme/partie/édition, provenance, jeu réel), puis définition/test des round-trips `catalog → Cytoscape → catalog`. **Prochaine étape technique distincte :** seulement après autorisation, chantier `B1.4-A` de géométrie pure et tests.
 
 **Rappel du contrat d'intervention :** Node.js/Bash ; audit lecture seule, staging, diff et SHA-256, approbation explicite avant installation ; backup et rollback pour remplacements ; jamais de `git commit`/`push` implicite.
+
+## Mise à jour 15 novembre 2026 — A8.6-R2
+
+Baseline R1 qualifiée partiellement par l'utilisateur : 600 tests, retéléchargement sans mutation confirmé, ISO en prévisualisation restant. Candidat R2 : [architecture](../architecture/86-R2-S14-3-PUBLICATION-CONFIGURATION-AND-PREVIEW.md), [recette](../evidence/08-A86-R2-PUBLISHER-CANDIDATE.md). Workspace reporté, priorité à la publication puis aux évolutions métier.

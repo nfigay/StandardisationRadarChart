@@ -146,3 +146,7 @@ révisé. Ne clôture ni CPV-05/07/08/09/10/12 ni DEC-009/010.
 ### DEC-019 — Précision A8.6-R1 (14 novembre 2026)
 
 **ADOPTED-PRINCIPLE** — clarification utilisateur lors de la recette A8.6 : le destinataire consulte un radar ou une collection déterminée de radars, de préférence les révisions retenues comme applicables. Une seule révision publiée par radar pour la publication courante ; pas de règle implicite de dernière version. La fiche descriptive prend la place de l'arbre dans le panneau left. Le Viewer publié ne charge ni ne remplace de catalogue externe ; le Viewer générique garde cette capacité. Les versions historiques sont un usage distinct. Cette décision n'ajoute pas de modèle temporel d'applicabilité ni de contrat de métadonnées confidentielles. Réalisation et qualification détaillées dans architecture 86-R1 et preuve 07 ; CPV-13/14/15. A8.2 publique inchangée.
+
+### DEC-019 — Précision A8.6-R2 (15 novembre 2026)
+
+**ADOPTED-PRINCIPLE** : report du Workspace persistant et de la convergence SPM à un jalon ultérieur non numéroté ; priorité à la maturation métier et à la distribution. Le catalogue JSON reste la persistance métier. Les livraisons doivent être explicables à partir du registre historique ; une répétition à Viewer identique est signalée, le retéléchargement ne mute pas le registre. La génération ne vaut ni sauvegarde physique vérifiée ni diffusion. L'onglet de prévisualisation autonome est un choix d'implémentation candidat à qualifier. Voir architecture 86-R2 et preuve 08.

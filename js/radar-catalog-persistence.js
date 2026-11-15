@@ -579,7 +579,7 @@
     var state=model.state(owner.source);
     var release=model.release({releaseId:identity.releaseId,createdAt:identity.createdAt,definition:current.definition,
       source:{...current.source,codeCommit:report.codeCommit},resolvedRevisionIds:current.resolvedRevisionIds,resolvedRevisions:current.resolvedRevisions,mode:current.mode,
-      modules:report.modules,artifacts:report.artifacts,validation:{status:'reported-passed',checks:report.checks}});
+      modules:report.modules,artifacts:report.artifacts,validation:{status:'reported-passed',checks:report.checks},...(identity.reason?{reason:identity.reason}:{})});
     state.releases.push(release);commitPublicationState(owner,state);return clone(release);
   }
   // Reserved checks may only be recorded by the actual byte-generating path.
@@ -591,16 +591,19 @@
   }
   // A8.6: assemble and validate real bytes before the native ledger is mutated.
   // No authoring data enters the public manifest; the full snapshot stays here.
-  async function generateStandalonePublication(graph,id,expectedVersion){
+  async function generateStandalonePublication(graph,id,expectedVersion,options={}){
+    if(options.reason!==undefined&&(typeof options.reason!=='string'||options.reason!==options.reason.trim()||options.reason.length>1000))fail('invalid release reason');
+    if(options.expectedViewerSha256!==undefined&&!/^[a-f0-9]{64}$/.test(options.expectedViewerSha256))fail('invalid expected Viewer digest');
     var owner=publicationOwner(),before=canonical(build(graph)),delivery=root.__radarPublicationDelivery,v=root.__radarPublicationViewer;
     if(!delivery||!v)fail('standalone publication delivery unavailable');
     var plan=await preparePublicationRelease(graph,id,expectedVersion,'standalone');
     if(plan.definition.configuration.packaging.data!=='embedded')fail('standalone delivery requires embedded data');
     var projection=await preparePublicationProjection(graph,id,expectedVersion);
     if(projection.report.sourceDigest!==plan.source.catalogDigest||!eq(projection.report.revisionIds,plan.resolvedRevisionIds)||publicationOwner()!==owner||canonical(build(graph))!==before)fail('publication generation inputs changed');
-    var identity={releaseId:publicationId('release_'),createdAt:new Date().toISOString()};
+    var identity={releaseId:publicationId('release_'),createdAt:new Date().toISOString(),reason:options.reason};
     var result=await delivery.assemble({template:v.template(),templateProof:delivery.proof(),standalone:root.__radarStandalone,payload:v.payload(projection.catalog,projection.report,plan.definition.configuration.presentation),...identity});
     if(publicationOwner()!==owner||canonical(build(graph))!==before)fail('publication workspace changed during delivery');
+    if(options.expectedViewerSha256&&result.evidence.artifacts.find(a=>a.path==='viewer.html')?.sha256!==options.expectedViewerSha256)fail('publication Viewer changed after comparison');
     if(!eq(result.evidence.checks,byteChecks.slice(0,-1)))fail('unexpected byte verification evidence');
     // Construct the exact downloadable Blob before recording, not after.
     var blob=new root.Blob([result.bytes],{type:'application/zip'});

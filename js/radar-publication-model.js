@@ -104,7 +104,8 @@
     return [...ids].sort();
   }
   function release(x){
-    object(x,'release',['releaseId','createdAt','definition','source','resolvedRevisionIds','resolvedRevisions','mode','modules','artifacts','validation']);
+    object(x,'release',['releaseId','createdAt','definition','source','resolvedRevisionIds','resolvedRevisions','mode','modules','artifacts','validation',...(own(x,'reason')?['reason']:[])]);
+    if(own(x,'reason'))text(x.reason,'release reason',1000);
     text(x.releaseId,'releaseId',300);timestamp(x.createdAt,'release createdAt');
     const d=definition(x.definition);
     if(d.status!=='active'||x.createdAt<d.updatedAt)fail('invalid release definition snapshot');

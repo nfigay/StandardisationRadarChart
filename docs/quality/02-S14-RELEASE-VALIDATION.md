@@ -59,3 +59,7 @@ A8.6 candidat : vérification des octets du modèle, HTML, manifeste et ZIP, reg
 ### A8.6-R1 — Candidat
 
 Source A8.6 `c73653c` : 593 tests validés dans le rapport local. Correctif R1 : 595 tests disponibles réussis sur les sources modifiées, hors cinq tests Vite du fichier `client-variants.test.mjs` (dépendances absentes de l'instantané). 600 tests attendus pour la suite complète sur Mac, sans affirmer leur réussite avant exécution. Les sept nouveaux tests couvrent fiche/collection/unique, import interdit, ambiguïté, verrouillage du payload invalide, dialogue et références du radar actif. Chromium HTTP local bloqué par la politique de navigation de l'environnement d'analyse ; recette navigateur et build final non réalisés. Voir preuve 07. Exécuter la recette des deux modes, changement de langue, navigation et détail ISO ; contrôler ZIP réel, registre et retéléchargement, puis fonctionnement hors réseau. Ne pas publier avant qualification.
+
+## A8.6-R2
+
+Candidat à qualifier selon preuve 08 : 31 tests Publisher, 597 tests exécutables sans Vite, 602 attendus sur installation complète. Refaire le build Pages/standalone et la recette d'onglet Blob ISO, comparaison historique, confirmation de répétition, réouverture JSON et retéléchargement sans mutation. Ne pas annoncer la correction ISO acquise avant la recette. Aucun push automatique.
