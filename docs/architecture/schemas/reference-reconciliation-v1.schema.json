@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "S15-C native reference reconciliation history v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "reconciledAt", "previousName", "previousDeclaration"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "reconciledAt": {"type": "string", "format": "date-time"},
+    "previousName": {"type": "string", "minLength": 1},
+    "previousDeclaration": {
+      "type": "object",
+      "required": ["issuer", "designation", "editionDesignation", "origin", "verification"],
+      "properties": {
+        "issuer": {"type": "string", "minLength": 1},
+        "designation": {"type": "string", "minLength": 1},
+        "editionDesignation": {"type": "string", "minLength": 1},
+        "origin": {"const": "manual"},
+        "verification": {"const": "unverified"}
+      },
+      "additionalProperties": true
+    }
+  }
+}

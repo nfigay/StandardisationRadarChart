@@ -46,6 +46,8 @@
  Object.assign(isoStrings.fr,{advancedSearch:'Recherche avancée…',advancedTitle:'Combiner des critères ET / OU / NON avec des parenthèses',moreFilters:'Filtres et tri',declareLocal:'Déclarer une référence',declaredFeedback:'Référence locale enregistrée (non vérifiée). Vous pouvez l’ajouter au brouillon actif.',nativeAll:'Toutes les provenances',nativeTitle:'Fiche de référence',nativeIssuer:'Organisme',nativeSource:'Source documentaire',nativeUrl:'URL source',nativeOrigin:'Origine',nativeId:'Identifiant',nativeUnknown:'Inconnu',nativeManual:'Déclaration locale',nativeIso:'ISO Open Data',nativeLegacy:'Historique',nativeUnverified:'Non vérifiée',nativeVerified:'Issue de la source'});
  Object.assign(isoStrings.en,{advancedSearch:'Advanced search…',advancedTitle:'Combine AND / OR / NOT criteria with parentheses',moreFilters:'Filters and sorting',declareLocal:'Declare a reference',declaredFeedback:'Local reference saved (unverified). You can add it to the active draft.',nativeAll:'All origins',nativeTitle:'Reference details',nativeIssuer:'Issuer',nativeSource:'Documentary source',nativeUrl:'Source URL',nativeOrigin:'Origin',nativeId:'Identifier',nativeUnknown:'Unknown',nativeManual:'Local declaration',nativeIso:'ISO Open Data',nativeLegacy:'Legacy',nativeUnverified:'Unverified',nativeVerified:'Source verified'});
  Object.assign(isoStrings.fr,{standardSources:'Sources de standardisation',nativeRfc:'RFC Editor',nativeW3c:'W3C API',nativeDocumentStatus:'Statut documentaire',nativeAcquired:'Acquisition',externalAdded:'Référence intégrée au catalogue.',externalExisting:'Référence déjà présente ; notice sélectionnée.'});
+ Object.assign(isoStrings.fr,{referenceLifecycle:'Cycle de vie',referenceUpdated:'Notice actualisée ; identifiant conservé.',referenceReconciled:'Déclaration réconciliée ; identifiant conservé.',referenceRemoved:'Référence supprimée.',referenceLifecycleError:'Impossible de contrôler les dépendances de cette référence.'});
+ Object.assign(isoStrings.en,{referenceLifecycle:'Lifecycle',referenceUpdated:'Record updated; identifier retained.',referenceReconciled:'Declaration reconciled; identifier retained.',referenceRemoved:'Reference removed.',referenceLifecycleError:'Unable to check dependencies for this reference.'});
  Object.assign(isoStrings.en,{standardSources:'Standardization sources',nativeRfc:'RFC Editor',nativeW3c:'W3C API',nativeDocumentStatus:'Document status',nativeAcquired:'Acquired',externalAdded:'Reference added to catalog.',externalExisting:'Reference already present; record selected.'});
  registerI18n();
  let activeDetailRecord=null,activeDetailCleanup=null;
@@ -564,6 +566,7 @@
    const isoFilters=mount?.querySelector('[data-iso-more-filters]');if(isoFilters)isoFilters.style.display=mode==='references'?'none':'';
    if(nativeOriginFilter)nativeOriginFilter.style.display=mode==='references'?'':'none';
    const declareButton=mount?.querySelector('[data-native-declare]');if(declareButton)declareButton.style.display=mode==='references'?'':'none';
+   const lifecycleButton=mount?.querySelector('[data-reference-lifecycle]');if(lifecycleButton){lifecycleButton.style.display=mode==='references'?'':'none';lifecycleButton.disabled=root.__radarCatalogPersistence?.status?.().importedCatalogs!==1||root.__radarApplicationProfile?.allows('catalog.declareReference')!==true;}
    const sourcesButton=mount?.querySelector('[data-standard-sources]');if(sourcesButton){sourcesButton.style.display=mode==='references'?'':'none';sourcesButton.disabled=root.__radarCatalogPersistence?.status?.().importedCatalogs!==1||root.__radarApplicationProfile?.allows('catalog.declareReference')!==true;}
    for(const btn of mount?.querySelectorAll('[data-catalog-mode]')||[]){
      const active=btn.dataset.catalogMode===mode;
@@ -1077,14 +1080,17 @@
    if(!nativeOnly){
      // Optional documentary sources are consulted only on explicit user action.
      const sourceButton=d.createElement('button');sourceButton.type='button';sourceButton.style.display='none';sourceButton.dataset.standardSources='true';sourceButton.dataset.isoTranslation='standardSources';sourceButton.textContent=tr('standardSources');
-     sourceButton.addEventListener('click',()=>{
-       root.__radarStandardSourceDialog?.open({openIso(){mount.querySelector('[data-catalog-mode="iso-list"]')?.click();},openIsoAdmin:root.__radarApplicationProfile?.allows('catalog.admin')?()=>root.__radarS14Z?.open?.():null,onIntegrated(result){
+     function openStandardSources(row){
+       root.__radarStandardSourceDialog?.open({graphProvider:()=>graphProvider?.(),sourceId:row?.origin==='iso-open-data'?'iso-open-data':row?.externalDocument?.sourceId,query:row?.designation||'',openIso(){mount.querySelector('[data-catalog-mode="iso-list"]')?.click();},openIsoAdmin:root.__radarApplicationProfile?.allows('catalog.admin')?()=>root.__radarS14Z?.open?.():null,onIntegrated(result){
          mode='references';nativeOriginFilter.value='all';search.value='';refresh();
          const index=grid.records.findIndex(r=>r.standardId===result.standardId);
          if(index>=0){grid.select?.(result.standardId);selected=result.standardId;grid.scrollIntoView?.(index,null,true);}
-         if(status)status.textContent=tr(result.action==='existing'?'externalExisting':'externalAdded');
+         if(status)status.textContent=tr(({existing:'externalExisting',refresh:'referenceUpdated',reconcile:'referenceReconciled'})[result.action]||'externalAdded');
        }});
-     });bar.appendChild(sourceButton);
+     }
+     sourceButton.addEventListener('click',()=>openStandardSources());bar.appendChild(sourceButton);
+     const lifecycleButton=d.createElement('button');lifecycleButton.type='button';lifecycleButton.style.display='none';lifecycleButton.dataset.referenceLifecycle='true';lifecycleButton.dataset.isoTranslation='referenceLifecycle';lifecycleButton.textContent=tr('referenceLifecycle');
+     lifecycleButton.addEventListener('click',()=>{const id=grid.getSelection?.()[0]||selected;if(!id){if(status)status.textContent=tr('selectReference');return;}try{root.__radarStandardRegistry.openLifecycle(()=>graphProvider?.(),id,{onRemoved(){refresh();if(status)status.textContent=tr('referenceRemoved');},onSources:openStandardSources});}catch(e){root.console?.warn?.('Reference lifecycle rejected',e);if(status)status.textContent=tr('referenceLifecycleError');}});bar.appendChild(lifecycleButton);
      const declareButton=d.createElement('button');declareButton.type='button';declareButton.style.display='none';declareButton.dataset.nativeDeclare='true';declareButton.dataset.isoTranslation='declareLocal';declareButton.textContent=tr('declareLocal');
      declareButton.addEventListener('click',()=>{
        try{root.__radarStandardRegistry.open(graphProvider?.(),{declaration:true,onDeclared(result){

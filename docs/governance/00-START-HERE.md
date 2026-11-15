@@ -11,7 +11,8 @@
 - Publication distante réussie, artefacts vérifiés ; recette navigateur des distributions publiques encore à enregistrer.
 - Baseline documentaire S15 : `2695a6ef64cf338129f9ce0eb4f163dd495db1bf`.
 - Lot métier **S15-A/R1** consolidé sur `feature/s15-standards-sources` : `af248ca643c14b0b2391370c0f9dce305df2d47e`. [architecture et contrat](../architecture/88-S15-A-REFERENCES-SOURCES.md), [validation et recette](../evidence/11-S15-A-CANDIDATE-VALIDATION.md). Références ISO/non-ISO, sources et création de blips ; 615 tests Node et 15 contrôles Chrome réussis, aucune publication S15.
-- Candidat **S15-B** : [sources externes et contrats](../architecture/89-S15-B-STANDARD-SOURCES.md), [qualification](../evidence/12-S15-B-CANDIDATE-VALIDATION.md). RFC Editor, W3C, ISO réutilisé ; qualification Mac à confirmer.
+- **S15-B/R1/R2** consolidé localement : `eb214da42c7533210daf0a2d6487be5f4231a0a0`. [Sources externes et contrats](../architecture/89-S15-B-STANDARD-SOURCES.md), [qualification](../evidence/12-S15-B-CANDIDATE-VALIDATION.md) : 631 tests, 44 contrôles Chrome, 9 858 RFC et 1 721 spécifications W3C acquises.
+- Candidat **S15-C** : [cycle de vie des références](../architecture/90-S15-C-REFERENCE-LIFECYCLE.md), [qualification](../evidence/13-S15-C-CANDIDATE-VALIDATION.md). Dépendances, suppression protégée, comparaison et réconciliation contrôlées ; qualification Mac à confirmer.
 - Workspace persistant, convergence SPM, composition physique avancée et prévisualisation autonome sans téléchargement reportés.
 
 Lire le HEAD réel et l'état de travail avant modification. Le tag publié reste immuable ; main évolue indépendamment. Les états antérieurs ci-dessous sont historiques, non des instructions courantes.

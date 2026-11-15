@@ -2,7 +2,7 @@
 
 Entrée : [START HERE](governance/00-START-HERE.md). Pour l’état effectivement réalisé, lire [AS-IS](architecture/ARCHITECTURE-AS-IS-A86.md), [distribution](architecture/87-A86-DISTRIBUTION-RELEASES-PAGES.md), [preuve de publication](evidence/10-A86-PUBLICATION.md) et [revue exigences](requirements/A86-RECONCILIATION.md). La [spécification cible](architecture/02-SPECIFICATION-CIBLE.md) et les décisions adoptées définissent les objectifs ; les documents de lots restent des traces datées. Une référence historique n’est pas une instruction actuelle. Cet inventaire recense les fichiers présents dans la reconstruction de la baseline et le delta documentaire ; il ne prétend pas avoir réécrit ou requalifié chaque document historique.
 
-S15-A/R1 est consolidé localement (`af248ca643c14b0b2391370c0f9dce305df2d47e`) ; voir [architecture](architecture/88-S15-A-REFERENCES-SOURCES.md) et [validation](evidence/11-S15-A-CANDIDATE-VALIDATION.md). Le candidat S15-B ajoute les [sources documentaires externes](architecture/89-S15-B-STANDARD-SOURCES.md) ; [qualification](evidence/12-S15-B-CANDIDATE-VALIDATION.md). A8.6 demeure publique.
+S15-A/R1 est consolidé localement (`af248ca643c14b0b2391370c0f9dce305df2d47e`) ; voir [architecture](architecture/88-S15-A-REFERENCES-SOURCES.md) et [validation](evidence/11-S15-A-CANDIDATE-VALIDATION.md). S15-B/R1/R2 est consolidé (`eb214da42c7533210daf0a2d6487be5f4231a0a0`) : [sources documentaires externes](architecture/89-S15-B-STANDARD-SOURCES.md), [qualification](evidence/12-S15-B-CANDIDATE-VALIDATION.md). Le candidat [S15-C](architecture/90-S15-C-REFERENCE-LIFECYCLE.md) ajoute le cycle de vie protégé ; [qualification](evidence/13-S15-C-CANDIDATE-VALIDATION.md). A8.6 demeure publique.
 
 | Fichier | Rôle |
 |---|---|
@@ -92,12 +92,14 @@ S15-A/R1 est consolidé localement (`af248ca643c14b0b2391370c0f9dce305df2d47e`) 
 | [architecture/86-S14-3-STANDALONE-PUBLICATION-DELIVERY.md](architecture/86-S14-3-STANDALONE-PUBLICATION-DELIVERY.md) | Architecture de lot / étude ; lire avec AS-IS |
 | [architecture/87-A86-DISTRIBUTION-RELEASES-PAGES.md](architecture/87-A86-DISTRIBUTION-RELEASES-PAGES.md) | Référence courante / registre |
 | [architecture/88-S15-A-REFERENCES-SOURCES.md](architecture/88-S15-A-REFERENCES-SOURCES.md) | Delta architecture et contrat S15-A/R1 consolidé |
-| [architecture/89-S15-B-STANDARD-SOURCES.md](architecture/89-S15-B-STANDARD-SOURCES.md) | Delta architecture et contrat S15-B candidat |
+| [architecture/89-S15-B-STANDARD-SOURCES.md](architecture/89-S15-B-STANDARD-SOURCES.md) | Delta architecture et contrat S15-B consolidé |
+| [architecture/90-S15-C-REFERENCE-LIFECYCLE.md](architecture/90-S15-C-REFERENCE-LIFECYCLE.md) | Cycle de vie protégé, contrat métier S15-C |
 | [architecture/ARCHITECTURE-AS-IS-A86.md](architecture/ARCHITECTURE-AS-IS-A86.md) | Référence courante / registre |
 | [architecture/ARCHITECTURE-CATALOGUE-ETAT-COURANT.md](architecture/ARCHITECTURE-CATALOGUE-ETAT-COURANT.md) | Architecture de lot / étude ; lire avec AS-IS |
 | [architecture/CONCEPTION-CONSULTATION-ISO.md](architecture/CONCEPTION-CONSULTATION-ISO.md) | Architecture de lot / étude ; lire avec AS-IS |
 | [architecture/INVENTAIRE-SOURCES-CATALOGUES.md](architecture/INVENTAIRE-SOURCES-CATALOGUES.md) | Architecture de lot / étude ; lire avec AS-IS |
 | [architecture/schemas/external-document-v1.schema.json](architecture/schemas/external-document-v1.schema.json) | Contrat optionnel des notices externes S15-B |
+| [architecture/schemas/reference-reconciliation-v1.schema.json](architecture/schemas/reference-reconciliation-v1.schema.json) | Historique privé de réconciliation S15-C |
 | [architecture/schemas/publications-v1.schema.json](architecture/schemas/publications-v1.schema.json) | Contrat de données (versionné) |
 | [evidence/01-SOURCES-ET-CONFIANCE.md](evidence/01-SOURCES-ET-CONFIANCE.md) | Preuve historique / source archivée |
 | [evidence/02-DOC-P0-REPO-AUDIT.md](evidence/02-DOC-P0-REPO-AUDIT.md) | Preuve historique / source archivée |
@@ -110,7 +112,8 @@ S15-A/R1 est consolidé localement (`af248ca643c14b0b2391370c0f9dce305df2d47e`) 
 | [evidence/09-A86-FINAL-QUALIFICATION.md](evidence/09-A86-FINAL-QUALIFICATION.md) | Preuve historique / source archivée |
 | [evidence/10-A86-PUBLICATION.md](evidence/10-A86-PUBLICATION.md) | Preuve historique / source archivée |
 | [evidence/11-S15-A-CANDIDATE-VALIDATION.md](evidence/11-S15-A-CANDIDATE-VALIDATION.md) | Preuve de qualification S15-A/R1 |
-| [evidence/12-S15-B-CANDIDATE-VALIDATION.md](evidence/12-S15-B-CANDIDATE-VALIDATION.md) | Préparation et recette candidat S15-B |
+| [evidence/12-S15-B-CANDIDATE-VALIDATION.md](evidence/12-S15-B-CANDIDATE-VALIDATION.md) | Qualification S15-B/R1/R2 consolidé |
+| [evidence/13-S15-C-CANDIDATE-VALIDATION.md](evidence/13-S15-C-CANDIDATE-VALIDATION.md) | Préparation et recette S15-C |
 | [evidence/release-a86/RELEASE-NOTES.md](evidence/release-a86/RELEASE-NOTES.md) | Preuve historique / source archivée |
 | [evidence/release-a86/publish.mjs](evidence/release-a86/publish.mjs) | Preuve historique / source archivée |
 | [governance/00-START-HERE.md](governance/00-START-HERE.md) | Référence courante / registre |

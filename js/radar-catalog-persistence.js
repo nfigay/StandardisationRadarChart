@@ -199,12 +199,115 @@
     if(matches.length===1)return {action:'existing',standardId:matches[0].standardId,reference:matches[0].extensions.referenceDeclaration.designation};
     var id=sourceId==='rfc-editor'?'rfc:'+key:'w3c-tr:'+key;
     if(standards.some(s=>s.standardId===id))fail('external standardId collision');
-    var declaration={issuer:doc.issuer,designation:doc.designation,editionDesignation:doc.edition,
-      sourceName:sourceId==='rfc-editor'?'RFC Editor':'W3C API',sourceUrl:doc.url,origin:sourceId,verification:'source-verified'};
+    var declaration=sourceDeclaration(doc);
     if(standards.some(s=>externalCollision(s,declaration)))fail('source reference conflicts with an existing declaration; reconcile before importing');
     var record={standardId:id,name:doc.title,extensions:{referenceDeclaration:declaration,externalDocument:clone(doc)}};
     source.standards=standards.concat([record]);
     return {action:'imported',standardId:id,reference:doc.designation};
+  }
+  // S15-C: lifecycle operations remain inside the private catalog owner.
+  // A stored revision and its current graph/session snapshot are both protected.
+  // No cascade, no rewriting of blip references, no implicit source refresh.
+  function lifecycleOwner() {
+    if(root.__radarApplicationProfile?.viewer)fail('Viewer cannot manage references');
+    root.__radarApplicationProfile?.require('catalog.declareReference');
+    if(imports.length!==1)fail('exactly one imported catalog required');
+    return imports[0];
+  }
+  function lifecycleRecord(owner,id) {
+    var matches=owner.source.standards.filter(s=>s.standardId===id);
+    if(matches.length!==1)fail('unresolved or ambiguous standardId');
+    return matches[0];
+  }
+  function referenceImpact(graph,id) {
+    var owner=lifecycleOwner(),record=lifecycleRecord(owner,id),dependencies=new Map();
+    function add(key,detail){if(!dependencies.has(key))dependencies.set(key,detail);}
+    function scan(value,location,ignoreIdentity){
+      if(!value||typeof value!=='object')return;
+      if(Array.isArray(value)){value.forEach((v,i)=>scan(v,location+'/'+i,false));return;}
+      for(var key of Object.keys(value)){
+        var child=value[key],where=location+'/'+key.replace(/~/g,'~0').replace(/\//g,'~1');
+        if(key==='standardId'&&child===id&&!ignoreIdentity)add('other:'+where,{kind:'other',location:where});
+        if(key==='standardIds'&&Array.isArray(child)&&child.includes(id))add('other:'+where,{kind:'other',location:where});
+        scan(child,where,false);
+      }
+    }
+    function inspect(catalog){
+      for(var r of catalog.radarRevisions){
+        for(var b of r.blips){
+          if(b.standardId===id)add('blip:'+JSON.stringify([r.revisionId,b.blipId]),{kind:'blip',revisionId:r.revisionId,radarId:r.radarId,status:r.status,blipId:b.blipId,label:b.label||b.blipId});
+          scan(b,'/radarRevisions/'+r.revisionId+'/blips/'+b.blipId,true);
+        }
+        var copy=Object.assign({},r);delete copy.blips;scan(copy,'/radarRevisions/'+r.revisionId,false);
+      }
+      for(var a of catalog.assessments||[]){
+        if(a.standardId===id)add('assessment:'+a.assessmentId,{kind:'assessment',assessmentId:a.assessmentId});
+        scan(a,'/assessments/'+a.assessmentId,true);
+      }
+      for(var s of catalog.standards)if(s.standardId!==id)scan(s,'/standards/'+s.standardId,true);
+      for(var key of Object.keys(catalog))if(!['standards','radarRevisions','assessments'].includes(key))scan(catalog[key],'/'+key,false);
+    }
+    inspect(owner.source);
+    // build() validates mapped graph nodes and preserves published revisions.
+    // If a workspace snapshot cannot be inspected, fail closed rather than delete.
+    inspect(build(graph));
+    return {standardId:id,name:record.name,dependencies:Array.from(dependencies.values()),unused:dependencies.size===0,token:canonical({catalogId:owner.manifest.catalogId,record:record})};
+  }
+  function removeUnusedReference(graph,id,expectedToken) {
+    var owner=lifecycleOwner(),impact=referenceImpact(graph,id);
+    if(expectedToken!==impact.token)fail('reference changed; inspect again');
+    if(!impact.unused)fail('reference is still in use');
+    owner.source.standards=owner.source.standards.filter(s=>s.standardId!==id);
+    return {action:'removed',standardId:id};
+  }
+  function sourceDeclaration(doc){
+    return {issuer:doc.issuer,designation:doc.designation,editionDesignation:doc.edition,
+      sourceName:doc.sourceId==='rfc-editor'?'RFC Editor':'W3C API',sourceUrl:doc.url,origin:doc.sourceId,verification:'source-verified'};
+  }
+  function sameDeclaredEdition(a,b){
+    return !!a&&typeof a.issuer==='string'&&typeof a.designation==='string'&&typeof a.editionDesignation==='string'&&!!a.editionDesignation.trim()&&isoDesignation(a.issuer)===isoDesignation(b.issuer)&&
+      isoDesignation(a.designation)===isoDesignation(b.designation)&&isoDesignation(a.editionDesignation)===isoDesignation(b.editionDesignation);
+  }
+  function sourceLifecyclePlan(graph,sourceId,key,generation){
+    var owner=lifecycleOwner(),standards=owner.source.standards;
+    if(!['rfc-editor','w3c'].includes(sourceId))fail('unsupported source reference');
+    var doc=root.__radarStandardSources?.selected(sourceId,key,generation);
+    if(!doc||doc.schemaVersion!==1||doc.sourceId!==sourceId||doc.key!==key||!doc.title||!doc.designation||!doc.issuer||!doc.edition||!doc.url)fail('invalid source publication');
+    var declaration=sourceDeclaration(doc),id=sourceId==='rfc-editor'?'rfc:'+key:'w3c-tr:'+key;
+    var official=standards.filter(s=>s.extensions?.externalDocument?.sourceId===sourceId&&s.extensions.externalDocument.key===key);
+    if(official.length>1)fail('ambiguous external source identity');
+    var conflicts=standards.filter(s=>s!==official[0]&&externalCollision(s,declaration));
+    var record=official[0],action='new';
+    if(!record){
+      if(conflicts.length===1&&conflicts[0].extensions?.referenceDeclaration?.origin==='manual'&&
+        conflicts[0].extensions.referenceDeclaration.verification==='unverified'&&sameDeclaredEdition(conflicts[0].extensions.referenceDeclaration,declaration)&&
+        !conflicts[0].extensions?.isoDocument&&!conflicts[0].extensions?.externalDocument){record=conflicts[0];action='reconcile';}
+      else if(conflicts.length||standards.some(s=>s.standardId===id))return {action:'conflict',canApply:false};
+      else return {action:'new',canApply:false};
+    }else action='existing';
+    var old=record.extensions.referenceDeclaration||{},oldDoc=record.extensions.externalDocument||{};
+    var differences=[];
+    for(var [field,before,after] of [['title',record.name,doc.title],['issuer',old.issuer,doc.issuer],['designation',old.designation,doc.designation],['edition',old.editionDesignation,doc.edition],['status',oldDoc.status,doc.status],['stream',oldDoc.stream,doc.stream],['url',old.sourceUrl,doc.url]])
+      if((before??null)!==(after??null))differences.push({field,before:before??null,after:after??null});
+    if(action==='existing'&&differences.length)action='refresh';
+    var impact=referenceImpact(graph,record.standardId);
+    var compatible=sameDeclaredEdition(old,declaration)&&!standards.some(s=>s!==record&&s.standardId===id)&&
+      !standards.some(s=>s!==record&&externalCollision(s,declaration));
+    return {action,standardId:record.standardId,token:impact.token,differences,dependencies:impact.dependencies,
+      canApply:['reconcile','refresh'].includes(action)&&impact.unused&&compatible,
+      reason:!compatible?'identity':!impact.unused?'in-use':null};
+  }
+  function applySourceLifecycle(graph,request){
+    var owner=lifecycleOwner();
+    if(!request||!['refresh','reconcile'].includes(request.action))fail('explicit lifecycle action required');
+    var plan=sourceLifecyclePlan(graph,request.sourceId,request.key,request.generation);
+    if(!plan.canApply||plan.action!==request.action||plan.standardId!==request.standardId||plan.token!==request.token)fail('reference lifecycle plan changed or reference is in use');
+    var record=lifecycleRecord(owner,plan.standardId),doc=root.__radarStandardSources.selected(request.sourceId,request.key,request.generation);
+    var replacement=clone(record);replacement.name=doc.title;
+    if(plan.action==='reconcile')replacement.extensions.referenceReconciliation={schemaVersion:1,reconciledAt:new Date().toISOString(),previousName:record.name,previousDeclaration:clone(record.extensions.referenceDeclaration)};
+    replacement.extensions.referenceDeclaration=sourceDeclaration(doc);replacement.extensions.externalDocument=clone(doc);
+    owner.source.standards=owner.source.standards.map(s=>s===record?replacement:s);
+    return {action:plan.action,standardId:record.standardId,reference:doc.designation};
   }
   // A locally declared record is NOT a verified SDO publication.
   // No revision/blip is created or modified by this operation.
@@ -668,6 +771,7 @@
     isDirty:isDirty,markNew:markNew,closeCatalog:closeCatalog,importIsoReference:importIsoReference,importSourceReference:importSourceReference,renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
     registerDraft:registerDraft,removeGroup:removeGroup, ownsRevision:ownsRevision, transitionRevision:transitionRevision,
     validateCreation:validateCreation,commitCreation:commitCreation,
+    referenceImpact:referenceImpact,removeUnusedReference:removeUnusedReference,sourceLifecyclePlan:sourceLifecyclePlan,applySourceLifecycle:applySourceLifecycle,
     listStandardsForDraft:listStandardsForDraft, listReferenceRecords:listReferenceRecords, declareLocalReference:declareLocalReference, status:function(){return {importedCatalogs:imports.length,
     catalogId:imports.length===1?imports[0].manifest.catalogId:null,
     importDigest:imports.length===1?imports[0].importDigest:null};}});

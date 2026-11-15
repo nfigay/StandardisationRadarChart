@@ -69,6 +69,8 @@
     "failed": "Operation failed. See the console for technical details."
   }
 };
+  Object.assign(dict.fr,{lifecycle:'Cycle de vie de la référence',impact:'Dépendances dans le catalogue et la session',unused:'Aucune dépendance détectée. La suppression est possible.',inUse:'Référence utilisée : aucune suppression ni modification de notice autorisée.',blip:'Blip',assessment:'Évaluation',other:'Autre lien métier',remove:'Supprimer la référence',confirmRemove:'Je confirme la suppression définitive de cette référence inutilisée.',removed:'Référence supprimée.',sources:'Comparer avec les sources / consulter les éditions',sourceHint:'Les notices publiées ne sont pas modifiées. Les autres éditions peuvent être intégrées séparément.',draftState:'Brouillon',publishedState:'Publiée',archivedState:'Archivée'});
+  Object.assign(dict.en,{lifecycle:'Reference lifecycle',impact:'Dependencies in the catalog and session',unused:'No dependency detected. Removal is possible.',inUse:'Reference in use: removal and record changes are blocked.',blip:'Blip',assessment:'Assessment',other:'Other business link',remove:'Remove reference',confirmRemove:'I confirm permanent removal of this unused reference.',removed:'Reference removed.',sources:'Compare with sources / browse editions',sourceHint:'Published records are not changed. Other editions may be integrated separately.',draftState:'Draft',publishedState:'Published',archivedState:'Archived'});
   var registeredI18n=null;
   function t(key,options){
     var instance=root.i18next;
@@ -208,5 +210,21 @@
    if(!declarationOnly)actions.appendChild(project);actions.appendChild(close);panel.appendChild(actions);if(!declarationOnly)panel.appendChild(projectMsg);
    overlay.appendChild(panel);d.body.appendChild(overlay);render();root.i18next?.on?.('languageChanged',refreshLanguage);(declarationOnly?inputs.name:search).focus();return overlay;
  }
- root.__radarStandardRegistry=Object.freeze({records:records,declare:declare,open:open,close:close});
+ function openLifecycle(graphProvider,id,options={}){
+   root.__radarApplicationProfile?.require('catalog.declareReference');
+   var p=api(),d=root.document,catalogId=p.status().catalogId;
+   var initial=p.referenceImpact(graphProvider?.(),id),row=p.listReferenceRecords().find(r=>r.standardId===id);
+   close();var dialog=el(d,'dialog');dialog.id='standard-reference-lifecycle';dialog.style.cssText='box-sizing:border-box;width:min(700px,96vw);max-height:90vh;overflow:auto;padding:18px;border:1px solid #aaa;border-radius:8px;background:white;color:#222;font:14px Arial,sans-serif';
+   var heading=el(d,'h2'),name=el(d,'p',row.name+' — '+id),caption=el(d,'h3'),details=el(d,'ul'),message=el(d,'p'),hint=el(d,'p'),confirmLabel=el(d,'label'),confirm=el(d,'input'),confirmText=el(d,'span'),actions=el(d,'div'),remove=el(d,'button'),sources=el(d,'button'),cancel=el(d,'button'),feedback=el(d,'p');
+   confirm.type='checkbox';confirm.dataset.lifecycleConfirm='true';confirmLabel.append(confirm,confirmText);remove.dataset.lifecycleRemove='true';sources.dataset.lifecycleSources='true';remove.type=sources.type=cancel.type='button';actions.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin-top:12px';actions.append(remove,sources,cancel);feedback.setAttribute('role','alert');dialog.append(heading,name,caption,details,message,hint,confirmLabel,actions,feedback);d.body.appendChild(dialog);
+   var impact=initial;
+   function dismiss(){root.i18next?.off?.('languageChanged',render);if(dialog.open)dialog.close();dialog.remove();if(activeClose===dismiss)activeClose=null;}
+   function alive(){return activeClose===dismiss&&p.status().catalogId===catalogId;}
+   function render(){heading.textContent=t('lifecycle');caption.textContent=t('impact');message.textContent=t(impact.unused?'unused':'inUse');hint.textContent=t('sourceHint');confirmText.textContent=t('confirmRemove');remove.textContent=t('remove');sources.textContent=t('sources');cancel.textContent=t('close');confirmLabel.hidden=!impact.unused;remove.disabled=!impact.unused||!confirm.checked;sources.hidden=!options.onSources;details.replaceChildren();for(var dep of impact.dependencies){var label=dep.kind==='blip'?[t('blip'),dep.label,dep.radarId,dep.revisionId,t(({draft:'draftState',published:'publishedState',archived:'archivedState'})[dep.status]||dep.status)].filter(Boolean).join(' · '):dep.kind==='assessment'?t('assessment')+' · '+dep.assessmentId:t('other')+' · '+dep.location;details.appendChild(el(d,'li',label));}}
+   confirm.addEventListener('change',render);cancel.addEventListener('click',dismiss);dialog.addEventListener('cancel',e=>{e.preventDefault();dismiss();});
+   remove.addEventListener('click',()=>{if(!alive()||!confirm.checked)return;try{p.removeUnusedReference(graphProvider?.(),id,impact.token);}catch(e){feedback.textContent=errorMessage(e);try{impact=p.referenceImpact(graphProvider?.(),id);confirm.checked=false;render();}catch(_){}return;}dismiss();options.onRemoved?.({standardId:id});});
+   sources.addEventListener('click',()=>{if(!alive())return;dismiss();options.onSources?.(row);});
+   activeClose=dismiss;root.i18next?.on?.('languageChanged',render);render();if(dialog.showModal)dialog.showModal();else dialog.setAttribute('open','');cancel.focus();return dialog;
+ }
+ root.__radarStandardRegistry=Object.freeze({records:records,declare:declare,open:open,close:close,openLifecycle:openLifecycle});
 })(window);

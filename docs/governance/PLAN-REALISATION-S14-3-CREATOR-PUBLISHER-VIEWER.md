@@ -547,4 +547,8 @@ La release publique A8.6 est maintenue (603 tests de release, preuve 10). Le can
 
 ## S15-B — acquisition multi-sources
 
-Candidat : adaptateurs RFC Editor et W3C, intégration explicite des notices datées, sélection native et réutilisation dans les blips, caches documentaires optionnels, ISO existant, i18n FR/EN, contrôles auteur et projection inchangée. Voir [architecture et contrats](../architecture/89-S15-B-STANDARD-SOURCES.md) et [qualification](../evidence/12-S15-B-CANDIDATE-VALIDATION.md). Qualification Mac et acquisition officielle à confirmer ; aucune publication.
+Candidat : adaptateurs RFC Editor et W3C, intégration explicite des notices datées, sélection native et réutilisation dans les blips, caches documentaires optionnels, ISO existant, i18n FR/EN, contrôles auteur et projection inchangée. Voir [architecture et contrats](../architecture/89-S15-B-STANDARD-SOURCES.md) et [qualification](../evidence/12-S15-B-CANDIDATE-VALIDATION.md). Qualification Mac réussie : 631 tests, 44 contrôles Chrome, 9 858 RFC, 1 721 spécifications W3C, quatre caches officiels. Consolidé localement (`eb214da42c7533210daf0a2d6487be5f4231a0a0`) ; aucune publication.
+
+## S15-C — cycle de vie protégé
+
+Candidat : inventaire conservateur des dépendances stockées et de session, suppression explicite sans cascade, comparaison et actualisation RFC/W3C et réconciliation exacte des notices inutilisées avec conservation de l’identifiant local. Révisions publiées et notices utilisées inchangées ; projection inchangée. Voir [architecture et contrats](../architecture/90-S15-C-REFERENCE-LIFECYCLE.md) et [qualification](../evidence/13-S15-C-CANDIDATE-VALIDATION.md). DEC-009/010 restent ouvertes. Qualification Mac à réaliser. S15-D : recette intégrale, distributions et préparation de release.
