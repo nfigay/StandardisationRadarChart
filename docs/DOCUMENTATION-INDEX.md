@@ -144,3 +144,10 @@ S15-A/R1 est consolidé localement (`af248ca643c14b0b2391370c0f9dce305df2d47e`) 
 - [Notes de release A8.7](RELEASE-A87.md)
 - [Architecture de préparation](architecture/92-A87-RELEASE-PREPARATION.md)
 - [Preuves fonctionnelles S15-D](evidence/14-S15-D-FINAL-VALIDATION.md)
+
+## A8.7 — Clôture de la release publiée
+
+- [Release A8.7](RELEASE-A87.md)
+- [Validation publique](evidence/15-A87-PUBLISHED-VALIDATION.md)
+- [Manifeste des preuves](evidence/a87/manifest.json)
+- [Architecture de release](architecture/92-A87-RELEASE-PREPARATION.md)

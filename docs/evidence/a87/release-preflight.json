@@ -1,0 +1,358 @@
+{
+  "operation": "A87-RELEASE-PREFLIGHT",
+  "startedAt": "2026-11-15T17:51:53.771Z",
+  "repository": "$HOME/git/StandardisationRadarChart",
+  "project": "nfigay/StandardisationRadarChart",
+  "candidate": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+  "tag": "pilot-a87",
+  "checks": [
+    {
+      "name": "candidate-baseline",
+      "ok": true,
+      "detail": {
+        "branch": "feature/s15-standards-sources",
+        "head": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "main": "2695a6ef64cf338129f9ce0eb4f163dd495db1bf",
+        "release": "894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55",
+        "tracked": ""
+      }
+    },
+    {
+      "name": "fast-forward-compatible",
+      "ok": true,
+      "detail": {
+        "from": "2695a6ef64cf338129f9ce0eb4f163dd495db1bf",
+        "to": "545ed539df2e117a8aab5158a4bcc5c151308ba3"
+      }
+    },
+    {
+      "name": "expected-origin",
+      "ok": true,
+      "detail": "nfigay/StandardisationRadarChart"
+    },
+    {
+      "name": "local-release-tag-absent",
+      "ok": true,
+      "detail": "pilot-a87"
+    },
+    {
+      "name": "qualification-report-integrity",
+      "ok": true,
+      "detail": "d8653e95704c774e7e413b523330b5a12bd844cfe659782e0e457bccaed0aa21"
+    },
+    {
+      "name": "qualified-candidate",
+      "ok": true,
+      "detail": {
+        "codeCommit": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "checks": 50,
+        "passed": 50
+      }
+    },
+    {
+      "name": "645-tests",
+      "ok": true,
+      "detail": {
+        "files": 100,
+        "tests": 645,
+        "pass": 645,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    },
+    {
+      "name": "public-source-access",
+      "ok": true,
+      "detail": {
+        "origin": "https://nfigay.github.io",
+        "path": "/StandardisationRadarChart/distributions.html",
+        "results": [
+          {
+            "name": "RFC Editor index",
+            "ok": true,
+            "count": 9858,
+            "acquiredAt": "2026-11-15T17:35:20.709Z"
+          },
+          {
+            "name": "W3C index",
+            "ok": true,
+            "count": 1721,
+            "acquiredAt": "2026-11-15T17:35:29.047Z"
+          },
+          {
+            "name": "W3C JSON-LD history",
+            "ok": true,
+            "count": 17,
+            "acquiredAt": "2026-11-15T17:35:20.509Z"
+          },
+          {
+            "name": "W3C historical plus shortname",
+            "ok": true,
+            "count": 1,
+            "acquiredAt": "2026-11-15T17:35:20.486Z"
+          }
+        ],
+        "adapterSha256": "df716b21bba67380cb96220f371b3e251ff88d63c0b371ea75c153181ac4f79b"
+      }
+    },
+    {
+      "name": "functional-diagnostics",
+      "ok": true,
+      "detail": {
+        "blocked": [],
+        "exceptions": [],
+        "consoleErrors": [],
+        "networkFailures": []
+      }
+    },
+    {
+      "name": "isolated-source",
+      "ok": true,
+      "detail": "545ed539df2e117a8aab5158a4bcc5c151308ba3"
+    },
+    {
+      "name": "distribution-location",
+      "ok": true,
+      "detail": "$HOME/Documents/A87-RC-O4x8KG/source/dist"
+    },
+    {
+      "name": "verify-qualified-distribution",
+      "ok": true,
+      "detail": "WEB DISTRIBUTION OK\n{\n  \"sourceCommit\": \"545ed53\",\n  \"files\": 388,\n  \"variants\": 6,\n  \"available\": 3\n}"
+    },
+    {
+      "name": "manifest:release-manifest.json",
+      "ok": true,
+      "detail": {
+        "sourceCommit": "545ed53",
+        "sha256": "aa3044f3df86083504f1687704fb0d8030e9cf43fa5de61a282de746d7ddbdda"
+      }
+    },
+    {
+      "name": "manifest:distributions.json",
+      "ok": true,
+      "detail": {
+        "sourceCommit": "545ed53",
+        "sha256": "9728beeab6b32dc098c97302bfe96d4f06132ccc9d7f2eea7161666ca91536e7"
+      }
+    },
+    {
+      "name": "manifest:site-manifest.json",
+      "ok": true,
+      "detail": {
+        "sourceCommit": "545ed53",
+        "sha256": "aa8875a480a5096c18e1af8be89af3ac7e5d45d3fd3b18ad4a8cc66be496f02f"
+      }
+    },
+    {
+      "name": "site-file-count",
+      "ok": true,
+      "detail": 388
+    },
+    {
+      "name": "portal-integrity",
+      "ok": true,
+      "detail": "726a4de17b9e5ed9d73c85329e023a2479779aca7a2c6ab0018f9b9d0e2c3adb"
+    },
+    {
+      "name": "qualified-asset:standardization-radar-creator.html",
+      "ok": true,
+      "detail": {
+        "sha256": "e5627668e2c1e6924c55052d13dd55d4f16d9dd775fc16890e8b5d63c690b49f",
+        "bytes": 41655574
+      }
+    },
+    {
+      "name": "qualified-asset:standardization-radar-viewer.html",
+      "ok": true,
+      "detail": {
+        "sha256": "444b56d291e3bb5d31a7c1f2d7c7908fd512f3c3c383510b4ac9e00f7a2d58ee",
+        "bytes": 8101841
+      }
+    },
+    {
+      "name": "copied-asset:standardization-radar-creator.html",
+      "ok": true,
+      "detail": "e5627668e2c1e6924c55052d13dd55d4f16d9dd775fc16890e8b5d63c690b49f"
+    },
+    {
+      "name": "copied-asset:standardization-radar-viewer.html",
+      "ok": true,
+      "detail": "444b56d291e3bb5d31a7c1f2d7c7908fd512f3c3c383510b4ac9e00f7a2d58ee"
+    },
+    {
+      "name": "release-assets-inventory",
+      "ok": true,
+      "detail": [
+        "RELEASE-NOTES.md",
+        "SHA256SUMS",
+        "standardization-radar-creator.html",
+        "standardization-radar-viewer.html"
+      ]
+    },
+    {
+      "name": "github-authenticated",
+      "ok": true,
+      "detail": "github.com"
+    },
+    {
+      "name": "github-repository",
+      "ok": true,
+      "detail": {
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "nameWithOwner": "nfigay/StandardisationRadarChart",
+        "viewerPermission": "ADMIN"
+      }
+    },
+    {
+      "name": "github-write-permission",
+      "ok": true,
+      "detail": "ADMIN"
+    },
+    {
+      "name": "remote-main-baseline",
+      "ok": true,
+      "detail": {
+        "expected": "2695a6ef64cf338129f9ce0eb4f163dd495db1bf",
+        "actual": "2695a6ef64cf338129f9ce0eb4f163dd495db1bf"
+      }
+    },
+    {
+      "name": "remote-pages-baseline",
+      "ok": true,
+      "detail": {
+        "expected": "d24d7ef448be374528c725dbcb6845175aebda03",
+        "actual": "d24d7ef448be374528c725dbcb6845175aebda03"
+      }
+    },
+    {
+      "name": "remote-a86-unchanged",
+      "ok": true,
+      "detail": {
+        "expected": "894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55",
+        "actual": "894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55"
+      }
+    },
+    {
+      "name": "remote-a87-tag-absent",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "remote-a87-release-absent",
+      "ok": true,
+      "detail": "pilot-a87"
+    },
+    {
+      "name": "previous-release-preserved",
+      "ok": true,
+      "detail": "pilot-a86"
+    },
+    {
+      "name": "pages-deployment-configuration",
+      "ok": true,
+      "detail": {
+        "htmlUrl": "https://nfigay.github.io/StandardisationRadarChart/",
+        "status": "built",
+        "buildType": "legacy",
+        "source": {
+          "branch": "gh-pages",
+          "path": "/"
+        },
+        "httpsEnforced": true
+      }
+    },
+    {
+      "name": "remote-unchanged-during-preflight",
+      "ok": true,
+      "detail": {
+        "main": "2695a6ef64cf338129f9ce0eb4f163dd495db1bf",
+        "pages": "d24d7ef448be374528c725dbcb6845175aebda03",
+        "a86": "894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55",
+        "a87": null
+      }
+    },
+    {
+      "name": "original-unchanged",
+      "ok": true,
+      "detail": {
+        "branch": "feature/s15-standards-sources",
+        "head": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "main": "2695a6ef64cf338129f9ce0eb4f163dd495db1bf",
+        "release": "894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55",
+        "tracked": ""
+      }
+    }
+  ],
+  "errors": [],
+  "committed": false,
+  "pushed": false,
+  "published": false,
+  "ok": true,
+  "assets": {
+    "standardization-radar-creator.html": {
+      "path": "$HOME/Documents/A87-release-prepared-NFCawr/release-assets/standardization-radar-creator.html",
+      "sha256": "e5627668e2c1e6924c55052d13dd55d4f16d9dd775fc16890e8b5d63c690b49f",
+      "bytes": 41655574
+    },
+    "standardization-radar-viewer.html": {
+      "path": "$HOME/Documents/A87-release-prepared-NFCawr/release-assets/standardization-radar-viewer.html",
+      "sha256": "444b56d291e3bb5d31a7c1f2d7c7908fd512f3c3c383510b4ac9e00f7a2d58ee",
+      "bytes": 8101841
+    },
+    "RELEASE-NOTES.md": {
+      "path": "$HOME/Documents/A87-release-prepared-NFCawr/release-assets/RELEASE-NOTES.md",
+      "sha256": "112a63440986ca4407016e6f5fadfcd2ef694c8e2863a8f7fbd2feae898bb82f",
+      "bytes": 3497
+    },
+    "SHA256SUMS": {
+      "path": "$HOME/Documents/A87-release-prepared-NFCawr/release-assets/SHA256SUMS",
+      "sha256": "e064c9eee2425bfe859390108ee5006baabe9dec8df3a9c982922de1df38ec6b",
+      "bytes": 284
+    }
+  },
+  "pages": {
+    "htmlUrl": "https://nfigay.github.io/StandardisationRadarChart/",
+    "status": "built",
+    "buildType": "legacy",
+    "source": {
+      "branch": "gh-pages",
+      "path": "/"
+    },
+    "httpsEnforced": true
+  },
+  "preparedReport": "$HOME/Documents/A87-release-prepared-NFCawr/A87-RELEASE-PREPARED.json",
+  "preparedReportSha256": "25f8565c772afb97cde88e7a7585d7707a81741c83a0f0199dbfc0789d8d1f1e",
+  "releaseAssets": "$HOME/Documents/A87-release-prepared-NFCawr/release-assets",
+  "distribution": "$HOME/Documents/A87-RC-O4x8KG/source/dist",
+  "expectedRemote": {
+    "main": "2695a6ef64cf338129f9ce0eb4f163dd495db1bf",
+    "pages": "d24d7ef448be374528c725dbcb6845175aebda03",
+    "a86": "894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55",
+    "a87": null
+  },
+  "manifests": {
+    "release-manifest.json": {
+      "sourceCommit": "545ed53",
+      "sha256": "aa3044f3df86083504f1687704fb0d8030e9cf43fa5de61a282de746d7ddbdda"
+    },
+    "distributions.json": {
+      "sourceCommit": "545ed53",
+      "sha256": "9728beeab6b32dc098c97302bfe96d4f06132ccc9d7f2eea7161666ca91536e7"
+    },
+    "site-manifest.json": {
+      "sourceCommit": "545ed53",
+      "sha256": "aa8875a480a5096c18e1af8be89af3ac7e5d45d3fd3b18ad4a8cc66be496f02f"
+    }
+  },
+  "status": "ready-for-explicit-publication",
+  "finishedAt": "2026-11-15T17:52:00.204Z",
+  "reportPath": "$HOME/Documents/A87-release-prepared-NFCawr/A87-RELEASE-PREFLIGHT.json",
+  "clipboard": {
+    "ok": true
+  }
+}

@@ -1,0 +1,1029 @@
+{
+  "operation": "A87-PUBLIC-QUALIFICATION",
+  "startedAt": "2026-11-15T18:03:43.300Z",
+  "repository": "$HOME/git/StandardisationRadarChart",
+  "codeCommit": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+  "checks": [
+    {
+      "name": "original-baseline",
+      "ok": true,
+      "detail": {
+        "branch": "feature/s15-standards-sources",
+        "head": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "main": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "release": "894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55",
+        "tracked": ""
+      }
+    },
+    {
+      "name": "publication-proof",
+      "ok": true,
+      "detail": "$HOME/Documents/A87-publication-c1YzbI/A87-RELEASE-PUBLICATION.json"
+    },
+    {
+      "name": "remote-references",
+      "ok": true,
+      "detail": {
+        "refs/heads/gh-pages": "1eb772603268a48b653e0bde36187a6b7e15e143",
+        "refs/heads/main": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "refs/tags/pilot-a86": "894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55",
+        "refs/tags/pilot-a87": "545ed539df2e117a8aab5158a4bcc5c151308ba3"
+      }
+    },
+    {
+      "name": "public-site-manifest",
+      "ok": true,
+      "detail": {
+        "sha256": "aa8875a480a5096c18e1af8be89af3ac7e5d45d3fd3b18ad4a8cc66be496f02f",
+        "sourceCommit": "545ed53",
+        "files": 388
+      }
+    },
+    {
+      "name": "public-file:distributions.html",
+      "ok": true,
+      "detail": {
+        "sha256": "726a4de17b9e5ed9d73c85329e023a2479779aca7a2c6ab0018f9b9d0e2c3adb",
+        "bytes": 4600
+      }
+    },
+    {
+      "name": "public-portal",
+      "ok": true,
+      "detail": "distributions.html"
+    },
+    {
+      "name": "public-file:distributions.json",
+      "ok": true,
+      "detail": {
+        "sha256": "9728beeab6b32dc098c97302bfe96d4f06132ccc9d7f2eea7161666ca91536e7",
+        "bytes": 1644
+      }
+    },
+    {
+      "name": "public-file:release-manifest.json",
+      "ok": true,
+      "detail": {
+        "sha256": "aa3044f3df86083504f1687704fb0d8030e9cf43fa5de61a282de746d7ddbdda",
+        "bytes": 35780
+      }
+    },
+    {
+      "name": "public-file:radar.html",
+      "ok": true,
+      "detail": {
+        "sha256": "7bfecc12e7b72bad99b0ecfd7a7e9afe9404db6a85b482bb1f62c8dc39b063e3",
+        "bytes": 113795
+      }
+    },
+    {
+      "name": "public-file:js/radar-standard-sources.js",
+      "ok": true,
+      "detail": {
+        "sha256": "df716b21bba67380cb96220f371b3e251ff88d63c0b371ea75c153181ac4f79b",
+        "bytes": 15456
+      }
+    },
+    {
+      "name": "public-file:js/radar-standards-panel.js",
+      "ok": true,
+      "detail": {
+        "sha256": "3acdfc884dc701b96a0c410b47cbab20da06acf83cb8e9d6252dc41181c682e1",
+        "bytes": 97471
+      }
+    },
+    {
+      "name": "public-file:js/radar-publication-viewer.js",
+      "ok": true,
+      "detail": {
+        "sha256": "9edd9b517ce4aaaf5735e431f9cd4dfe7ed07e992e6e4fde7993523c57a0479b",
+        "bytes": 7578
+      }
+    },
+    {
+      "name": "public-file:lib/w2ui.min.js",
+      "ok": true,
+      "detail": {
+        "sha256": "8e8a93a5d82656e29532e7da883eb0a4feb23dc9402da887f9a68c772f1e3815",
+        "bytes": 492568
+      }
+    },
+    {
+      "name": "anonymous-download:standardization-radar-creator.html",
+      "ok": true,
+      "detail": {
+        "sha256": "e5627668e2c1e6924c55052d13dd55d4f16d9dd775fc16890e8b5d63c690b49f",
+        "bytes": 41655574
+      }
+    },
+    {
+      "name": "anonymous-download:standardization-radar-viewer.html",
+      "ok": true,
+      "detail": {
+        "sha256": "444b56d291e3bb5d31a7c1f2d7c7908fd512f3c3c383510b4ac9e00f7a2d58ee",
+        "bytes": 8101841
+      }
+    },
+    {
+      "name": "anonymous-download:RELEASE-NOTES.md",
+      "ok": true,
+      "detail": {
+        "sha256": "112a63440986ca4407016e6f5fadfcd2ef694c8e2863a8f7fbd2feae898bb82f",
+        "bytes": 3497
+      }
+    },
+    {
+      "name": "anonymous-download:SHA256SUMS",
+      "ok": true,
+      "detail": {
+        "sha256": "e064c9eee2425bfe859390108ee5006baabe9dec8df3a9c982922de1df38ec6b",
+        "bytes": 284
+      }
+    },
+    {
+      "name": "historical-release:pilot-a86",
+      "ok": true,
+      "detail": "pilot-a86"
+    },
+    {
+      "name": "historical-release:pilot-a82",
+      "ok": true,
+      "detail": "pilot-a82"
+    },
+    {
+      "name": "standalone-template-provenance",
+      "ok": true,
+      "detail": {
+        "codeCommit": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "templateSha256": "444b56d291e3bb5d31a7c1f2d7c7908fd512f3c3c383510b4ac9e00f7a2d58ee",
+        "templateBytes": 8101841,
+        "modules": 61
+      }
+    },
+    {
+      "name": "standalone-resource-isolation",
+      "ok": true,
+      "detail": {
+        "creatorResources": 7,
+        "viewerResources": 2
+      }
+    },
+    {
+      "name": "pages-creator-startup",
+      "ok": true,
+      "detail": {
+        "profile": "creator",
+        "creator": true,
+        "graph": true,
+        "sources": [
+          "iso-open-data",
+          "rfc-editor",
+          "w3c"
+        ],
+        "nativeCount": 0,
+        "externalCacheReads": 0
+      }
+    },
+    {
+      "name": "pages-iso-installed",
+      "ok": true,
+      "detail": {
+        "startup": {
+          "status": "running"
+        },
+        "release": "2026-11-09",
+        "reference": "ISO 10303-242:2014"
+      }
+    },
+    {
+      "name": "pages-native-v1-compatibility",
+      "ok": true,
+      "detail": {
+        "legacy": true,
+        "revision": "old-rev",
+        "closed": "closed"
+      }
+    },
+    {
+      "name": "pages-create-radar",
+      "ok": true,
+      "detail": {
+        "action": "created-catalog",
+        "group": "CATALOG_REVISION_1",
+        "revisionId": "revision_0821193f-0ba3-4bda-b888-79d3352700a4",
+        "radarId": "radar_0821193f-0ba3-4bda-b888-79d3352700a4",
+        "catalogTitle": "S15-D synthetic multi-source"
+      }
+    },
+    {
+      "name": "pages-import-and-reconcile",
+      "ok": true,
+      "detail": {
+        "iso": "iso-deliverable:57620",
+        "rfc": "rfc:9110",
+        "w3c": "w3c-tr:json-ld11:20200716",
+        "reconciled": "standard_17dc32b3-94b5-40c9-adcb-ac39926aff14",
+        "local": "standard_05efb8f7-e64c-4264-a78c-99fa91d9d471",
+        "rfcCount": 9858,
+        "w3cCount": 1721,
+        "liveSources": {
+          "rfc": {
+            "generation": 1,
+            "acquiredAt": "2026-11-15T18:04:49.457Z",
+            "count": 9858,
+            "storage": "browser-cache",
+            "unsupported": 0
+          },
+          "w3c": {
+            "generation": 2,
+            "acquiredAt": "2026-11-15T18:04:58.869Z",
+            "count": 1721,
+            "storage": "browser-cache",
+            "unsupported": 0
+          },
+          "jsonld": {
+            "generation": 3,
+            "acquiredAt": "2026-11-15T18:04:59.068Z",
+            "count": 17,
+            "storage": "browser-cache",
+            "unsupported": 0
+          },
+          "daml": {
+            "generation": 4,
+            "acquiredAt": "2026-11-15T18:04:59.233Z",
+            "count": 1,
+            "storage": "browser-cache",
+            "unsupported": 0
+          }
+        },
+        "removed": "standard_62b559b5-3068-43f4-8849-3d51d28371d3"
+      }
+    },
+    {
+      "name": "pages-create-blips-and-publish",
+      "ok": true,
+      "detail": {
+        "revisionId": "revision_0821193f-0ba3-4bda-b888-79d3352700a4",
+        "blips": 5,
+        "protected": true,
+        "dependencies": [
+          {
+            "kind": "blip",
+            "revisionId": "revision_0821193f-0ba3-4bda-b888-79d3352700a4",
+            "radarId": "radar_0821193f-0ba3-4bda-b888-79d3352700a4",
+            "status": "published",
+            "blipId": "blip_11ae660a-0e98-4664-90c6-c5854ca56814",
+            "label": "S15-D 2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "pages-native-grid-and-language",
+      "ok": true,
+      "detail": {
+        "en": 5,
+        "fr": 5,
+        "language": "fr"
+      }
+    },
+    {
+      "name": "pages-export-and-close",
+      "ok": true,
+      "detail": {
+        "artifact": {
+          "manifest": {
+            "format": "StandardisationRadarChart",
+            "schemaVersion": "1.0.0",
+            "catalogId": "catalog_c934777c-684b-4de0-a413-ae2b68e79016",
+            "artifactId": "artifact_3eaace0f-f9a6-4e08-b001-bb76c0b953f1",
+            "origin": {
+              "system": "StandardisationRadarChart",
+              "organizationId": "org_0821193f-0ba3-4bda-b888-79d3352700a4"
+            },
+            "lineage": {
+              "parentArtifactId": null
+            }
+          },
+          "data": {
+            "schemaVersion": "1.0.0",
+            "title": "S15-D synthetic multi-source",
+            "organizations": [
+              {
+                "organizationId": "org_0821193f-0ba3-4bda-b888-79d3352700a4",
+                "name": "Test organization"
+              }
+            ],
+            "portfolios": [
+              {
+                "portfolioId": "portfolio_0821193f-0ba3-4bda-b888-79d3352700a4",
+                "ownerOrganizationId": "org_0821193f-0ba3-4bda-b888-79d3352700a4",
+                "name": "Test portfolio"
+              }
+            ],
+            "standards": [
+              {
+                "standardId": "iso-deliverable:57620",
+                "name": "ISO 10303-242:2014",
+                "extensions": {
+                  "referenceDeclaration": {
+                    "issuer": "ISO",
+                    "designation": "ISO 10303-242:2014",
+                    "editionDesignation": "1",
+                    "sourceName": "ISO Open Data",
+                    "origin": "iso-open-data",
+                    "verification": "source-verified"
+                  },
+                  "isoDocument": {
+                    "schemaVersion": 1,
+                    "source": "ISO Open Data",
+                    "release": "2026-11-09",
+                    "id": "57620",
+                    "reference": "ISO 10303-242:2014",
+                    "title": "Systèmes d'automatisation industrielle et intégration — Représentation et échange de données de produits — Partie 242: Protocole d'application: Gestion des modèles 3D d'ingénierie",
+                    "titleI18n": {
+                      "en": "Industrial automation systems and integration — Product data representation and exchange — Part 242: Application protocol: Managed model-based 3D engineering",
+                      "fr": "Systèmes d'automatisation industrielle et intégration — Représentation et échange de données de produits — Partie 242: Protocole d'application: Gestion des modèles 3D d'ingénierie"
+                    },
+                    "scopeI18n": {
+                      "en": "ISO 10303-242:2014       \nspecifies the application protocol for\nManaged model based 3d engineering. \n\n\n\n\nThe following are within the scope of\nISO 10303-242:2014:\n\n\n\nproducts of automotive, aerospace and other mechanical manufacturers and of their suppliers,\nincluding parts, assemblies of parts, tools, assemblies of tools, and raw materials;\n\nengineering and product data for the purpose of long-term archiving and retrieval;\nproduct data management\n\nproduct definition data and configuration control data for managing large numbers of variants of products during the design\nphase;\n\ndata describing the changes that have occurred during the design phase, including tracking of the versions of a product and\nof the data related to the documentation of the change process;\n\nidentification of standard parts, based on international, national, or industrial standards;\nrelease and approval data for product data;\ndata that identify the supplier of a product and related contract information;\nproperties of parts or of tools;\nreferences to product documentation represented in a format other than those specified by ISO 10303;\nproduct manufacturing information, covering the design and manufacturing planning phase;\nidentification of physically realized parts or of tools, including assembly of physically realized products and recording\nof test results.\n\n\n\n\nprocess planning\n\nprocess plan information describing the relationships between parts and the tools used to manufacture them\nand to manage the relationships between intermediate stages of part or tool development.\n\n\n\n\nmechanical design\n\ndifferent types of geometry models, including:\n\n2D- and 3D-wireframe geometry model;\ngeometrically bounded surface geometry model;\ntopologically bounded surface geometry model;\nfaceted-boundary geometry model;\nboundary geometry model;\ncompound shape geometry model;\nconstructive solid geometry model;\nparametric and constrained geometry model;\n2D-sketch model;\n3D tessellated geometry model.\n\n\n\nrepresentation of the shape of parts or tools that is a combination of two or more of different types of geometry models;\ndata that pertains to the presentation of the shape of the product;\nrepresentation of portions of the shape of a part or a tool by manufacturing features;\ndata defining surface conditions;\ndimensional and geometrical tolerance data;\nquality criteria and inspection results of given three dimensional product shape data;\nproduct documentation as annotated 3D models and as drawings.\n\n\n\nkinematics\n\nsimulation data for the description of kinematic structures and motion.\n\n\n\ncomposite design\n\ndefinition of composite structural parts;\nthe association of the constituents of composite and metallic parts with the constituent shape model;\nthe depiction of composite laminate tables describing the material, stacking sequence and ply orientation;\n\n\nconstituents of the composite or a portion of the composite with a defined shape;\n\n\nthe identification of material specifications from internal and external sources and their properties for a specific operating\nenvironment."
+                    },
+                    "scope": "ISO 10303-242:2014       \nspecifies the application protocol for\nManaged model based 3d engineering. \n\n\n\n\nThe following are within the scope of\nISO 10303-242:2014:\n\n\n\nproducts of automotive, aerospace and other mechanical manufacturers and of their suppliers,\nincluding parts, assemblies of parts, tools, assemblies of tools, and raw materials;\n\nengineering and product data for the purpose of long-term archiving and retrieval;\nproduct data management\n\nproduct definition data and configuration control data for managing large numbers of variants of products during the design\nphase;\n\ndata describing the changes that have occurred during the design phase, including tracking of the versions of a product and\nof the data related to the documentation of the change process;\n\nidentification of standard parts, based on international, national, or industrial standards;\nrelease and approval data for product data;\ndata that identify the supplier of a product and related contract information;\nproperties of parts or of tools;\nreferences to product documentation represented in a format other than those specified by ISO 10303;\nproduct manufacturing information, covering the design and manufacturing planning phase;\nidentification of physically realized parts or of tools, including assembly of physically realized products and recording\nof test results.\n\n\n\n\nprocess planning\n\nprocess plan information describing the relationships between parts and the tools used to manufacture them\nand to manage the relationships between intermediate stages of part or tool development.\n\n\n\n\nmechanical design\n\ndifferent types of geometry models, including:\n\n2D- and 3D-wireframe geometry model;\ngeometrically bounded surface geometry model;\ntopologically bounded surface geometry model;\nfaceted-boundary geometry model;\nboundary geometry model;\ncompound shape geometry model;\nconstructive solid geometry model;\nparametric and constrained geometry model;\n2D-sketch model;\n3D tessellated geometry model.\n\n\n\nrepresentation of the shape of parts or tools that is a combination of two or more of different types of geometry models;\ndata that pertains to the presentation of the shape of the product;\nrepresentation of portions of the shape of a part or a tool by manufacturing features;\ndata defining surface conditions;\ndimensional and geometrical tolerance data;\nquality criteria and inspection results of given three dimensional product shape data;\nproduct documentation as annotated 3D models and as drawings.\n\n\n\nkinematics\n\nsimulation data for the description of kinematic structures and motion.\n\n\n\ncomposite design\n\ndefinition of composite structural parts;\nthe association of the constituents of composite and metallic parts with the constituent shape model;\nthe depiction of composite laminate tables describing the material, stacking sequence and ply orientation;\n\n\nconstituents of the composite or a portion of the composite with a defined shape;\n\n\nthe identification of material specifications from internal and external sources and their properties for a specific operating\nenvironment.",
+                    "icsCodes": [
+                      "25.040.40"
+                    ],
+                    "ownerCommittee": "ISO/TC 184/SC 4",
+                    "currentStage": "9599",
+                    "edition": "1",
+                    "publicationDate": "2014-12-01",
+                    "deliverableType": "IS",
+                    "supplementType": "",
+                    "languages": [
+                      "en"
+                    ],
+                    "pages": "",
+                    "replaces": [
+                      "20596",
+                      "43669",
+                      "44305",
+                      "34451",
+                      "20595"
+                    ],
+                    "replacedBy": [
+                      "66654"
+                    ]
+                  }
+                }
+              },
+              {
+                "standardId": "rfc:9110",
+                "name": "HTTP Semantics",
+                "extensions": {
+                  "referenceDeclaration": {
+                    "issuer": "IETF",
+                    "designation": "RFC 9110",
+                    "editionDesignation": "2022-06",
+                    "sourceName": "RFC Editor",
+                    "sourceUrl": "https://www.rfc-editor.org/rfc/rfc9110",
+                    "origin": "rfc-editor",
+                    "verification": "source-verified"
+                  },
+                  "externalDocument": {
+                    "schemaVersion": 1,
+                    "sourceId": "rfc-editor",
+                    "key": "9110",
+                    "issuer": "IETF",
+                    "designation": "RFC 9110",
+                    "title": "HTTP Semantics",
+                    "edition": "2022-06",
+                    "status": "INTERNET STANDARD",
+                    "stream": "IETF",
+                    "url": "https://www.rfc-editor.org/rfc/rfc9110",
+                    "acquiredAt": "2026-11-15T18:04:49.457Z"
+                  }
+                }
+              },
+              {
+                "standardId": "w3c-tr:json-ld11:20200716",
+                "name": "JSON-LD 1.1",
+                "extensions": {
+                  "referenceDeclaration": {
+                    "issuer": "W3C",
+                    "designation": "json-ld11",
+                    "editionDesignation": "2020-07-16",
+                    "sourceName": "W3C API",
+                    "sourceUrl": "https://www.w3.org/TR/2020/REC-json-ld11-20200716/",
+                    "origin": "w3c",
+                    "verification": "source-verified"
+                  },
+                  "externalDocument": {
+                    "schemaVersion": 1,
+                    "sourceId": "w3c",
+                    "key": "json-ld11:20200716",
+                    "issuer": "W3C",
+                    "designation": "json-ld11",
+                    "title": "JSON-LD 1.1",
+                    "edition": "2020-07-16",
+                    "status": "Recommendation",
+                    "stream": null,
+                    "url": "https://www.w3.org/TR/2020/REC-json-ld11-20200716/",
+                    "acquiredAt": "2026-11-15T18:04:59.068Z"
+                  }
+                }
+              },
+              {
+                "standardId": "standard_17dc32b3-94b5-40c9-adcb-ac39926aff14",
+                "name": "An Axiomatic Semantics for RDF, RDF-S, and DAML+OIL (March 2001)",
+                "extensions": {
+                  "referenceDeclaration": {
+                    "issuer": "W3C",
+                    "designation": "daml+oil-axioms",
+                    "editionDesignation": "2001-12-18",
+                    "sourceName": "W3C API",
+                    "sourceUrl": "https://www.w3.org/TR/2001/NOTE-daml+oil-axioms-20011218",
+                    "origin": "w3c",
+                    "verification": "source-verified"
+                  },
+                  "referenceReconciliation": {
+                    "schemaVersion": 1,
+                    "reconciledAt": "2026-11-15T18:04:59.234Z",
+                    "previousName": "PRIVATE_S15D_ORIGINAL",
+                    "previousDeclaration": {
+                      "designation": "daml+oil-axioms",
+                      "issuer": "W3C",
+                      "editionDesignation": "2001-12-18",
+                      "sourceName": "PRIVATE_S15D_SOURCE",
+                      "sourceUrl": null,
+                      "verification": "unverified",
+                      "origin": "manual",
+                      "declaredAt": "2026-11-15T18:04:59.234Z"
+                    }
+                  },
+                  "externalDocument": {
+                    "schemaVersion": 1,
+                    "sourceId": "w3c",
+                    "key": "daml+oil-axioms:20011218",
+                    "issuer": "W3C",
+                    "designation": "daml+oil-axioms",
+                    "title": "An Axiomatic Semantics for RDF, RDF-S, and DAML+OIL (March 2001)",
+                    "edition": "2001-12-18",
+                    "status": "Note",
+                    "stream": null,
+                    "url": "https://www.w3.org/TR/2001/NOTE-daml+oil-axioms-20011218",
+                    "acquiredAt": "2026-11-15T18:04:59.233Z"
+                  }
+                }
+              },
+              {
+                "standardId": "standard_05efb8f7-e64c-4264-a78c-99fa91d9d471",
+                "name": "Internal test reference",
+                "extensions": {
+                  "referenceDeclaration": {
+                    "designation": "INTERNAL-1",
+                    "issuer": "Synthetic organization",
+                    "editionDesignation": "1",
+                    "sourceName": "Manual entry",
+                    "sourceUrl": null,
+                    "verification": "unverified",
+                    "origin": "manual",
+                    "declaredAt": "2026-11-15T18:04:59.234Z"
+                  }
+                }
+              }
+            ],
+            "assessments": [],
+            "radarRevisions": [
+              {
+                "schemaVersion": "1.0.0",
+                "revisionId": "revision_0821193f-0ba3-4bda-b888-79d3352700a4",
+                "radarId": "radar_0821193f-0ba3-4bda-b888-79d3352700a4",
+                "ownerOrganizationId": "org_0821193f-0ba3-4bda-b888-79d3352700a4",
+                "portfolioId": "portfolio_0821193f-0ba3-4bda-b888-79d3352700a4",
+                "status": "published",
+                "version": "0.1.0",
+                "title": "Multi-source radar",
+                "blips": [
+                  {
+                    "blipId": "blip_a61ef1c0-410e-43b5-a261-12b1fb6b0ea2",
+                    "standardId": "iso-deliverable:57620",
+                    "label": "S15-D 1",
+                    "ring": "Adopted",
+                    "quadrant": "Available",
+                    "position": {
+                      "x": 310,
+                      "y": 325
+                    },
+                    "assessmentId": null,
+                    "context": {},
+                    "extensions": {}
+                  },
+                  {
+                    "blipId": "blip_11ae660a-0e98-4664-90c6-c5854ca56814",
+                    "standardId": "rfc:9110",
+                    "label": "S15-D 2",
+                    "ring": "Adopted",
+                    "quadrant": "Available",
+                    "position": {
+                      "x": 322,
+                      "y": 337
+                    },
+                    "assessmentId": null,
+                    "context": {},
+                    "extensions": {}
+                  },
+                  {
+                    "blipId": "blip_256bc13d-f589-4f24-a5dc-1011a6465c9c",
+                    "standardId": "w3c-tr:json-ld11:20200716",
+                    "label": "S15-D 3",
+                    "ring": "Adopted",
+                    "quadrant": "Available",
+                    "position": {
+                      "x": 334,
+                      "y": 349
+                    },
+                    "assessmentId": null,
+                    "context": {},
+                    "extensions": {}
+                  },
+                  {
+                    "blipId": "blip_40334798-6c96-4b3e-a7a1-d1ae1f9b0dab",
+                    "standardId": "standard_17dc32b3-94b5-40c9-adcb-ac39926aff14",
+                    "label": "S15-D 4",
+                    "ring": "Adopted",
+                    "quadrant": "Available",
+                    "position": {
+                      "x": 346,
+                      "y": 361
+                    },
+                    "assessmentId": null,
+                    "context": {},
+                    "extensions": {}
+                  },
+                  {
+                    "blipId": "blip_06a4d4ae-08fa-4af2-a642-21ff02c65414",
+                    "standardId": "standard_05efb8f7-e64c-4264-a78c-99fa91d9d471",
+                    "label": "S15-D 5",
+                    "ring": "Adopted",
+                    "quadrant": "Available",
+                    "position": {
+                      "x": 358,
+                      "y": 373
+                    },
+                    "assessmentId": null,
+                    "context": {},
+                    "extensions": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "proof": {
+          "canonicalization": "sorted-json-v1",
+          "digestAlgorithm": "SHA-256",
+          "digest": "a4a9108b8c2df1fc4337401e7c93891654470c0fad3e8f53172340527242b095",
+          "signature": null
+        }
+      }
+    },
+    {
+      "name": "standalone-creator-startup",
+      "ok": true,
+      "detail": {
+        "profile": "creator",
+        "commit": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "secure": true,
+        "template": true,
+        "catalogCount": 0
+      }
+    },
+    {
+      "name": "standalone-catalog-reopen",
+      "ok": true,
+      "detail": {
+        "digest": "a4a9108b8c2df1fc4337401e7c93891654470c0fad3e8f53172340527242b095",
+        "revision": "revision_0821193f-0ba3-4bda-b888-79d3352700a4",
+        "standards": 5
+      }
+    },
+    {
+      "name": "standalone-publisher-projection",
+      "ok": true,
+      "detail": {
+        "definitionId": "publication_f2e0a1cf-264c-4e0d-aeda-97d227348927",
+        "version": 1,
+        "projectionDigest": "ea2d095a2183eff07cc713aef26fb1f8f0193efdf49ab80d74a4a95e55982747",
+        "report": {
+          "revisionIds": [
+            "revision_0821193f-0ba3-4bda-b888-79d3352700a4"
+          ],
+          "radarCount": 1,
+          "organizationCount": 1,
+          "portfolioCount": 1,
+          "standardCount": 5,
+          "assessmentCount": 0,
+          "blipCount": 5,
+          "isoDocumentCount": 1,
+          "detachedAssessments": 0,
+          "omittedContexts": 5,
+          "omittedBlipExtensions": 5,
+          "policy": "native-v1-positive-allowlist",
+          "limitations": [
+            "free-context-and-unknown-extensions-excluded",
+            "no-native-relationship-contract",
+            "assessment-summary-only",
+            "presentation-and-packaging-not-applied"
+          ],
+          "definitionId": "publication_f2e0a1cf-264c-4e0d-aeda-97d227348927",
+          "definitionVersion": 1,
+          "sourceDigest": "6bb105c447d194ed46425133003897f8cb5a2f1da8f2df74448ae92f05b2409c",
+          "projectionDigest": "ea2d095a2183eff07cc713aef26fb1f8f0193efdf49ab80d74a4a95e55982747",
+          "canonicalization": "sorted-json-v1"
+        }
+      }
+    },
+    {
+      "name": "publisher-real-html-download",
+      "ok": true,
+      "detail": {
+        "file": "$HOME/Documents/A87-public-recipe-jpeMKK/downloads/radar-viewer-candidate-ea2d095a2183.html",
+        "sha256": "be4d2816753a72ae278ed86f4d0d4b69709ff1270ed0f54bf34830987fd6e1a3",
+        "bytes": 8116025,
+        "projectionDigest": "ea2d095a2183eff07cc713aef26fb1f8f0193efdf49ab80d74a4a95e55982747",
+        "history": 0
+      }
+    },
+    {
+      "name": "publisher-real-zip-download",
+      "ok": true,
+      "detail": {
+        "file": "$HOME/Documents/A87-public-recipe-jpeMKK/downloads/radar-publication-3c3eab40-422c-4740-bb1b-2b0c50dac120.zip",
+        "sha256": "18b61e0190e43971ad1a498ef94374c66794e2738daa082e6c50f65a65c793fd",
+        "manifest": {
+          "format": "StandardisationRadarChart-Publication",
+          "schemaVersion": 1,
+          "releaseId": "release_3c3eab40-422c-4740-bb1b-2b0c50dac120",
+          "createdAt": "2026-11-15T18:05:01.865Z",
+          "mode": "standalone",
+          "codeCommit": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+          "templateSha256": "444b56d291e3bb5d31a7c1f2d7c7908fd512f3c3c383510b4ac9e00f7a2d58ee",
+          "projectionDigest": "ea2d095a2183eff07cc713aef26fb1f8f0193efdf49ab80d74a4a95e55982747",
+          "revisionIds": [
+            "revision_0821193f-0ba3-4bda-b888-79d3352700a4"
+          ],
+          "modules": [
+            "assets/radar--vG1J_f9.js",
+            "js/blips.js",
+            "js/cytoscape/RadarStyle.js",
+            "js/ics.js",
+            "js/radar-application-profile.js",
+            "js/radar-artifact-integrity.js",
+            "js/radar-catalog-adapter.js",
+            "js/radar-catalog-atomic.js",
+            "js/radar-catalog-changes.js",
+            "js/radar-catalog-create-form.js",
+            "js/radar-catalog-creation.js",
+            "js/radar-catalog-distribution.js",
+            "js/radar-catalog-followed.js",
+            "js/radar-catalog-persistence.js",
+            "js/radar-catalog-ui.js",
+            "js/radar-iso-full-grid.js",
+            "js/radar-iso-open-data.js",
+            "js/radar-iso-rss.js",
+            "js/radar-iso-sidebar-index.js",
+            "js/radar-iso-stream-core.js",
+            "js/radar-iso-stream-distribution.js",
+            "js/radar-iso-toolbar.js",
+            "js/radar-iso-tree-index.js",
+            "js/radar-iso-windowed-db.js",
+            "js/radar-publication-model.js",
+            "js/radar-publication-projection.js",
+            "js/radar-publication-ui.js",
+            "js/radar-publication-viewer.js",
+            "js/radar-radar-admin.js",
+            "js/radar-revision-dialogs.js",
+            "js/radar-revision-session.js",
+            "js/radar-s14-z-sources.js",
+            "js/radar-standard-registry.js",
+            "js/radar-standard-source-dialog.js",
+            "js/radar-standard-sources.js",
+            "js/radar-standards-panel.js",
+            "js/radar-workspace-explorer.js",
+            "js/radar.js",
+            "js/working-groups-classic.js",
+            "lib/cola.min.js",
+            "lib/cose-base.js",
+            "lib/cytoscape-cola.js",
+            "lib/cytoscape-dagre.js",
+            "lib/cytoscape-expand-collapse.js",
+            "lib/cytoscape-fcose.js",
+            "lib/cytoscape-popper.min.js",
+            "lib/cytoscape-undo-redo.js",
+            "lib/cytoscape.min.js",
+            "lib/d3.min.js",
+            "lib/dagre.min.js",
+            "lib/i18next.min.js",
+            "lib/index.umd.js",
+            "lib/layout-base.js",
+            "lib/papaparse.js",
+            "lib/popper.js",
+            "lib/tippy-bundle.iife.js",
+            "lib/uuid.min.js",
+            "lib/w2ui.min.js",
+            "radar.html:inline-script-59",
+            "radar.html:inline-script-61",
+            "standalone:offline-bootstrap"
+          ],
+          "artifacts": [
+            {
+              "path": "viewer.html",
+              "bytes": 8116025,
+              "sha256": "be4d2816753a72ae278ed86f4d0d4b69709ff1270ed0f54bf34830987fd6e1a3"
+            }
+          ]
+        },
+        "history": 1
+      }
+    },
+    {
+      "name": "downloaded-viewer-offline-startup",
+      "ok": true,
+      "detail": {
+        "startup": {
+          "projectionDigest": "ea2d095a2183eff07cc713aef26fb1f8f0193efdf49ab80d74a4a95e55982747",
+          "expectedGroup": "CATALOG_REVISION_0",
+          "expectedRevisionId": "revision_0821193f-0ba3-4bda-b888-79d3352700a4",
+          "sessionGroup": "CATALOG_REVISION_0",
+          "explorerGroup": "CATALOG_REVISION_0",
+          "activeRevisionId": "revision_0821193f-0ba3-4bda-b888-79d3352700a4",
+          "ok": true
+        },
+        "profile": "viewer",
+        "commit": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "title": "S15-D multi-source Viewer",
+        "author": false,
+        "catalogOpen": false,
+        "iso": null,
+        "source": null
+      }
+    },
+    {
+      "name": "downloaded-viewer-reference-grid",
+      "ok": true,
+      "detail": {
+        "rows": 5,
+        "records": [
+          {
+            "id": "iso-deliverable:57620",
+            "origin": "iso-open-data",
+            "iso": true
+          },
+          {
+            "id": "rfc:9110",
+            "origin": "rfc-editor",
+            "iso": false
+          },
+          {
+            "id": "standard_05efb8f7-e64c-4264-a78c-99fa91d9d471",
+            "origin": "manual",
+            "iso": false
+          },
+          {
+            "id": "standard_17dc32b3-94b5-40c9-adcb-ac39926aff14",
+            "origin": "w3c",
+            "iso": false
+          },
+          {
+            "id": "w3c-tr:json-ld11:20200716",
+            "origin": "w3c",
+            "iso": false
+          }
+        ],
+        "denied": true,
+        "authorButtons": 0
+      }
+    },
+    {
+      "name": "downloaded-viewer-iso-detail",
+      "ok": true,
+      "detail": {
+        "reference": "ISO 10303-242:2014",
+        "fields": 19,
+        "readOnly": true,
+        "actions": [],
+        "dialogOpen": true
+      }
+    },
+    {
+      "name": "browser-no-runtime-exceptions",
+      "ok": true,
+      "detail": {
+        "exceptions": 0,
+        "externalRequestsBlocked": 0,
+        "consoleErrors": 0,
+        "networkFailures": 0
+      }
+    },
+    {
+      "name": "isolated-source-still-clean",
+      "ok": true,
+      "detail": "545ed539df2e117a8aab5158a4bcc5c151308ba3"
+    },
+    {
+      "name": "original-unchanged",
+      "ok": true,
+      "detail": {
+        "branch": "feature/s15-standards-sources",
+        "head": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "main": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "release": "894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55",
+        "tracked": ""
+      }
+    },
+    {
+      "name": "no-local-source-cache",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "public-web-viewer",
+      "ok": true,
+      "detail": {
+        "profile": "viewer",
+        "author": false
+      }
+    },
+    {
+      "name": "downloaded-generic-viewer",
+      "ok": true,
+      "detail": {
+        "profile": "viewer",
+        "commit": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "author": false
+      }
+    },
+    {
+      "name": "final-browser-diagnostics",
+      "ok": true,
+      "detail": {
+        "exceptions": [],
+        "blocked": [],
+        "consoleErrors": [],
+        "networkFailures": []
+      }
+    },
+    {
+      "name": "original-final-unchanged",
+      "ok": true,
+      "detail": {
+        "branch": "feature/s15-standards-sources",
+        "head": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "main": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "release": "894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55",
+        "tracked": ""
+      }
+    },
+    {
+      "name": "remote-final-unchanged",
+      "ok": true,
+      "detail": "1eb772603268a48b653e0bde36187a6b7e15e143\trefs/heads/gh-pages\n545ed539df2e117a8aab5158a4bcc5c151308ba3\trefs/heads/main\n894ae2a1ed25f7cef6bbbb56b3d2520792ecdc55\trefs/tags/pilot-a86\n545ed539df2e117a8aab5158a4bcc5c151308ba3\trefs/tags/pilot-a87"
+    }
+  ],
+  "errors": [],
+  "committed": false,
+  "pushed": false,
+  "published": false,
+  "ok": true,
+  "artifacts": {
+    "creator": {
+      "path": "$HOME/Documents/A87-public-recipe-jpeMKK/standalone/standardization-radar-creator.html",
+      "bytes": 41655574,
+      "sha256": "e5627668e2c1e6924c55052d13dd55d4f16d9dd775fc16890e8b5d63c690b49f"
+    },
+    "viewerTemplate": {
+      "path": "$HOME/Documents/A87-public-recipe-jpeMKK/standalone/standardization-radar-viewer.html",
+      "bytes": 8101841,
+      "sha256": "444b56d291e3bb5d31a7c1f2d7c7908fd512f3c3c383510b4ac9e00f7a2d58ee"
+    },
+    "distribution": "$HOME/Documents/A87-RC-O4x8KG/source/dist",
+    "candidate": {
+      "file": "$HOME/Documents/A87-public-recipe-jpeMKK/downloads/radar-viewer-candidate-ea2d095a2183.html",
+      "sha256": "be4d2816753a72ae278ed86f4d0d4b69709ff1270ed0f54bf34830987fd6e1a3",
+      "bytes": 8116025,
+      "projectionDigest": "ea2d095a2183eff07cc713aef26fb1f8f0193efdf49ab80d74a4a95e55982747",
+      "history": 0
+    },
+    "zip": {
+      "file": "$HOME/Documents/A87-public-recipe-jpeMKK/downloads/radar-publication-3c3eab40-422c-4740-bb1b-2b0c50dac120.zip",
+      "sha256": "18b61e0190e43971ad1a498ef94374c66794e2738daa082e6c50f65a65c793fd",
+      "manifest": {
+        "format": "StandardisationRadarChart-Publication",
+        "schemaVersion": 1,
+        "releaseId": "release_3c3eab40-422c-4740-bb1b-2b0c50dac120",
+        "createdAt": "2026-11-15T18:05:01.865Z",
+        "mode": "standalone",
+        "codeCommit": "545ed539df2e117a8aab5158a4bcc5c151308ba3",
+        "templateSha256": "444b56d291e3bb5d31a7c1f2d7c7908fd512f3c3c383510b4ac9e00f7a2d58ee",
+        "projectionDigest": "ea2d095a2183eff07cc713aef26fb1f8f0193efdf49ab80d74a4a95e55982747",
+        "revisionIds": [
+          "revision_0821193f-0ba3-4bda-b888-79d3352700a4"
+        ],
+        "modules": [
+          "assets/radar--vG1J_f9.js",
+          "js/blips.js",
+          "js/cytoscape/RadarStyle.js",
+          "js/ics.js",
+          "js/radar-application-profile.js",
+          "js/radar-artifact-integrity.js",
+          "js/radar-catalog-adapter.js",
+          "js/radar-catalog-atomic.js",
+          "js/radar-catalog-changes.js",
+          "js/radar-catalog-create-form.js",
+          "js/radar-catalog-creation.js",
+          "js/radar-catalog-distribution.js",
+          "js/radar-catalog-followed.js",
+          "js/radar-catalog-persistence.js",
+          "js/radar-catalog-ui.js",
+          "js/radar-iso-full-grid.js",
+          "js/radar-iso-open-data.js",
+          "js/radar-iso-rss.js",
+          "js/radar-iso-sidebar-index.js",
+          "js/radar-iso-stream-core.js",
+          "js/radar-iso-stream-distribution.js",
+          "js/radar-iso-toolbar.js",
+          "js/radar-iso-tree-index.js",
+          "js/radar-iso-windowed-db.js",
+          "js/radar-publication-model.js",
+          "js/radar-publication-projection.js",
+          "js/radar-publication-ui.js",
+          "js/radar-publication-viewer.js",
+          "js/radar-radar-admin.js",
+          "js/radar-revision-dialogs.js",
+          "js/radar-revision-session.js",
+          "js/radar-s14-z-sources.js",
+          "js/radar-standard-registry.js",
+          "js/radar-standard-source-dialog.js",
+          "js/radar-standard-sources.js",
+          "js/radar-standards-panel.js",
+          "js/radar-workspace-explorer.js",
+          "js/radar.js",
+          "js/working-groups-classic.js",
+          "lib/cola.min.js",
+          "lib/cose-base.js",
+          "lib/cytoscape-cola.js",
+          "lib/cytoscape-dagre.js",
+          "lib/cytoscape-expand-collapse.js",
+          "lib/cytoscape-fcose.js",
+          "lib/cytoscape-popper.min.js",
+          "lib/cytoscape-undo-redo.js",
+          "lib/cytoscape.min.js",
+          "lib/d3.min.js",
+          "lib/dagre.min.js",
+          "lib/i18next.min.js",
+          "lib/index.umd.js",
+          "lib/layout-base.js",
+          "lib/papaparse.js",
+          "lib/popper.js",
+          "lib/tippy-bundle.iife.js",
+          "lib/uuid.min.js",
+          "lib/w2ui.min.js",
+          "radar.html:inline-script-59",
+          "radar.html:inline-script-61",
+          "standalone:offline-bootstrap"
+        ],
+        "artifacts": [
+          {
+            "path": "viewer.html",
+            "bytes": 8116025,
+            "sha256": "be4d2816753a72ae278ed86f4d0d4b69709ff1270ed0f54bf34830987fd6e1a3"
+          }
+        ]
+      },
+      "history": 1
+    }
+  },
+  "catalogArtifact": {
+    "path": "$HOME/Documents/A87-public-recipe-jpeMKK/catalogue-s15-d.json",
+    "sha256": "e1a035d6f1900ed753402ea89b97be922aa475a565028917d56c3ce869600fd6",
+    "digest": "a4a9108b8c2df1fc4337401e7c93891654470c0fad3e8f53172340527242b095"
+  },
+  "functionalQualified": true,
+  "functionalDiagnostics": {
+    "blocked": [],
+    "exceptions": [],
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  "browserDiagnostics": {
+    "blocked": [],
+    "exceptions": [],
+    "consoleErrors": [],
+    "networkFailures": [],
+    "servedCaches": []
+  },
+  "finishedAt": "2026-11-15T18:05:10.817Z",
+  "reportPath": "$HOME/Documents/A87-public-recipe-jpeMKK/A87-PUBLIC-QUALIFICATION.json",
+  "clipboard": {
+    "ok": true
+  }
+}

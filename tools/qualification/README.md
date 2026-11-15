@@ -30,3 +30,24 @@ The manifest records both original and archived hashes.
 
 For a new release, generalize the runner or prepare
 a fresh qualification campaign with the new commit.
+
+## A8.7 — Clôture de la release publiée
+
+a87-qualify.mjs: unified release-candidate recipe.
+
+a87-public-qualify.mjs: exact historical public
+qualification campaign for pilot-a87.
+
+The public runner verifies the deployed Pages
+manifest, public downloads, live source acquisition
+and the Creator/Publisher/Viewer workflow.
+
+The public script is archived byte for byte.
+It contains historical campaign paths and requires
+the corresponding original evidence and artifacts.
+
+It is not a generic CI runner for future releases.
+
+Evidence: ../../docs/evidence/a87/manifest.json
+
+The release tag must remain fixed to 545ed539df2e117a8aab5158a4bcc5c151308ba3.

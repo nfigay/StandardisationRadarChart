@@ -588,3 +588,27 @@ font l’objet d’une qualification explicite.
 
 Aucune publication distante à cette étape.
 A8.6 reste la distribution publique stable.
+
+## A8.7 — Clôture de la release publiée
+
+15 novembre 2026 : A8.7 publiée et qualifiée.
+
+- Source : 545ed539df2e117a8aab5158a4bcc5c151308ba3.
+- Pages : 1eb772603268a48b653e0bde36187a6b7e15e143.
+- Tag : pilot-a87.
+- 645/645 tests Node.js.
+- 50/50 contrôles candidat A8.7-RC.
+- 46/46 contrôles publics.
+
+Creator Web, Creator autonome, Publisher et Viewer
+publié qualifiés avec les véritables distributions.
+Acquisitions RFC Editor et W3C directes validées
+sur le site public sans cache documentaire local.
+
+A8.7 remplace A8.6 comme baseline stable.
+Les versions historiques restent accessibles.
+
+S15-A/B/C/D et livraison A8.7 sont clos.
+DEC-009 et DEC-010 restent ouvertes.
+Aucun nouveau chantier métier n’est engagé
+par cette clôture documentaire.
