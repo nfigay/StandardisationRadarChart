@@ -107,5 +107,7 @@ run([
 ]);
 
 const provenance=writePagesProvenance(root,buildSource);
+// S16: inject the existing standalone Viewer, then refresh Pages provenance.
+run(['scripts/embed-pages-viewer-template.mjs']);
 console.log('Pages provenance:',JSON.stringify(provenance));
 console.log('S14.1 COMPLETE PAGES BUILD: OK');
