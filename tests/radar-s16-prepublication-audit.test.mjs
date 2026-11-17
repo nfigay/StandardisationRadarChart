@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {evaluateSnapshot,EXPECTED_BRANCH,EXPECTED_HEAD,EXPECTED_PROTECTED,R4_FILES,R4_HASHES} from '../tools/radar-s16-prepublication-audit.mjs';
+const snap=()=>({branch:EXPECTED_BRANCH,head:EXPECTED_HEAD,refs:{...EXPECTED_PROTECTED},stagedCount:0,tracked:[],untracked:[],files:Object.fromEntries(R4_FILES.map(f=>[f,{exists:true,sha256:R4_HASHES[f]}]))});
+test('C1 accepte un état R4 exact sans autoriser publication',()=>{const r=evaluateSnapshot(snap());assert.equal(r.ok,true);assert.equal(r.publicationAuthorized,false);assert.equal(r.readOnly,true);});
+test('C1 refuse un HEAD divergent',()=>{const s=snap();s.head='deadbeef';assert.equal(evaluateSnapshot(s).ok,false);});
+test('C1 refuse une référence protégée altérée',()=>{const s=snap();s.refs['refs/remotes/origin/gh-pages']='bad';assert.equal(evaluateSnapshot(s).ok,false);});
+test('C1 refuse le staging',()=>{const s=snap();s.stagedCount=1;assert.equal(evaluateSnapshot(s).ok,false);});
+test('C1 refuse un fichier R4 altéré',()=>{const s=snap();s.files['js/radar-standards-panel.js'].sha256='bad';assert.equal(evaluateSnapshot(s).ok,false);});
+test('C1 conserve les caches non publiables dans inventaire',()=>{const s=snap();s.untracked=['iso-rss-cache/','iso-open-data-cache/'];const r=evaluateSnapshot(s);assert.equal(r.ok,true);assert.deepEqual(r.untracked,s.untracked);});
+test('C1 refuse un répertoire de distribution non suivi',()=>{const s=snap();s.untracked=['dist/'];assert.equal(evaluateSnapshot(s).ok,false);});

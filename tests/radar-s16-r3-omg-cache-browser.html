@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>S16-R3 OMG cache qualification</title>
+<script src="../js/radar-standard-sources.js"></script></head><body><pre id="result">pending</pre><script>
+(async()=>{
+ const report={operation:'S16-A-R3-OMG-CACHE-BROWSER',checks:[],errors:[],ok:false};
+ const api=window.__radarStandardSources;let disposable=false,frame=null;
+ const assert=(v,m)=>{if(!v)throw Error(m);};
+ const check=async(name,fn)=>{await fn();report.checks.push({name,ok:true});};
+ const html='<table><tr><th>Name</th><th>Acronym</th><th>Version</th><th>Status</th><th>Publication Date</th></tr><tr><td>Cache Fixture</td><td>EXAMPLE</td><td><a href="/spec/EXAMPLE/2.0">2.0</a></td><td>formal</td><td>August 2020</td></tr></table><table><tr><th>Specification Title</th><th>Version</th><th>ISO Number</th><th>OMG File ID</th></tr><tr><td>Cache Fixture</td><td><a href="/spec/EXAMPLE/1.0">1.0</a></td><td>12345:2020</td><td>formal/20-01-01</td></tr></table>';
+ window.fetch=async()=>{throw Error('No documentary network allowed');};
+ try{
+  assert(new URLSearchParams(location.search).get('isolated')==='1','Use a disposable origin and ?isolated=1');
+  assert(window.indexedDB,'IndexedDB unavailable');
+  assert(await api.restoreOmg()===null,'Existing OMG cache preserved; use a disposable origin');
+  disposable=true;
+  await check('no acquisition authorization API',async()=>{assert(api.loadOmg===undefined,'Unexpected network API');assert(api.omg.authorize===undefined,'Unexpected rights API');});
+  await check('import real IndexedDB',async()=>{await api.importOmg(html,{format:'html'});assert(api.omgStatus().storage==='browser-cache','Not persisted');assert(api.searchOmg('').total===1,'Missing publication');assert(api.searchOmg('',0,true).rows[0].key==='EXAMPLE/1.0','Missing adoption');});
+  await check('new document reads same corpus',async()=>{
+   frame=document.createElement('iframe');frame.hidden=true;document.body.appendChild(frame);
+   const other=frame.contentWindow;other.fetch=async()=>{throw Error('No external data access');};
+   await new Promise((resolve,reject)=>{const script=other.document.createElement('script');script.src=new URL('../js/radar-standard-sources.js',location.href).href;script.onload=resolve;script.onerror=()=>reject(Error('Script load failed'));other.document.head.appendChild(script);});
+   const reader=other.__radarStandardSources;assert(reader.omgStatus()===null,'Not a fresh service');await reader.restoreOmg();assert(reader.omgStatus().storage==='browser-cache','Restore failed');assert(reader.searchOmg('',0,true).rows[0].omgFileIds[0]==='formal/20-01-01','Adoption file identifier lost');assert(reader.omgStatus().origin==='local-unverified','Provenance incorrectly promoted');
+   await reader.clearOmg();assert(reader.omgStatus()===null,'Clear failed');
+  });
+  await check('clear and reload empty cache',async()=>{await api.clearOmg();assert(await api.restoreOmg()===null,'Cache reappeared');});
+  report.ok=true;
+ }catch(e){report.errors.push(e.stack||e.message);}finally{if(disposable)try{await api.clearOmg();}catch(e){report.errors.push(String(e));report.ok=false;}frame?.remove();document.getElementById('result').textContent=JSON.stringify(report);document.body.dataset.finished='true';}
+})();
+</script></body></html>

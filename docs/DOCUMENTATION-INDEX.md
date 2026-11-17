@@ -151,3 +151,28 @@ S15-A/R1 est consolidé localement (`af248ca643c14b0b2391370c0f9dce305df2d47e`) 
 - [Validation publique](evidence/15-A87-PUBLISHED-VALIDATION.md)
 - [Manifeste des preuves](evidence/a87/manifest.json)
 - [Architecture de release](architecture/92-A87-RELEASE-PREPARATION.md)
+
+## S16-A — Accès direct aux sources documentaires
+
+- [93 — Standards multisource : accès direct RFC/W3C](architecture/93-S16-A-MULTISOURCE-STANDARDS-WORKSPACE.md) — candidat post-A8.7, réalisation et recette à consolider.
+
+## S16-A-R1 — Fédération documentaire et priorité OMG
+
+- [94 — Connaissances de normalisation fédérées](architecture/94-S16-FEDERATED-STANDARDIZATION-KNOWLEDGE.md) — noyau conceptuel, non-redondance, registre des ressources et trajectoire.
+- [95 — OMG : ressources, acquisition et droits](architecture/95-S16-OMG-SOURCE-ACQUISITION.md) — catalogue, RDF/JSON-LD versionnés, autorisations, diagnostic privé et qualification à réaliser.
+
+## S16-A-R2 — Consultation fédérée dans le Creator
+
+- [96 — Consultation fédérée Standards / W2UI](architecture/96-S16-A-R2-FEDERATED-STANDARDS-UI.md) — candidat : sélecteur, grille commune, accès OMG privé et inventaire des ressources.
+
+## S16-A-R3 — Corpus OMG
+
+- [97 — Corpus documentaire OMG : collecte séparée et consultation persistante](architecture/97-S16-A-R3-OMG-CORPUS.md) — recette R2, collecteur, cache local et séparation des droits du Creator.
+
+## S16-A-R3.1 — Actualisation OMG en ligne
+
+- [98 — Acquisition du catalogue OMG depuis le Creator](architecture/98-S16-A-R31-OMG-ONLINE-CATALOG.md) — lecture publique bornée, relais local, corpus préparé et contrôle de couverture.
+
+## S16-A-R4 — Historique des éditions OMG et intégration métier
+
+- [99 — Éditions historiques OMG et sélection explicite](architecture/99-S16-A-R4-OMG-HISTORICAL-EDITIONS.md) — collecte à la demande d'une famille, W2UI, versions formelles anciennes, cache indépendant, intégration native sans substitution automatique et préservation de l'applicabilité opérationnelle.

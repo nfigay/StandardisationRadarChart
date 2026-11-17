@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
+    "dev": "vite --config vite.omg.config.mjs --host 127.0.0.1",
     "build": "node scripts/build-safe.mjs local",
     "build:pages": "node scripts/build-pages-complete.mjs",
     "verify:source": "node scripts/verify-source.mjs",

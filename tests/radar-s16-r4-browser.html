@@ -1,0 +1,62 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>S16-R4 OMG edition browser recipe</title>
+<link rel="stylesheet" href="../css/w2ui.min.css"><style>body{margin:0}#standard-references-panel{width:100%;height:420px;box-sizing:border-box}</style>
+<script src="../lib/jquery.min.js"></script><script src="../lib/w2ui.min.js"></script><script src="../lib/i18next.min.js"></script>
+<script>Object.defineProperty(window,'indexedDB',{value:undefined,configurable:true});i18next.init({lng:'fr',fallbackLng:'fr',resources:{fr:{translation:{}},en:{translation:{}}},initImmediate:false});</script>
+<script src="../js/radar-application-profile.js"></script><script src="../js/radar-publication-model.js"></script><script src="../js/radar-catalog-persistence.js"></script><script src="../js/radar-standard-registry.js"></script><script src="../js/radar-iso-tree-index.js"></script><script src="../js/radar-iso-sidebar-index.js"></script><script src="../js/radar-standard-sources.js"></script><script src="../js/radar-standard-source-dialog.js"></script><script src="../js/radar-standards-panel.js"></script><script src="../js/radar-iso-toolbar.js"></script><script src="../js/radar-s14-z-sources.js"></script>
+</head><body><div id="standard-references-panel"></div><pre id="result">pending</pre><script>
+(async()=>{
+ const report={operation:'S16-A-R4-BROWSER',checks:[],errors:[],ok:false};
+ const assert=(condition,message)=>{if(!condition)throw Error(message);};
+ const wait=async condition=>{for(let i=0;i<250;i++){if(condition())return;await new Promise(resolve=>setTimeout(resolve,35));}throw Error('Timeout');};
+ const check=async(name,fn)=>{await fn();report.checks.push({name,ok:true});};
+ window.addEventListener('error',e=>report.errors.push(e.message));window.addEventListener('unhandledrejection',e=>report.errors.push(String(e.reason)));
+ try{
+ const api=window.__radarStandardSources,store=window.__radarCatalogPersistence;
+ const index=`<table><tr><th>Name</th><th>Acronym</th><th>Version</th><th>Status</th><th>Publication Date</th></tr><tr><td>Example Model</td><td>EXAMPLE</td><td><a href="/spec/EXAMPLE/2.0">2.0</a></td><td>formal</td><td>August 2020</td></tr></table><table><tr><th>Specification Title</th><th>Version</th><th>ISO Number</th><th>OMG File ID</th></tr><tr><td>Example Model</td><td><a href="/spec/EXAMPLE/1.0">1.0</a></td><td>12345:2020</td><td>formal/20-01-01</td></tr></table>`;
+ const history=`<table><tr><th>Version</th><th>Adoption Date</th><th>URL</th></tr><tr><td>2.0</td><td>August 2020</td><td><a href="/spec/EXAMPLE/2.0">2.0</a></td></tr><tr><td>1.0</td><td>January 2005</td><td><a href="/spec/EXAMPLE/1.0">1.0</a></td></tr></table>`;
+ const sample=api.omg.parseOmgHistory(history,'EXAMPLE',{acquiredAt:'2026-11-17T00:00:00.000Z',sourceDigest:'a'.repeat(64)});
+ const originalFetch=window.fetch.bind(window);let relayCalls=0;
+ window.fetch=async(url,options)=>{
+  url=String(url);
+  if(url.endsWith('/__radar-omg/catalog/history/EXAMPLE')){
+    relayCalls++;assert(options.method==='POST','Expected scoped POST');
+    return new Response(JSON.stringify({operation:'S16-OMG-LOCAL-RELAY',ok:true,snapshot:sample}),{status:200,headers:{'content-type':'application/json'}});
+  }
+  if(url==='https://www.omg.org/spec/EXAMPLE/')return new Response(history,{status:200,headers:{'content-type':'text/html'}});
+  throw Error('Unexpected external network request: '+url);
+ };
+ window.__radarRevisionSession={exportGroup:()=>null,status:()=>({activeGroup:null})};
+ window.__radarIsoWindowed={current:async()=>({generation:'fixture',summary:{release:'fixture',datasets:{deliverables:{count:0}}}}),page:async()=>({records:[],next:null})};
+ window.__radarIsoFullGrid={project:()=>[]};
+ window.__radarStandardsPanel.initialize(document.getElementById('standard-references-panel'),()=>null);
+ const g=w2ui.standardReferencesGrid,t=w2ui.standardsToolbar;
+ assert(t&&g,'W2UI Standards controls unavailable');
+ const click=async id=>{t.click(id);await new Promise(resolve=>setTimeout(resolve,120));};
+ const select=async id=>{g.select(id);g.click(id);await new Promise(resolve=>setTimeout(resolve,90));};
+ await check('source OMG without catalog',async()=>{
+  await click('source:omg-specifications');await api.importOmg(index,{format:'html'});
+  window.__radarStandardsPanel.refresh();await wait(()=>g.records.some(r=>r.recid==='EXAMPLE/2.0'));
+  await select('EXAMPLE/2.0');assert(t.get('history').disabled!==true,'History disabled');assert(t.get('integrate').disabled===true,'Native import without catalog');
+ });
+ await check('W2UI history acquisition and old editions',async()=>{
+  await click('history');await wait(()=>g.records.some(r=>r.recid==='EXAMPLE/1.0'));
+  assert(g.records.length===2,'Expected both historical editions');
+  assert(relayCalls===1,'Expected one scoped local history request');
+  assert(document.querySelector('#standard-references-panel').textContent.includes('EXAMPLE'),'History label missing');
+ });
+ await check('explicit old edition native integration',async()=>{
+  store.remember({schemaVersion:'1.0.0',title:'R4 disposable fixture',organizations:[],portfolios:[],standards:[],assessments:[],radarRevisions:[{schemaVersion:'1.0.0',revisionId:'pub',radarId:'rad',status:'published',blips:[]}]},{revisions:[{group:'g0',revisionId:'pub'}]});
+  window.__radarStandardsPanel.refresh();await select('EXAMPLE/1.0');await click('integrate');
+  await wait(()=>store.listReferenceRecords().some(r=>r.standardId==='omg:EXAMPLE/1.0'));
+  assert(store.listReferenceRecords()[0].editionDesignation==='1.0','Edition not preserved');
+ });
+ await check('new edition coexists and no latest promotion',async()=>{
+  await click('source:omg-specifications');await wait(()=>g.records.some(r=>r.recid==='EXAMPLE/2.0'));
+  await select('EXAMPLE/2.0');await click('integrate');
+  await wait(()=>store.listReferenceRecords().some(r=>r.standardId==='omg:EXAMPLE/2.0'));
+  assert(store.listReferenceRecords().length===2,'Historical publication overwritten');
+ });
+ report.ok=report.errors.length===0;
+ }catch(e){report.errors.push(e.stack||e.message);}finally{document.getElementById('result').textContent=JSON.stringify(report,null,2);document.body.dataset.finished='true';}
+})();
+</script></body></html>

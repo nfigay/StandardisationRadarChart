@@ -404,3 +404,36 @@ S15-A/B/C/D et livraison A8.7 sont clos.
 DEC-009 et DEC-010 restent ouvertes.
 Aucun nouveau chantier métier n’est engagé
 par cette clôture documentaire.
+
+## S16-A — Reprise post-A8.7
+
+Base de réalisation : `1df817baad2072b005936197414da1ea6353f392`.
+A8.7 reste la baseline stable publiée. L'audit S16-0 a identifié les composants
+Workspace et métier existants. Le retour utilisateur sur la visibilité des
+sources RFC/W3C donne la priorité à un delta d'interface Standards :
+[architecture 93](../architecture/93-S16-A-MULTISOURCE-STANDARDS-WORKSPACE.md).
+Candidat de développement sur `feature/s16-multisource-standards`,
+sans évolution des moteurs S15 ni du format natif.
+Qualification locale puis navigateur avant consolidation. Aucun push,
+tag ou changement Pages implicite. La reprise portefeuilles, Workspace
+persistant et SPM reste prévue ; les arbitrages ouverts sont conservés.
+
+### S16-A-R1 — Fédération documentaire (candidat)
+
+Suite aux retours de recette S16-A (648 tests Node réussis sur Mac), prioriser le registre extensible et le noyau documentaire sans dupliquer les objets métier, avant la refonte W2UI. Voir [94](../architecture/94-S16-FEDERATED-STANDARDIZATION-KNOWLEDGE.md) et [95](../architecture/95-S16-OMG-SOURCE-ACQUISITION.md). OMG est prioritaire, avec découverte du catalogue et des métadonnées RDF/JSON-LD ; acquisition réelle soumise aux droits documentés, privée hors dépôt. Les connecteurs d'import restent ISO/RFC/W3C ; le candidat R1 ne publie rien et ne modifie pas le schéma. La recette et les tests complets R1 restent à valider.
+
+### S16-A-R2 — Candidat consultation fédérée
+
+R1 validé sur Mac (659 tests). R2 : [architecture 96](../architecture/96-S16-A-R2-FEDERATED-STANDARDS-UI.md), consultation RFC/W3C sans catalogue, accès OMG privé depuis le Creator, inventaire des 29 ressources. Qualification navigateur et données réelles à terminer avant consolidation. A8.7 reste la release publiée.
+
+### S16-A-R3 — Corpus OMG
+
+R2 : recette utilisateur 10/10. Le retour demande un corpus OMG consultable sans formulaire de droits. R3 : collecte externe et import/actualisation du corpus persistant dans le Creator ; voir [97](../architecture/97-S16-A-R3-OMG-CORPUS.md). Qualification réelle du corpus et suite Node complète encore requises. A8.7 reste publiée.
+
+### S16-A-R3.1 — Catalogue OMG en ligne
+
+R3 est installé et qualifié par 673 tests Node sur Mac ; aucun corpus réel n'a été constitué lors de cette installation. Le retour utilisateur demande l'acquisition depuis le Creator sans téléchargement manuel. [Architecture 98](../architecture/98-S16-A-R31-OMG-ONLINE-CATALOG.md) : commande explicite, lecture de l'index public, relais Vite local et corpus privé. Qualification du HTML réel, du navigateur et de la régression R3.1 encore requises.
+
+### S16-A-R4 — Éditions historiques OMG
+
+R3.1-R1 : recette navigateur R3.1 réussie, 84/84 tests ciblés et 683/683 tests Node sur Mac ; collecte réelle privée de 286 publications et 16 adoptions ISO. L'index OMG n'est pas exhaustif des anciennes éditions, qui peuvent rester applicables à des systèmes en exploitation. R4 : acquisition explicite de l'historique formel par famille, consultation W2UI, sélection d'une édition ancienne et intégration métier contrôlée, sans remplacement automatique. Voir [architecture 99](../architecture/99-S16-A-R4-OMG-HISTORICAL-EDITIONS.md). Le statut opérationnel et l'identité normative restent soumis aux décisions de gouvernance ouvertes ; aucune publication sans qualification.

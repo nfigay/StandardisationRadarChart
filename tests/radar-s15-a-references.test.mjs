@@ -45,21 +45,26 @@ class Element {
   close(){this.open=false;this.emit('close');}
   reset(){for(const n of nodes(this))if(['input','select'].includes(n.tag))n.value='';}
 }
-function environment({viewer=false,published=false,initial=null,activeGroup='g1'}={}){
+function environment({viewer=false,published=false,initial=null,activeGroup='g1',withToolbar=false}={}){
   const body=new Element('body'),mount=new Element('div'),forms=[],alerts=[],reads={iso:0,fetch:0};body.appendChild(mount);mount.id='standard-references-panel';
   const document={body,documentElement:body,createElement:tag=>new Element(tag),getElementById:id=>nodes(body).find(n=>n.id===id)||null,querySelector:sel=>body.querySelector(sel),addEventListener:(...a)=>body.addEventListener(...a),removeEventListener:(...a)=>body.removeEventListener(...a)};
   const listeners=new Map();const i18next={language:'fr',addResourceBundle(){},t(key,opts){return opts?.defaultValue||key;},on(name,fn){const a=listeners.get(name)||[];a.push(fn);listeners.set(name,a);},off(name,fn){listeners.set(name,(listeners.get(name)||[]).filter(x=>x!==fn));},switch(lang){this.language=lang;for(const fn of [...(listeners.get('languageChanged')||[])])fn(lang);}};
   let grid,group=activeGroup,model=initial||catalog(undefined,viewer);const graphNodes=[];
   const graph={extent:()=>({x1:0,x2:800,y1:0,y2:800}),nodes:()=>graphNodes.map(n=>({position:()=>n.position})),add(n){graphNodes.push(plain(n));},$id(id){return graphNodes.filter(n=>n.data.id===id);},remove(ns){for(const n of ns)graphNodes.splice(graphNodes.indexOf(n),1);}};
   const root={location:{search:viewer?'?profile=viewer'+(published?'&publicationPreview=1':''):'',href:'https://example.test/radar.html'},URLSearchParams,crypto:{randomUUID},document,i18next,console,
-    w2grid:function(o){Object.assign(this,o);grid=this;this.clear=()=>{this.records=[];};this.refresh=()=>{};this.render=()=>{};this.select=id=>{this.selection=id;};},
-    w2form:function(o){forms.push(o);this.render=()=>{};this.destroy=()=>{};},w2alert:m=>alerts.push(m),
+    w2grid:function(o){Object.assign(this,o);grid=this;this.clear=()=>{this.records=[];if(withToolbar)this.selection=null;};this.refresh=()=>{};this.render=()=>{};this.select=id=>{this.selection=id;};if(withToolbar)this.getSelection=()=>this.selection?[this.selection]:[];},
+    w2form:function(o){forms.push(o);if(withToolbar){Object.assign(this,o);(root.__testFormInstances??=[]).push(this);}this.render=()=>{};this.destroy=()=>{};},w2alert:m=>alerts.push(m),
     w2ui:{mainLayout:{show(){},sizeTo(){}}},
     __radarRevisionSession:{status:()=>({activeGroup:group}),exportGroup:()=>null},
     __radarCatalogAdapter:{getRevision:g=>model.radarRevisions[Number(String(g).slice(1))]},
     __radarIsoWindowed:{async current(){reads.iso++;return {generation:'g1',summary:{release:'2026-11-09',datasets:{deliverables:{count:1}}}};},async page(){reads.iso++;return {records:[],next:null};},async get(){reads.iso++;return plain(isoItem);}},
     fetch:async()=>{reads.fetch++;return {ok:false};},setTimeout,clearTimeout};
-  const ctx=createContext({window:root,URL,console,setTimeout,clearTimeout,AbortSignal,TextDecoder});
+  if(withToolbar){
+    root.w2toolbar=function(o){Object.assign(this,o);this.render=()=>{};this.set=(id,patch)=>{const item=this.items.find(r=>r.id===id);assert.ok(item,'unknown toolbar item '+id);Object.assign(item,patch);};this.destroy=()=>{};root.w2ui[o.name]=this;};
+    root.w2popup={open(o){this.options=o;const id=o.body.match(/id="([^"]+)"/)?.[1];if(id){const el=new Element('div');el.id=id;body.appendChild(el);}const event={};o.onOpen?.(event);event.onComplete?.();},close(){this.options?.onClose?.();}};
+    root.confirm=()=>true;root.open=(url)=>{root.lastOpened=url;};
+  }
+  const ctx=createContext({window:root,URL,console,setTimeout,clearTimeout,AbortSignal,TextDecoder,TextEncoder});
   for(const name of modules)runInContext(source(name),ctx,{filename:name+'.js'});
   const store=root.__radarCatalogPersistence,registry=root.__radarStandardRegistry,panel=root.__radarStandardsPanel;
   function open(data){model=data;store.remember(data,{revisions:data.radarRevisions.map((r,i)=>({group:'g'+i,revisionId:r.revisionId}))});}
@@ -181,4 +186,163 @@ test('S15-B Creator source dialog, dated W3C selection, i18n and existing blip e
   form.querySelectorAll('input').find(n=>n.name==='label').value='W3C blip';form.querySelectorAll('select').find(n=>n.name==='ring').value='Adopted';form.querySelectorAll('select').find(n=>n.name==='quadrant').value='Available';form.querySelector('form').emit('submit');
   const data=x.store.build(x.graph);assert.equal(data.radarRevisions[1].blips[0].standardId,id);assert.equal(data.radarRevisions[0].blips.length,0);
   x.query('[data-standard-sources]').click();x.panel.resetWorkspace();x.open(catalog());assert.equal(x.root.document.getElementById('standard-source-dialog'),null);
+});
+
+
+// S16-A: the same source dialogue is reachable directly from every Creator mode.
+test('S16-A direct RFC and W3C shortcuts preserve source selection and explicit acquisition',async()=>{
+  const x=environment();await x.initialize();
+  // The unrelated ISO projection is isolated; the panel and source services are real.
+  x.root.__radarIsoFullGrid={project:()=>[]};
+  x.query('[data-catalog-mode="iso-list"]').click();
+  const rfc=x.query('[data-standard-source-shortcut="rfc-editor"]'),w3c=x.query('[data-standard-source-shortcut="w3c"]');
+  assert.equal(rfc.disabled,false);assert.equal(w3c.disabled,false);
+  const before=plain(x.store.build(null));
+  let acquisitions=0;
+  x.root.fetch=async()=>{acquisitions++;throw Error('Unexpected source acquisition');};
+  rfc.click();let d=x.query('#standard-source-dialog');
+  assert.equal(d.querySelector('[data-source-picker]').value,'rfc-editor');
+  assert.equal(x.query('[data-catalog-mode="iso-list"]').getAttribute('aria-pressed'),'true');
+  w3c.click();d=x.query('#standard-source-dialog');
+  assert.equal(d.querySelector('[data-source-picker]').value,'w3c');
+  assert.equal(x.body.querySelectorAll('#standard-source-dialog').length,1);
+  x.root.i18next.switch('en');assert.equal(d.querySelector('[data-source-picker]').value,'w3c');
+  assert.equal(acquisitions,0);assert.deepEqual(plain(x.store.build(null)),before);
+  x.panel.resetWorkspace();assert.equal(x.body.querySelector('#standard-source-dialog'),null);
+  x.store.closeCatalog();x.panel.refresh();assert.equal(rfc.disabled,true);assert.equal(w3c.disabled,true);
+  w3c.emit('click');assert.equal(x.body.querySelector('#standard-source-dialog'),null);
+});
+test('S16-A W3C shortcut integrates a dated publication through the existing service and selects the native reference',async()=>{
+  const x=environment();await x.initialize();x.root.__radarIsoFullGrid={project:()=>[]};x.query('[data-catalog-mode="iso-list"]').click();
+  const api=x.root.__radarStandardSources,stamp='2026-11-15T00:00:00.000Z';
+  const link=api.w3cLink({href:'https://api.w3.org/specifications/shacl',title:'Shapes Constraint Language'});
+  const version=api.w3cRecord({uri:'https://www.w3.org/TR/2017/REC-shacl-20170720/',date:'2017-07-20',title:'Shapes Constraint Language',status:'Recommendation'},'shacl');
+  x.root.fetch=async url=>new Response(JSON.stringify({schemaVersion:1,sourceId:'w3c',acquiredAt:stamp,...(url.endsWith('w3c-shacl.json')?{shortname:'shacl',payload:[version]}:{payload:[link]})}));
+  x.query('[data-standard-source-shortcut="w3c"]').click();const d=x.query('#standard-source-dialog');
+  d.querySelector('[data-source-load]').click();await new Promise(r=>setImmediate(r));
+  d.querySelector('[data-source-result="shacl"]').click();await new Promise(r=>setImmediate(r));
+  d.querySelector('[data-source-result="shacl:20170720"]').click();
+  d.querySelector('[data-source-integrate]').click();
+  const id='w3c-tr:shacl:20170720';
+  assert.equal(x.grid.selection,id);assert.ok(ids(x.grid).includes(id));
+  assert.equal(x.query('[data-catalog-mode="references"]').getAttribute('aria-pressed'),'true');
+  assert.equal(x.store.build(null).radarRevisions[0].blips.length,0);
+});
+test('S16-A generic and published Viewers expose neither external source shortcut',async()=>{
+  for(const published of [false,true]){
+    const x=environment({viewer:true,published,activeGroup:'g0'});await x.initialize();
+    assert.equal(x.body.querySelectorAll('[data-standard-source-shortcut]').length,0);
+    assert.equal(x.body.querySelector('[data-standard-sources]'),null);
+    assert.equal(x.reads.iso,0);assert.equal(x.reads.fetch,0);
+    assert.throws(()=>x.root.__radarStandardSourceDialog.open({sourceId:'w3c'}),/denied/i);
+  }
+});
+
+
+// S16-A-R2: exercise real navigation/action handlers through W2UI contract doubles.
+// The separate browser recipe exercises the actual W2UI implementation.
+const tick=()=>new Promise(r=>setImmediate(r));
+function toolbar(x){return x.root.w2ui.standardsToolbar;}
+function toolItem(x,id){return toolbar(x).items.find(r=>r.id===id);}
+async function toolClick(x,target){toolbar(x).onClick({target});await tick();await tick();}
+async function selectRow(x,id){x.grid.select(id);x.grid.onClick({recid:id});await tick();}
+const r2stamp='2026-11-16T00:00:00.000Z';
+function w3cFixture(x,n=1){const api=x.root.__radarStandardSources;const series=Array.from({length:n},(_,i)=>api.w3cLink({href:api.W3C+'/spec'+i,title:'Specification '+i}));const version=api.w3cRecord({uri:'https://www.w3.org/TR/2020/REC-spec0-20200716/',date:'2020-07-16',title:'Specification 0',status:'Recommendation'},'spec0');x.root.fetch=async url=>new Response(JSON.stringify({schemaVersion:1,sourceId:'w3c',acquiredAt:r2stamp,...(String(url).endsWith('w3c-spec0.json')?{shortname:'spec0',payload:[version]}:{payload:series})}));}
+const omgHtml='<table><tr><th>Name</th><th>Acronym</th><th>Version</th><th>Status</th><th>Publication Date</th></tr><tr><td>Example Model</td><td>EXAMPLE</td><td><a href="/spec/EXAMPLE/1.0">1.0</a></td><td>formal</td><td>August 2020</td></tr><tr><td>Example Model</td><td>EXAMPLE</td><td><a href="/spec/EXAMPLE/1.1/Beta1">1.1 Beta1</a></td><td>beta</td><td>August 2021</td></tr></table><table><tr><th>Specification Title</th><th>Version</th><th>ISO Number</th><th>OMG File ID</th></tr><tr><td>Example Model</td><td><a href="/spec/EXAMPLE/1.0">1.0</a></td><td>12345:2020</td><td>formal/20-01-01</td></tr></table>';
+
+test('S16-R2 W2UI source selector and contextual menu replace visible shortcuts; inventory is registry-backed',async()=>{
+ const x=environment({withToolbar:true});await x.initialize();
+ assert.equal(toolItem(x,'source').type,'menu-radio');assert.deepEqual(Array.from(toolItem(x,'source').items,r=>r.id),['iso-open-data','rfc-editor','w3c','omg-specifications','references','resources']);
+ assert.equal(x.query('[data-standard-source-shortcut="w3c"]').style.display,'none');
+ assert.equal(x.query('[data-catalog-mode="references"]').style.display,'none');
+ assert.equal(x.query('[data-native-declare]').style.display,'none');
+ const before=plain(x.store.build(null));const calls=x.reads.fetch;
+ await toolClick(x,'source:resources');assert.equal(x.grid.records.length,29);assert.ok(x.grid.records.some(r=>r.recid==='omg-specifications'));assert.equal(toolItem(x,'isoView').hidden,true);assert.equal(toolItem(x,'acquisition').hidden,true);assert.equal(x.reads.fetch,calls);assert.deepEqual(plain(x.store.build(null)),before);
+ await selectRow(x,'omg-specifications');await toolClick(x,'details');assert.ok(x.forms.at(-1).fields.length>10);await toolClick(x,'openSource');assert.equal(x.root.lastOpened,'https://www.omg.org/spec/');
+ x.root.__radarIsoFullGrid={project:()=>[]};await toolClick(x,'source:iso-open-data');assert.equal(toolItem(x,'isoView').hidden,false);assert.equal(toolItem(x,'isoView').selected,'iso-list');assert.equal(toolItem(x,'acquisition').hidden,false);assert.equal(toolItem(x,'integrate').hidden,true);
+});
+test('S16-R2 W3C consultation without a catalog, dated publication integration only after opening catalog',async()=>{
+ const x=environment({withToolbar:true});await x.initialize();x.store.closeCatalog();x.panel.refresh();w3cFixture(x);
+ await toolClick(x,'source:w3c');assert.equal(x.grid.records.length,0);assert.equal(toolItem(x,'isoView').hidden,true);
+ await toolClick(x,'acquisition:load');assert.equal(x.grid.records[0].recid,'spec0');assert.equal(toolItem(x,'integrate').hidden,true);
+ await selectRow(x,'spec0');await toolClick(x,'versions');assert.equal(x.grid.records[0].recid,'spec0:20200716');await selectRow(x,'spec0:20200716');assert.equal(toolItem(x,'integrate').disabled,true);
+ await toolClick(x,'integrate');assert.equal(x.store.status().importedCatalogs,0);
+ x.open(catalog());x.panel.refresh();await selectRow(x,'spec0:20200716');assert.equal(toolItem(x,'integrate').disabled,false);
+ const before=plain(x.store.build(null));await toolClick(x,'integrate');const after=plain(x.store.build(null));assert.equal(toolItem(x,'source').selected,'references');assert.equal(x.grid.selection,'w3c-tr:spec0:20200716');assert.ok(after.standards.some(r=>r.standardId==='w3c-tr:spec0:20200716'));for(const k of ['organizations','portfolios','assessments','radarRevisions'])assert.deepEqual(after[k],before[k]);
+});
+test('S16-R2 bounded external paging and search in common grid',async()=>{
+ const x=environment({withToolbar:true});await x.initialize();w3cFixture(x,205);await toolClick(x,'source:w3c');await toolClick(x,'acquisition:load');assert.equal(x.grid.records.length,100);assert.equal(toolItem(x,'next').disabled,false);await toolClick(x,'next');assert.equal(x.grid.records[0].recid,'spec100');await toolClick(x,'next');assert.equal(x.grid.records.length,5);assert.equal(toolItem(x,'next').disabled,true);
+ const search=x.query('input[type="search"]');search.value='Specification 4';search.emit('input');await new Promise(r=>setTimeout(r,220));assert.equal(x.grid.records[0].recid,'spec4');assert.equal(toolItem(x,'previous').disabled,true);await x.root.i18next.switch('en');assert.equal(toolItem(x,'source').selected,'w3c');assert.match(toolItem(x,'source').text,/Documentary source/);
+});
+test('S16-R2 stale external acquisition cannot replace another source view',async()=>{
+ const x=environment({withToolbar:true});await x.initialize();const api=x.root.__radarStandardSources;let release;const pending=new Promise(r=>release=r);x.root.fetch=async()=>pending;
+ await toolClick(x,'source:w3c');await toolClick(x,'acquisition:load');await toolClick(x,'source:resources');release(new Response(JSON.stringify({schemaVersion:1,sourceId:'w3c',acquiredAt:r2stamp,payload:[api.w3cLink({href:api.W3C+'/test',title:'Test'})]})));await tick();await tick();assert.equal(x.grid.records.length,29);assert.equal(toolItem(x,'source').selected,'resources');
+});
+test('S16-R2 OMG HTML imported from browser, private and non-mutating, clear preserves native catalog',async()=>{
+ const x=environment({withToolbar:true});await x.initialize();const before=plain(x.store.build(null));await toolClick(x,'source:omg-specifications');assert.equal(x.grid.records.length,0);assert.equal(toolItem(x,'integrate').hidden,false);assert.equal(toolItem(x,'integrate').disabled,true);const input=x.query('[data-omg-file]');input.files=[{name:'catalog.html',size:omgHtml.length,text:async()=>omgHtml}];input.emit('change');await tick();await tick();assert.equal(x.grid.records.length,2);assert.equal(x.grid.records[0].recid,'EXAMPLE/1.0');assert.equal(x.grid.records[0].isoAdoptionsText,'12345:2020');assert.equal(x.grid.records[1].recid,'EXAMPLE/1.1/Beta1');await toolClick(x,'omgView:adoptions');assert.equal(x.grid.records.length,1);assert.equal(x.grid.records[0].recid,'EXAMPLE/1.0');assert.equal(toolItem(x,'omgView').selected,'adoptions');await toolClick(x,'omgView:specifications');assert.equal(x.grid.records.length,2);assert.equal(x.root.__radarStandardSources.omgStatus().distribution,'private-only');assert.equal(x.root.__radarStandardSources.omgStatus().origin,'local-unverified');assert.deepEqual(plain(x.store.build(null)),before);
+ await selectRow(x,'EXAMPLE/1.0');await toolClick(x,'openSource');assert.equal(x.root.lastOpened,'https://www.omg.org/spec/EXAMPLE/1.0');await toolClick(x,'details');assert.ok(x.forms.at(-1).record);await toolClick(x,'acquisition:omgClear');assert.equal(x.grid.records.length,0);assert.deepEqual(plain(x.store.build(null)),before);
+});
+test('S16-R3 OMG import and restore have no authorization prompt or implicit network acquisition',async()=>{
+ const x=environment({withToolbar:true});await x.initialize();await toolClick(x,'source:omg-specifications');const api=x.root.__radarStandardSources;assert.equal(api.loadOmg,undefined);assert.equal(toolItem(x,'acquisition').items.some(r=>r.id==='omgRights'),false);assert.ok(toolItem(x,'acquisition').items.some(r=>r.id==='omgRestore'));x.root.confirm=()=>{throw Error('No authorization prompt');};const calls=x.reads.fetch;const input=x.query('[data-omg-file]');input.files=[{name:'catalog.html',size:omgHtml.length,text:async()=>omgHtml}];input.emit('change');await tick();await tick();assert.equal(x.grid.records.length,2);await toolClick(x,'acquisition:omgRestore');assert.equal(x.grid.records.length,2);assert.equal(x.reads.fetch,calls);assert.equal(toolItem(x,'integrate').hidden,false);assert.equal(toolItem(x,'integrate').disabled,true);
+});
+test('S16-R2 Viewer cannot mount source toolbar or import OMG',async()=>{
+ for(const published of [false,true]){const x=environment({viewer:true,published,withToolbar:true,activeGroup:'g0'});await x.initialize();assert.equal(toolbar(x),undefined);assert.equal(x.body.querySelector('[data-omg-file]'),null);assert.equal(x.reads.fetch,0);await assert.rejects(x.root.__radarStandardSources.importOmg(omgHtml,{format:'html'}),/denied/);}
+});
+
+
+test('S16-R2 RFC uses same grid and integrates exact number, with optional Datatracker context',async()=>{
+ const x=environment({withToolbar:true});await x.initialize();const api=x.root.__radarStandardSources;
+ // Minimal DOM fixture double only for the already qualified RFC XML boundary.
+ const node=(localName,textContent='',children=[])=>({localName,textContent,children});const entry=node('rfc-entry','',[node('doc-id','RFC9110'),node('title','HTTP Semantics'),node('date','',[node('month','June'),node('year','2022')]),node('stream','IETF'),node('current-status','INTERNET STANDARD')]);x.root.DOMParser=class{parseFromString(){return {documentElement:node('rfc-index','',[entry]),getElementsByTagName:()=>[]};}};
+ let contextCalls=0;x.root.fetch=async url=>{if(String(url).includes('datatracker.ietf.org')){contextCalls++;return new Response(JSON.stringify({name:'rfc9110',title:'HTTP Semantics',group:{acronym:'httpbis',name:'HTTP',type:'WG'}}));}return new Response(JSON.stringify({schemaVersion:1,sourceId:'rfc-editor',acquiredAt:r2stamp,payload:'<rfc-index><rfc-entry/></rfc-index>'}));};
+ await toolClick(x,'source:rfc-editor');assert.equal(contextCalls,0);await toolClick(x,'acquisition:load');assert.equal(x.grid.records[0].recid,'9110');assert.equal(toolItem(x,'versions').hidden,true);await selectRow(x,'9110');await toolClick(x,'context');assert.equal(contextCalls,1);assert.ok(Object.values(x.forms.at(-1).record).some(v=>v.includes('httpbis')));const before=plain(x.store.build(null));await toolClick(x,'integrate');const after=plain(x.store.build(null));assert.ok(after.standards.some(r=>r.standardId==='rfc:9110'));assert.equal(x.grid.selection,'rfc:9110');assert.deepEqual(after.organizations,before.organizations);assert.deepEqual(after.radarRevisions,before.radarRevisions);
+});
+
+// S16-R3.1: the actual W2UI action delegates to the bounded source service.
+test('S16-R31 OMG online command is available in local Creator, preserves the index on relay failure, and stays hidden on static Pages',async()=>{
+ // Static GitHub Pages cannot offer a command backed by the local Vite relay.
+ const pages=environment({withToolbar:true});
+ pages.root.location.href='http://127.0.0.1:5189/StandardisationRadarChart/radar.html';
+ await pages.initialize();await toolClick(pages,'source:omg-specifications');
+ assert.equal(pages.root.__radarStandardSources.omgHasLocalRelay(),false);
+ assert.equal(toolItem(pages,'acquisition').items.some(r=>r.id==='omgOnline'),false);
+ assert.ok(toolItem(pages,'acquisition').items.some(r=>r.id==='omgImport'));
+ assert.ok(toolItem(pages,'acquisition').items.some(r=>r.id==='omgHistoryImport'));
+ // The local Creator exposes the command. An absent relay may fall back to
+ // the official URL; a real relay failure must not silently replace the index.
+ const x=environment({withToolbar:true});
+ x.root.location.href='http://127.0.0.1:5174/radar.html';
+ await x.initialize();x.store.closeCatalog();x.panel.refresh();
+ const api=x.root.__radarStandardSources;let calls=[];
+ const html=omgHtml+omgHtml.slice(0,omgHtml.indexOf('</table>')+8);
+ x.root.fetch=async url=>{
+   calls.push(String(url));
+   if(String(url)==='http://127.0.0.1:5174/__radar-omg/catalog/refresh')return new Response('Not Found',{status:404});
+   assert.equal(String(url),'https://www.omg.org/spec/');
+   return new Response(html,{headers:{'Content-Type':'text/html'}});
+ };
+ await toolClick(x,'source:omg-specifications');
+ assert.equal(calls.length,0);
+ assert.equal(api.omgHasLocalRelay(),true);
+ assert.ok(toolItem(x,'acquisition').items.some(r=>r.id==='omgOnline'));
+ await toolClick(x,'acquisition:omgOnline');
+ assert.deepEqual(calls,['http://127.0.0.1:5174/__radar-omg/catalog/refresh','https://www.omg.org/spec/']);
+ assert.equal(x.grid.records.length,2);
+ assert.equal(api.omgStatus().origin,'official-fetch');
+ assert.equal(x.store.status().importedCatalogs,0);
+ assert.equal(toolItem(x,'integrate').hidden,false);
+ assert.equal(toolItem(x,'integrate').disabled,true);
+ x.root.fetch=async url=>{
+   assert.equal(String(url),'http://127.0.0.1:5174/__radar-omg/catalog/refresh');
+   return new Response(JSON.stringify({operation:'S16-OMG-LOCAL-RELAY',ok:false,error:'upstream unavailable'}),{status:503,headers:{'Content-Type':'application/json'}});
+ };
+ await toolClick(x,'acquisition:omgOnline');
+ assert.equal(x.grid.records.length,2);
+ assert.equal(api.omgStatus().origin,'official-fetch');
+});
+test('S16-R31 prepared local corpus is available through the source menu without changing native data',async()=>{
+ const x=environment({withToolbar:true});x.root.location.href='http://127.0.0.1:5174/radar.html';await x.initialize();const api=x.root.__radarStandardSources,before=plain(x.store.build(null));
+ const html=omgHtml+omgHtml.slice(0,omgHtml.indexOf('</table>')+8),snapshot=api.omg.parseOmgCatalog(html,{acquiredAt:r2stamp,sha256:'a'.repeat(64)});
+ x.root.fetch=async url=>{assert.match(String(url),/\/__radar-omg\/catalog\/current$/);return new Response(JSON.stringify({operation:'S16-OMG-LOCAL-RELAY',ok:true,snapshot}),{headers:{'Content-Type':'application/json'}});};
+ await toolClick(x,'source:omg-specifications');assert.ok(toolItem(x,'acquisition').items.some(r=>r.id==='omgPrepared'));await toolClick(x,'acquisition:omgPrepared');assert.equal(x.grid.records.length,2);assert.equal(api.omgStatus().origin,'local-prepared');assert.deepEqual(plain(x.store.build(null)),before);
 });

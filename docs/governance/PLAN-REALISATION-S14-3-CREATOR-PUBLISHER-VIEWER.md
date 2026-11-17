@@ -612,3 +612,41 @@ S15-A/B/C/D et livraison A8.7 sont clos.
 DEC-009 et DEC-010 restent ouvertes.
 Aucun nouveau chantier métier n’est engagé
 par cette clôture documentaire.
+
+## Reprise post-A8.7 — S16-A
+
+Après clôture de S15 et publication A8.7, l'audit S16-0 confirme le socle
+Workspace et les objets métier existants. Le retour de consultation du
+Creator met en évidence un accès RFC/W3C trop peu visible dans Standards.
+Le premier incrément candidat ajoute des accès directs aux dialogues S15-B
+depuis le panneau existant, sans refonte de modèle ni nouvelle persistance.
+Contrat et critères : [architecture 93](../architecture/93-S16-A-MULTISOURCE-STANDARDS-WORKSPACE.md).
+La recette du nouveau parcours, les tests Node et la non-régression des
+capacités précèdent toute consolidation.
+
+Ordre de travail proposé, non engagement de release :
+S16-A accès multisource ; puis administration des organisations, portefeuilles
+et radars ; puis Workspace persistant et organisation multi-catalogues
+selon DEC-016 ; convergence métier SPM selon les contrats et arbitrages.
+DEC-009/010 restent ouvertes. Les cibles A9/A10 non réalisées restent
+identifiées et ne sont pas annulées par ce delta.
+
+### Ajustement S16 — Fédération de connaissances et non-redondance
+
+Le retour utilisateur demande une navigation par source et W2UI-first, et une fédération élargie (OMG, IEC, IEEE, ETSI, OASIS, CEN-CENELEC, The Open Group, INCOSE/SEBoK, MOSA/ASSIST, consortiums industriels). R1 : registre de ressources et projection documentaire non mutante, premiers diagnostics Datatracker et OMG, droits et identités explicites ; voir [94](../architecture/94-S16-FEDERATED-STANDARDIZATION-KNOWLEDGE.md), [95](../architecture/95-S16-OMG-SOURCE-ACQUISITION.md). R2 : sélection contextuelle W2UI et consultation indépendante du catalogue. B : enrichir les `organizations` et `portfolios` natifs. C : élicitation et profils de standards à utiliser conjointement ; D : relations/provenance, analyses et projections. Persistance du Workspace selon les dépendances, sans persistance métier parallèle. Le registre décrit des ressources, pas des organisations canoniques. Aucun arbitrage DEC-009/010/016/017/018 fermé implicitement ; aucune publication automatique.
+
+### S16-A-R2 — Réalisation applicative
+
+Voir [architecture 96](../architecture/96-S16-A-R2-FEDERATED-STANDARDS-UI.md). Réutiliser w2toolbar/w2grid/w2form/w2popup et le catalogue natif 1.0.0. Le candidat R2 rend les ressources visibles, conserve les moteurs ISO et métier, et introduit une consultation OMG privée sans intégration automatique. Qualification Node, navigateur et corpus réel avant consolidation.
+
+### S16-A-R3 — Corpus OMG
+
+R3 corrige le retour de recette R2 : collecteur séparé, corpus OMG importable et persistant, aucune autorisation à saisir dans le Creator. [Architecture 97](../architecture/97-S16-A-R3-OMG-CORPUS.md). Le socle métier et les frontières de publication restent inchangés ; la qualification OMG réelle précède l’intégration native.
+
+### S16-A-R3.1 — Actualisation OMG en ligne
+
+Le Creator propose une actualisation explicite du catalogue OMG et l'ouverture du corpus préparé localement, sans formulaire juridique ni téléchargement manuel. Le relais de développement est limité à une lecture publique de l'index officiel. La collecte d'autres ressources et la redistribution restent distinctes. Voir [98](../architecture/98-S16-A-R31-OMG-ONLINE-CATALOG.md). Le lot R4 d'intégration métier reste séparé ; aucune migration native.
+
+### S16-A-R4 — Historique et sélection par édition
+
+Suite au rapport R3.1-R1 (683 tests réussis, corpus OMG privé réel), le retour fonctionnel signale les éditions UML absentes de l'index courant et la persistance opérationnelle des anciennes éditions. R4 introduit, dans le Creator, la consultation de la table History/Formal Versions par famille OMG sélectionnée, sa mise en cache distincte, puis l'intégration explicite d'une édition dans `standards[]` avec `standardId` stable et provenance. Pas de mutation d'une édition existante, pas de lien `supersedes` inféré, pas d'actualisation implicite des blips, pas de conversion automatique des adoptions ISO en équivalences. Vérifier la fiche officielle UML, les conflits de déclaration, les conditions d'accès et la recette navigateur. Voir [99](../architecture/99-S16-A-R4-OMG-HISTORICAL-EDITIONS.md). DEC-009/010/016/017/018 ouvertes ; format natif 1.0.0 conservé.
