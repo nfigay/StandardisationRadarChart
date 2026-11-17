@@ -1,6 +1,6 @@
 # 117 — S16 : retour d’expérience de livraison et exigences S17
 
-**Statut : consolidation documentaire post-S16 — proposition S16-DOC-R1, à vérifier et versionner après autorisation explicite.**
+**Statut : retour d’expérience S16 versionné sur `main` par le commit documentaire `277a0c8c386d5be61176571f82f6b07dcf9b42a2` ; addendum de réconciliation S16-ARCH-R1 proposé ci-dessous, non versionné à ce stade.**
 
 ## 1. Constat factuel — historique et livraison finale
 
@@ -63,3 +63,9 @@ Cette étape était publiée selon le rapport `S16-PUBLICATION-RESUME-R2` et vé
 
 **Points à instruire avant conception détaillée :** définition réelle de « groupe », distinction groupe de travail / groupe de révision / regroupement de normes, localisation des opérations métier sur blips, portée de la suppression (association, révision active, entité), politique de restauration, commande canonique de la campagne des 764 tests et comportement exact des scripts de livraison. Ces points ne sont pas résolus par le seul inventaire de signatures.
 
+
+## 7. Addendum de réconciliation documentaire S16-ARCH-R1 (17 novembre 2026)
+
+Le document 117 a été publié par push Git contrôlé du commit documentaire `277a0c8c386d5be61176571f82f6b07dcf9b42a2` vers `origin/main`, avec `gh-pages` inchangée à `645f34ddbc53b5f7bcfee24aea9149afb9b133c1`, selon l'audit `S16-DOC-R1-GITHUB-PUSH-20261117-222444.txt` communiqué. Ce contrôle prouve le SHA Git distant et **ne constitue pas** une nouvelle recette HTTP de Pages. Les préconditions de la section 5 décrivent la procédure *historique* de mise en version de ce document et ne constituent pas une consigne de rejouer le commit.
+
+L'inventaire documentaire S16-ARCH-R1-R3 a recensé 117 documents Markdown, 87 références locales analysées et aucune cible absente détectée. Une synthèse transversale de l'architecture S16 et une matrice de traçabilité documentaire sont proposées dans [119](119-S16-ARCHITECTURE-REALISEE-ET-RECONCILIATION.md), sans prétendre à une vérification nouvelle des sources applicatives. Le document [118](118-S16-PAGES-VIEWER-HTML-EXPORT-HOTFIX.md) conserve sa numérotation et sa portée. La décision de gouvernance [115](115-S16-C6-R3-GOUVERNANCE-HORS-LOGICIEL.md) prévaut sur les anciennes propositions de contrôles juridiques intégrés à 107–114.

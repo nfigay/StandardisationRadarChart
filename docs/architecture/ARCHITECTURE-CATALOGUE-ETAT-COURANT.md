@@ -1,5 +1,8 @@
 # Architecture de référence — catalogue ISO (état S14-W)
 
+> **Périmètre documentaire (réconciliation S16-ARCH-R1, 17 novembre 2026).** Ce texte conserve les constats spécifiques au catalogue ISO depuis S14-W jusqu'à A8.5 ; malgré son nom de fichier, il **ne constitue pas à lui seul la photographie de toute l'application à la fin de S16**. Pour l'architecture transversale Creator / sources ISO, OMG, RFC/IETF, W3C / Publisher / Viewer, les qualifications et les décisions supplantées, consulter [119 — Architecture S16 réalisée et réconciliation](119-S16-ARCHITECTURE-REALISEE-ET-RECONCILIATION.md). Les sections « non validé » sont des états datés de leurs campagnes, et non des conclusions automatiquement reconduites après S16. La séparation gouvernance/logiciel est régie par [115](115-S16-C6-R3-GOUVERNANCE-HORS-LOGICIEL.md).
+
+
 ## Statut des affirmations
 
 - **Observé et validé par l'utilisateur (S14-Q)** : génération `2026-11-09`, 81 768 livrables, 810 comités ; lecture paginée IndexedDB ; index hiérarchiques actifs ; fenêtre ICS 01 et TC 121 ; détails par identifiant. Deux fenêtres successives distinctes.
