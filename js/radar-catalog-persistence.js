@@ -176,6 +176,10 @@
     var ma=rfc.exec(a),mb=rfc.exec(b);
     if(ma&&mb&&ma[1]===mb[1]&&(doc?.sourceId==='rfc-editor'||declaration.origin==='rfc-editor'))return true;
     if(isoDesignation(r.issuer)!==isoDesignation(declaration.issuer)||a!==b)return false;
+    if(doc?.sourceId==='omg-specifications'||declaration.origin==='omg-specifications'){
+      var left=isoDesignation(r.editionDesignation),right=isoDesignation(declaration.editionDesignation);
+      return !left||!right||left===right; // distinct historical versions can coexist
+    }
     if(doc?.sourceId==='w3c'||declaration.origin==='w3c'){
       var left=isoDesignation(r.editionDesignation),right=isoDesignation(declaration.editionDesignation);
       // Unknown/ambiguous editions require reconciliation; explicit different dates may coexist.
@@ -203,6 +207,27 @@
     if(standards.some(s=>externalCollision(s,declaration)))fail('source reference conflicts with an existing declaration; reconcile before importing');
     var record={standardId:id,name:doc.title,extensions:{referenceDeclaration:declaration,externalDocument:clone(doc)}};
     source.standards=standards.concat([record]);
+    return {action:'imported',standardId:id,reference:doc.designation};
+  }
+  // R4: one explicit OMG edition, with immutable source identity and evidence.
+  // No automatic latest-version replacement; old editions remain first-class.
+  function importOmgReference(key,generation,{family=null}={}){
+    if(root.__radarApplicationProfile?.viewer)fail('Viewer cannot import source references');
+    root.__radarApplicationProfile?.require('catalog.declareReference');
+    if(imports.length!==1)fail('exactly one imported catalog required');
+    var provider=root.__radarStandardSources;
+    var doc=family?provider?.selectedOmgHistory?.(family,key,generation):provider?.selectedOmgCurrent?.(key,generation);
+    if(!doc||doc.sourceId!=='omg-specifications'||doc.key!==key||doc.issuer!=='OMG'||!doc.edition||!doc.url||!doc.designation)fail('Invalid OMG edition');
+    var owner=imports[0].source,standards=owner.standards;
+    if(!Array.isArray(standards))fail('Missing standards array');
+    var matches=standards.filter(s=>s.extensions?.externalDocument?.sourceId==='omg-specifications'&&s.extensions.externalDocument.key===key);
+    if(matches.length>1)fail('Ambiguous OMG source identity');
+    if(matches.length===1)return {action:'existing',standardId:matches[0].standardId,reference:doc.designation};
+    var id='omg:'+key;
+    if(standards.some(s=>s.standardId===id))fail('OMG standardId collision');
+    var declaration=sourceDeclaration(doc);
+    if(standards.some(s=>externalCollision(s,declaration)))fail('OMG edition conflicts with an existing reference; reconcile explicitly');
+    owner.standards=standards.concat([{standardId:id,name:doc.title,extensions:{referenceDeclaration:declaration,externalDocument:clone(doc)}}]);
     return {action:'imported',standardId:id,reference:doc.designation};
   }
   // S15-C: lifecycle operations remain inside the private catalog owner.
@@ -262,7 +287,7 @@
   }
   function sourceDeclaration(doc){
     return {issuer:doc.issuer,designation:doc.designation,editionDesignation:doc.edition,
-      sourceName:doc.sourceId==='rfc-editor'?'RFC Editor':'W3C API',sourceUrl:doc.url,origin:doc.sourceId,verification:'source-verified'};
+      sourceName:doc.sourceId==='rfc-editor'?'RFC Editor':doc.sourceId==='omg-specifications'?'OMG Specifications':'W3C API',sourceUrl:doc.url,origin:doc.sourceId,verification:doc.sourceId==='omg-specifications'&&doc.verification!=='source-verified'?'unverified':'source-verified'};
   }
   function sameDeclaredEdition(a,b){
     return !!a&&typeof a.issuer==='string'&&typeof a.designation==='string'&&typeof a.editionDesignation==='string'&&!!a.editionDesignation.trim()&&isoDesignation(a.issuer)===isoDesignation(b.issuer)&&
@@ -768,7 +793,7 @@
   root.__radarCatalogPersistence=Object.freeze({
     generateStandalonePublication:generateStandalonePublication,preparePublicationProjection:preparePublicationProjection,downloadPublicationProjection:downloadPublicationProjection,
     publicationState:publicationState,createPublicationDefinition:createPublicationDefinition,updatePublicationDefinition:updatePublicationDefinition,removePublicationDefinition:removePublicationDefinition,resolvePublicationDefinition:resolvePublicationDefinition,preparePublicationRelease:preparePublicationRelease,recordPublicationRelease:recordPublicationRelease,assertCanRemoveGroups:assertCanRemoveGroups,
-    isDirty:isDirty,markNew:markNew,closeCatalog:closeCatalog,importIsoReference:importIsoReference,importSourceReference:importSourceReference,renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
+    isDirty:isDirty,markNew:markNew,closeCatalog:closeCatalog,importIsoReference:importIsoReference,importSourceReference:importSourceReference,importOmgReference:importOmgReference,renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
     registerDraft:registerDraft,removeGroup:removeGroup, ownsRevision:ownsRevision, transitionRevision:transitionRevision,
     validateCreation:validateCreation,commitCreation:commitCreation,
     referenceImpact:referenceImpact,removeUnusedReference:removeUnusedReference,sourceLifecyclePlan:sourceLifecyclePlan,applySourceLifecycle:applySourceLifecycle,

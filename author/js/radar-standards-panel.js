@@ -13,6 +13,7 @@
  const WINDOW_SIZES=[100,250,500];let windowSize=100,windowSortField='reference',windowSortDirection='asc',autoLoading=false,windowBasePosition=0;
  let advancedExpression=null,advancedRevision=0,advancedButton=null,advancedDialog=null;
  let nativeOriginFilter=null;
+ let standardsToolbar=null,toolbarState=new Map(),documentOffset=0,documentSeries=null,documentOmgAdoptions=false,documentOmgFamily=null,documentResult=null,documentBusy=false,documentMessage='',documentToken=0,omgFile=null;
  let mode='ics',icsRows=null,icsError=null,loading=false,isoDeliverables=[],isoCommittees=[],isoSync=[],isoLoading=false,localSyncBusy=false,localSyncMessage='',rssRows=[],rssMessage='',changeRows=[],changeMessage='',changeRelease='';
  /* S14-L2 INCREMENTAL TREES */
  let treeIndex=null,treeIcs=null,treeCommittees=null,treeDeliverables=null;
@@ -49,6 +50,14 @@
  Object.assign(isoStrings.fr,{referenceLifecycle:'Cycle de vie',referenceUpdated:'Notice actualisée ; identifiant conservé.',referenceReconciled:'Déclaration réconciliée ; identifiant conservé.',referenceRemoved:'Référence supprimée.',referenceLifecycleError:'Impossible de contrôler les dépendances de cette référence.'});
  Object.assign(isoStrings.en,{referenceLifecycle:'Lifecycle',referenceUpdated:'Record updated; identifier retained.',referenceReconciled:'Declaration reconciled; identifier retained.',referenceRemoved:'Reference removed.',referenceLifecycleError:'Unable to check dependencies for this reference.'});
  Object.assign(isoStrings.en,{standardSources:'Standardization sources',nativeRfc:'RFC Editor',nativeW3c:'W3C API',nativeDocumentStatus:'Document status',nativeAcquired:'Acquired',externalAdded:'Reference added to catalog.',externalExisting:'Reference already present; record selected.'});
+ Object.assign(isoStrings.fr,{browseRfc:'RFC Editor',browseW3c:'W3C',sourceNeedsCatalog:'Ouvrez un catalogue métier pour consulter et intégrer les références de cette source.'});
+ Object.assign(isoStrings.en,{browseRfc:'RFC Editor',browseW3c:'W3C',sourceNeedsCatalog:'Open a business catalog to browse and integrate references from this source.'});
+ Object.assign(isoStrings.fr,{resourceSelector:'Source documentaire',resourceOmgSpecs:'Spécifications OMG',resourceOmgAdoptions:'Adoptions ISO',resourceIsoManage:'Gérer les sources ISO',resourceInventory:'Inventaire des ressources',resourceLoad:'Charger',resourceRefresh:'Actualiser la source',resourceOpen:'Ouvrir la source',resourceImport:'Importer / actualiser le corpus',resourceOmgRestore:'Charger le corpus en cache',resourceOmgOnline:'Actualiser OMG en ligne',resourceOmgPrepared:'Charger le corpus préparé',resourceOmgOfficial:'Acquisition HTTPS directe',resourceOmgRelay:'Acquisition HTTPS via le relais local',resourceOmgPreparedOrigin:'Corpus préparé par le collecteur local',resourceBack:'Retour aux spécifications',resourceVersions:'Publications',resourceDetails:'Fiche documentaire',resourceEmpty:'Aucune donnée chargée. Charger explicitement la source.',resourceOmgEmpty:'OMG : actualiser en ligne, charger un corpus préparé ou importer un fichier. Aucun accès réseau automatique.',resourceOmgPrivate:'Corpus documentaire privé — redistribution non autorisée.',resourceOmgLocal:'Fichier local : origine non vérifiée',resourcePartial:'Couverture partielle',resourceComplete:'Tables reconnues sans rejet (pas toutes les éditions historiques)',resourceRows:'résultats',resourcePrevious:'Page précédente',resourceNext:'Page suivante',resourcePage:'Page',resourceRead:'Consultation',resourceSearch:'Référence, titre, statut, édition…',resourceType:'Type de ressource',resourceAccess:'Accès',resourceConnector:'Connecteur',resourceIsoAdoption:'Adoptions ISO signalées',resourceDate:'Date',resourceFlow:'Flux',resourceSelect:'Sélectionner une ligne',resourceNoCatalog:'Ouvrir ou créer un catalogue pour intégrer une publication.',resourceVersionRequired:'Sélectionner une publication datée.',resourceCancel:'Annuler',resourceError:'Erreur documentaire',resourceLoading:'Chargement…',resourceContext:'Contexte IETF',resourceAvailable:'Disponible',resourceNotImplemented:'Non implémenté',resourceReview:'À instruire',resourceSource:'Source',resourceRightsReview:'Droits de réutilisation à instruire',resourceClear:'Effacer l’index OMG en cache (historiques conservés)',resourceImportSnapshot:'Importer un instantané',resourceSourceUrl:'URL officielle',resourceCache:'Cache',resourceLocalNoDate:'Date d’acquisition non déclarée',resourceCacheClearFailed:'Le cache navigateur n’a pas pu être effacé.'});
+ Object.assign(isoStrings.en,{resourceSelector:'Documentary source',resourceOmgSpecs:'OMG specifications',resourceOmgAdoptions:'ISO adoptions',resourceIsoManage:'Manage ISO sources',resourceInventory:'Resource inventory',resourceLoad:'Load',resourceRefresh:'Refresh source',resourceOpen:'Open source',resourceImport:'Import / update corpus',resourceOmgRestore:'Load cached corpus',resourceOmgOnline:'Refresh OMG online',resourceOmgPrepared:'Load prepared corpus',resourceOmgOfficial:'Direct HTTPS acquisition',resourceOmgRelay:'HTTPS acquisition via local relay',resourceOmgPreparedOrigin:'Corpus prepared by the local collector',resourceBack:'Back to specifications',resourceVersions:'Publications',resourceDetails:'Document details',resourceEmpty:'No data loaded. Explicitly load the source.',resourceOmgEmpty:'OMG: refresh online, load a prepared corpus or import a file. No automatic network access.',resourceOmgPrivate:'Private documentary corpus — redistribution not authorized.',resourceOmgLocal:'Local file: unverified origin',resourcePartial:'Partial coverage',resourceComplete:'Recognized tables without rejected rows (not all historical editions)',resourceRows:'results',resourcePrevious:'Previous page',resourceNext:'Next page',resourcePage:'Page',resourceRead:'Consultation',resourceSearch:'Reference, title, status, edition…',resourceType:'Resource type',resourceAccess:'Access',resourceConnector:'Connector',resourceIsoAdoption:'Reported ISO adoptions',resourceDate:'Date',resourceFlow:'Stream',resourceSelect:'Select a row',resourceNoCatalog:'Open or create a catalog to integrate a publication.',resourceVersionRequired:'Select a dated publication.',resourceCancel:'Cancel',resourceError:'Documentary error',resourceLoading:'Loading…',resourceContext:'IETF context',resourceAvailable:'Available',resourceNotImplemented:'Not implemented',resourceReview:'To review',resourceSource:'Source',resourceRightsReview:'Reuse rights require review',resourceClear:'Clear cached OMG index (keep histories)',resourceImportSnapshot:'Import snapshot',resourceSourceUrl:'Official URL',resourceCache:'Cache',resourceLocalNoDate:'Acquisition date not declared',resourceCacheClearFailed:'Browser cache could not be cleared.'});
+ Object.assign(isoStrings.fr,{resourceOmgHistoryImport:'Importer un historique OMG (JSON)',resourceOmgHistoryExport:'Exporter cet historique (JSON)',resourceOmgHistoryImported:'Historique privé importé'});
+ Object.assign(isoStrings.en,{resourceOmgHistoryImport:'Import OMG edition history (JSON)',resourceOmgHistoryExport:'Export this history (JSON)',resourceOmgHistoryImported:'Private history imported'});
+ Object.assign(isoStrings.fr,{resourceOmgHistory:'Historique des éditions',resourceOmgHistoryView:'Historique OMG',resourceOmgApplicability:'Une ancienne édition peut rester applicable en exploitation ; vérifier le contexte contractuel ou technique.',resourceOmgHistoryBack:'Retour au catalogue OMG',resourceOmgHistoryRefresh:'Actualiser cet historique',resourceOmgHistoryUnavailable:'Historique non encore acquis'});
+ Object.assign(isoStrings.en,{resourceOmgHistory:'Edition history',resourceOmgHistoryView:'OMG history',resourceOmgApplicability:'An earlier edition may remain applicable in operation; verify contractual or technical context.',resourceOmgHistoryBack:'Back to OMG catalog',resourceOmgHistoryRefresh:'Refresh this history',resourceOmgHistoryUnavailable:'History not yet acquired'});
  registerI18n();
  let activeDetailRecord=null,activeDetailCleanup=null;
  let localeSubscribed=false;
@@ -57,7 +66,7 @@
    root.i18next.on('languageChanged',()=>{
      const previous=mode==='references'?selected:null;
      refresh();updateStaticLabels();
-     if(previous&&grid?.records.some(r=>r.recid===previous)){grid.select?.(previous);selected=previous;}
+     if(previous&&grid?.records.some(r=>r.recid===previous)){grid.select?.(previous);selected=previous;updateToolbar();}
      if(activeDetailRecord)showDetail({...activeDetailRecord});
    });
    localeSubscribed=true;
@@ -77,6 +86,38 @@
  const nativeIsoDetailColumn={field:'detail',text:tr('detailColumn'),size:'82px',sortable:false,render:r=>({html:'<button type="button" data-native-iso-detail="'+escapeHtml(r.standardId)+'">'+escapeHtml(tr('detail'))+'</button>'})};
  const findDeliverable=id=>isoDeliverables.find(x=>str(x.id)===str(id));
  const findCommittee=id=>isoCommittees.find(x=>str(x.id)===str(id));
+ // C3: evidence-based ISO edition navigation. Never equate a missing cache row
+ // with a nonexistent publication, and never infer relationships from dates.
+ const isoEditionSeries=(function(){
+   function family(reference){
+     const match=String(reference||'').toUpperCase().match(/\b(\d{3,7}(?:-\d{1,5})+)(?=[:\s\/]|$)/);
+     return match?match[1]:null;
+   }
+   function kind(record){
+     const ref=String(record?.reference||'');
+     if(/(?:\/|\b)(?:COR|CORRIGENDUM|TC)\s*\d/i.test(ref)||/corrigend/i.test(String(record?.supplementType||'')))return 'corrigendum';
+     if(/(?:\/|\b)(?:AMD|AMENDMENT)\s*\d/i.test(ref)||/amendment/i.test(String(record?.supplementType||'')))return 'amendment';
+     if(/^ISO\/(?:CD|DIS|FDIS|NP|WD|DTS|DTR)\b/i.test(ref))return 'project';
+     return 'edition';
+   }
+   function collect(subject,candidates){
+     const id=family(subject?.reference),found=new Map();
+     if(!id)return {family:null,rows:[]};
+     for(const item of [subject,...(Array.isArray(candidates)?candidates:[])]){
+       if(!item||family(item.reference)!==id||!item.reference)continue;
+       const key=String(item.id??item.reference);
+       if(!found.has(key))found.set(key,{id:item.id==null?null:String(item.id),reference:String(item.reference),edition:item.edition??null,date:item.publicationDate??null,kind:kind(item),item});
+     }
+     return {family:id,rows:[...found.values()].sort((a,b)=>String(a.reference).localeCompare(String(b.reference),'fr',{numeric:true}))};
+   }
+   function relations(subject,candidates){
+     const byId=new Map(candidates.filter(Boolean).map(x=>[String(x.id),x]));
+     return ['replaces','replacedBy'].flatMap(direction=>(Array.isArray(subject?.[direction])?subject[direction]:[]).map(id=>({direction,id:String(id),record:byId.get(String(id))||null})));
+   }
+   return Object.freeze({family,kind,collect,relations});
+ })();
+ root.__radarIsoEditionSeries=isoEditionSeries;
+
  /* S14-L3: one navigation index derived from the existing IndexedDB cache. */
  let sidebarIndex=null,sidebarInputs=null;
  let treeSearchState=null,treeSearchRequest=null,treeSearchToken=0,sidebarSearchSignature=null;
@@ -371,6 +412,80 @@
      browse.addEventListener('click',()=>{dialog.close();openReferences();});
      header.appendChild(use);header.appendChild(browse);header.appendChild(feedback);
    }
+   // C3: explicit, bounded lookup within the local ISO cache. No HTTP access.
+   // C3-R2: also visible from an ISO snapshot kept in the business catalog; read-only.
+   const editionLanguage=String(root.i18next?.language||'fr').slice(0,2);
+   const editionFamily=typeof isoEditionSeries!=='undefined'&&isoEditionSeries?.family?.(item.reference);
+   if(!local&&record.kind==='standard'&&editionFamily){
+     const editions=d.createElement('button');editions.type='button';editions.className='w2ui-btn';
+     editions.setAttribute('data-iso-editions','');
+     editions.textContent=editionLanguage==='fr'?'Éditions et documents liés':'Editions and related documents';
+     editions.addEventListener('click',async()=>{
+       editions.disabled=true;
+       const panel=d.createElement('dialog');panel.setAttribute('aria-label',editions.textContent+' — '+editionFamily);
+       panel.style.cssText='width:min(960px,94vw);max-height:82vh;overflow:auto;padding:18px;background:white;color:#222';
+       const title=d.createElement('h2');title.textContent=editions.textContent+' — ISO '+editionFamily;panel.appendChild(title);
+       const body=d.createElement('div');body.setAttribute('role','status');body.textContent=editionLanguage==='fr'?'Recherche dans le cache ISO local…':'Searching local ISO cache…';panel.appendChild(body);
+       const exit=d.createElement('button');exit.type='button';exit.className='w2ui-btn';exit.textContent=tr('close');exit.addEventListener('click',()=>panel.close());panel.appendChild(exit);
+       panel.addEventListener('close',()=>{panel.remove();editions.disabled=false;});d.body.appendChild(panel);
+       if(typeof panel.showModal==='function')panel.showModal();else panel.setAttribute('open','');
+       try{
+         const candidates=[item],source=root.__radarIsoWindowed,seenPages=new Set();let after=null,complete=true;
+         // Resolve explicit relations by ISO IDs before searching the standard family.
+         if(windowedActive&&source?.get){
+           for(const id of [...new Set([...(item.replaces||[]),...(item.replacedBy||[])].map(String))].slice(0,100)){
+             const match=await source.get({type:'deliverables',id});if(match)candidates.push(match);
+           }
+         }
+         if(windowedActive&&source?.page){
+           for(let i=0;i<5;i++){
+             const result=await source.page({type:'deliverables',search:isoEditionSeries.family(item.reference),limit:100,after});
+             if(!Array.isArray(result?.records))throw Error('Réponse du cache ISO invalide');
+             candidates.push(...result.records);if(!result.next){after=null;break;}
+             const next=JSON.stringify(result.next);if(seenPages.has(next))throw Error('Pagination ISO répétée');seenPages.add(next);after=result.next;
+           }
+           if(after)complete=false;
+         }else if(!windowedActive){candidates.push(...isoDeliverables);}
+         const grouped=isoEditionSeries.collect(item,candidates),relations=isoEditionSeries.relations(item,candidates);
+         body.replaceChildren();
+         const note=d.createElement('p');note.textContent=editionLanguage==='fr'
+           ?'Notices retrouvées dans le cache ISO local ; cette liste peut être incomplète. Consultation seule, sans acquisition réseau.'
+           :'Records found in the local ISO cache; the list may be incomplete. Read-only; no network acquisition.';
+         body.appendChild(note);
+         if(!complete){const limited=d.createElement('p');limited.textContent=editionLanguage==='fr'?'Limite de recherche locale atteinte.':'Local search limit reached.';body.appendChild(limited);}
+         const groups=[['edition',editionLanguage==='fr'?'Éditions':'Editions'],['corrigendum',editionLanguage==='fr'?'Rectificatifs':'Corrigenda'],['amendment',editionLanguage==='fr'?'Amendements':'Amendments'],['project',editionLanguage==='fr'?'Projets':'Projects']];
+         for(const [kind,heading] of groups){
+           const rows=grouped.rows.filter(row=>row.kind===kind);if(!rows.length)continue;
+           const section=d.createElement('section');section.setAttribute('data-iso-kind',kind);
+           const groupTitle=d.createElement('h3');groupTitle.textContent=heading+' ('+rows.length+')';section.appendChild(groupTitle);
+           const list=d.createElement('ul');section.appendChild(list);
+           for(const row of rows){
+             const li=d.createElement('li');li.textContent=row.reference+(row.edition!=null?' · '+(editionLanguage==='fr'?'édition ':'edition ')+row.edition:'')+(row.date?' · '+row.date:'');
+             if(row.id!=null&&String(row.id)!==String(item.id)){
+               const open=d.createElement('button');open.type='button';open.className='w2ui-btn';open.textContent=tr('detail');
+               open.addEventListener('click',()=>{panel.close();dialog.close();showDetail({kind:'standard',isoId:row.id,isoItem:row.item,nativeReference:false});});li.appendChild(open);
+             }
+             list.appendChild(li);
+           }
+           body.appendChild(section);
+         }
+         const relationTitle=d.createElement('h3');relationTitle.textContent=tr('grpRelations');body.appendChild(relationTitle);
+         if(!relations.length){const empty=d.createElement('p');empty.textContent=editionLanguage==='fr'?'Aucune relation explicite dans cette notice.':'No explicit relationship in this record.';body.appendChild(empty);}
+         for(const edge of relations){
+           const line=d.createElement('p');line.setAttribute('data-iso-relation',edge.direction);
+           line.textContent=(edge.direction==='replaces'?tr('replaces'):tr('replacedBy'))+' : '+(edge.record?.reference||(editionLanguage==='fr'?'Notice ISO n° ':'ISO record #')+edge.id+' — '+(editionLanguage==='fr'?'référence non résolue dans le cache':'reference unresolved in cache'));
+           // The URL derives from a source ID; it does not prove that the page exists.
+           if(!edge.record&&/^\d{1,9}$/.test(edge.id)){
+             const link=d.createElement('a');link.href='https://www.iso.org/standard/'+edge.id+'.html';
+             link.target='_blank';link.rel='noopener noreferrer';link.textContent=editionLanguage==='fr'?' · Consulter ISO (lien non vérifié)':' · View ISO (unverified link)';line.appendChild(link);
+           }
+           body.appendChild(line);
+         }
+         if(!grouped.rows.length){const empty=d.createElement('p');empty.textContent=editionLanguage==='fr'?'Aucune édition retrouvée dans le cache.':'No edition found in cache.';body.appendChild(empty);}
+       }catch(error){body.textContent=(editionLanguage==='fr'?'Consultation ISO impossible : ':'ISO lookup failed: ')+String(error?.message||error);}
+     });
+     header.appendChild(editions);
+   }
    const close=d.createElement('button');close.type='button';close.textContent=tr('close');close.className='w2ui-btn';header.appendChild(close);wrapper.appendChild(header);
    const container=d.createElement('div');container.style.cssText='flex:1;min-height:0;overflow:hidden';wrapper.appendChild(container);dialog.appendChild(wrapper);d.body.appendChild(dialog);
    if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
@@ -378,7 +493,18 @@
    const list=v=>Array.isArray(v)?v.map(x=>typeof x==='object'?JSON.stringify(x):String(x)).join(', '):v==null?'':typeof v==='object'?JSON.stringify(v):String(v);
    const localized=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{};
    const titles=localized(item.titleI18n),scopes=localized(item.scopeI18n);
-   const resolveRelations=ids=>Array.isArray(ids)?ids.map(id=>record.nativeReference?String(id):findDeliverable(id)?.reference||tr('missingReference',{id})).join('\n'):'';
+   // C3-R3: the main detail must use the same ISO-ID evidence as the
+   // editions dialog. A missing synchronous list entry is not proof that
+   // a record is absent from the windowed IndexedDB cache.
+   const relationIds=[...new Set([...(Array.isArray(item.replaces)?item.replaces:[]),...(Array.isArray(item.replacedBy)?item.replacedBy:[])].map(String))].slice(0,100);
+   const relationRecords=new Map();
+   // A published/native ISO snapshot is self-contained: do not consult the
+   // global ISO catalogue for documentary relations in Viewer mode.
+   if(!record.nativeReference){
+     for(const id of relationIds){const hit=findDeliverable(id);if(hit)relationRecords.set(id,hit);}
+   }
+   const resolvedRelation=id=>record.nativeReference?String(id):(relationRecords.get(String(id))?.reference||tr('missingReference',{id}));
+   const resolveRelations=ids=>Array.isArray(ids)?ids.map(resolvedRelation).join('\n'):'';
    let recordData={
      reference:item.reference||'',titleFr:line(titles.fr||(titles.en?'':item.title)),titleEn:line(titles.en),
      scopeFr:line(scopes.fr),scopeEn:line(scopes.en||item.scope),
@@ -444,6 +570,26 @@
      dialog.remove();
    }
    activeDetailCleanup=dispose;
+   // Reconcile visible relations with the same get-by-ID cache used by
+   // « Editions and related documents ». Never fetch across the network.
+   // Guard the dialog lifecycle: a late IndexedDB result cannot update a
+   // closed/replaced form, or the business catalog.
+   const relationSource=root.__radarIsoWindowed;
+   if(!local&&!record.nativeReference&&relationIds.length&&windowedActive&&typeof relationSource?.get==='function'){
+     Promise.all(relationIds.map(async id=>{
+       try{
+         const hit=await relationSource.get({type:'deliverables',id});
+         if(hit&&String(hit.id)===id&&typeof hit.reference==='string'&&hit.reference.trim())return {id,hit};
+       }catch(_){/* an unavailable cache row remains explicitly unresolved */}
+       return {id,hit:null};
+     })).then(results=>{
+       if(disposed||activeDetailRecord!==detail)return;
+       for(const {id,hit} of results)if(hit)relationRecords.set(id,hit);
+       form.record.replaces=resolveRelations(item.replaces);
+       form.record.replacedBy=resolveRelations(item.replacedBy);
+       form.refresh?.();
+     }).catch(()=>{/* Never interrupt ISO documentary consultation. */});
+   }
    dialog.addEventListener('close',dispose,{once:true});
    close.addEventListener('click',()=>dialog.close());
  }
@@ -525,11 +671,11 @@
        // UI remains usable through the S14-O cursor fallback during the migration.
        if(!groupIndexBuild&&typeof windowed.ensureGroupIndex==='function'){
          groupIndexBuild=windowed.ensureGroupIndex({batchSize:300,onProgress:p=>{
-           if(status&&p.processed%3000===0)status.textContent='Indexation ICS/TC-SC : '+p.processed+' notices';
+           if(status&&isoModes.includes(mode)&&p.processed%3000===0)status.textContent='Indexation ICS/TC-SC : '+p.processed+' notices';
          }}).then(result=>{
            if(result.ready&&(mode==='ics'||mode==='committees'))windowPage('reset');
            return result;
-         }).catch(e=>{if(status)status.textContent='Index ICS/TC-SC indisponible : '+e.message;})
+         }).catch(e=>{if(status&&isoModes.includes(mode))status.textContent='Index ICS/TC-SC indisponible : '+e.message;})
            .finally(()=>{groupIndexBuild=null;});
        }
      }else{
@@ -538,7 +684,7 @@
          provider.readAll('deliverables'),provider.readAll('committees'),provider.syncInfo()]);
      }
      sidebarIndex=null;sidebarInputs=null;
-   }catch(e){if(status)status.textContent='Cache ISO indisponible : '+e.message;}
+   }catch(e){if(status&&isoModes.includes(mode))status.textContent='Cache ISO indisponible : '+e.message;}
    finally{isoLoading=false;refresh();}
  }
  function referenceRows(term,origin='all'){
@@ -560,6 +706,165 @@
    try{return root.__radarStandardRegistry?.records(term,1000)||[];}
    catch(e){if(status)status.textContent=e.message;return [];}
  }
+
+ // S16-A-R2: the W2UI toolbar owns the visible navigation and action commands.
+ // Legacy ISO/native controls remain delegated implementation details (and a fallback
+ // when an older host does not provide w2toolbar). Search/facets remain compact inputs.
+ const isoModes=['ics','committees','iso-list','rss','changes'];
+ const documentaryModes=['rfc-editor','w3c','omg-specifications','resources'];
+ const isDocumentary=()=>documentaryModes.includes(mode);
+ const sourceApi=()=>root.__radarStandardSources;
+ const canIntegrate=()=>!root.__radarApplicationProfile?.viewer&&root.__radarApplicationProfile?.allows('catalog.declareReference')===true&&root.__radarCatalogPersistence?.status?.().importedCatalogs===1;
+ function currentSource(){return isoModes.includes(mode)?'iso-open-data':mode;}
+ function navigateMode(id){
+   if(root.__radarApplicationProfile?.viewer&&id!=='references')return;
+   if(!isoModes.includes(id)&&!documentaryModes.includes(id)&&id!=='references')return;
+   toolbarState.clear();windowToken++;documentToken++;documentBusy=false;documentMessage='';documentOffset=0;documentSeries=null;documentOmgAdoptions=false;documentOmgFamily=null;documentResult=null;mode=id;selected=null;if(search)search.value='';refresh();if(mode==='ics')void loadIcs();if(mode==='omg-specifications'&&!sourceApi()?.omgStatus())void documentaryAction('omgRestore');
+ }
+ function sourceItems(){
+   const entries=(sourceApi()?.listResources?.()||[]).filter(r=>['iso-open-data','rfc-editor','w3c','omg-specifications'].includes(r.id));
+   return [...entries.map(r=>({id:r.id,text:r.id==='omg-specifications'?'OMG':r.label})),{id:'references',text:tr('modeReferences')},{id:'resources',text:tr('resourceInventory')}];
+ }
+ function isoViewItems(){return [['iso-list','modeIsoList'],['ics','modeIcs'],['committees','modeCommittees'],['rss','modeRss'],['changes','modeChanges']].map(([id,label])=>({id,text:tr(label)}));}
+ function acquisitionItems(){const items=isoModes.includes(mode)?[['reload','refresh'],['sync','sync'],['distributed','distributedSync'],['manageIso','resourceIsoManage'],['isoImport','import'],...(mode==='rss'?[['rssLoad','rssSync']]:[]),...(mode==='changes'?[['changesLoad','changesLoad']]:[])]:mode==='rfc-editor'||mode==='w3c'?[['load','resourceLoad'],['refreshSource','resourceRefresh']]:mode==='omg-specifications'?[...(sourceApi()?.omgHasLocalRelay?.()?[['omgOnline','resourceOmgOnline']]:[]),...(sourceApi()?.omgHasLocalRelay?.()?[['omgPrepared','resourceOmgPrepared']]:[]),['omgRestore','resourceOmgRestore'],...(documentOmgFamily?[['omgHistoryRefresh','resourceOmgHistoryRefresh'],['omgHistoryExport','resourceOmgHistoryExport']]:[]),['omgHistoryImport','resourceOmgHistoryImport'],['omgImport','resourceImport'],['omgClear','resourceClear']]:[];return items.map(([id,label])=>({id,text:tr(label),disabled:documentBusy||(id==='isoImport'&&['rss','changes'].includes(mode))}));}
+ function omgViewItems(){return [{id:'specifications',text:tr('resourceOmgSpecs')},{id:'adoptions',text:tr('resourceOmgAdoptions')}];}
+ function toolbarItems(){return [
+   {type:'menu-radio',id:'source',text:tr('resourceSelector'),selected:currentSource(),items:sourceItems()},
+   {type:'break',id:'source-divider'},
+   {type:'menu-radio',id:'isoView',text:tr('modeIsoList'),selected:mode,items:isoViewItems(),hidden:true},
+   {type:'menu-radio',id:'omgView',text:tr('resourceOmgSpecs'),selected:'specifications',items:omgViewItems(),hidden:true},
+   {type:'menu',id:'acquisition',text:tr('standardSources'),items:[],hidden:true},
+   ...[['advanced','advancedSearch'],['history','resourceOmgHistory'],['versions','resourceVersions'],['back','resourceBack'],['previous','resourcePrevious'],['next','resourceNext'],['details','resourceDetails'],['context','resourceContext'],['integrate','addToCatalog'],['openSource','resourceOpen'],['declare','declareLocal'],['lifecycle','referenceLifecycle'],['addRadar','add'],['sourceDialog','standardSources']].map(([id,label])=>({type:'button',id,text:tr(label),hidden:true}))
+ ];}
+ function selectedDocument(){return grid?.records?.find(r=>r.recid===(grid.getSelection?.()[0]||selected))||null;}
+ function setToolbarItem(id,patch){const signature=JSON.stringify(patch),key=id+':'+Object.keys(patch).join(',');if(toolbarState.get(key)===signature)return;toolbarState.set(key,signature);standardsToolbar.set(id,patch);}
+ function updateToolbar(){
+   if(!standardsToolbar)return;
+   const source=currentSource(),doc=isDocumentary(),row=selectedDocument(),ext=mode==='rfc-editor'||mode==='w3c',omg=mode==='omg-specifications',inventory=mode==='resources',native=mode==='references',iso=isoModes.includes(mode);
+   const item=sourceItems().find(x=>x.id===source);
+   setToolbarItem('source',{text:tr('resourceSelector')+' : '+(item?.text||source),selected:source,items:sourceItems()});
+   const visible=new Set(iso?['advanced']:native?['declare','lifecycle','addRadar','sourceDialog']:ext?['details','openSource','previous','next',...(mode==='rfc-editor'?['integrate','context']:documentSeries?['back','integrate']:['versions'])]:omg?['details','openSource','previous','next','integrate',...(documentOmgFamily?['back']:['history'])]:inventory?['details','openSource']:[]);
+   setToolbarItem('isoView',{text:isoViewItems().find(x=>x.id===mode)?.text||tr('modeIsoList'),selected:mode,items:isoViewItems(),hidden:!iso});
+   setToolbarItem('omgView',{text:tr(documentOmgAdoptions?'resourceOmgAdoptions':'resourceOmgSpecs'),selected:documentOmgAdoptions?'adoptions':'specifications',items:omgViewItems(),hidden:!omg||!!documentOmgFamily});
+   setToolbarItem('acquisition',{text:tr('standardSources'),items:acquisitionItems(),hidden:!iso&&!ext&&!omg,disabled:documentBusy});
+   for(const def of toolbarItems().slice(5))setToolbarItem(def.id,{text:def.text,hidden:!visible.has(def.id)});
+   const disabled=new Set();
+   if(!row){for(const id of ['details','context','versions','history','integrate'])disabled.add(id);}
+   if(!canIntegrate()){for(const id of ['integrate','declare','lifecycle','sourceDialog','addRadar'])disabled.add(id);}
+   if(native&&!row){disabled.add('lifecycle');disabled.add('addRadar');}
+   if(!doc||documentOffset===0)disabled.add('previous');
+   if(!documentResult||documentOffset+100>=documentResult.total)disabled.add('next');
+   if(documentBusy){for(const id of ['load','refreshSource','history','versions','previous','next','integrate','context','omgImport','omgRestore','omgOnline','omgPrepared','omgHistoryRefresh','omgHistoryImport','omgHistoryExport','omgClear'])disabled.add(id);}
+   if(mode==='rss'||mode==='changes')disabled.add('isoImport');
+   for(const id of visible)setToolbarItem(id,{disabled:disabled.has(id),checked:isoModes.includes(id)&&id===mode});
+   // The former DOM buttons are not visible when the toolbar exists. The search
+   // and ISO/native facet/window controls are retained until their own migration.
+   for(const selector of ['[data-catalog-mode]','[data-standard-source-shortcut]','[data-standard-sources]','[data-native-declare]','[data-reference-lifecycle]','[data-iso-import]','[data-catalog-distribution]','[data-r2-legacy-action]'])for(const el of mount?.querySelectorAll(selector)||[])el.style.display='none';
+   if(advancedButton)advancedButton.style.display='none';
+   const filters=mount?.querySelector('[data-iso-more-filters]');if(filters&&doc)filters.style.display='none';
+ }
+ function documentColumns(fields){return fields.map(([field,label,size])=>({field,text:tr(label),size,sortable:false,render:r=>({html:escapeHtml(r[field])})}));}
+ function renderDocumentary(){
+   refreshSidebar();const api=sourceApi(),term=search?.value||'';let records=[],info=null,total=0;const inventory=mode==='resources';
+   if(search)search.placeholder=tr('resourceSearch');
+   try{
+     if(inventory){const q=norm(term);const all=(api?.listResources?.()||[]).filter(r=>!q||norm([r.label,r.providerLabel,r.kind,r.id].join(' ')).includes(q));total=all.length;records=all.map(r=>({recid:r.id,designation:r.label,title:r.providerLabel,kind:r.kind,access:r.access.type,connector:r.connector,resource:r}));grid.columns=documentColumns([['designation','resourceSource','27%'],['title','nativeIssuer','25%'],['kind','resourceType','20%'],['access','resourceAccess','18%'],['connector','resourceConnector','180px']]);}
+     else{
+       const omg=mode==='omg-specifications',result=omg?(documentOmgFamily?api.searchOmgHistory(documentOmgFamily,term,documentOffset):api.searchOmg(term,documentOffset,documentOmgAdoptions)):api.search(mode,term,documentSeries,documentOffset);documentResult=result;total=result.total;
+       info=omg?(documentOmgFamily?api.omgHistoryStatus(documentOmgFamily):api.omgStatus()):api.status(mode,documentSeries);records=result.rows.map(r=>({...r,recid:r.key,isoAdoptionsText:(r.isoAdoptions||[]).join(', ')}));
+       const fields=[['designation','colRef','160px'],['title','colTitle','42%'],['edition','colEdition','135px'],['status','nativeDocumentStatus','150px']];
+       if(mode==='rfc-editor')fields.push(['stream','resourceFlow','140px']);
+       if(omg)fields.push(['publicationDate','resourceDate','110px'],['isoAdoptionsText','resourceIsoAdoption','210px']);
+       grid.columns=documentColumns(fields);
+     }
+   }catch(error){documentMessage=tr('resourceError')+' : '+String(error.message||error);}
+   const previous=selected;grid.clear(true);grid.records=records;grid.total=records.length;grid.buffered=records.length;grid.refresh();selected=null;
+   if(previous&&records.some(r=>r.recid===previous)){grid.select?.(previous);selected=previous;}
+   const detail=info?[''+total+' '+tr('resourceRows'),tr('resourcePage')+' '+(Math.floor(documentOffset/100)+1),info.acquiredAt||tr('resourceLocalNoDate'),info.storage||'',info.origin?tr(({"local-unverified":'resourceOmgLocal',"official-fetch":'resourceOmgOfficial',"local-relay":'resourceOmgRelay',"local-prepared":'resourceOmgPreparedOrigin'})[info.origin]||'colProvenance'):'',info.coverage?(info.coverage.complete?tr('resourceComplete'):tr('resourcePartial')+' ('+info.coverage.rejected+')'):''].filter(Boolean).join(' · '):inventory?total+' '+tr('resourceRows'):mode==='omg-specifications'?tr('resourceOmgEmpty'):tr('resourceEmpty');
+   if(status)status.textContent=(documentBusy?tr('resourceLoading')+' · ':'')+detail+(documentSeries?' · '+documentSeries:'')+(mode==='omg-specifications'?' · '+tr('resourceOmgPrivate'):'')+(documentMessage?' · '+documentMessage:'');
+   const nav=mount?.querySelector('[data-iso-window-navigator]');if(nav)nav.style.display='none';updateModeButtons();
+ }
+ async function documentaryAction(action){
+   if(root.__radarApplicationProfile?.viewer)return;
+   const api=sourceApi(),view=mode,row=selectedDocument();let token=documentToken,started=false,failed=false;
+   if(documentBusy&&['previous','next','load','refreshSource','versions','context','integrate','history','omgImport','omgRestore','omgOnline','omgPrepared','omgHistoryRefresh','omgHistoryImport','omgHistoryExport','omgClear'].includes(action))return;
+   if(action.startsWith('omg')&&view!=='omg-specifications')return;
+   try{
+     if(action==='previous'||action==='next'){if(documentBusy||!documentResult||(action==='next'&&documentOffset+100>=documentResult.total)||(action==='previous'&&documentOffset===0))return;documentOffset=Math.max(0,documentOffset+(action==='previous'?-100:100));selected=null;renderDocumentary();return;}
+     if(action==='back'){documentToken++;documentBusy=false;documentSeries=null;documentOmgFamily=null;documentOffset=0;selected=null;documentMessage='';search.value='';renderDocumentary();return;}
+     if(action==='openSource'){const url=row?.resource?.access?.url||row?.url||(view==='w3c'&&row?.key&&!documentSeries?api.W3C+'/'+encodeURIComponent(row.key):api.getResource(view)?.access?.url);if(url&&new URL(url).protocol==='https:')root.open?.(url,'_blank','noopener,noreferrer');return;}
+     if(action==='history'){
+       if(view!=='omg-specifications'||documentOmgFamily||!row?.acronym)throw Error(tr('resourceSelect'));
+       documentBusy=true;started=true;token=++documentToken;documentMessage='';updateToolbar();
+       await api.loadOmgHistory(row.acronym);
+       if(token===documentToken&&mode===view){documentOmgFamily=row.acronym;documentOmgAdoptions=false;documentOffset=0;selected=null;search.value='';}return;
+     }
+     if(action==='omgHistoryRefresh'){
+       if(view!=='omg-specifications'||!documentOmgFamily)throw Error(tr('resourceSelect'));
+       documentBusy=true;started=true;token=++documentToken;documentMessage='';updateToolbar();
+       await api.loadOmgHistory(documentOmgFamily,{refresh:true});
+       if(token===documentToken&&mode===view){documentOffset=0;selected=null;}return;
+     }
+     if(action==='omgHistoryImport'){omgFile?.click();return;}
+     if(action==='omgHistoryExport'){
+       if(view!=='omg-specifications'||!documentOmgFamily)throw Error(tr('resourceSelect'));
+       const json=await api.exportOmgHistory(documentOmgFamily);
+       const blob=new Blob([json],{type:'application/json'});
+       const url=URL.createObjectURL(blob);
+       try{const a=root.document.createElement('a');a.href=url;a.download='S16-OMG-History-'+documentOmgFamily.replace(/\//g,'-')+'.json';a.style.display='none';root.document.body.appendChild(a);a.click();a.remove();}
+       finally{root.setTimeout?.(()=>URL.revokeObjectURL(url),1000);}
+       return;
+     }
+     if(action==='omgImport'){omgFile?.click();return;}
+     if(action==='omgOnline'||action==='omgPrepared'){documentBusy=true;started=true;token=++documentToken;documentMessage='';updateToolbar();
+       if(action==='omgOnline')await api.loadOmgOnline();else await api.loadOmgPrepared();
+       if(token===documentToken&&mode===view){selected=null;documentOffset=0;}return;
+     }
+     if(action==='omgRestore'){documentBusy=true;started=true;token=++documentToken;documentMessage='';updateToolbar();await api.restoreOmg();if(token===documentToken&&mode===view){selected=null;documentOffset=0;}return;}
+     if(action==='omgClear'){documentBusy=true;started=true;token=++documentToken;documentMessage='';updateToolbar();const cleared=await api.clearOmg();if(token===documentToken&&mode===view){selected=null;documentOffset=0;if(root.indexedDB&&!cleared)documentMessage=tr('resourceCacheClearFailed');}return;}
+     if(action==='details'){if(!row)throw Error(tr('resourceSelect'));showDocumentaryDetail(row);return;}
+     if(action==='integrate'){
+       if(!canIntegrate())throw Error(tr('resourceNoCatalog'));if(!row||!documentResult?.generation||(view==='w3c'&&!documentSeries)||!['rfc-editor','w3c','omg-specifications'].includes(view))throw Error(tr('resourceVersionRequired'));
+       const result=view==='omg-specifications'?root.__radarCatalogPersistence.importOmgReference(row.key,documentResult.generation,{family:documentOmgFamily}):root.__radarCatalogPersistence.importSourceReference(view,row.key,documentResult.generation);navigateMode('references');nativeOriginFilter.value='all';refresh();grid.select?.(result.standardId);selected=result.standardId;updateToolbar();if(status)status.textContent=tr(result.action==='existing'?'externalExisting':'externalAdded');return;
+     }
+     if(documentBusy)return;
+     if(action==='context'){
+       if(view!=='rfc-editor'||!row)throw Error(tr('resourceSelect'));documentBusy=true;started=true;token=++documentToken;updateToolbar();const result=await api.readRfcContext(row.key);if(token===documentToken&&mode===view){documentBusy=false;showDocumentaryDetail({...row,context:result});}return;
+     }
+     if(!['load','refreshSource','versions'].includes(action)||!['rfc-editor','w3c'].includes(view))return;
+     let series=documentSeries;
+     if(action==='versions'){if(view!=='w3c'||!row||documentSeries)throw Error(tr('resourceSelect'));series=row.key;}
+     documentBusy=true;started=true;documentMessage='';token=++documentToken;updateToolbar();if(status)status.textContent=tr('resourceLoading');
+     const opts={refresh:action==='refreshSource',reload:action==='load'};
+     if(series)await api.loadVersions(series,opts);else await api.load(view,opts);
+     if(token!==documentToken||mode!==view)return;
+     documentSeries=series;documentOffset=0;selected=null;if(action==='versions')search.value='';
+   }catch(error){failed=true;if(token===documentToken&&mode===view)documentMessage=tr('resourceError')+' : '+String(error.message||error);}
+   finally{if((started||failed)&&token===documentToken&&mode===view&&isDocumentary()){if(started)documentBusy=false;renderDocumentary();}}
+ }
+ function showDocumentaryDetail(row){
+   if(!root.w2popup||typeof root.w2popup.open!=='function')throw Error(tr('readOnlyUnavailable'));
+   const resource=row.resource,info=mode==='omg-specifications'?sourceApi().omgStatus():sourceApi().status(mode,documentSeries);
+   const values=resource?[[tr('resourceSource'),resource.label],[tr('nativeIssuer'),resource.providerLabel],[tr('resourceType'),resource.kind],[tr('resourceAccess'),resource.access.type],[tr('resourceSourceUrl'),resource.access.url],[tr('resourceConnector'),resource.connector],[tr('resourceRightsReview'),resource.rights.metadataReuse+' / '+resource.rights.redistribution],...Object.entries(resource.capabilities).map(([k,v])=>[k,v.availability+' / '+v.implementation+(v.mapping?' — '+v.mapping:'')])]:[[tr('colRef'),row.designation],[tr('colTitle'),row.title],[tr('colEdition'),row.edition],[tr('nativeDocumentStatus'),row.status],[tr('nativeIssuer'),row.issuer],[tr('resourceFlow'),row.stream],[tr('resourceDate'),row.publicationDate],[tr('resourceIsoAdoption'),row.isoAdoptionsText],[tr('resourceOmgHistoryView'),row.historyEvidence],[tr('resourceSourceUrl'),row.url||(mode==='w3c'&&!documentSeries&&row.key?sourceApi().W3C+'/'+encodeURIComponent(row.key):null)],[tr('nativeAcquired'),info?.acquiredAt],[tr('resourceCache'),info?.storage],[tr('colProvenance'),info?.origin],[tr('resourceOmgPrivate'),mode==='omg-specifications'?info?.distribution:null],[tr('resourceContext'),row.context?JSON.stringify(row.context.fields,null,2):null]];
+   // w2popup owns the window, w2form read-only fields own the detail presentation.
+   const name='standardsDocumentDetail';const safeValues=values.filter(([,v])=>v!==null&&v!==undefined&&v!=='').map(([label,value],i)=>({key:'field'+i,label,value:String(value)}));
+   root.w2popup.open({title:escapeHtml(resource?.label||row.designation||tr('resourceDetails')),width:850,height:600,body:'<div id="standards-document-detail" style="height:100%;overflow:auto"></div>',onOpen(event){event.onComplete=()=>{const target=root.document.getElementById('standards-document-detail');if(!target)return;root.w2ui?.[name]?.destroy?.();const form=new root.w2form({name,focus:-1,fields:safeValues.map(v=>({field:v.key,type:'textarea',html:{label:escapeHtml(v.label),span:5,attr:'readonly style="width:95%;height:55px"'}})),record:Object.fromEntries(safeValues.map(v=>[v.key,v.value])),actions:{}});form.render(target);};},onClose(){root.w2ui?.[name]?.destroy?.();}});
+ }
+ function initializeToolbar(host){
+   if(typeof root.w2toolbar!=='function'||root.__radarApplicationProfile?.viewer)return;
+   root.w2ui?.standardsToolbar?.destroy?.();
+   toolbarState.clear();standardsToolbar=new root.w2toolbar({name:'standardsToolbar',items:toolbarItems(),onClick(event){const target=String(event.target||'');if(['source','isoView','omgView','acquisition'].includes(target))return;if(['acquisition:omgImport','acquisition:omgHistoryImport'].includes(target)&&mode==='omg-specifications'&&!documentBusy){omgFile?.click();return;}Promise.resolve().then(()=>{
+     if(target.startsWith('source:')){const id=target.slice(7);navigateMode(id==='iso-open-data'?'iso-list':id);return;}
+     if(target.startsWith('isoView:')){navigateMode(target.slice(8));return;}
+     if(target.startsWith('omgView:')&&mode==='omg-specifications'&&!documentOmgFamily){documentOmgAdoptions=target==='omgView:adoptions';documentOffset=0;selected=null;search.value='';renderDocumentary();return;}
+     const action=target.startsWith('acquisition:')?target.slice(12):target;
+     if(isDocumentary()){void documentaryAction(action);return;}
+     if(action==='advanced'){advancedButton?.click();return;}
+     if(action==='manageIso'){if(root.__radarApplicationProfile?.allows('catalog.admin')===true)root.__radarS14Z?.open?.();return;}
+     const selectors={reload:'[data-r2-legacy-action="reload"]',sync:'[data-r2-legacy-action="sync"]',distributed:'[data-catalog-distribution]',isoImport:'[data-iso-import]',rssLoad:'[data-r2-legacy-action="rssLoad"]',changesLoad:'[data-r2-legacy-action="changesLoad"]',declare:'[data-native-declare]',lifecycle:'[data-reference-lifecycle]',addRadar:'[data-r2-legacy-action="addRadar"]',sourceDialog:'[data-standard-sources]'};
+     if(selectors[action])mount?.querySelector(selectors[action])?.click();
+   });}});standardsToolbar.render(host);mount.setAttribute('data-standards-w2ui','true');const style=root.document.createElement('style');style.textContent='[data-standards-w2ui] [data-s14-z-manage]{display:none!important}';host.parentElement?.appendChild(style);updateToolbar();
+ }
  function updateModeButtons(){
    // These controls query the external ISO corpus, not the native references.
    if(advancedButton)advancedButton.style.display=mode==='references'?'none':'';
@@ -568,10 +873,15 @@
    const declareButton=mount?.querySelector('[data-native-declare]');if(declareButton)declareButton.style.display=mode==='references'?'':'none';
    const lifecycleButton=mount?.querySelector('[data-reference-lifecycle]');if(lifecycleButton){lifecycleButton.style.display=mode==='references'?'':'none';lifecycleButton.disabled=root.__radarCatalogPersistence?.status?.().importedCatalogs!==1||root.__radarApplicationProfile?.allows('catalog.declareReference')!==true;}
    const sourcesButton=mount?.querySelector('[data-standard-sources]');if(sourcesButton){sourcesButton.style.display=mode==='references'?'':'none';sourcesButton.disabled=root.__radarCatalogPersistence?.status?.().importedCatalogs!==1||root.__radarApplicationProfile?.allows('catalog.declareReference')!==true;}
+   for(const btn of mount?.querySelectorAll('[data-standard-source-shortcut]')||[]){
+     btn.disabled=root.__radarCatalogPersistence?.status?.().importedCatalogs!==1||root.__radarApplicationProfile?.allows('catalog.declareReference')!==true;
+     btn.title=btn.disabled?tr('sourceNeedsCatalog'):btn.textContent;
+   }
    for(const btn of mount?.querySelectorAll('[data-catalog-mode]')||[]){
      const active=btn.dataset.catalogMode===mode;
      btn.setAttribute('aria-pressed',String(active));btn.style.fontWeight=active?'bold':'normal';
    }
+   updateToolbar();
  }
 
  async function windowPage(direction='reset'){
@@ -640,7 +950,7 @@
      }
      if(windowSortField!=='reference'&&provider.ensureSortIndex){
        await provider.ensureSortIndex({batchSize:300,onProgress:p=>{
-         if(status&&p.processed%3000===0)status.textContent=tr('sortLabel')+' : '+p.processed;
+         if(status&&isoModes.includes(mode)&&p.processed%3000===0)status.textContent=tr('sortLabel')+' : '+p.processed;
        }});
      }
      const result=await provider.page(options);
@@ -648,7 +958,7 @@
      windowNext=result.next;
      const projected=root.__radarIsoFullGrid.project(result.records,'');
      grid.clear(true);grid.records=projected;grid.total=projected.length;grid.buffered=projected.length;grid.refresh();
-     if(status)status.textContent='ISO '+result.release+' · '+scopeLabel()+' · '+
+     if(status&&isoModes.includes(mode))status.textContent='ISO '+result.release+' · '+scopeLabel()+' · '+
        (projected.length?tr('windowRange',{from:windowPosition*windowSize+1,to:windowPosition*windowSize+projected.length}):tr('windowEmpty'))+
        (windowNext?' · '+tr('windowMore'):' · '+tr('windowEnd'));
      updateButtons(projected.length);
@@ -732,6 +1042,7 @@
  function refresh(){
    if(root.__radarApplicationProfile?.viewer)mode='references';
    if(!grid)return;
+   if(isDocumentary()){renderDocumentary();return;}
    detailColumn.text=tr('detailColumn');nativeIsoDetailColumn.text=tr('detailColumn');
    const term=search?.value||'';
    if(search)search.placeholder=mode==='ics'?tr('searchIcs'):mode==='committees'?tr('searchCommittees'):mode==='iso-list'?tr('searchIso'):mode==='rss'?tr('rssSearch'):mode==='changes'?tr('changesSearch'):tr('searchLocal');
@@ -828,6 +1139,7 @@
    const declareButton=mount?.querySelector('[data-native-declare]');
    if(declareButton){declareButton.style.display=mode==='references'?'':'none';declareButton.disabled=root.__radarCatalogPersistence?.status?.().importedCatalogs!==1||root.__radarApplicationProfile?.allows('catalog.declareReference')!==true;}
    const importBtn=mount?.querySelector('[data-iso-import]');if(importBtn){importBtn.disabled=mode==='references'||mode==='rss'||mode==='changes';importBtn.title=mode==='committees'?'Importer iso_technical_committees (JSONLines)':mode==='ics'||mode==='iso-list'?'Importer iso_deliverables_metadata (JSONLines)':'Sélectionner une vue ISO pour importer';}
+   updateToolbar();
  }
  async function syncLocalIso(force=false){
    if(localSyncBusy)return;
@@ -938,14 +1250,15 @@
  }
  function initialize(node,getGraph){
    const nativeOnly=!!root.__radarApplicationProfile?.viewer;
-   if(nativeOnly){root.__radarApplicationProfile.require('radar.consult');mode='references';}
+   if(nativeOnly){root.__radarApplicationProfile.require('radar.consult');mode='references';if(standardsToolbar){standardsToolbar.destroy?.();standardsToolbar=null;toolbarState.clear();}}
    registerI18n();
    graphProvider=typeof getGraph==='function'?getGraph:null;
    if(!node||!root.document)return false;
    mount=node;mount.replaceChildren();const d=root.document;
    const box=d.createElement('div');box.style.cssText='height:100%;display:flex;flex-direction:column;min-height:0;font:13px Arial,sans-serif';
+   const toolbarHost=d.createElement('div');toolbarHost.id='standards-toolbar';toolbarHost.style.cssText='flex:0 0 auto;min-width:0';
    const bar=d.createElement('div');bar.style.cssText='display:flex;flex:0 0 auto;flex-wrap:wrap;align-items:center;gap:8px;padding:6px;border-bottom:1px solid #ddd';
-   function modeButton(id,label){const btn=d.createElement('button');btn.type='button';btn.textContent=label;btn.dataset.isoTranslation=({ics:'modeIcs',committees:'modeCommittees','iso-list':'modeIsoList',references:'modeReferences',rss:'modeRss',changes:'modeChanges'})[id];btn.dataset.catalogMode=id;btn.addEventListener('click',()=>{windowToken++;mode=id;search.value='';refresh();if(mode==='ics')loadIcs();});bar.appendChild(btn);}
+   function modeButton(id,label){const btn=d.createElement('button');btn.type='button';btn.textContent=label;btn.dataset.isoTranslation=({ics:'modeIcs',committees:'modeCommittees','iso-list':'modeIsoList',references:'modeReferences',rss:'modeRss',changes:'modeChanges'})[id];btn.dataset.catalogMode=id;btn.addEventListener('click',()=>navigateMode(id));bar.appendChild(btn);}
    modeButton('ics',tr('modeIcs'));modeButton('committees',tr('modeCommittees'));modeButton('iso-list',tr('modeIsoList'));modeButton('references',tr('modeReferences'));modeButton('rss',tr('modeRss'));modeButton('changes',tr('modeChanges'));
    search=d.createElement('input');search.type='search';search.placeholder='Code ou libellé ICS…';search.setAttribute('aria-label',tr('searchAccessible'));search.style.cssText='flex:1;min-width:180px;padding:5px';bar.appendChild(search);
    advancedButton=d.createElement('button');advancedButton.type='button';advancedButton.dataset.isoTranslation='advancedSearch';advancedButton.textContent=tr('advancedSearch');advancedButton.title=tr('advancedTitle');advancedButton.addEventListener('click',openAdvancedDialog);bar.appendChild(advancedButton);
@@ -1007,8 +1320,8 @@
    filterContent.appendChild(sortLabel);
    filterContent.appendChild(icsFacet.parentElement);
    filterContent.appendChild(committeeFacet.parentElement);
-   const reload=d.createElement('button');reload.type='button';reload.textContent=tr('refresh');reload.dataset.isoTranslation='refresh';bar.appendChild(reload);
-   const syncButton=d.createElement('button');syncButton.type='button';syncButton.textContent=tr('sync');syncButton.dataset.isoTranslation='sync';syncButton.title='Charger les fichiers ISO téléchargés localement dans IndexedDB';syncButton.addEventListener('click',()=>syncLocalIso());bar.appendChild(syncButton);
+   const reload=d.createElement('button');reload.type='button';reload.textContent=tr('refresh');reload.dataset.isoTranslation='refresh';reload.dataset.r2LegacyAction='reload';bar.appendChild(reload);
+   const syncButton=d.createElement('button');syncButton.type='button';syncButton.textContent=tr('sync');syncButton.dataset.isoTranslation='sync';syncButton.title='Charger les fichiers ISO téléchargés localement dans IndexedDB';syncButton.addEventListener('click',()=>syncLocalIso());syncButton.dataset.r2LegacyAction='sync';bar.appendChild(syncButton);
    const remote=d.createElement('button');remote.type='button';remote.dataset.catalogDistribution='true';remote.dataset.isoTranslation='distributedSync';remote.textContent=tr('distributedSync');remote.title=tr('distributedSync');
    // S14.1-B1: one awaited operation for startup and manual refresh.
    let distributedSyncPromise=null;
@@ -1026,7 +1339,7 @@
 
          const result=await root.__radarIsoCatalogClient.sync({
            onProgress:p=>{
-             if(status)status.textContent='ISO '+
+             if(status&&isoModes.includes(mode))status.textContent='ISO '+
                (p.dataset||'')+' : '+(p.count||0)+' enregistrements';
            }
          });
@@ -1042,7 +1355,7 @@
              release:result.release
            };
          }
-         if(status)status.textContent='Catalogue '+result.release+
+         if(status&&isoModes.includes(mode))status.textContent='Catalogue '+result.release+
            ' : ISO '+result.iso.status+', ICS '+result.ics.status+
            (result.warnings.length?' · '+result.warnings.join('; '):'');
          return result;
@@ -1059,7 +1372,7 @@
              message
            };
          }
-         if(status)status.textContent=
+         if(status&&isoModes.includes(mode))status.textContent=
            tr('distributedError')+' : '+message;
          throw error;
        }finally{
@@ -1074,9 +1387,9 @@
    remote.addEventListener('click',()=>{
      void synchronizeDistributedIso('manual').catch(()=>{});
    });bar.appendChild(remote);
-   const changesReload=d.createElement('button');changesReload.type='button';changesReload.dataset.isoTranslation='changesLoad';changesReload.textContent=tr('changesLoad');changesReload.addEventListener('click',()=>loadChanges());bar.appendChild(changesReload);
-   const rssReload=d.createElement('button');rssReload.type='button';rssReload.textContent=tr('rssSync');rssReload.dataset.isoTranslation='rssSync';rssReload.addEventListener('click',()=>loadRssCache(true));bar.appendChild(rssReload);
-   const add=d.createElement('button');add.type='button';add.textContent=tr('add');add.dataset.isoTranslation='add';bar.appendChild(add);
+   const changesReload=d.createElement('button');changesReload.type='button';changesReload.dataset.isoTranslation='changesLoad';changesReload.textContent=tr('changesLoad');changesReload.addEventListener('click',()=>loadChanges());changesReload.dataset.r2LegacyAction='changesLoad';bar.appendChild(changesReload);
+   const rssReload=d.createElement('button');rssReload.type='button';rssReload.textContent=tr('rssSync');rssReload.dataset.isoTranslation='rssSync';rssReload.addEventListener('click',()=>loadRssCache(true));rssReload.dataset.r2LegacyAction='rssLoad';bar.appendChild(rssReload);
+   const add=d.createElement('button');add.type='button';add.textContent=tr('add');add.dataset.isoTranslation='add';add.dataset.r2LegacyAction='addRadar';bar.appendChild(add);
    if(!nativeOnly){
      // Optional documentary sources are consulted only on explicit user action.
      const sourceButton=d.createElement('button');sourceButton.type='button';sourceButton.style.display='none';sourceButton.dataset.standardSources='true';sourceButton.dataset.isoTranslation='standardSources';sourceButton.textContent=tr('standardSources');
@@ -1084,11 +1397,20 @@
        root.__radarStandardSourceDialog?.open({graphProvider:()=>graphProvider?.(),sourceId:row?.origin==='iso-open-data'?'iso-open-data':row?.externalDocument?.sourceId,query:row?.designation||'',openIso(){mount.querySelector('[data-catalog-mode="iso-list"]')?.click();},openIsoAdmin:root.__radarApplicationProfile?.allows('catalog.admin')?()=>root.__radarS14Z?.open?.():null,onIntegrated(result){
          mode='references';nativeOriginFilter.value='all';search.value='';refresh();
          const index=grid.records.findIndex(r=>r.standardId===result.standardId);
-         if(index>=0){grid.select?.(result.standardId);selected=result.standardId;grid.scrollIntoView?.(index,null,true);}
+         if(index>=0){grid.select?.(result.standardId);selected=result.standardId;grid.scrollIntoView?.(index,null,true);updateToolbar();}
          if(status)status.textContent=tr(({existing:'externalExisting',refresh:'referenceUpdated',reconcile:'referenceReconciled'})[result.action]||'externalAdded');
        }});
      }
      sourceButton.addEventListener('click',()=>openStandardSources());bar.appendChild(sourceButton);
+     // S16-A: explicit external-source entry points, not additional ISO grid modes.
+     for(const [sourceId,label] of [['rfc-editor','browseRfc'],['w3c','browseW3c']]){
+       const shortcut=d.createElement('button');shortcut.type='button';shortcut.dataset.standardSourceShortcut=sourceId;shortcut.dataset.isoTranslation=label;shortcut.textContent=tr(label);
+       shortcut.addEventListener('click',()=>{
+         if(root.__radarApplicationProfile?.allows('catalog.declareReference')!==true||root.__radarCatalogPersistence?.status?.().importedCatalogs!==1)return;
+         openStandardSources({externalDocument:{sourceId}});
+       });
+       bar.insertBefore(shortcut,bar.querySelector('[data-catalog-mode="references"]'));
+     }
      const lifecycleButton=d.createElement('button');lifecycleButton.type='button';lifecycleButton.style.display='none';lifecycleButton.dataset.referenceLifecycle='true';lifecycleButton.dataset.isoTranslation='referenceLifecycle';lifecycleButton.textContent=tr('referenceLifecycle');
      lifecycleButton.addEventListener('click',()=>{const id=grid.getSelection?.()[0]||selected;if(!id){if(status)status.textContent=tr('selectReference');return;}try{root.__radarStandardRegistry.openLifecycle(()=>graphProvider?.(),id,{onRemoved(){refresh();if(status)status.textContent=tr('referenceRemoved');},onSources:openStandardSources});}catch(e){root.console?.warn?.('Reference lifecycle rejected',e);if(status)status.textContent=tr('referenceLifecycleError');}});bar.appendChild(lifecycleButton);
      const declareButton=d.createElement('button');declareButton.type='button';declareButton.style.display='none';declareButton.dataset.nativeDeclare='true';declareButton.dataset.isoTranslation='declareLocal';declareButton.textContent=tr('declareLocal');
@@ -1097,7 +1419,7 @@
          // Use the same native row and selection as an integrated ISO reference.
          mode='references';nativeOriginFilter.value='all';search.value='';refresh();
          const index=grid.records.findIndex(r=>r.standardId===result.standardId);
-         if(index>=0){grid.select?.(result.standardId);selected=result.standardId;grid.scrollIntoView?.(index,null,true);}
+         if(index>=0){grid.select?.(result.standardId);selected=result.standardId;grid.scrollIntoView?.(index,null,true);updateToolbar();}
          if(status)status.textContent=tr('declaredFeedback');
        }});}catch(e){if(status)status.textContent=String(e.message||e);}
      });bar.appendChild(declareButton);
@@ -1131,11 +1453,28 @@
      }catch(e){status.textContent='Import ISO échoué : '+e.message;}
      finally{file.disabled=false;file.value='';pendingDataset=null;}
    });
+   if(!nativeOnly){
+     omgFile=d.createElement('input');omgFile.type='file';omgFile.accept='.html,.htm,.json,text/html,application/json';omgFile.style.display='none';omgFile.dataset.omgFile='true';bar.appendChild(omgFile);
+     async function handleOmgFile(input){const chosen=input.files?.[0];input.value='';if(!chosen||mode!=='omg-specifications'||documentBusy)return;
+       const token=++documentToken;documentBusy=true;documentMessage='';renderDocumentary();try{if(chosen.size>8*1024*1024)throw Error('File exceeds size limit');const raw=await chosen.text();if(token!==documentToken||mode!=='omg-specifications')return;
+         const payload= /\.json$/i.test(chosen.name)?JSON.parse(raw):null;
+         if(payload?.sourceId==='omg-formal-history'){
+           const imported=await sourceApi().importOmgHistory(raw);
+           if(token===documentToken){documentOmgFamily=imported.family;documentOmgAdoptions=false;documentOffset=0;selected=null;search.value='';documentMessage=tr('resourceOmgHistoryImported')+' : '+imported.family+' ('+imported.count+')';}
+         }else{
+           await sourceApi().importOmg(raw,{format:/\.html?$/i.test(chosen.name)?'html':'json'});
+           if(token===documentToken){documentOmgFamily=null;documentOffset=0;selected=null;}
+         }
+       }catch(error){if(token===documentToken)documentMessage=tr('resourceError')+' : '+String(error.message||error);}finally{if(token===documentToken&&mode==='omg-specifications'){documentBusy=false;renderDocumentary();}}}
+     omgFile.addEventListener('change',()=>void handleOmgFile(omgFile));
+   }
    const target=d.createElement('div');target.id='standard-references-grid';target.style.cssText='flex:1 1 0;min-height:100px';
    status=d.createElement('div');status.style.cssText='padding:3px 7px;color:#555';status.setAttribute('role','status');
+   if(!nativeOnly)box.appendChild(toolbarHost);
    box.append(bar,target,status);mount.appendChild(box);
    if(typeof root.w2grid!=='function'){status.textContent='w2ui grid indisponible';return false;}
    grid=new root.w2grid({name:'standardReferencesGrid',recordHeight:28,show:{toolbar:false,footer:true,expandColumn:false},multiSelect:false,records:[],columns:[],onClick(event){selected=event.recid||event.detail?.recid||null;
+     if(standardsToolbar)Promise.resolve().then(()=>updateToolbar());
      if(selected?.startsWith('iso-more:')&&getTreeIndex().loadMore(selected)){
        // Defer rebuilding the tree until w2ui finishes dispatching the click.
        Promise.resolve().then(()=>refresh());
@@ -1164,7 +1503,7 @@
      if(windowedActive&&root.__radarIsoWindowed?.get){root.__radarIsoWindowed.get({type:'deliverables',id}).then(item=>{if(item)showDetail({...record,isoItem:item});else showDetail(record);}).catch(err=>{if(status)status.textContent=err.message;});}
      else showDetail(record);
    });
-   let isoSearchDebounce=null;search.addEventListener('input',()=>{if(isoSearchDebounce)clearTimeout(isoSearchDebounce);if(mode!=='iso-list'){isoSearchDebounce=setTimeout(()=>{isoSearchDebounce=null;refresh();},180);return;}isoSearchDebounce=setTimeout(()=>{isoSearchDebounce=null;refresh();},180);});reload.addEventListener('click',()=>{if(mode==='ics')loadIcs(true);loadIsoCache();});
+   let isoSearchDebounce=null;search.addEventListener('input',()=>{if(isDocumentary()){documentOffset=0;selected=null;}if(isoSearchDebounce)clearTimeout(isoSearchDebounce);if(mode!=='iso-list'){isoSearchDebounce=setTimeout(()=>{isoSearchDebounce=null;refresh();},180);return;}isoSearchDebounce=setTimeout(()=>{isoSearchDebounce=null;refresh();},180);});reload.addEventListener('click',()=>{if(mode==='ics')loadIcs(true);loadIsoCache();});
    add.addEventListener('click',()=>{
      if(mode!=='references'){status.textContent=tr('addFromReferences');return;}
      if(!selected){status.textContent=tr('selectReference');return;}
@@ -1182,6 +1521,7 @@
      bar.replaceChildren(label,search,nativeOriginFilter);
      return true; // no global ISO, RSS or changes initialization in Viewer
    }
+   initializeToolbar(toolbarHost);
    // Creator startup retains the R5 optional-source contract.
    bindLocale();updateStaticLabels();refresh();
    void loadIcs();
@@ -1197,7 +1537,7 @@
        return;
      }
 
-     if(status)status.textContent=
+     if(status&&isoModes.includes(mode))status.textContent=
        'Installation initiale du catalogue ISO…';
 
      await synchronizeDistributedIso('startup');
@@ -1206,7 +1546,7 @@
      if(root.__radarIsoStartup?.status!=='failed'){
        root.__radarIsoStartup={status:'failed',message};
      }
-     if(status)status.textContent=
+     if(status&&isoModes.includes(mode))status.textContent=
        'Initialisation du catalogue ISO : '+message;
    });
 
@@ -1226,8 +1566,9 @@
    root.__radarStandardRegistry?.close?.();
    root.__radarStandardSourceDialog?.close?.();
    activeDetailCleanup?.();
+   if(root.w2ui?.standardsDocumentDetail)root.w2popup?.close?.();
    activeDetailRecord=null;
-   selected=null;windowToken++;windowHistory=[null];windowPosition=0;windowBasePosition=0;windowNext=null;
+   selected=null;documentToken++;documentBusy=false;documentOffset=0;documentSeries=null;documentOmgFamily=null;documentMessage='';windowToken++;windowHistory=[null];windowPosition=0;windowBasePosition=0;windowNext=null;
    if(search)search.value='';
    if(nativeOriginFilter)nativeOriginFilter.value='all';
    refresh();
@@ -1235,6 +1576,7 @@
  function openReferences(){
    root.__radarApplicationProfile?.require('radar.consult');
    if(root.__radarPublishedPresentation?.references===false)throw Error('Publication references panel disabled');
+   if(mode!=='references'){documentToken++;documentBusy=false;documentSeries=null;documentOmgFamily=null;documentOffset=0;documentMessage='';}
    mode='references';
    const layout=root.w2ui?.mainLayout;
    layout?.show?.('bottom');layout?.sizeTo?.('bottom',240);
