@@ -1,7 +1,7 @@
 {
   "format": "standardisation-radar-multi-product",
   "version": 1,
-  "sourceCommit": "73c6a6c",
+  "sourceCommit": "c92fbe5",
   "products": {
     "author": {
       "product": "author",
@@ -2214,8 +2214,8 @@
         },
         {
           "path": "radar.html",
-          "bytes": 113795,
-          "sha256": "7bfecc12e7b72bad99b0ecfd7a7e9afe9404db6a85b482bb1f62c8dc39b063e3"
+          "bytes": 11051375,
+          "sha256": "1b79cea7727cb65606c161fb513411a86d665f414d0906ce50245a5a356f6b2c"
         },
         {
           "path": "src/domain/roadmap-published-projection.mjs",
@@ -2264,7 +2264,7 @@
         }
       ],
       "fileCount": 451,
-      "totalBytes": 29152235
+      "totalBytes": 40089815
     },
     "client": {
       "product": "client",

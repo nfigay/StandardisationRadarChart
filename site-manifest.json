@@ -1,7 +1,7 @@
 {
   "format": "standardisation-radar-web-site",
   "version": 1,
-  "sourceCommit": "73c6a6c",
+  "sourceCommit": "c92fbe5",
   "files": [
     {
       "path": ".nojekyll",
@@ -2265,8 +2265,8 @@
     },
     {
       "path": "author/radar.html",
-      "bytes": 113795,
-      "sha256": "7bfecc12e7b72bad99b0ecfd7a7e9afe9404db6a85b482bb1f62c8dc39b063e3"
+      "bytes": 11051375,
+      "sha256": "1b79cea7727cb65606c161fb513411a86d665f414d0906ce50245a5a356f6b2c"
     },
     {
       "path": "author/src/domain/roadmap-published-projection.mjs",
@@ -3836,12 +3836,12 @@
     {
       "path": "distributions.html",
       "bytes": 4600,
-      "sha256": "8c2ce1894dacfa71a5e6c57d8db3814170e25c5e7157300509fd539fc815b384"
+      "sha256": "9f5b7f2fe6bd3bd7591a27be1297b4a26eaf51a83d02a3bdf7f1b56f8fddf3a4"
     },
     {
       "path": "distributions.json",
       "bytes": 1644,
-      "sha256": "b67d406376ac17f38bd20701ca611db11f326b85836329234efcd12e66e72139"
+      "sha256": "5490344cedf6a9e3c3df733af714876cee3c3b23f2d8170f739febea73b413f7"
     },
     {
       "path": "ICS.csv",
@@ -4530,13 +4530,13 @@
     },
     {
       "path": "radar.html",
-      "bytes": 113795,
-      "sha256": "7bfecc12e7b72bad99b0ecfd7a7e9afe9404db6a85b482bb1f62c8dc39b063e3"
+      "bytes": 11051375,
+      "sha256": "1b79cea7727cb65606c161fb513411a86d665f414d0906ce50245a5a356f6b2c"
     },
     {
       "path": "release-manifest.json",
-      "bytes": 90101,
-      "sha256": "dd111512e55e2ca4f9745538cc2805c436c367049f9b1e597772660ba9d99fcd"
+      "bytes": 90103,
+      "sha256": "9be640185bb15a0c2940b02452bff6b80134701d6804aab96d3e3f506f22a19a"
     },
     {
       "path": "src/domain/roadmap-published-projection.mjs",
