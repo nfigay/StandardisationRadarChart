@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "CSRM",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/CSRM/",
+    "acquiredAt": "2026-11-17T14:44:45.534Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/CSRM/1.0",
+      "publicationDate": "2023-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/CSRM/1.1",
+      "publicationDate": "2025-09"
+    }
+  ]
+}

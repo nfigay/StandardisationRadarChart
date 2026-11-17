@@ -28,7 +28,7 @@ test('S16 registry inventories all target families without adding import connect
  const resources=api.listResources();assert.ok(resources.length>=29);assert.equal(new Set(resources.map(r=>r.id)).size,resources.length);
  for(const id of ['omg-specifications','omg-version-metadata','mosa-sd28','incose','sebok','open-group-library','iec-webstore','ieee-sa','etsi-standards','cen-cenelec','oasis-standards','face-consortium','sosa-consortium'])assert.ok(api.getResource(id),id);
  assert.deepEqual(api.descriptors.map(x=>x.id),['iso-open-data','rfc-editor','w3c']);assert.deepEqual(api.listResources({integratedOnly:true}).map(x=>x.id),api.descriptors.map(x=>x.id));
- assert.equal(api.getResource('omg-specifications').connector,'candidate-discovery');assert.equal(api.getResource('omg-version-metadata').rights.redistribution,'to-review');
+ assert.equal(api.getResource('omg-specifications').connector,'candidate-discovery');assert.equal(Object.hasOwn(api.getResource('omg-version-metadata'),'rights'),false);
  assert.equal(api.knowledgeConcepts.organization.native,'organizations[].organizationId');assert.equal(api.knowledgeConcepts.portfolio.native,'portfolios[].portfolioId');assert.ok(resources.every(r=>!('organizationId' in r)&&Object.isFrozen(r.capabilities)));
  assert.equal(api.getResource('unknown'),null);assert.throws(()=>{resources[0].label='changed';},TypeError);assert.throws(()=>{resources[0].capabilities.publication.availability='changed';},TypeError);
 });

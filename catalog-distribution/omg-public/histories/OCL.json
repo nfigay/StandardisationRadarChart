@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "OCL",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/OCL/",
+    "acquiredAt": "2026-11-17T14:47:31.186Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 4
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/OCL/2.0",
+      "publicationDate": "2006-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/OCL/2.2",
+      "publicationDate": "2010-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/OCL/2.3.1",
+      "publicationDate": "2011-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/OCL/2.4",
+      "publicationDate": "2014-02"
+    }
+  ]
+}

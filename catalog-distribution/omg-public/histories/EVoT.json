@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "EVoT",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/EVoT/",
+    "acquiredAt": "2026-11-17T14:46:43.621Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 4
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/EVoT/1.0",
+      "publicationDate": "2001-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/EVoT/1.1",
+      "publicationDate": "2002-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/EVoT/1.2",
+      "publicationDate": "2004-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/EVoT/2.0",
+      "publicationDate": "2008-08"
+    }
+  ]
+}

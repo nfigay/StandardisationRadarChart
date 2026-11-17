@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "MOFVD",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/MOFVD/",
+    "acquiredAt": "2026-11-17T14:47:25.138Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/MOFVD/2.0",
+      "publicationDate": "2007-05"
+    }
+  ]
+}

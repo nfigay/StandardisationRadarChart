@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "PIDS",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/PIDS/",
+    "acquiredAt": "2026-11-17T14:47:36.949Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/PIDS/1.0",
+      "publicationDate": "2000-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/PIDS/1.1",
+      "publicationDate": "2001-04"
+    }
+  ]
+}

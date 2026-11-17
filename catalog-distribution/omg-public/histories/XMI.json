@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "XMI",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/XMI/",
+    "acquiredAt": "2026-11-17T14:59:06.342Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 4
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/XMI/2.0",
+      "publicationDate": "2003-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/XMI/2.1.1",
+      "publicationDate": "2007-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/XMI/2.4.2",
+      "publicationDate": "2014-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/XMI/2.5.1",
+      "publicationDate": "2015-06"
+    }
+  ]
+}

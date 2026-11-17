@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "XTCE",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/XTCE/",
+    "acquiredAt": "2026-11-17T14:59:07.782Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 4
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/XTCE/1.0",
+      "publicationDate": "2005-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/XTCE/1.1",
+      "publicationDate": "2008-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/XTCE/1.2",
+      "publicationDate": "2018-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/XTCE/1.3",
+      "publicationDate": "2025-07"
+    }
+  ]
+}

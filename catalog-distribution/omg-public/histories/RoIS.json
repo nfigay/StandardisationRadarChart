@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "RoIS",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/RoIS/",
+    "acquiredAt": "2026-11-17T14:47:55.551Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 4
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/RoIS/1.0",
+      "publicationDate": "2013-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/RoIS/1.1",
+      "publicationDate": "2016-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/RoIS/1.2",
+      "publicationDate": "2018-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/RoIS/2.0",
+      "publicationDate": "2026-06"
+    }
+  ]
+}

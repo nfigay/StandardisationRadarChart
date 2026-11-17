@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "HDAIS",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/HDAIS/",
+    "acquiredAt": "2026-11-17T14:46:55.175Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/HDAIS/1.0",
+      "publicationDate": "2005-06"
+    }
+  ]
+}

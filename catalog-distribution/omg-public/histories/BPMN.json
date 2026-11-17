@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "BPMN",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/BPMN/",
+    "acquiredAt": "2026-11-17T14:44:28.042Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 6
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/BPMN/1.0",
+      "publicationDate": "2007-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/BPMN/1.1",
+      "publicationDate": "2008-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/BPMN/1.2",
+      "publicationDate": "2009-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/BPMN/2.0",
+      "publicationDate": "2010-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/BPMN/2.0.1",
+      "publicationDate": "2013-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/BPMN/2.0.2",
+      "publicationDate": "2014-01"
+    }
+  ]
+}

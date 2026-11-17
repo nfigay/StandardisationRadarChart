@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "JAV2I",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/JAV2I/",
+    "acquiredAt": "2026-11-17T14:47:05.230Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 4
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/JAV2I/1.0",
+      "publicationDate": "1999-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/JAV2I/1.2",
+      "publicationDate": "2002-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/JAV2I/1.3",
+      "publicationDate": "2003-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/JAV2I/1.4",
+      "publicationDate": "2008-01"
+    }
+  ]
+}

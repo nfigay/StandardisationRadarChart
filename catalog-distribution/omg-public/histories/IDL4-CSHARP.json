@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "IDL4-CSHARP",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/IDL4-CSHARP/",
+    "acquiredAt": "2026-11-17T14:46:59.880Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/IDL4-CSHARP/1.0",
+      "publicationDate": "2022-04"
+    }
+  ]
+}

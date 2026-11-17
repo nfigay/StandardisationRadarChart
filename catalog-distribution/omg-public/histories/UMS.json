@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "UMS",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/UMS/",
+    "acquiredAt": "2026-11-17T14:58:56.640Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/UMS/1.0",
+      "publicationDate": "2001-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/UMS/2.0.1",
+      "publicationDate": "2005-06"
+    }
+  ]
+}

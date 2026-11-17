@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "operation": "S16-C6-R2-OMG-EDITION-EVIDENCE",
+  "editions": [
+    {
+      "family": "BPMN",
+      "edition": "2.0",
+      "url": "https://www.omg.org/spec/BPMN/2.0",
+      "publicationDate": "2010-12",
+      "evidenceUrl": "https://www.omg.org/spec/BPMN/2.0/About-BPMN"
+    },
+    {
+      "family": "BPMN",
+      "edition": "2.0.1",
+      "url": "https://www.omg.org/spec/BPMN/2.0.1",
+      "publicationDate": "2013-09",
+      "evidenceUrl": "https://www.omg.org/spec/BPMN/2.0.1"
+    }
+  ]
+}
