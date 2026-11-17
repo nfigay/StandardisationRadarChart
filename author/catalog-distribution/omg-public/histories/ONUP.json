@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "ONUP",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/ONUP/",
+    "acquiredAt": "2026-11-17T14:47:32.662Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/ONUP/1.0",
+      "publicationDate": "2008-01"
+    }
+  ]
+}

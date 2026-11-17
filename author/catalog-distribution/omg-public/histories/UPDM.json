@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "UPDM",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/UPDM/",
+    "acquiredAt": "2026-11-17T14:58:57.362Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 4
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/UPDM/1.0.1",
+      "publicationDate": "2011-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/UPDM/1.1",
+      "publicationDate": "2011-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/UPDM/2.0.1",
+      "publicationDate": "2013-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/UPDM/2.1.1",
+      "publicationDate": "2017-05"
+    }
+  ]
+}

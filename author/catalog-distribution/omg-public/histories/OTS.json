@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "OTS",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/OTS/",
+    "acquiredAt": "2026-11-17T14:47:33.350Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/OTS/1.0",
+      "publicationDate": "2002-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/OTS/1.1",
+      "publicationDate": "2005-01"
+    }
+  ]
+}

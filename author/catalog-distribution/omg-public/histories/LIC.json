@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "LIC",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/LIC/",
+    "acquiredAt": "2026-11-17T14:47:10.575Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/LIC/1.0",
+      "publicationDate": "2000-06"
+    }
+  ]
+}

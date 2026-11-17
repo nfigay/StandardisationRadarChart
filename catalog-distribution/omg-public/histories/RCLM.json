@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "RCLM",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/RCLM/",
+    "acquiredAt": "2026-11-17T14:47:49.936Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 3
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/RCLM/1.0",
+      "publicationDate": "2010-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/RCLM/1.1",
+      "publicationDate": "2012-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/RCLM/1.2",
+      "publicationDate": "2013-04"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "PLM",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/PLM/",
+    "acquiredAt": "2026-11-17T14:47:39.148Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 3
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/PLM/1.0.1",
+      "publicationDate": "2006-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/PLM/2.0",
+      "publicationDate": "2009-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/PLM/2.1",
+      "publicationDate": "2011-05"
+    }
+  ]
+}

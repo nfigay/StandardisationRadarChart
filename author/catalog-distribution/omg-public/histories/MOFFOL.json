@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "MOFFOL",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/MOFFOL/",
+    "acquiredAt": "2026-11-17T14:47:23.704Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/MOFFOL/2.0",
+      "publicationDate": "2010-03"
+    }
+  ]
+}

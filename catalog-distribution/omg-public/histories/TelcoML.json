@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "TelcoML",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/TelcoML/",
+    "acquiredAt": "2026-11-17T14:48:24.429Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/TelcoML/1.0",
+      "publicationDate": "2013-07"
+    }
+  ]
+}

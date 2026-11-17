@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "QFTP",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/QFTP/",
+    "acquiredAt": "2026-11-17T14:47:44.967Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/QFTP/1.0",
+      "publicationDate": "2006-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/QFTP/1.1",
+      "publicationDate": "2008-04"
+    }
+  ]
+}

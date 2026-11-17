@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "ITFAC",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/ITFAC/",
+    "acquiredAt": "2026-11-17T14:47:03.036Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/ITFAC/1.0",
+      "publicationDate": "2000-01"
+    }
+  ]
+}

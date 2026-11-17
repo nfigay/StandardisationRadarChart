@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "SFPM",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/SFPM/",
+    "acquiredAt": "2026-11-17T14:48:07.466Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/SFPM/1.0",
+      "publicationDate": "2024-08"
+    }
+  ]
+}

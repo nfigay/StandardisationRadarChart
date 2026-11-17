@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "PSS",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/PSS/",
+    "acquiredAt": "2026-11-17T14:47:42.693Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/PSS/1.0",
+      "publicationDate": "2000-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/PSS/2.0",
+      "publicationDate": "2002-09"
+    }
+  ]
+}

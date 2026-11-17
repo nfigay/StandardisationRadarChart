@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "DDS",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/DDS/",
+    "acquiredAt": "2026-11-17T14:44:50.231Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 4
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/DDS/1.0",
+      "publicationDate": "2004-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS/1.1",
+      "publicationDate": "2005-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS/1.2",
+      "publicationDate": "2006-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS/1.4",
+      "publicationDate": "2015-03"
+    }
+  ]
+}

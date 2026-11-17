@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "FUML",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/FUML/",
+    "acquiredAt": "2026-11-17T14:46:50.711Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 6
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/FUML/1.0",
+      "publicationDate": "2011-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/FUML/1.1",
+      "publicationDate": "2013-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/FUML/1.2.1",
+      "publicationDate": "2015-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/FUML/1.3",
+      "publicationDate": "2017-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/FUML/1.4",
+      "publicationDate": "2018-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/FUML/1.5",
+      "publicationDate": "2021-06"
+    }
+  ]
+}

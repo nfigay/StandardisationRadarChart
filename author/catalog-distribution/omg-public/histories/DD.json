@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "DD",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/DD/",
+    "acquiredAt": "2026-11-17T14:44:49.491Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/DD/1.0",
+      "publicationDate": "2012-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/DD/1.1",
+      "publicationDate": "2015-08"
+    }
+  ]
+}

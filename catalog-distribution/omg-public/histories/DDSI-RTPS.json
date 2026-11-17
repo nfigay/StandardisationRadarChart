@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "DDSI-RTPS",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/DDSI-RTPS/",
+    "acquiredAt": "2026-11-17T14:45:01.163Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 5
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/DDSI-RTPS/2.0",
+      "publicationDate": "2008-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDSI-RTPS/2.1",
+      "publicationDate": "2010-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDSI-RTPS/2.2",
+      "publicationDate": "2014-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDSI-RTPS/2.3",
+      "publicationDate": "2019-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDSI-RTPS/2.5",
+      "publicationDate": "2022-04"
+    }
+  ]
+}

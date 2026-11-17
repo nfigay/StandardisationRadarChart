@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "CORBA",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/CORBA/",
+    "acquiredAt": "2026-11-17T14:44:39.851Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 15
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/CORBA/1.0",
+      "publicationDate": "1991-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/1.1",
+      "publicationDate": "1991-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/1.2",
+      "publicationDate": "1993-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/2.0",
+      "publicationDate": "1997-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/2.1",
+      "publicationDate": "1997-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/2.2",
+      "publicationDate": "1998-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/2.3.1",
+      "publicationDate": "1999-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/2.4.2",
+      "publicationDate": "2000-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/2.5",
+      "publicationDate": "2001-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/2.6.1",
+      "publicationDate": "2002-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/3.0.3",
+      "publicationDate": "2004-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/3.1.1",
+      "publicationDate": "2011-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/3.2",
+      "publicationDate": "2011-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/3.3",
+      "publicationDate": "2012-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/3.4",
+      "publicationDate": "2021-02"
+    }
+  ]
+}

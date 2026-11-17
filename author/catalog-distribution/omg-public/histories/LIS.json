@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "LIS",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/LIS/",
+    "acquiredAt": "2026-11-17T14:47:11.314Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/LIS/1.0",
+      "publicationDate": "2004-12"
+    }
+  ]
+}

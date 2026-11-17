@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "ALF",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/ALF/",
+    "acquiredAt": "2026-11-17T14:44:13.727Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/ALF/1.0.1",
+      "publicationDate": "2013-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/ALF/1.1",
+      "publicationDate": "2017-06"
+    }
+  ]
+}

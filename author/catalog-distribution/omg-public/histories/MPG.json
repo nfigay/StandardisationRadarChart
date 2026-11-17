@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "MPG",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/MPG/",
+    "acquiredAt": "2026-11-17T14:47:25.870Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/MPG/1.0",
+      "publicationDate": "2013-12"
+    }
+  ]
+}

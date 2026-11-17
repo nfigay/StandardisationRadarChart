@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "ServD",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/ServD/",
+    "acquiredAt": "2026-11-17T14:48:06.700Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/ServD/1.0",
+      "publicationDate": "2014-02"
+    }
+  ]
+}

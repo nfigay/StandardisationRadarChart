@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "PSCS",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/PSCS/",
+    "acquiredAt": "2026-11-17T14:47:41.989Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 3
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/PSCS/1.0",
+      "publicationDate": "2015-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/PSCS/1.1",
+      "publicationDate": "2018-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/PSCS/1.2",
+      "publicationDate": "2019-06"
+    }
+  ]
+}

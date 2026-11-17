@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "DDS4CCM",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/DDS4CCM/",
+    "acquiredAt": "2026-11-17T14:45:00.484Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/DDS4CCM/1.0",
+      "publicationDate": "2011-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS4CCM/1.1",
+      "publicationDate": "2012-02"
+    }
+  ]
+}

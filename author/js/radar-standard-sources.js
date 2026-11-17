@@ -24,7 +24,7 @@
    radar:{native:'radarRevisions[].radarId / revisionId',meaning:'Existing visualization and revision identities'}
  });
  const conceptIds=Object.keys(knowledgeConcepts);
- // Availability and implementation are independent. No right is inferred from public access.
+ // Availability and implementation are independent technical properties.
  const capability=(availability,implementation='not-implemented',mapping=null)=>({availability,implementation,mapping});
  const mapped=mapping=>capability('available','existing',mapping);
  const candidate=mapping=>capability('available','candidate',mapping);
@@ -33,33 +33,32 @@
  function resource(id,label,providerLabel,kind,url,access,connector,capabilities={},details={}){
    return {id,label,providerLabel,kind,access:{type:access,url,authentication:details.authentication||'to-review',documentation:details.documentation||url},connector,
      capabilities:Object.fromEntries(conceptIds.map(key=>[key,capabilities[key]||review()])),
-     rights:{metadataReuse:'to-review',bulkAcquisition:details.bulkAcquisition||'to-review',redistribution:'to-review',policyUrl:details.policyUrl||null},
      note:details.note||null};
  }
  const resources=freezeTree([
    resource('iso-open-data','ISO Open Data','ISO','installed-iso','https://www.iso.org/','jsonl','existing-iso',{
      organization:mapped('referenceDeclaration.issuer (label only)'),standard:mapped('existing standardId'),publication:mapped('isoDocument.id/reference/edition/publicationDate/currentStage'),classification:mapped('isoDocument.icsCodes (ICS)'),workingGroup:mapped('isoDocument.ownerCommittee (source code)'),documentRelation:mapped('isoDocument.replaces/replacedBy (unresolved identifiers)'),provenance:mapped('isoDocument.release; referenceDeclaration')},{note:'Existing installed corpus; no new download endpoint inferred.'}),
    resource('rfc-editor','RFC Editor','RFC Editor','documents','https://www.rfc-editor.org/rfc-index.xml','xml-index','existing-index',{
-     organization:mapped('stream-derived issuer label, not a native organizationId'),standard:mapped('existing standardId'),publication:mapped('RFC number/title/date/status/stream'),person:available('rfc-entry/author; not ingested'),documentRelation:available('RFC Index obsoletes/updates and subseries; not normalized'),provenance:mapped('externalDocument.acquiredAt/url')},{authentication:'none',documentation:'https://www.rfc-editor.org/retrieve/',policyUrl:'https://www.rfc-editor.org/series/rfc-use/'}),
+     organization:mapped('stream-derived issuer label, not a native organizationId'),standard:mapped('existing standardId'),publication:mapped('RFC number/title/date/status/stream'),person:available('rfc-entry/author; not ingested'),documentRelation:available('RFC Index obsoletes/updates and subseries; not normalized'),provenance:mapped('externalDocument.acquiredAt/url')},{authentication:'none',documentation:'https://www.rfc-editor.org/retrieve/'}),
    resource('w3c','W3C','W3C','series','https://api.w3.org/specifications','rest-hal','existing-series',{
-     organization:mapped('issuer label'),standard:mapped('existing standardId'),publication:mapped('shortname and dated TR publication'),workingGroup:available('W3C API group resources; no joins implemented'),provenance:mapped('externalDocument.acquiredAt/url')},{authentication:'none',documentation:'https://www.w3.org/api/',policyUrl:'https://www.w3.org/copyright/'}),
+     organization:mapped('issuer label'),standard:mapped('existing standardId'),publication:mapped('shortname and dated TR publication'),workingGroup:available('W3C API group resources; no joins implemented'),provenance:mapped('externalDocument.acquiredAt/url')},{authentication:'none',documentation:'https://www.w3.org/api/'}),
    resource('ietf-datatracker','IETF Datatracker','IETF','document-context','https://datatracker.ietf.org/api/','rest-json','candidate-context',{
-     publication:candidate('doc/rfc<number>/doc.json: name and title'),workingGroup:candidate('group.name/type/acronym (source-scoped, not canonical)'),activity:candidate('rev_history: draft name/revision'),documentRelation:candidate('rev_history links the RFC to document history, not normative dependencies'),person:available('authors; intentionally not collected into normalized output'),affiliation:available('authors.affiliation; intentionally not collected'),provenance:candidate('request URL + acquisition date')},{authentication:'none for simplified document endpoint',documentation:'https://datatracker.ietf.org/api/',policyUrl:'https://www.ietf.org/about/open-records/',note:'Explicit RFC lookup only; no bulk crawl, raw person data storage or native mutation.'}),
+     publication:candidate('doc/rfc<number>/doc.json: name and title'),workingGroup:candidate('group.name/type/acronym (source-scoped, not canonical)'),activity:candidate('rev_history: draft name/revision'),documentRelation:candidate('rev_history links the RFC to document history, not normative dependencies'),person:available('authors; intentionally not collected into normalized output'),affiliation:available('authors.affiliation; intentionally not collected'),provenance:candidate('request URL + acquisition date')},{authentication:'none for simplified document endpoint',documentation:'https://datatracker.ietf.org/api/',note:'Explicit RFC lookup only; no bulk crawl, raw person data storage or native mutation.'}),
    resource('omg-specifications','OMG Specifications','OMG','specification-catalog','https://www.omg.org/spec/','html-index','candidate-discovery',{
-     publication:candidate('catalog acronym/version/status/date and versioned URL'),classification:available('catalog categories and specification keywords'),organization:available('contributing organizations on version pages; unresolved source labels'),documentRelation:candidate('ISO adoption table: versioned OMG subject and reported ISO designations'),provenance:candidate('catalog URL, acquisition timestamp and source digest')},{authentication:'none for public pages',documentation:'https://www.omg.org/spec/',policyUrl:'https://www.omg.org/legal/',bulkAcquisition:'requires-documented-basis',note:'Priority source. Public catalog consultation on explicit request, private cache; no native import connector. Bulk collection and redistribution remain to review.'}),
+     publication:candidate('catalog acronym/version/status/date and versioned URL'),classification:available('catalog categories and specification keywords'),organization:available('contributing organizations on version pages; unresolved source labels'),documentRelation:candidate('ISO adoption table: versioned OMG subject and reported ISO designations'),provenance:candidate('catalog URL, acquisition timestamp and source digest')},{authentication:'none for public pages',documentation:'https://www.omg.org/spec/',note:'Priority source. Public catalog consultation on explicit request, private cache; no native import connector. Historical editions are acquired and classified separately.'}),
    resource('omg-version-metadata','OMG version metadata','OMG','semantic-metadata','https://www.omg.org/spec/SysML/1.4/About-SysML.jsonld','json-ld-rdf','candidate-discovery',{
-     publication:available('version-scoped About metadata; field mapping pending raw response'),provenance:candidate('source URL, SHA-256 and acquisition date')},{authentication:'none for public links',documentation:'https://www.omg.org/spec/SysML/1.4',policyUrl:'https://www.omg.org/legal/',bulkAcquisition:'requires-documented-basis',note:'Prefer explicitly advertised versioned JSON-LD/RDF; not a catalog API, not all pages verified; no remote context expansion.'}),
+     publication:available('version-scoped About metadata; field mapping pending raw response'),provenance:candidate('source URL, SHA-256 and acquisition date')},{authentication:'none for public links',documentation:'https://www.omg.org/spec/SysML/1.4',note:'Prefer explicitly advertised versioned JSON-LD/RDF; not a catalog API, not all pages verified; no remote context expansion.'}),
    resource('iec-webstore','IEC Webstore','IEC','specification-catalog','https://webstore.iec.ch/','web-catalog','none'),
    resource('ieee-sa','IEEE SA','IEEE','specification-catalog','https://standards.ieee.org/','web-catalog','none'),
    resource('etsi-standards','ETSI Standards','ETSI','specification-catalog','https://www.etsi.org/standards/','web-catalog','none',{
-     publication:available('document types and PDF publications')},{documentation:'https://www.etsi.org/standards/understanding-standards/',note:'Free PDF download does not establish a bulk metadata license.'}),
+     publication:available('document types and PDF publications')},{documentation:'https://www.etsi.org/standards/understanding-standards/',note:'Resource availability is evaluated separately from document status.'}),
    resource('oasis-standards','OASIS Standards','OASIS','specification-catalog','https://www.oasis-open.org/standards/','web-catalog','none'),
    resource('cen-cenelec','CEN-CENELEC','CEN / CENELEC','specification-catalog','https://www.cencenelec.eu/','portal','none'),
-   resource('open-group-library','The Open Group Library','The Open Group','reference-library','https://publications.opengroup.org/','web-catalog','none',{}, {note:'Separate resource from the FACE/SOSA initiatives; access and rights vary.'}),
+   resource('open-group-library','The Open Group Library','The Open Group','reference-library','https://publications.opengroup.org/','web-catalog','none',{}, {note:'Separate resource from the FACE/SOSA initiatives.'}),
    resource('face-consortium','FACE Consortium','The Open Group','industrial-profile','https://www.opengroup.org/face','portal','none'),
    resource('sosa-consortium','SOSA Consortium','The Open Group','industrial-profile','https://www.opengroup.org/sosa','portal','none'),
    resource('incose','INCOSE','INCOSE','knowledge-portal','https://www.incose.org/','portal','none'),
-   resource('sebok','SEBoK','SEBoK / BKCASE','knowledge-base','https://sebokwiki.org/','wiki','none',{}, {note:'Knowledge base rather than normative catalog; review per-content rights.'}),
+   resource('sebok','SEBoK','SEBoK / BKCASE','knowledge-base','https://sebokwiki.org/','wiki','none',{}, {note:'Knowledge base rather than normative catalog.'}),
    resource('mosa-sd28','MOSA / SD-28','US Defense Standardization Program','guidance','https://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=286891','document-record','none',{
      guidance:available('SD-28 Standardization Decisions for a Modular Open Systems Approach')},{note:'MOSA is an approach, not an organization or a source of all standards it recommends.'}),
    resource('assist','ASSIST Quick Search','US Defense Logistics Agency','specification-catalog','https://quicksearch.dla.mil/','web-catalog','none'),
@@ -306,7 +305,7 @@ const text=s=>esc(decode(String(s).replace(/<(?:script|style)\b[^>]*>[\s\S]*?<\/
 function officialUrl(value){const u=new URL(value,CATALOG);if(u.origin!==ORIGIN||u.username||u.password||u.search||u.hash||/%|\\/.test(u.pathname))throw Error('Non-canonical OMG URL');return u;}
 function versionIdentity(value){const u=officialUrl(value);
   // The official index also contains the EDMC-FIBO/BE, /FBC, /FND and /IND families.
-  const m=/^\/spec\/([A-Za-z0-9][A-Za-z0-9._+-]{0,99}(?:\/[A-Za-z0-9][A-Za-z0-9._+-]{0,99}){0,2})\/(\d+(?:\.\d+){0,3})(?:\/(Beta[1-9]\d{0,2}))?(?:\/About-([A-Za-z0-9][A-Za-z0-9._+-]{0,99}))?\/?$/.exec(u.pathname);
+  const m=/^\/spec\/([A-Za-z0-9][A-Za-z0-9._+-]{0,99}(?:\/[A-Za-z0-9][A-Za-z0-9._+-]{0,99}){0,2})\/(\d+(?:\.\d+){0,3})(?:\/((?:Beta[1-9]\d{0,2})|(?:Alpha(?:0|[1-9]\d{0,2}))))?(?:\/About-([A-Za-z0-9][A-Za-z0-9._+-]{0,99}))?\/?$/.exec(u.pathname);
   if(!m||m[1].split('/').some(x=>x==='.'||x==='..')||(m[4]&&(m[1].includes('/')||m[4]!==m[1])))throw Error('Invalid OMG version identity');
   const key=[m[1],m[2],m[3]].filter(Boolean).join('/');return {sourceId:'omg-specifications',sourceKey:key,acronym:m[1],version:m[2],variant:m[3]||null,url:ORIGIN+'/spec/'+key};}
 function metadataIdentity(value){const u=officialUrl(value);if(!u.pathname.endsWith('.jsonld'))throw Error('Expected versioned OMG JSON-LD URL');const id=versionIdentity(u.href.slice(0,-7));if(u.pathname!==new URL(id.url).pathname+'/About-'+id.acronym+'.jsonld')throw Error('Invalid versioned OMG JSON-LD URL');return {...id,metadataUrl:u.href};}
@@ -410,6 +409,58 @@ function parseOmgCatalog(html,{acquiredAt=stamp(),sourceDigest=null}={}){
    if(tables.length>100)throw Error('Invalid OMG table count');
    return {rows:rows.map(row=>({...row,isoAdoptions:relations.get(row.key)||[]})),adoptionRows,acquiredAt,sha256,coverage:{complete:c.complete&&c.rejected.length===0&&c.adoptionTables>0,rejected:c.rejected.length,indexTables:c.indexTables,adoptionTables:c.adoptionTables,tables}};
  }
+ // S16 completion: same-origin public *reference links*, never a private OMG snapshot.
+ // The physical JSON is assembled separately after bibliographic publication review.
+ const OMG_PUBLIC_DIR='catalog-distribution/omg-public/';
+ function omgPublicUrl(name){
+   const href=root.location?.href;if(!href||!/^https?:/.test(href))throw Error('Public OMG index requires HTTP');
+   const page=new URL(href),prefix=/\/author\/radar\.html$/.test(page.pathname)?'../':'./';
+   return new URL(prefix+OMG_PUBLIC_DIR+name,page).href;
+ }
+ function validateOmgPublicLinks(payload){
+   if(payload?.schemaVersion!==1||payload.sourceId!=='omg-public-links'||payload.distribution!=='public-links-only'||payload.provenance?.url!==omg.CATALOG||!validTime(payload.provenance?.acquiredAt)||!Array.isArray(payload.records)||payload.records.length<1||payload.records.length>MAX_ROWS||payload.coverage?.complete!==true||payload.coverage?.records!==payload.records.length)throw Error('Invalid public OMG link index');
+   const seen=new Set();const rows=payload.records.map(r=>{
+     const id=omg.versionIdentity(r?.url);
+     if(Object.keys(r).sort().join(',')!=='publicationDate,status,url'||!/^\d{4}-(0[1-9]|1[0-2])$/.test(r.publicationDate)||!['formal','beta','retired','deprecated','withdrawn','superseded'].includes(r.status)||seen.has(id.sourceKey))throw Error('Invalid or duplicate public OMG reference');
+     seen.add(id.sourceKey);
+     return {...id,key:id.sourceKey,designation:id.acronym,edition:id.version,status:r.status,publicationDate:r.publicationDate,title:id.acronym+' '+id.version,issuer:'OMG',isoAdoptions:[]};
+   });
+   return {rows,adoptionRows:[],acquiredAt:payload.provenance.acquiredAt,sha256:null,coverage:{complete:true,rejected:0,indexTables:1,adoptionTables:0,tables:[]},distribution:'public-links-only'};
+ }
+ async function getOmgPublicJson(name,{fetcher=root.fetch?.bind(root)}={}){
+   if(typeof fetcher!=='function')throw Error('Public OMG index fetch unavailable');
+   const url=omgPublicUrl(name),response=await fetcher(url,{method:'GET',redirect:'error',credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(25000),headers:{Accept:'application/json'}});
+   if(!response.ok||response.url&&response.url!==url||!/^application\/json(?:\s*;|$)/i.test(response.headers?.get?.('content-type')||''))throw Error('Public OMG index unavailable or invalid (HTTP '+response.status+')');
+   const bytes=await boundedOmgBytes(response,omg.LIMIT);
+   return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
+ }
+ async function loadOmgPublished(options={}){
+   requireAuthor();const token=++omgRequest;
+   const entry=validateOmgPublicLinks(await getOmgPublicJson('index.json',options));
+   if(token!==omgRequest)throw Error('OMG public index superseded');
+   // Atomic session replacement; never overwrite the S16 private IndexedDB cache.
+   return commitOmg(entry,'same-origin-public','published-links');
+ }
+ function validateOmgPublicHistory(payload,family){
+   const familyUrl=omg.familyUrl(family);
+   if(payload?.schemaVersion!==1||payload.sourceId!=='omg-public-history-links'||payload.distribution!=='public-links-only'||payload.family!==family||payload.provenance?.url!==familyUrl||!validTime(payload.provenance?.acquiredAt)||!Array.isArray(payload.records)||payload.records.length<1||payload.records.length>5000||payload.coverage?.complete!==true||payload.coverage?.records!==payload.records.length)throw Error('Invalid public OMG history');
+   const seen=new Set();const rows=payload.records.map(r=>{
+     const id=omg.versionIdentity(r?.url);
+     if(Object.keys(r).sort().join(',')!=='publicationDate,url'||id.acronym!==family||id.variant||seen.has(id.sourceKey)||!/^\d{4}-(0[1-9]|1[0-2])$/.test(r.publicationDate))throw Error('Invalid public OMG history reference');
+     seen.add(id.sourceKey);
+     return {...id,key:id.sourceKey,designation:family,title:family+' '+id.version,edition:id.version,status:'formal',publicationDate:r.publicationDate,issuer:'OMG',historyEvidence:familyUrl,historyRelation:'formal-version-reported',isoAdoptions:[]};
+   });
+   return {family,rows,acquiredAt:payload.provenance.acquiredAt,sha256:null,coverage:{complete:true,formalVersions:rows.length,historyTables:1},origin:'published-links',storage:'same-origin-public',distribution:'public-links-only'};
+ }
+ async function loadOmgPublishedHistory(family,options={}){
+   requireAuthor();omg.familyUrl(family);
+   const revision=++omgHistoryGeneration;
+   const payload=await getOmgPublicJson('histories/'+family+'.json',options);
+   const entry=validateOmgPublicHistory(payload,family);
+   if(revision!==omgHistoryGeneration)throw Error('Public OMG history superseded');
+   entry.generation=revision;omgHistories.set(family,entry);
+   return omgHistoryStatus(family);
+ }
  // R4: histories are separately cached; index import never erases a historical edition.
  const omgHistories=new Map();let omgHistoryGeneration=0;
  function validateOmgHistory(snapshot,family){
@@ -479,11 +530,11 @@ function parseOmgCatalog(html,{acquiredAt=stamp(),sourceDigest=null}={}){
    return JSON.stringify(snapshot,null,2)+'\n';
  }
  function selectedOmgHistory(family,key,generation){requireAuthor();const h=omgHistories.get(family);if(!h||h.generation!==generation)throw Error('Stale OMG edition selection');const row=h.rows.find(x=>x.key===key);if(!row)throw Error('Missing OMG edition');return {schemaVersion:1,sourceId:'omg-specifications',key:row.key,title:row.title,designation:row.designation,edition:row.edition,status:row.status,url:row.url,issuer:'OMG',publicationDate:row.publicationDate,historyEvidence:row.historyEvidence,isoAdoptions:copy(omgEntry?.adoptionRows.find(a=>a.key===row.key)?.isoAdoptions||[]),sourceEvidence:{url:row.historyEvidence,sha256:h.sha256,acquiredAt:h.acquiredAt},verification:'source-verified'};}
- function selectedOmgCurrent(key,generation){requireAuthor();if(!omgEntry||omgEntry.generation!==generation)throw Error('Stale OMG catalog selection');const row=omgEntry.rows.find(x=>x.key===key);if(!row)throw Error('Missing OMG publication');return {schemaVersion:1,sourceId:'omg-specifications',key:row.key,title:row.title,designation:row.designation,edition:row.edition,status:row.status,url:row.url,issuer:'OMG',publicationDate:row.publicationDate,isoAdoptions:copy(row.isoAdoptions),sourceEvidence:{url:omg.CATALOG,sha256:omgEntry.sha256,acquiredAt:omgEntry.acquiredAt},verification:['official-fetch','local-relay','local-prepared'].includes(omgEntry.origin)?'source-verified':'unverified'};}
+ function selectedOmgCurrent(key,generation){requireAuthor();if(!omgEntry||omgEntry.generation!==generation)throw Error('Stale OMG catalog selection');const row=omgEntry.rows.find(x=>x.key===key);if(!row)throw Error('Missing OMG publication');return {schemaVersion:1,sourceId:'omg-specifications',key:row.key,title:row.title,designation:row.designation,edition:row.edition,status:row.status,url:row.url,issuer:'OMG',publicationDate:row.publicationDate,isoAdoptions:copy(row.isoAdoptions),sourceEvidence:{url:omg.CATALOG,sha256:omgEntry.sha256,acquiredAt:omgEntry.acquiredAt},verification:['official-fetch','local-relay','local-prepared','published-links'].includes(omgEntry.origin)?'source-verified':'unverified'};}
  const OMG_ORIGINS=['local-unverified','official-fetch','local-relay','local-prepared'];
  const OMG_RELAY_PATH='/__radar-omg/catalog/';
  function commitOmg(entry,storage,origin='local-unverified'){omgEntry={...entry,origin,storage,generation:++omgGeneration};return omgStatus();}
- function omgStatus(){requireAuthor();return omgEntry?{generation:omgEntry.generation,count:omgEntry.rows.length,adoptionCount:omgEntry.adoptionRows.length,acquiredAt:omgEntry.acquiredAt,sha256:omgEntry.sha256,coverage:copy(omgEntry.coverage),origin:omgEntry.origin,storage:omgEntry.storage,distribution:'private-only'}:null;}
+ function omgStatus(){requireAuthor();return omgEntry?{generation:omgEntry.generation,count:omgEntry.rows.length,adoptionCount:omgEntry.adoptionRows.length,acquiredAt:omgEntry.acquiredAt,sha256:omgEntry.sha256,coverage:copy(omgEntry.coverage),origin:omgEntry.origin,storage:omgEntry.storage,distribution:omgEntry.distribution||'private-only'}:null;}
  async function digestBytes(bytes){if(!root.crypto?.subtle)return null;const digest=await root.crypto.subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');}
  async function digestText(value){return digestBytes(new TextEncoder().encode(value));}
  // Reject partial online replacements: the public catalog currently contains the
@@ -501,7 +552,7 @@ function parseOmgCatalog(html,{acquiredAt=stamp(),sourceDigest=null}={}){
    const bytes=new Uint8Array(await response.arrayBuffer());if(bytes.byteLength>limit)throw Error('OMG response exceeds size limit');return bytes;
  }
  // A single public bibliographic index request, no discovery crawl, no credentials,
- // no remote scripts or linked assets. Does not grant metadata redistribution rights.
+ // no remote scripts or linked assets.
  async function readOmgPublicCatalog({fetcher=root.fetch?.bind(root),signal}={}){
    requireAuthor();if(typeof fetcher!=='function')throw Error('OMG fetch unavailable');
    const response=await fetcher(omg.CATALOG,{method:'GET',mode:'cors',redirect:'error',credentials:'omit',cache:'no-store',signal:signal||AbortSignal.timeout(30000),headers:{Accept:'text/html'}});
@@ -555,5 +606,5 @@ function parseOmgCatalog(html,{acquiredAt=stamp(),sourceDigest=null}={}){
  }
  async function restoreOmg(){requireAuthor();const token=omgRequest;return queueOmgWrite(async()=>{if(token!==omgRequest||omgEntry)return omgStatus();const snapshot=await cached(OMG_CACHE_KEY);if(token!==omgRequest)return omgStatus();if(!snapshot)return null;const entry=validateOmgSnapshot(snapshot);const origin=OMG_ORIGINS.includes(snapshot.provenance.localOrigin)?snapshot.provenance.localOrigin:'local-unverified';return commitOmg(entry,'browser-cache',origin);});}
  function searchOmg(query='',offset=0,adoptions=false){requireAuthor();if(!omgEntry)return {generation:null,total:0,rows:[]};if(!Number.isSafeInteger(offset)||offset<0)throw Error('Invalid offset');const q=norm(query);const rows=(adoptions?omgEntry.adoptionRows:omgEntry.rows).filter(r=>!q||norm([r.designation,r.title,r.edition,r.status,r.publicationDate,...r.isoAdoptions].join(' ')).includes(q));return {generation:omgEntry.generation,total:rows.length,rows:copy(rows.slice(offset,offset+100))};}
- root.__radarStandardSources=Object.freeze({omg,loadOmgHistory,restoreOmgHistory,importOmgHistory,exportOmgHistory,searchOmgHistory,omgHistoryStatus,selectedOmgHistory,selectedOmgCurrent,readOmgHistory,validateOmgHistory,importOmg,restoreOmg,searchOmg,omgStatus,clearOmg,readOmgPublicCatalog,validateOmgOnlineSnapshot,loadOmgOnline,loadOmgPrepared,omgHasLocalRelay,descriptors,knowledgeConcepts,listResources,getResource,describeNativeReference,readRfcContext,normalizeRfcContext,RFC,W3C,rfcRecord,countRfcEntries,parseRfcIndex,w3cLink,w3cRecord,acquireIndex,acquireVersions,validateIndex,validateVersions,load,loadVersions,search,selected,status});
+ root.__radarStandardSources=Object.freeze({omg,loadOmgPublished,loadOmgPublishedHistory,validateOmgPublicLinks,validateOmgPublicHistory,loadOmgHistory,restoreOmgHistory,importOmgHistory,exportOmgHistory,searchOmgHistory,omgHistoryStatus,selectedOmgHistory,selectedOmgCurrent,readOmgHistory,validateOmgHistory,importOmg,restoreOmg,searchOmg,omgStatus,clearOmg,readOmgPublicCatalog,validateOmgOnlineSnapshot,loadOmgOnline,loadOmgPrepared,omgHasLocalRelay,descriptors,knowledgeConcepts,listResources,getResource,describeNativeReference,readRfcContext,normalizeRfcContext,RFC,W3C,rfcRecord,countRfcEntries,parseRfcIndex,w3cLink,w3cRecord,acquireIndex,acquireVersions,validateIndex,validateVersions,load,loadVersions,search,selected,status});
 })(typeof window!=='undefined'?window:globalThis);

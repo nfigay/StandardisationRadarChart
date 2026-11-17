@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "EXPRESS",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/EXPRESS/",
+    "acquiredAt": "2026-11-17T14:46:44.361Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/EXPRESS/1.0",
+      "publicationDate": "2010-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/EXPRESS/1.1",
+      "publicationDate": "2015-05"
+    }
+  ]
+}

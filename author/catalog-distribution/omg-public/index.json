@@ -1,0 +1,1445 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-links",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/",
+    "acquiredAt": "2026-11-17T07:44:03.981Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 286
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/ADA/1.3",
+      "status": "formal",
+      "publicationDate": "2010-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/AEP/1.0",
+      "status": "formal",
+      "publicationDate": "2017-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/AFP/1.0",
+      "status": "formal",
+      "publicationDate": "2013-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/ALF/1.1",
+      "status": "formal",
+      "publicationDate": "2017-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/ALMAS/1.3",
+      "status": "formal",
+      "publicationDate": "2024-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/ALMAS/1.5/Beta1",
+      "status": "beta",
+      "publicationDate": "2026-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/AMI4CCM/1.1",
+      "status": "formal",
+      "publicationDate": "2015-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/AML/1.0",
+      "status": "formal",
+      "publicationDate": "2018-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/AMSM/1.1",
+      "status": "formal",
+      "publicationDate": "2010-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/API4KP/1.0",
+      "status": "formal",
+      "publicationDate": "2024-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/APP-INST/1.0",
+      "status": "formal",
+      "publicationDate": "2016-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/ASCDPM/1.0",
+      "status": "formal",
+      "publicationDate": "2022-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/ASCMM/1.0",
+      "status": "formal",
+      "publicationDate": "2015-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/ASCPEM/1.0",
+      "status": "formal",
+      "publicationDate": "2015-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/ASCQM/1.1",
+      "status": "formal",
+      "publicationDate": "2022-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/ASCRM/1.0",
+      "status": "formal",
+      "publicationDate": "2015-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/ASCRSM/1.0",
+      "status": "formal",
+      "publicationDate": "2024-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/ASCSM/1.0",
+      "status": "formal",
+      "publicationDate": "2015-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/ASTM/1.0",
+      "status": "formal",
+      "publicationDate": "2011-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/ATC/1.0",
+      "status": "formal",
+      "publicationDate": "2000-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/ATDM/1.0",
+      "status": "formal",
+      "publicationDate": "2017-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/ATDM2/1.0",
+      "status": "formal",
+      "publicationDate": "2025-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/ATLAS/1.0",
+      "status": "formal",
+      "publicationDate": "2002-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/AVSTR/1.0",
+      "status": "formal",
+      "publicationDate": "2000-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/BACM/1.1",
+      "status": "formal",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/BACM/1.2/Beta1",
+      "status": "beta",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/BKPMN/1.0/Beta1",
+      "status": "beta",
+      "publicationDate": "2022-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/BMM/1.3",
+      "status": "formal",
+      "publicationDate": "2015-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/BPDM/1.0",
+      "status": "formal",
+      "publicationDate": "2008-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/BPMM/1.0",
+      "status": "formal",
+      "publicationDate": "2008-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/BPMN/2.0.2",
+      "status": "formal",
+      "publicationDate": "2014-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/BPMNProfile/1.0",
+      "status": "formal",
+      "publicationDate": "2014-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/BQS/1.0",
+      "status": "formal",
+      "publicationDate": "2002-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/BSA/1.0",
+      "status": "formal",
+      "publicationDate": "2001-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/C/1.0",
+      "status": "formal",
+      "publicationDate": "1999-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/C2INAV/1.3",
+      "status": "formal",
+      "publicationDate": "2025-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/C2MS/1.2.1",
+      "status": "formal",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/C2WSDL/1.2.1",
+      "status": "formal",
+      "publicationDate": "2008-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/CAD/1.2",
+      "status": "formal",
+      "publicationDate": "2005-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/CCCMP/1.0",
+      "status": "formal",
+      "publicationDate": "2008-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/CCM/4.0",
+      "status": "formal",
+      "publicationDate": "2006-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/CCMP/1.0",
+      "status": "formal",
+      "publicationDate": "2005-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/CDSS/1.0",
+      "status": "formal",
+      "publicationDate": "2011-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/CMMN/1.1",
+      "status": "formal",
+      "publicationDate": "2016-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/COAS/1.0",
+      "status": "formal",
+      "publicationDate": "2001-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/COBOL/1.0",
+      "status": "formal",
+      "publicationDate": "1999-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/COLL/1.0.1",
+      "status": "formal",
+      "publicationDate": "2002-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/Commons/1.3",
+      "status": "formal",
+      "publicationDate": "2026-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/CONC/1.0",
+      "status": "formal",
+      "publicationDate": "2000-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA-REST/1.0",
+      "status": "formal",
+      "publicationDate": "2023-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBA/3.4",
+      "status": "formal",
+      "publicationDate": "2021-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBABINDING/1.0",
+      "status": "formal",
+      "publicationDate": "2010-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORBAe/1.0",
+      "status": "formal",
+      "publicationDate": "2008-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/CORP/1.0",
+      "status": "formal",
+      "publicationDate": "2002-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/CPP/1.3",
+      "status": "formal",
+      "publicationDate": "2012-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/CPP11/1.7",
+      "status": "formal",
+      "publicationDate": "2025-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/CSAR/1.0",
+      "status": "formal",
+      "publicationDate": "2007-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/CSRM/1.1",
+      "status": "formal",
+      "publicationDate": "2025-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/CTS2/1.2",
+      "status": "formal",
+      "publicationDate": "2015-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/CURR/1.0",
+      "status": "formal",
+      "publicationDate": "2000-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/CWM/1.1",
+      "status": "formal",
+      "publicationDate": "2003-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/DAF/1.0",
+      "status": "formal",
+      "publicationDate": "2016-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/DAIS/1.1",
+      "status": "formal",
+      "publicationDate": "2005-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/DD/1.1",
+      "status": "formal",
+      "publicationDate": "2015-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-DLRL/1.4",
+      "status": "formal",
+      "publicationDate": "2015-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-Java/1.0",
+      "status": "formal",
+      "publicationDate": "2013-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-JSON/1.0",
+      "status": "formal",
+      "publicationDate": "2021-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-Monitoring/1.0/Beta2",
+      "status": "beta",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-OPCUA/1.0",
+      "status": "formal",
+      "publicationDate": "2020-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-PSM-Cxx/1.0",
+      "status": "formal",
+      "publicationDate": "2013-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-RPC/1.0",
+      "status": "formal",
+      "publicationDate": "2017-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-SECURITY/1.2",
+      "status": "formal",
+      "publicationDate": "2026-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-TSN/1.0",
+      "status": "formal",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-WEB/1.0",
+      "status": "formal",
+      "publicationDate": "2016-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-XML/1.0",
+      "status": "formal",
+      "publicationDate": "2018-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-XML/1.1/Beta1",
+      "status": "beta",
+      "publicationDate": "2026-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-XRCE/1.0",
+      "status": "formal",
+      "publicationDate": "2020-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-XTypes/1.3",
+      "status": "formal",
+      "publicationDate": "2020-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS-XTypes/1.4/Beta1",
+      "status": "beta",
+      "publicationDate": "2026-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS/1.4",
+      "status": "formal",
+      "publicationDate": "2015-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDS4CCM/1.1",
+      "status": "formal",
+      "publicationDate": "2012-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/DDSI-RTPS/2.5",
+      "status": "formal",
+      "publicationDate": "2022-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/DEPL/4.0",
+      "status": "formal",
+      "publicationDate": "2006-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/DMN/1.6",
+      "status": "formal",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/DMN/1.7/Beta1",
+      "status": "beta",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/DOL/1.0",
+      "status": "formal",
+      "publicationDate": "2018-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/DPP/1.0",
+      "status": "formal",
+      "publicationDate": "2006-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/DPROD/1.0/Beta2",
+      "status": "beta",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/DRAPI/1.0",
+      "status": "formal",
+      "publicationDate": "2025-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/DSS/2.0",
+      "status": "formal",
+      "publicationDate": "2002-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/DTV/1.3",
+      "status": "formal",
+      "publicationDate": "2017-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/EAI/1.0",
+      "status": "formal",
+      "publicationDate": "2004-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/EDMC-FIBO/BE/1.1",
+      "status": "formal",
+      "publicationDate": "2018-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/EDMC-FIBO/FBC/1.0",
+      "status": "formal",
+      "publicationDate": "2017-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/EDMC-FIBO/FND/1.2",
+      "status": "formal",
+      "publicationDate": "2017-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/EDMC-FIBO/IND/1.0",
+      "status": "formal",
+      "publicationDate": "2017-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/EDOC/1.0",
+      "status": "formal",
+      "publicationDate": "2004-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/Essence/1.2",
+      "status": "formal",
+      "publicationDate": "2018-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/Essence/2.0/Beta2",
+      "status": "beta",
+      "publicationDate": "2026-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/EVNT/1.2",
+      "status": "formal",
+      "publicationDate": "2004-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/EVoT/2.0",
+      "status": "formal",
+      "publicationDate": "2008-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/EXPRESS/1.1",
+      "status": "formal",
+      "publicationDate": "2015-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/EXT/1.0",
+      "status": "formal",
+      "publicationDate": "2000-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/FACE/1.0",
+      "status": "formal",
+      "publicationDate": "2023-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/FACEv2/1.0/Beta2",
+      "status": "beta",
+      "publicationDate": "2026-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/FIGI/1.3",
+      "status": "formal",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/FSM4RTC/1.0",
+      "status": "formal",
+      "publicationDate": "2016-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/FT/1.0",
+      "status": "formal",
+      "publicationDate": "2010-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/FTAM/1.0",
+      "status": "formal",
+      "publicationDate": "2002-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/FTF/1.0",
+      "status": "formal",
+      "publicationDate": "2009-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/FUML/1.5",
+      "status": "formal",
+      "publicationDate": "2021-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/GDDI/1.0",
+      "status": "formal",
+      "publicationDate": "2026-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/GEMS/1.6",
+      "status": "formal",
+      "publicationDate": "2025-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/GEMS/1.7/Beta1",
+      "status": "beta",
+      "publicationDate": "2026-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/GENE/1.1",
+      "status": "formal",
+      "publicationDate": "2003-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/GMAPS/1.0",
+      "status": "formal",
+      "publicationDate": "2002-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/HAL4RT/1.0/Beta1",
+      "status": "beta",
+      "publicationDate": "2016-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/HDAIS/1.0",
+      "status": "formal",
+      "publicationDate": "2005-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/Hdata/1.0",
+      "status": "formal",
+      "publicationDate": "2013-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/HUTN/1.0",
+      "status": "formal",
+      "publicationDate": "2004-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/I2JAV/1.3",
+      "status": "formal",
+      "publicationDate": "2007-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/IDL/4.2",
+      "status": "formal",
+      "publicationDate": "2018-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/IDL4-CPP/1.0",
+      "status": "formal",
+      "publicationDate": "2025-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/IDL4-CSHARP/1.0",
+      "status": "formal",
+      "publicationDate": "2022-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/IDL4-CSHARP/1.1/Beta1",
+      "status": "beta",
+      "publicationDate": "2020-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/IDL4-Java/1.0",
+      "status": "formal",
+      "publicationDate": "2022-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/IEF-RA/1.0",
+      "status": "formal",
+      "publicationDate": "2019-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/IEF-RA/2.0/Beta1",
+      "status": "beta",
+      "publicationDate": "2025-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/IEPPV/1.0",
+      "status": "formal",
+      "publicationDate": "2015-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/IFML/1.0",
+      "status": "formal",
+      "publicationDate": "2015-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/ITFAC/1.0",
+      "status": "formal",
+      "publicationDate": "2000-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/ITPMF/1.0",
+      "status": "formal",
+      "publicationDate": "2007-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/IXS/1.0.1",
+      "status": "formal",
+      "publicationDate": "2011-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/JAV2I/1.4",
+      "status": "formal",
+      "publicationDate": "2008-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/KDM/1.4",
+      "status": "formal",
+      "publicationDate": "2016-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/KerML/1.0",
+      "status": "formal",
+      "publicationDate": "2025-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/LCC/1.2",
+      "status": "formal",
+      "publicationDate": "2022-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/LECIS/1.0",
+      "status": "formal",
+      "publicationDate": "2003-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/LEDG/1.0",
+      "status": "formal",
+      "publicationDate": "2001-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/LFCYC/1.2",
+      "status": "formal",
+      "publicationDate": "2002-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/LIC/1.0",
+      "status": "formal",
+      "publicationDate": "2000-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/LIS/1.0",
+      "status": "formal",
+      "publicationDate": "2004-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/LISP/1.0",
+      "status": "formal",
+      "publicationDate": "2000-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/LQS/1.0",
+      "status": "formal",
+      "publicationDate": "2000-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/LSAE/1.0",
+      "status": "formal",
+      "publicationDate": "2005-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/LtLOAD/1.0",
+      "status": "formal",
+      "publicationDate": "2010-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/LtLOG/1.1",
+      "status": "formal",
+      "publicationDate": "2005-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/LtSVC/1.0",
+      "status": "formal",
+      "publicationDate": "2004-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/LWFT/1.0",
+      "status": "formal",
+      "publicationDate": "2012-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/MACSTR/1.0",
+      "status": "formal",
+      "publicationDate": "2002-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/MARTE/1.3",
+      "status": "formal",
+      "publicationDate": "2024-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/MDMI/1.0",
+      "status": "formal",
+      "publicationDate": "2010-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/MDMI/2.0/Beta2",
+      "status": "beta",
+      "publicationDate": "2023-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/MED/1.0",
+      "status": "formal",
+      "publicationDate": "2001-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/MEF/1.0",
+      "status": "formal",
+      "publicationDate": "2021-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/MIPS/1.0",
+      "status": "formal",
+      "publicationDate": "2004-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/MOBFAC/1.0",
+      "status": "formal",
+      "publicationDate": "2000-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/MOF/2.5.1",
+      "status": "formal",
+      "publicationDate": "2016-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/MOF2I/2.0",
+      "status": "formal",
+      "publicationDate": "2006-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/MOF2RDF/1.0",
+      "status": "formal",
+      "publicationDate": "2021-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/MOFFOL/2.0",
+      "status": "formal",
+      "publicationDate": "2010-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/MOFM2T/1.0",
+      "status": "formal",
+      "publicationDate": "2008-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/MOFVD/2.0",
+      "status": "formal",
+      "publicationDate": "2007-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/MPG/1.0",
+      "status": "formal",
+      "publicationDate": "2013-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/MVF/1.1",
+      "status": "formal",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/NAM/1.3",
+      "status": "formal",
+      "publicationDate": "2004-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/NEG/1.0",
+      "status": "formal",
+      "publicationDate": "2002-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/NIEM-UML/3.0",
+      "status": "formal",
+      "publicationDate": "2017-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/NOT/1.1",
+      "status": "formal",
+      "publicationDate": "2004-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/NOTJMS/1.0",
+      "status": "formal",
+      "publicationDate": "2004-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/OARIS/2.0",
+      "status": "formal",
+      "publicationDate": "2023-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/OARIS/3.0/Beta2",
+      "status": "beta",
+      "publicationDate": "2024-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/OCL/2.4",
+      "status": "formal",
+      "publicationDate": "2014-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/ODM/1.1",
+      "status": "formal",
+      "publicationDate": "2014-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/ONUP/1.0",
+      "status": "formal",
+      "publicationDate": "2008-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/OTS/1.1",
+      "status": "formal",
+      "publicationDate": "2005-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/PAGE-OM/1.0",
+      "status": "formal",
+      "publicationDate": "2010-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/PARTY/1.0",
+      "status": "formal",
+      "publicationDate": "2001-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/PC/1.0",
+      "status": "formal",
+      "publicationDate": "2014-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/PDME/1.3",
+      "status": "formal",
+      "publicationDate": "2000-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/PIDS/1.1",
+      "status": "formal",
+      "publicationDate": "2001-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/PKI/1.0",
+      "status": "formal",
+      "publicationDate": "2002-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/PL1/1.0",
+      "status": "formal",
+      "publicationDate": "2002-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/PLM/2.1",
+      "status": "formal",
+      "publicationDate": "2011-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/PPMN/1.0",
+      "status": "formal",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/PROP/1.0",
+      "status": "formal",
+      "publicationDate": "2000-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/PRR/1.0",
+      "status": "formal",
+      "publicationDate": "2009-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/PSCS/1.2",
+      "status": "formal",
+      "publicationDate": "2019-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/PSS/2.0",
+      "status": "formal",
+      "publicationDate": "2002-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/PSSM/1.0",
+      "status": "formal",
+      "publicationDate": "2019-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/PSUM/1.0",
+      "status": "formal",
+      "publicationDate": "2025-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/PYTH/1.2",
+      "status": "formal",
+      "publicationDate": "2002-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/QFTP/1.1",
+      "status": "formal",
+      "publicationDate": "2008-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/QOSCCM/1.1",
+      "status": "formal",
+      "publicationDate": "2008-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/QUER/1.0",
+      "status": "formal",
+      "publicationDate": "2000-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/QVT/1.3",
+      "status": "formal",
+      "publicationDate": "2016-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/RAAML/1.1",
+      "status": "formal",
+      "publicationDate": "2025-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/RAAML/1.2/Beta1",
+      "status": "beta",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/RAD/1.0",
+      "status": "formal",
+      "publicationDate": "2001-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/RAS/2.2",
+      "status": "formal",
+      "publicationDate": "2005-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/RCLM/1.2",
+      "status": "formal",
+      "publicationDate": "2013-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/REL/1.0",
+      "status": "formal",
+      "publicationDate": "2000-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/ReqIF/1.2",
+      "status": "formal",
+      "publicationDate": "2016-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/RFLEC/1.0",
+      "status": "formal",
+      "publicationDate": "2006-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/RLS/1.1",
+      "status": "formal",
+      "publicationDate": "2012-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/RLUS/1.0.1",
+      "status": "formal",
+      "publicationDate": "2011-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/RMS/1.0",
+      "status": "formal",
+      "publicationDate": "2011-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/RoIS/2.0",
+      "status": "formal",
+      "publicationDate": "2026-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/ROSO/1.1",
+      "status": "formal",
+      "publicationDate": "2026-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/RT/1.2",
+      "status": "formal",
+      "publicationDate": "2005-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/RTC/1.1",
+      "status": "formal",
+      "publicationDate": "2012-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/SACM/2.3",
+      "status": "formal",
+      "publicationDate": "2023-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/SACM/2.4/Beta1",
+      "status": "beta",
+      "publicationDate": "2026-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/SBRM/1.0/Beta1",
+      "status": "beta",
+      "publicationDate": "2025-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/SBVR/1.5",
+      "status": "formal",
+      "publicationDate": "2019-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/SCCP/1.0",
+      "status": "formal",
+      "publicationDate": "2001-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/SCE/1.0",
+      "status": "formal",
+      "publicationDate": "2026-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/SCRPT/1.1",
+      "status": "formal",
+      "publicationDate": "2003-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/SDMN/1.0",
+      "status": "formal",
+      "publicationDate": "2026-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/SDO/1.1",
+      "status": "formal",
+      "publicationDate": "2008-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/SDRP/1.0",
+      "status": "formal",
+      "publicationDate": "2007-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/SEC/1.8",
+      "status": "formal",
+      "publicationDate": "2002-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/SENSR/1.0",
+      "status": "formal",
+      "publicationDate": "2022-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/ServD/1.0",
+      "status": "formal",
+      "publicationDate": "2014-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/SFPM/1.0",
+      "status": "formal",
+      "publicationDate": "2024-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/SMART/1.0",
+      "status": "formal",
+      "publicationDate": "2003-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/smartant/1.0",
+      "status": "formal",
+      "publicationDate": "2009-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/SMM/1.2",
+      "status": "formal",
+      "publicationDate": "2018-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/SMOF/1.0",
+      "status": "formal",
+      "publicationDate": "2013-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/SNP/1.0",
+      "status": "formal",
+      "publicationDate": "2005-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/SoaML/1.0.1",
+      "status": "formal",
+      "publicationDate": "2012-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/SoCP/1.0.1",
+      "status": "formal",
+      "publicationDate": "2006-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/SOLM/1.2",
+      "status": "formal",
+      "publicationDate": "2025-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/SOPES/1.0",
+      "status": "formal",
+      "publicationDate": "2011-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/SPDX/3.0",
+      "status": "formal",
+      "publicationDate": "2025-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/SPECTRA/1.0/Beta1",
+      "status": "beta",
+      "publicationDate": "2025-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/SPEM/2.0",
+      "status": "formal",
+      "publicationDate": "2008-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/SPMS/1.4",
+      "status": "formal",
+      "publicationDate": "2026-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/SPTP/1.1",
+      "status": "formal",
+      "publicationDate": "2005-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/ST/1.0",
+      "status": "formal",
+      "publicationDate": "1999-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/STI/1.0",
+      "status": "formal",
+      "publicationDate": "2024-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/SURV/1.0",
+      "status": "formal",
+      "publicationDate": "2003-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/SyM/1.0",
+      "status": "formal",
+      "publicationDate": "2012-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/SysML/2.0",
+      "status": "formal",
+      "publicationDate": "2025-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/SysPhS/1.1",
+      "status": "formal",
+      "publicationDate": "2021-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/SystemsModelingAPI/1.0",
+      "status": "formal",
+      "publicationDate": "2025-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/TCI/1.0",
+      "status": "formal",
+      "publicationDate": "2013-02"
+    },
+    {
+      "url": "https://www.omg.org/spec/TDAI/1.0",
+      "status": "formal",
+      "publicationDate": "2025-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/TDAI/1.1/Beta1",
+      "status": "beta",
+      "publicationDate": "2026-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/TelcoML-SES/1.0",
+      "status": "formal",
+      "publicationDate": "2013-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/TelcoML/1.0",
+      "status": "formal",
+      "publicationDate": "2013-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/TestIF/1.0",
+      "status": "formal",
+      "publicationDate": "2015-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/TEX/1.1",
+      "status": "formal",
+      "publicationDate": "2024-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/TIME/1.1",
+      "status": "formal",
+      "publicationDate": "2002-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/TLOG/1.1.2",
+      "status": "formal",
+      "publicationDate": "2003-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/TMN/1.0",
+      "status": "formal",
+      "publicationDate": "2000-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/TOIF/1.3",
+      "status": "formal",
+      "publicationDate": "2019-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/TRADE/1.0",
+      "status": "formal",
+      "publicationDate": "2000-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/TRANS/1.4",
+      "status": "formal",
+      "publicationDate": "2003-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/TSAS/1.0",
+      "status": "formal",
+      "publicationDate": "2002-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/TSKSES/1.0",
+      "status": "formal",
+      "publicationDate": "2000-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/UAF/1.3",
+      "status": "formal",
+      "publicationDate": "2026-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/UCM/1.3",
+      "status": "formal",
+      "publicationDate": "2022-10"
+    },
+    {
+      "url": "https://www.omg.org/spec/UML/2.5.1",
+      "status": "formal",
+      "publicationDate": "2017-12"
+    },
+    {
+      "url": "https://www.omg.org/spec/UMLDI/1.0",
+      "status": "formal",
+      "publicationDate": "2006-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/UMS/2.0.1",
+      "status": "formal",
+      "publicationDate": "2005-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/UPDM/2.1.1",
+      "status": "formal",
+      "publicationDate": "2017-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/UPOS/1.16.1",
+      "status": "formal",
+      "publicationDate": "2022-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/UPR/1.0",
+      "status": "formal",
+      "publicationDate": "2019-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/UTP2/2.2",
+      "status": "formal",
+      "publicationDate": "2024-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/UTP2/2.3/Beta1",
+      "status": "beta",
+      "publicationDate": "2025-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/VDML/1.1",
+      "status": "formal",
+      "publicationDate": "2018-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/VIDEOANALYTICS/1.0",
+      "status": "formal",
+      "publicationDate": "2019-01"
+    },
+    {
+      "url": "https://www.omg.org/spec/VOICP/1.0",
+      "status": "formal",
+      "publicationDate": "2008-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/VSIPL/1.5",
+      "status": "formal",
+      "publicationDate": "2014-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/VSIPL++/1.3",
+      "status": "formal",
+      "publicationDate": "2014-08"
+    },
+    {
+      "url": "https://www.omg.org/spec/WATM/1.2",
+      "status": "formal",
+      "publicationDate": "2005-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/WfMF/1.2",
+      "status": "formal",
+      "publicationDate": "2000-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/WS-POS/1.3.1",
+      "status": "formal",
+      "publicationDate": "2022-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/WS-POS/1.3.1/Beta2",
+      "status": "beta",
+      "publicationDate": "2019-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/WSDL2C/1.0",
+      "status": "formal",
+      "publicationDate": "2004-03"
+    },
+    {
+      "url": "https://www.omg.org/spec/XMI/2.5.1",
+      "status": "formal",
+      "publicationDate": "2015-06"
+    },
+    {
+      "url": "https://www.omg.org/spec/XML/1.1",
+      "status": "formal",
+      "publicationDate": "2003-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/XTCE/1.3",
+      "status": "formal",
+      "publicationDate": "2025-07"
+    },
+    {
+      "url": "https://www.omg.org/spec/XUSP/1.0",
+      "status": "formal",
+      "publicationDate": "2015-05"
+    },
+    {
+      "url": "https://www.omg.org/spec/ZIOP/1.0",
+      "status": "formal",
+      "publicationDate": "2010-01"
+    }
+  ]
+}

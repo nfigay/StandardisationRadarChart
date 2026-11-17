@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "RFLEC",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/RFLEC/",
+    "acquiredAt": "2026-11-17T14:47:52.160Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/RFLEC/1.0",
+      "publicationDate": "2006-05"
+    }
+  ]
+}

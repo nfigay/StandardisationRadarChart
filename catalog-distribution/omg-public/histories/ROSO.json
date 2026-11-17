@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "ROSO",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/ROSO/",
+    "acquiredAt": "2026-11-17T14:47:56.254Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/ROSO/1.0",
+      "publicationDate": "2026-04"
+    },
+    {
+      "url": "https://www.omg.org/spec/ROSO/1.1",
+      "publicationDate": "2026-06"
+    }
+  ]
+}

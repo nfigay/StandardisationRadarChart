@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "SPTP",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/SPTP/",
+    "acquiredAt": "2026-11-17T14:48:17.060Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/SPTP/1.0",
+      "publicationDate": "2003-09"
+    },
+    {
+      "url": "https://www.omg.org/spec/SPTP/1.1",
+      "publicationDate": "2005-01"
+    }
+  ]
+}

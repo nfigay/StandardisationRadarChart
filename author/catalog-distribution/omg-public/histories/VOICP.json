@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "VOICP",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/VOICP/",
+    "acquiredAt": "2026-11-17T14:59:01.741Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 1
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/VOICP/1.0",
+      "publicationDate": "2008-04"
+    }
+  ]
+}

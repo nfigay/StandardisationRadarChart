@@ -1,0 +1,2198 @@
+{
+  "schemaVersion": 1,
+  "operation": "S16-C6-OMG-PUBLIC-HISTORY-COVERAGE",
+  "sourceId": "omg-history-coverage",
+  "distribution": "public-links-only",
+  "completeness": "examined-catalog-families-not-entire-OMG-universe",
+  "publicationReview": "explicit-approval-required",
+  "summary": {
+    "catalogFamilies": 270,
+    "verifiedFamilies": 262,
+    "inProcessOnlyFamilies": 7,
+    "unresolvedFamilies": 1,
+    "formalEditions": 496,
+    "inProcessVersions": 27
+  },
+  "families": [
+    {
+      "family": "ADA",
+      "url": "https://www.omg.org/spec/ADA/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "AEP",
+      "url": "https://www.omg.org/spec/AEP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "AFP",
+      "url": "https://www.omg.org/spec/AFP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ALF",
+      "url": "https://www.omg.org/spec/ALF/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ALMAS",
+      "url": "https://www.omg.org/spec/ALMAS/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 2,
+      "historyAvailable": true
+    },
+    {
+      "family": "AMI4CCM",
+      "url": "https://www.omg.org/spec/AMI4CCM/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "AML",
+      "url": "https://www.omg.org/spec/AML/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "AMSM",
+      "url": "https://www.omg.org/spec/AMSM/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "API4KP",
+      "url": "https://www.omg.org/spec/API4KP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "APP-INST",
+      "url": "https://www.omg.org/spec/APP-INST/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ASCDPM",
+      "url": "https://www.omg.org/spec/ASCDPM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ASCMM",
+      "url": "https://www.omg.org/spec/ASCMM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ASCPEM",
+      "url": "https://www.omg.org/spec/ASCPEM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ASCQM",
+      "url": "https://www.omg.org/spec/ASCQM/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ASCRM",
+      "url": "https://www.omg.org/spec/ASCRM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ASCRSM",
+      "url": "https://www.omg.org/spec/ASCRSM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ASCSM",
+      "url": "https://www.omg.org/spec/ASCSM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ASTM",
+      "url": "https://www.omg.org/spec/ASTM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ATC",
+      "url": "https://www.omg.org/spec/ATC/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ATDM",
+      "url": "https://www.omg.org/spec/ATDM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ATDM2",
+      "url": "https://www.omg.org/spec/ATDM2/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ATLAS",
+      "url": "https://www.omg.org/spec/ATLAS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "AVSTR",
+      "url": "https://www.omg.org/spec/AVSTR/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "BACM",
+      "url": "https://www.omg.org/spec/BACM/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "BKPMN",
+      "url": "https://www.omg.org/spec/BKPMN/",
+      "state": "in-process-only",
+      "formalVersions": 0,
+      "inProcessVersions": 1,
+      "historyAvailable": false
+    },
+    {
+      "family": "BMM",
+      "url": "https://www.omg.org/spec/BMM/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "BPDM",
+      "url": "https://www.omg.org/spec/BPDM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "BPMM",
+      "url": "https://www.omg.org/spec/BPMM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "BPMN",
+      "url": "https://www.omg.org/spec/BPMN/",
+      "state": "verified",
+      "formalVersions": 6,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "BPMNProfile",
+      "url": "https://www.omg.org/spec/BPMNProfile/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "BQS",
+      "url": "https://www.omg.org/spec/BQS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "BSA",
+      "url": "https://www.omg.org/spec/BSA/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "C",
+      "url": "https://www.omg.org/spec/C/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "C2INAV",
+      "url": "https://www.omg.org/spec/C2INAV/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "C2MS",
+      "url": "https://www.omg.org/spec/C2MS/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "C2WSDL",
+      "url": "https://www.omg.org/spec/C2WSDL/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CAD",
+      "url": "https://www.omg.org/spec/CAD/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CCCMP",
+      "url": "https://www.omg.org/spec/CCCMP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CCM",
+      "url": "https://www.omg.org/spec/CCM/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CCMP",
+      "url": "https://www.omg.org/spec/CCMP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CDSS",
+      "url": "https://www.omg.org/spec/CDSS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CMMN",
+      "url": "https://www.omg.org/spec/CMMN/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "COAS",
+      "url": "https://www.omg.org/spec/COAS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "COBOL",
+      "url": "https://www.omg.org/spec/COBOL/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "COLL",
+      "url": "https://www.omg.org/spec/COLL/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "Commons",
+      "url": "https://www.omg.org/spec/Commons/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CONC",
+      "url": "https://www.omg.org/spec/CONC/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CORBA",
+      "url": "https://www.omg.org/spec/CORBA/",
+      "state": "verified",
+      "formalVersions": 15,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CORBA-REST",
+      "url": "https://www.omg.org/spec/CORBA-REST/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CORBABINDING",
+      "url": "https://www.omg.org/spec/CORBABINDING/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CORBAe",
+      "url": "https://www.omg.org/spec/CORBAe/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CORP",
+      "url": "https://www.omg.org/spec/CORP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CPP",
+      "url": "https://www.omg.org/spec/CPP/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CPP11",
+      "url": "https://www.omg.org/spec/CPP11/",
+      "state": "verified",
+      "formalVersions": 8,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CSAR",
+      "url": "https://www.omg.org/spec/CSAR/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CSRM",
+      "url": "https://www.omg.org/spec/CSRM/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CTS2",
+      "url": "https://www.omg.org/spec/CTS2/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CURR",
+      "url": "https://www.omg.org/spec/CURR/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "CWM",
+      "url": "https://www.omg.org/spec/CWM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DAF",
+      "url": "https://www.omg.org/spec/DAF/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DAIS",
+      "url": "https://www.omg.org/spec/DAIS/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DD",
+      "url": "https://www.omg.org/spec/DD/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS",
+      "url": "https://www.omg.org/spec/DDS/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS-DLRL",
+      "url": "https://www.omg.org/spec/DDS-DLRL/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS-Java",
+      "url": "https://www.omg.org/spec/DDS-Java/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS-JSON",
+      "url": "https://www.omg.org/spec/DDS-JSON/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS-Monitoring",
+      "url": "https://www.omg.org/spec/DDS-Monitoring/",
+      "state": "in-process-only",
+      "formalVersions": 0,
+      "inProcessVersions": 1,
+      "historyAvailable": false
+    },
+    {
+      "family": "DDS-OPCUA",
+      "url": "https://www.omg.org/spec/DDS-OPCUA/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS-PSM-Cxx",
+      "url": "https://www.omg.org/spec/DDS-PSM-Cxx/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS-RPC",
+      "url": "https://www.omg.org/spec/DDS-RPC/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS-SECURITY",
+      "url": "https://www.omg.org/spec/DDS-SECURITY/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS-TSN",
+      "url": "https://www.omg.org/spec/DDS-TSN/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS-WEB",
+      "url": "https://www.omg.org/spec/DDS-WEB/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS-XML",
+      "url": "https://www.omg.org/spec/DDS-XML/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS-XRCE",
+      "url": "https://www.omg.org/spec/DDS-XRCE/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS-XTypes",
+      "url": "https://www.omg.org/spec/DDS-XTypes/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDS4CCM",
+      "url": "https://www.omg.org/spec/DDS4CCM/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DDSI-RTPS",
+      "url": "https://www.omg.org/spec/DDSI-RTPS/",
+      "state": "verified",
+      "formalVersions": 5,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DEPL",
+      "url": "https://www.omg.org/spec/DEPL/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DMN",
+      "url": "https://www.omg.org/spec/DMN/",
+      "state": "verified",
+      "formalVersions": 7,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "DOL",
+      "url": "https://www.omg.org/spec/DOL/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DPP",
+      "url": "https://www.omg.org/spec/DPP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DPROD",
+      "url": "https://www.omg.org/spec/DPROD/",
+      "state": "in-process-only",
+      "formalVersions": 0,
+      "inProcessVersions": 1,
+      "historyAvailable": false
+    },
+    {
+      "family": "DRAPI",
+      "url": "https://www.omg.org/spec/DRAPI/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DSS",
+      "url": "https://www.omg.org/spec/DSS/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "DTV",
+      "url": "https://www.omg.org/spec/DTV/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "EAI",
+      "url": "https://www.omg.org/spec/EAI/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "EDMC-FIBO/BE",
+      "url": "https://www.omg.org/spec/EDMC-FIBO/BE/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "EDMC-FIBO/FBC",
+      "url": "https://www.omg.org/spec/EDMC-FIBO/FBC/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "EDMC-FIBO/FND",
+      "url": "https://www.omg.org/spec/EDMC-FIBO/FND/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "EDMC-FIBO/IND",
+      "url": "https://www.omg.org/spec/EDMC-FIBO/IND/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "EDOC",
+      "url": "https://www.omg.org/spec/EDOC/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "Essence",
+      "url": "https://www.omg.org/spec/Essence/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "EVNT",
+      "url": "https://www.omg.org/spec/EVNT/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "EVoT",
+      "url": "https://www.omg.org/spec/EVoT/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "EXPRESS",
+      "url": "https://www.omg.org/spec/EXPRESS/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "EXT",
+      "url": "https://www.omg.org/spec/EXT/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "FACE",
+      "url": "https://www.omg.org/spec/FACE/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "FACEv2",
+      "url": "https://www.omg.org/spec/FACEv2/",
+      "state": "in-process-only",
+      "formalVersions": 0,
+      "inProcessVersions": 1,
+      "historyAvailable": false
+    },
+    {
+      "family": "FIGI",
+      "url": "https://www.omg.org/spec/FIGI/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "FSM4RTC",
+      "url": "https://www.omg.org/spec/FSM4RTC/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "FT",
+      "url": "https://www.omg.org/spec/FT/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "FTAM",
+      "url": "https://www.omg.org/spec/FTAM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "FTF",
+      "url": "https://www.omg.org/spec/FTF/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "FUML",
+      "url": "https://www.omg.org/spec/FUML/",
+      "state": "verified",
+      "formalVersions": 6,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "GDDI",
+      "url": "https://www.omg.org/spec/GDDI/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "GEMS",
+      "url": "https://www.omg.org/spec/GEMS/",
+      "state": "verified",
+      "formalVersions": 6,
+      "inProcessVersions": 2,
+      "historyAvailable": true
+    },
+    {
+      "family": "GENE",
+      "url": "https://www.omg.org/spec/GENE/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "GMAPS",
+      "url": "https://www.omg.org/spec/GMAPS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "HAL4RT",
+      "url": "https://www.omg.org/spec/HAL4RT/",
+      "state": "in-process-only",
+      "formalVersions": 0,
+      "inProcessVersions": 1,
+      "historyAvailable": false
+    },
+    {
+      "family": "HDAIS",
+      "url": "https://www.omg.org/spec/HDAIS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "Hdata",
+      "url": "https://www.omg.org/spec/Hdata/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "HUTN",
+      "url": "https://www.omg.org/spec/HUTN/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "I2JAV",
+      "url": "https://www.omg.org/spec/I2JAV/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "IDL",
+      "url": "https://www.omg.org/spec/IDL/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "IDL4-CPP",
+      "url": "https://www.omg.org/spec/IDL4-CPP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "IDL4-CSHARP",
+      "url": "https://www.omg.org/spec/IDL4-CSHARP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "IDL4-Java",
+      "url": "https://www.omg.org/spec/IDL4-Java/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "IEF-RA",
+      "url": "https://www.omg.org/spec/IEF-RA/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "IEPPV",
+      "url": "https://www.omg.org/spec/IEPPV/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "IFML",
+      "url": "https://www.omg.org/spec/IFML/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ITFAC",
+      "url": "https://www.omg.org/spec/ITFAC/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ITPMF",
+      "url": "https://www.omg.org/spec/ITPMF/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "IXS",
+      "url": "https://www.omg.org/spec/IXS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "JAV2I",
+      "url": "https://www.omg.org/spec/JAV2I/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "KDM",
+      "url": "https://www.omg.org/spec/KDM/",
+      "state": "verified",
+      "formalVersions": 5,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "KerML",
+      "url": "https://www.omg.org/spec/KerML/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LCC",
+      "url": "https://www.omg.org/spec/LCC/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LECIS",
+      "url": "https://www.omg.org/spec/LECIS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LEDG",
+      "url": "https://www.omg.org/spec/LEDG/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LFCYC",
+      "url": "https://www.omg.org/spec/LFCYC/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LIC",
+      "url": "https://www.omg.org/spec/LIC/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LIS",
+      "url": "https://www.omg.org/spec/LIS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LISP",
+      "url": "https://www.omg.org/spec/LISP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LQS",
+      "url": "https://www.omg.org/spec/LQS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LSAE",
+      "url": "https://www.omg.org/spec/LSAE/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LtLOAD",
+      "url": "https://www.omg.org/spec/LtLOAD/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LtLOG",
+      "url": "https://www.omg.org/spec/LtLOG/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LtSVC",
+      "url": "https://www.omg.org/spec/LtSVC/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "LWFT",
+      "url": "https://www.omg.org/spec/LWFT/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MACSTR",
+      "url": "https://www.omg.org/spec/MACSTR/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MARTE",
+      "url": "https://www.omg.org/spec/MARTE/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MDMI",
+      "url": "https://www.omg.org/spec/MDMI/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "MED",
+      "url": "https://www.omg.org/spec/MED/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MEF",
+      "url": "https://www.omg.org/spec/MEF/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MIPS",
+      "url": "https://www.omg.org/spec/MIPS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MOBFAC",
+      "url": "https://www.omg.org/spec/MOBFAC/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MOF",
+      "url": "https://www.omg.org/spec/MOF/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MOF2I",
+      "url": "https://www.omg.org/spec/MOF2I/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MOF2RDF",
+      "url": "https://www.omg.org/spec/MOF2RDF/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MOFFOL",
+      "url": "https://www.omg.org/spec/MOFFOL/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MOFM2T",
+      "url": "https://www.omg.org/spec/MOFM2T/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MOFVD",
+      "url": "https://www.omg.org/spec/MOFVD/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MPG",
+      "url": "https://www.omg.org/spec/MPG/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "MVF",
+      "url": "https://www.omg.org/spec/MVF/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "NAM",
+      "url": "https://www.omg.org/spec/NAM/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "NEG",
+      "url": "https://www.omg.org/spec/NEG/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "NIEM-UML",
+      "url": "https://www.omg.org/spec/NIEM-UML/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "NOT",
+      "url": "https://www.omg.org/spec/NOT/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "NOTJMS",
+      "url": "https://www.omg.org/spec/NOTJMS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "OARIS",
+      "url": "https://www.omg.org/spec/OARIS/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "OCL",
+      "url": "https://www.omg.org/spec/OCL/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ODM",
+      "url": "https://www.omg.org/spec/ODM/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ONUP",
+      "url": "https://www.omg.org/spec/ONUP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "OTS",
+      "url": "https://www.omg.org/spec/OTS/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PAGE-OM",
+      "url": "https://www.omg.org/spec/PAGE-OM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PARTY",
+      "url": "https://www.omg.org/spec/PARTY/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PC",
+      "url": "https://www.omg.org/spec/PC/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PDME",
+      "url": "https://www.omg.org/spec/PDME/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PIDS",
+      "url": "https://www.omg.org/spec/PIDS/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PKI",
+      "url": "https://www.omg.org/spec/PKI/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PL1",
+      "url": "https://www.omg.org/spec/PL1/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PLM",
+      "url": "https://www.omg.org/spec/PLM/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PPMN",
+      "url": "https://www.omg.org/spec/PPMN/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PROP",
+      "url": "https://www.omg.org/spec/PROP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PRR",
+      "url": "https://www.omg.org/spec/PRR/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PSCS",
+      "url": "https://www.omg.org/spec/PSCS/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PSS",
+      "url": "https://www.omg.org/spec/PSS/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PSSM",
+      "url": "https://www.omg.org/spec/PSSM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PSUM",
+      "url": "https://www.omg.org/spec/PSUM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "PYTH",
+      "url": "https://www.omg.org/spec/PYTH/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "QFTP",
+      "url": "https://www.omg.org/spec/QFTP/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "QOSCCM",
+      "url": "https://www.omg.org/spec/QOSCCM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "QUER",
+      "url": "https://www.omg.org/spec/QUER/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "QVT",
+      "url": "https://www.omg.org/spec/QVT/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "RAAML",
+      "url": "https://www.omg.org/spec/RAAML/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "RAD",
+      "url": "https://www.omg.org/spec/RAD/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "RAS",
+      "url": "https://www.omg.org/spec/RAS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "RCLM",
+      "url": "https://www.omg.org/spec/RCLM/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "REL",
+      "url": "https://www.omg.org/spec/REL/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ReqIF",
+      "url": "https://www.omg.org/spec/ReqIF/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "RFLEC",
+      "url": "https://www.omg.org/spec/RFLEC/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "RLS",
+      "url": "https://www.omg.org/spec/RLS/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "RLUS",
+      "url": "https://www.omg.org/spec/RLUS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "RMS",
+      "url": "https://www.omg.org/spec/RMS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "RoIS",
+      "url": "https://www.omg.org/spec/RoIS/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ROSO",
+      "url": "https://www.omg.org/spec/ROSO/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "RT",
+      "url": "https://www.omg.org/spec/RT/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "RTC",
+      "url": "https://www.omg.org/spec/RTC/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SACM",
+      "url": "https://www.omg.org/spec/SACM/",
+      "state": "verified",
+      "formalVersions": 6,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "SBRM",
+      "url": "https://www.omg.org/spec/SBRM/",
+      "state": "in-process-only",
+      "formalVersions": 0,
+      "inProcessVersions": 1,
+      "historyAvailable": false
+    },
+    {
+      "family": "SBVR",
+      "url": "https://www.omg.org/spec/SBVR/",
+      "state": "verified",
+      "formalVersions": 6,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SCCP",
+      "url": "https://www.omg.org/spec/SCCP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SCE",
+      "url": "https://www.omg.org/spec/SCE/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SCRPT",
+      "url": "https://www.omg.org/spec/SCRPT/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SDMN",
+      "url": "https://www.omg.org/spec/SDMN/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SDO",
+      "url": "https://www.omg.org/spec/SDO/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SDRP",
+      "url": "https://www.omg.org/spec/SDRP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SEC",
+      "url": "https://www.omg.org/spec/SEC/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SENSR",
+      "url": "https://www.omg.org/spec/SENSR/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ServD",
+      "url": "https://www.omg.org/spec/ServD/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SFPM",
+      "url": "https://www.omg.org/spec/SFPM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SMART",
+      "url": "https://www.omg.org/spec/SMART/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "smartant",
+      "url": "https://www.omg.org/spec/smartant/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SMM",
+      "url": "https://www.omg.org/spec/SMM/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SMOF",
+      "url": "https://www.omg.org/spec/SMOF/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SNP",
+      "url": "https://www.omg.org/spec/SNP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SoaML",
+      "url": "https://www.omg.org/spec/SoaML/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SoCP",
+      "url": "https://www.omg.org/spec/SoCP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SOLM",
+      "url": "https://www.omg.org/spec/SOLM/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SOPES",
+      "url": "https://www.omg.org/spec/SOPES/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SPDX",
+      "url": "https://www.omg.org/spec/SPDX/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SPECTRA",
+      "url": "https://www.omg.org/spec/SPECTRA/",
+      "state": "in-process-only",
+      "formalVersions": 0,
+      "inProcessVersions": 1,
+      "historyAvailable": false
+    },
+    {
+      "family": "SPEM",
+      "url": "https://www.omg.org/spec/SPEM/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SPMS",
+      "url": "https://www.omg.org/spec/SPMS/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "SPTP",
+      "url": "https://www.omg.org/spec/SPTP/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ST",
+      "url": "https://www.omg.org/spec/ST/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "STI",
+      "url": "https://www.omg.org/spec/STI/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SURV",
+      "url": "https://www.omg.org/spec/SURV/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SyM",
+      "url": "https://www.omg.org/spec/SyM/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SysML",
+      "url": "https://www.omg.org/spec/SysML/",
+      "state": "verified",
+      "formalVersions": 9,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SysPhS",
+      "url": "https://www.omg.org/spec/SysPhS/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "SystemsModelingAPI",
+      "url": "https://www.omg.org/spec/SystemsModelingAPI/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "TCI",
+      "url": "https://www.omg.org/spec/TCI/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "TDAI",
+      "url": "https://www.omg.org/spec/TDAI/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "TelcoML",
+      "url": "https://www.omg.org/spec/TelcoML/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "TelcoML-SES",
+      "url": "https://www.omg.org/spec/TelcoML-SES/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "TestIF",
+      "url": "https://www.omg.org/spec/TestIF/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "TEX",
+      "url": "https://www.omg.org/spec/TEX/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "TIME",
+      "url": "https://www.omg.org/spec/TIME/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "TLOG",
+      "url": "https://www.omg.org/spec/TLOG/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "TMN",
+      "url": "https://www.omg.org/spec/TMN/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "TOIF",
+      "url": "https://www.omg.org/spec/TOIF/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "TRADE",
+      "url": "https://www.omg.org/spec/TRADE/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "TRANS",
+      "url": "https://www.omg.org/spec/TRANS/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "TSAS",
+      "url": "https://www.omg.org/spec/TSAS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "TSKSES",
+      "url": "https://www.omg.org/spec/TSKSES/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "UAF",
+      "url": "https://www.omg.org/spec/UAF/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "UCM",
+      "url": "https://www.omg.org/spec/UCM/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "UML",
+      "url": "https://www.omg.org/spec/UML/",
+      "state": "verified",
+      "formalVersions": 11,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "UMLDI",
+      "url": "https://www.omg.org/spec/UMLDI/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "UMS",
+      "url": "https://www.omg.org/spec/UMS/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "UPDM",
+      "url": "https://www.omg.org/spec/UPDM/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "UPOS",
+      "url": "https://www.omg.org/spec/UPOS/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "UPR",
+      "url": "https://www.omg.org/spec/UPR/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "UTP2",
+      "url": "https://www.omg.org/spec/UTP2/",
+      "state": "unresolved",
+      "formalVersions": 0,
+      "inProcessVersions": 1,
+      "historyAvailable": false,
+      "reasonCategory": "documentary-cross-family-review"
+    },
+    {
+      "family": "VDML",
+      "url": "https://www.omg.org/spec/VDML/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "VIDEOANALYTICS",
+      "url": "https://www.omg.org/spec/VIDEOANALYTICS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "VOICP",
+      "url": "https://www.omg.org/spec/VOICP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "VSIPL",
+      "url": "https://www.omg.org/spec/VSIPL/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "VSIPL++",
+      "url": "https://www.omg.org/spec/VSIPL++/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "WATM",
+      "url": "https://www.omg.org/spec/WATM/",
+      "state": "verified",
+      "formalVersions": 3,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "WfMF",
+      "url": "https://www.omg.org/spec/WfMF/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "WS-POS",
+      "url": "https://www.omg.org/spec/WS-POS/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 1,
+      "historyAvailable": true
+    },
+    {
+      "family": "WSDL2C",
+      "url": "https://www.omg.org/spec/WSDL2C/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "XMI",
+      "url": "https://www.omg.org/spec/XMI/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "XML",
+      "url": "https://www.omg.org/spec/XML/",
+      "state": "verified",
+      "formalVersions": 2,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "XTCE",
+      "url": "https://www.omg.org/spec/XTCE/",
+      "state": "verified",
+      "formalVersions": 4,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "XUSP",
+      "url": "https://www.omg.org/spec/XUSP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    },
+    {
+      "family": "ZIOP",
+      "url": "https://www.omg.org/spec/ZIOP/",
+      "state": "verified",
+      "formalVersions": 1,
+      "inProcessVersions": 0,
+      "historyAvailable": true
+    }
+  ],
+  "supplementalEditionEvidence": {
+    "operation": "S16-C6-R2-OMG-EDITION-EVIDENCE",
+    "editions": [
+      {
+        "family": "BPMN",
+        "edition": "2.0",
+        "url": "https://www.omg.org/spec/BPMN/2.0",
+        "publicationDate": "2010-12",
+        "evidenceUrl": "https://www.omg.org/spec/BPMN/2.0/About-BPMN"
+      },
+      {
+        "family": "BPMN",
+        "edition": "2.0.1",
+        "url": "https://www.omg.org/spec/BPMN/2.0.1",
+        "publicationDate": "2013-09",
+        "evidenceUrl": "https://www.omg.org/spec/BPMN/2.0.1"
+      }
+    ]
+  }
+}

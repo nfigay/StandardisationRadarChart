@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "omg-public-history-links",
+  "family": "XML",
+  "distribution": "public-links-only",
+  "provenance": {
+    "url": "https://www.omg.org/spec/XML/",
+    "acquiredAt": "2026-11-17T14:59:07.071Z"
+  },
+  "coverage": {
+    "complete": true,
+    "records": 2
+  },
+  "records": [
+    {
+      "url": "https://www.omg.org/spec/XML/1.0",
+      "publicationDate": "2002-11"
+    },
+    {
+      "url": "https://www.omg.org/spec/XML/1.1",
+      "publicationDate": "2003-04"
+    }
+  ]
+}
