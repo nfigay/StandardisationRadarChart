@@ -82,8 +82,6 @@
  const escapeHtml=v=>str(v).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
  const asLines=v=>str(v).replace(/\r\n/g,'\n');
  const preview=v=>escapeHtml(asLines(v).slice(0,280)).replace(/\n/g,'<br>');
- const detailColumn={field:'detail',text:tr('detailColumn'),size:'82px',sortable:false,render:r=>r.kind==='standard'?{html:'<button type=\"button\" data-iso-detail=\"'+escapeHtml(r.isoId)+'\">'+escapeHtml(tr('detail'))+'</button>'}:''};
- const nativeIsoDetailColumn={field:'detail',text:tr('detailColumn'),size:'82px',sortable:false,render:r=>({html:'<button type="button" data-native-iso-detail="'+escapeHtml(r.standardId)+'">'+escapeHtml(tr('detail'))+'</button>'})};
  const findDeliverable=id=>isoDeliverables.find(x=>str(x.id)===str(id));
  const findCommittee=id=>isoCommittees.find(x=>str(x.id)===str(id));
  // C3: evidence-based ISO edition navigation. Never equate a missing cache row
@@ -370,19 +368,19 @@
    const local=record.localReference;
    const item=local?{reference:local.designation||local.name}:record.nativeReference?record.isoItem:record.kind==='standard'?(record.isoItem||findDeliverable(record.isoId)):record.kind==='committee'?findCommittee(record.committeeId):null;
    if(!d||!item)return;
-   if(typeof root.w2form!=='function'){
+   if(typeof root.w2form!=='function'||typeof root.w2popup?.open!=='function'){
      if(status)status.textContent=tr('readOnlyUnavailable');
      return;
    }
+   if(activeDetailRecord)root.w2popup?.close?.();
    activeDetailCleanup?.();
    const detail={...record};
    activeDetailRecord=detail;
-   const dialog=d.createElement('dialog');
-   dialog.id='iso-standard-detail-dialog';
-   dialog.style.cssText='box-sizing:border-box;width:min(1000px,96vw);max-width:96vw;height:min(780px,90vh);max-height:90vh;padding:0;border:1px solid #aaa;border-radius:8px;overflow:hidden;background:white';
+   // S17-R4: w2popup owns the window. The existing read-only w2form owns the fields.
+   // Keep a per-record lifecycle so delayed ISO lookups cannot repaint a closed form.
+   let disposed=false,form=null,pendingNext=null;
    const style=d.createElement('style');
-   style.textContent='#iso-standard-detail-dialog .w2ui-label, #iso-standard-detail-dialog .w2ui-field > label, #iso-standard-detail-dialog .w2ui-field label {white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:break-word!important;max-width:none!important;}';
-   dialog.appendChild(style);
+   style.textContent='#iso-standard-detail-popup-body .w2ui-label, #iso-standard-detail-popup-body .w2ui-field > label, #iso-standard-detail-popup-body .w2ui-field label {white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:break-word!important;max-width:none!important;}';
    const wrapper=d.createElement('div');wrapper.style.cssText='height:100%;display:flex;flex-direction:column;min-height:0';
    const header=d.createElement('div');header.style.cssText='flex:none;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 16px;border-bottom:1px solid #ddd';
    const heading=d.createElement('strong');heading.textContent=item.reference||tr('formTitle');heading.style.cssText='font:600 18px Arial,sans-serif';header.appendChild(heading);
@@ -409,7 +407,7 @@
      });
      const browse=d.createElement('button');browse.type='button';browse.className='w2ui-btn';
      browse.textContent=tr('viewReferences');
-     browse.addEventListener('click',()=>{dialog.close();openReferences();});
+     browse.addEventListener('click',()=>{root.w2popup.close();openReferences();});
      header.appendChild(use);header.appendChild(browse);header.appendChild(feedback);
    }
    // C3: explicit, bounded lookup within the local ISO cache. No HTTP access.
@@ -463,7 +461,7 @@
              const li=d.createElement('li');li.textContent=row.reference+(row.edition!=null?' · '+(editionLanguage==='fr'?'édition ':'edition ')+row.edition:'')+(row.date?' · '+row.date:'');
              if(row.id!=null&&String(row.id)!==String(item.id)){
                const open=d.createElement('button');open.type='button';open.className='w2ui-btn';open.textContent=tr('detail');
-               open.addEventListener('click',()=>{panel.close();dialog.close();showDetail({kind:'standard',isoId:row.id,isoItem:row.item,nativeReference:false});});li.appendChild(open);
+               open.addEventListener('click',()=>{pendingNext={kind:'standard',isoId:row.id,isoItem:row.item,nativeReference:false};panel.close();root.w2popup.close();});li.appendChild(open);
              }
              list.appendChild(li);
            }
@@ -487,8 +485,7 @@
      header.appendChild(editions);
    }
    const close=d.createElement('button');close.type='button';close.textContent=tr('close');close.className='w2ui-btn';header.appendChild(close);wrapper.appendChild(header);
-   const container=d.createElement('div');container.style.cssText='flex:1;min-height:0;overflow:hidden';wrapper.appendChild(container);dialog.appendChild(wrapper);d.body.appendChild(dialog);
-   if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
+   const container=d.createElement('div');container.style.cssText='flex:1;min-height:0;overflow:hidden';wrapper.appendChild(container);
    const line=v=>String(v??'').replace(/\r\n?/g,'\n').replace(/\\n/g,'\n').trim();
    const list=v=>Array.isArray(v)?v.map(x=>typeof x==='object'?JSON.stringify(x):String(x)).join(', '):v==null?'':typeof v==='object'?JSON.stringify(v):String(v);
    const localized=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{};
@@ -553,23 +550,42 @@
      for(const key of Object.keys(recordData))field(key,key,key==='nativeUrl'?'textarea':'text','',0,60);
    }
    const name='isoStandardReadOnlyForm';
-   try{root.w2ui?.[name]?.destroy?.();}catch(_){/* clean up stale form */}
-   let form;
-   try{
-     form=new root.w2form({name,style:'border:0;background:transparent',
-       tabs:local?[{id:'details',text:tr('nativeTitle')}]:[{id:'details',text:tr('formTab')},record.nativeReference?{id:'raw',text:tr('storedTab')}:{id:'raw',text:tr('rawTab')}],
-       fields,record:recordData,actions:{}});
-     form.render(container);
-   }catch(e){dialog.remove();activeDetailRecord=null;if(status)status.textContent='Erreur d’ouverture w2form : '+e.message;return;}
-   let disposed=false;
    function dispose(){
      if(disposed)return;disposed=true;
      if(activeDetailRecord===detail)activeDetailRecord=null;
      if(activeDetailCleanup===dispose)activeDetailCleanup=null;
-     try{form.destroy();}catch(_){/* already cleaned up */}
-     dialog.remove();
+     try{form?.destroy?.();}catch(_){/* already cleaned up */}
+     wrapper.remove();
    }
    activeDetailCleanup=dispose;
+   function mountForm(){
+     if(disposed)return;
+     const host=d.getElementById('iso-standard-detail-popup-body');
+     if(!host){dispose();if(status)status.textContent=tr('readOnlyUnavailable');return;}
+     host.appendChild(style);host.appendChild(wrapper);
+     try{
+       root.w2ui?.[name]?.destroy?.();
+       form=new root.w2form({name,style:'border:0;background:transparent',
+         tabs:local?[{id:'details',text:tr('nativeTitle')}]:[{id:'details',text:tr('formTab')},record.nativeReference?{id:'raw',text:tr('storedTab')}:{id:'raw',text:tr('rawTab')}],
+         fields,record:recordData,actions:{}});
+       form.render(container);
+       root.__radarFormAutoheight?.schedule?.();
+     }catch(error){
+       if(status)status.textContent='Erreur d’ouverture w2form : '+String(error?.message||error);
+       root.w2popup.close();
+     }
+   }
+   root.w2popup.open({
+     title:escapeHtml(item.reference||tr('formTitle')),
+     width:1000,height:780,
+     body:'<div id="iso-standard-detail-popup-body" style="height:100%;overflow:hidden"></div>',
+     onOpen(event){event.onComplete=mountForm;},
+     onClose(event){
+       const finish=()=>{dispose();const next=pendingNext;pendingNext=null;if(next)showDetail(next);};
+       if(event)event.onComplete=finish;else finish();
+     }
+   });
+   close.addEventListener('click',()=>root.w2popup.close());
    // Reconcile visible relations with the same get-by-ID cache used by
    // « Editions and related documents ». Never fetch across the network.
    // Guard the dialog lifecycle: a late IndexedDB result cannot update a
@@ -585,13 +601,12 @@
      })).then(results=>{
        if(disposed||activeDetailRecord!==detail)return;
        for(const {id,hit} of results)if(hit)relationRecords.set(id,hit);
+       if(!form)return;
        form.record.replaces=resolveRelations(item.replaces);
        form.record.replacedBy=resolveRelations(item.replacedBy);
        form.refresh?.();
      }).catch(()=>{/* Never interrupt ISO documentary consultation. */});
    }
-   dialog.addEventListener('close',dispose,{once:true});
-   close.addEventListener('click',()=>dialog.close());
  }
  const str=v=>String(v??'').trim();
  const norm=v=>str(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
@@ -737,13 +752,34 @@
    ...[['advanced','advancedSearch'],['history','resourceOmgHistory'],['versions','resourceVersions'],['back','resourceBack'],['previous','resourcePrevious'],['next','resourceNext'],['details','resourceDetails'],['context','resourceContext'],['integrate','addToCatalog'],['openSource','resourceOpen'],['declare','declareLocal'],['lifecycle','referenceLifecycle'],['addRadar','add'],['sourceDialog','standardSources']].map(([id,label])=>({type:'button',id,text:tr(label),hidden:true}))
  ];}
  function selectedDocument(){return grid?.records?.find(r=>r.recid===(grid.getSelection?.()[0]||selected))||null;}
+ // S17: one toolbar command for records from every supported documentary source.
+ async function openSelectedDocumentaryRecord(){
+   const row=selectedDocument();if(!row||!['ics','committees','iso-list','references'].includes(mode))return;
+   if(mode==='references'){
+     // The w2grid projects compact display columns, not the complete native record.
+     // Resolve through the scope-aware registry before opening the read-only form.
+     const record=referenceRows('', 'all').find(r=>r.standardId===row.standardId);
+     if(!record)return;
+     if(record.isoDocument)showDetail({kind:'standard',isoId:record.isoDocument.id,isoItem:record.isoDocument,nativeReference:true});
+     else showDetail({kind:'local',localReference:record,nativeReference:true});
+     return;
+   }
+   if(row.kind!=='standard'||!row.isoId)return;
+   const isoId=row.isoId,view=mode;
+   if(windowedActive&&root.__radarIsoWindowed?.get){
+     try{const item=await root.__radarIsoWindowed.get({type:'deliverables',id:isoId});
+       if(mode===view&&selectedDocument()?.isoId===isoId)showDetail(item?{kind:'standard',isoId,isoItem:item}:{kind:'standard',isoId});
+     }catch(error){if(status)status.textContent=String(error.message||error);}
+   }else showDetail({kind:'standard',isoId});
+ }
+
  function setToolbarItem(id,patch){const signature=JSON.stringify(patch),key=id+':'+Object.keys(patch).join(',');if(toolbarState.get(key)===signature)return;toolbarState.set(key,signature);standardsToolbar.set(id,patch);}
  function updateToolbar(){
    if(!standardsToolbar)return;
    const source=currentSource(),doc=isDocumentary(),row=selectedDocument(),ext=mode==='rfc-editor'||mode==='w3c',omg=mode==='omg-specifications',inventory=mode==='resources',native=mode==='references',iso=isoModes.includes(mode);
    const item=sourceItems().find(x=>x.id===source);
    setToolbarItem('source',{text:tr('resourceSelector')+' : '+(item?.text||source),selected:source,items:sourceItems()});
-   const visible=new Set(iso?['advanced']:native?['declare','lifecycle','addRadar','sourceDialog']:ext?['details','openSource','previous','next',...(mode==='rfc-editor'?['integrate','context']:documentSeries?['back','integrate']:['versions'])]:omg?['details','openSource','previous','next','integrate',...(documentOmgFamily?['back']:['history'])]:inventory?['details','openSource']:[]);
+   const visible=new Set(iso?['advanced',...(['ics','committees','iso-list'].includes(mode)?['details']:[])]:native?['details','declare','lifecycle','addRadar','sourceDialog']:ext?['details','openSource','previous','next',...(mode==='rfc-editor'?['integrate','context']:documentSeries?['back','integrate']:['versions'])]:omg?['details','openSource','previous','next','integrate',...(documentOmgFamily?['back']:['history'])]:inventory?['details','openSource']:[]);
    setToolbarItem('isoView',{text:isoViewItems().find(x=>x.id===mode)?.text||tr('modeIsoList'),selected:mode,items:isoViewItems(),hidden:!iso});
    setToolbarItem('omgView',{text:tr(documentOmgAdoptions?'resourceOmgAdoptions':'resourceOmgSpecs'),selected:documentOmgAdoptions?'adoptions':'specifications',items:omgViewItems(),hidden:!omg||!!documentOmgFamily});
    setToolbarItem('acquisition',{text:tr('standardSources'),items:acquisitionItems(),hidden:!iso&&!ext&&!omg,disabled:documentBusy});
@@ -860,6 +896,7 @@
      if(target.startsWith('omgView:')&&mode==='omg-specifications'&&!documentOmgFamily){documentOmgAdoptions=target==='omgView:adoptions';documentOffset=0;selected=null;search.value='';renderDocumentary();return;}
      const action=target.startsWith('acquisition:')?target.slice(12):target;
      if(isDocumentary()){void documentaryAction(action);return;}
+     if(action==='details'){void openSelectedDocumentaryRecord();return;}
      if(action==='advanced'){advancedButton?.click();return;}
      if(action==='manageIso'){if(root.__radarApplicationProfile?.allows('catalog.admin')===true)root.__radarS14Z?.open?.();return;}
      const selectors={reload:'[data-r2-legacy-action="reload"]',sync:'[data-r2-legacy-action="sync"]',distributed:'[data-catalog-distribution]',isoImport:'[data-iso-import]',rssLoad:'[data-r2-legacy-action="rssLoad"]',changesLoad:'[data-r2-legacy-action="changesLoad"]',declare:'[data-native-declare]',lifecycle:'[data-reference-lifecycle]',addRadar:'[data-r2-legacy-action="addRadar"]',sourceDialog:'[data-standard-sources]'};
@@ -958,7 +995,7 @@
      if(token!==windowToken||mode!==view)return;
      windowNext=result.next;
      const projected=root.__radarIsoFullGrid.project(result.records,'');
-     grid.clear(true);grid.records=projected;grid.total=projected.length;grid.buffered=projected.length;grid.refresh();
+     grid.clear(true);grid.records=projected;grid.total=projected.length;grid.buffered=projected.length;selected=null;grid.refresh();updateToolbar();
      if(status&&isoModes.includes(mode))status.textContent='ISO '+result.release+' · '+scopeLabel()+' · '+
        (projected.length?tr('windowRange',{from:windowPosition*windowSize+1,to:windowPosition*windowSize+projected.length}):tr('windowEmpty'))+
        (windowNext?' · '+tr('windowMore'):' · '+tr('windowEnd'));
@@ -1018,7 +1055,7 @@
        windowNext=result.next;
      }
      // Each page remains within the same filter/search/sort and active generation.
-     grid.clear(true);grid.records=combined;grid.total=combined.length;grid.buffered=combined.length;grid.refresh();
+     grid.clear(true);grid.records=combined;grid.total=combined.length;grid.buffered=combined.length;selected=null;grid.refresh();updateToolbar();
      const actual=mount?.querySelector('#grid_standardReferencesGrid_records, .w2ui-grid-records');
      if(actual){actual.scrollTop=Math.max(0,scrollBefore+(previous?rows.length:-removed)*28);}
      if(windowIndicator){
@@ -1044,7 +1081,6 @@
    if(root.__radarApplicationProfile?.viewer)mode='references';
    if(!grid)return;
    if(isDocumentary()){renderDocumentary();return;}
-   detailColumn.text=tr('detailColumn');nativeIsoDetailColumn.text=tr('detailColumn');
    const term=search?.value||'';
    if(search)search.placeholder=mode==='ics'?tr('searchIcs'):mode==='committees'?tr('searchCommittees'):mode==='iso-list'?tr('searchIso'):mode==='rss'?tr('rssSearch'):mode==='changes'?tr('changesSearch'):tr('searchLocal');
    if(mode==='ics'||mode==='committees'){
@@ -1060,7 +1096,7 @@
        {field:'titleEn',text:tr('colEnglishTitle'),size:'24%',sortable:false},
        {field:'icsCodes',text:tr('ics'),size:'140px'},
        {field:'committee',text:tr('colTC'),size:'160px'},
-       {field:'stage',text:tr('colStage'),size:'80px'},detailColumn
+       {field:'stage',text:tr('colStage'),size:'80px'}
      ];
      if(windowedActive){
        grid.clear(true);grid.records=[];grid.total=0;grid.buffered=0;
@@ -1083,7 +1119,7 @@
        {field:'titleEn',text:tr('colEnglishTitle'),size:'24%',sortable:false},
        {field:'icsCodes',text:tr('ics'),size:'135px'},
        {field:'committee',text:tr('colTC'),size:'145px'},
-       {field:'stage',text:tr('colStage'),size:'75px'},detailColumn
+       {field:'stage',text:tr('colStage'),size:'75px'}
      ];
      /* S14-L1 FULL ISO GRID */ const fullGrid=root.__radarIsoFullGrid;if(!fullGrid?.project)throw Error('S14-L1: projection ISO manquante');
      grid.clear(true);grid.records=[];grid.total=0;grid.buffered=0;
@@ -1123,8 +1159,7 @@
        {field:'edition',text:tr('colEdition'),size:'90px',sortable:true,editable:{},render:r=>({html:escapeHtml(r.edition)})},
        {field:'issuer',text:tr('nativeIssuer'),size:'110px',sortable:true,editable:{},render:r=>({html:escapeHtml(r.issuer)})},
        {field:'sourceName',text:tr('nativeSource'),size:'150px',sortable:true,editable:{},render:r=>({html:escapeHtml(r.sourceName)})},
-       {field:'verification',text:tr('colProvenance'),size:'160px',sortable:true,editable:{},render:r=>({html:escapeHtml(tr(({unverified:'nativeUnverified','source-verified':'nativeVerified'})[r.verification]||'nativeUnknown'))})},
-       nativeIsoDetailColumn
+       {field:'verification',text:tr('colProvenance'),size:'160px',sortable:true,editable:{},render:r=>({html:escapeHtml(tr(({unverified:'nativeUnverified','source-verified':'nativeVerified'})[r.verification]||'nativeUnknown'))})}
      ];
      const found=referenceRows(term,nativeOriginFilter?.value||'all');
      grid.clear(true);
@@ -1474,7 +1509,14 @@
    if(!nativeOnly)box.appendChild(toolbarHost);
    box.append(bar,target,status);mount.appendChild(box);
    if(typeof root.w2grid!=='function'){status.textContent='w2ui grid indisponible';return false;}
-   grid=new root.w2grid({name:'standardReferencesGrid',recordHeight:28,show:{toolbar:false,footer:true,expandColumn:false},multiSelect:false,records:[],columns:[],onClick(event){selected=event.recid||event.detail?.recid||null;
+   grid=new root.w2grid({name:'standardReferencesGrid',recordHeight:28,show:{toolbar:false,footer:true,expandColumn:false},multiSelect:false,records:[],columns:[],onDblClick(event){
+     // The Viewer has no Creator toolbar. Preserve read-only record consultation
+     // without reintroducing the ISO-specific detail column.
+     if(!root.__radarApplicationProfile?.viewer)return;
+     const recid=event.recid||event.detail?.recid;
+     if(!recid||!grid.records.some(r=>r.recid===recid))return;
+     selected=recid;void openSelectedDocumentaryRecord();
+   },onClick(event){selected=event.recid||event.detail?.recid||null;
      if(standardsToolbar)Promise.resolve().then(()=>updateToolbar());
      if(selected?.startsWith('iso-more:')&&getTreeIndex().loadMore(selected)){
        // Defer rebuilding the tree until w2ui finishes dispatching the click.
@@ -1490,20 +1532,7 @@
      isoLayout.render(target);isoLayout.html('main',grid);
    }else grid.render(target);
    target.addEventListener('scroll',onWindowGridScroll,true);
-   target.addEventListener('click',e=>{const rss=e.target?.closest?.('[data-rss-open]');if(rss){const url=rss.getAttribute('data-rss-open');try{const u=new URL(url);if(u.protocol==='https:'&&u.hostname.endsWith('.iso.org'))root.open(u.href,'_blank','noopener,noreferrer');}catch(_){/* invalid url */}return;}
-     const nativeButton=e.target?.closest?.('[data-native-iso-detail]');
-     if(nativeButton){
-       const id=nativeButton.getAttribute('data-native-iso-detail');
-       const row=referenceRows('',nativeOriginFilter?.value||'all').find(r=>r.standardId===id);
-       if(row?.isoDocument)showDetail({kind:'standard',isoId:row.isoDocument.id,isoItem:row.isoDocument,nativeReference:true});
-       else if(row)showDetail({kind:'local',localReference:row,nativeReference:true});
-       return;
-     }
-     const btn=e.target?.closest?.('[data-iso-detail]');if(!btn)return;
-     const id=btn.getAttribute('data-iso-detail');const record={kind:'standard',isoId:id};
-     if(windowedActive&&root.__radarIsoWindowed?.get){root.__radarIsoWindowed.get({type:'deliverables',id}).then(item=>{if(item)showDetail({...record,isoItem:item});else showDetail(record);}).catch(err=>{if(status)status.textContent=err.message;});}
-     else showDetail(record);
-   });
+   target.addEventListener('click',e=>{const rss=e.target?.closest?.('[data-rss-open]');if(rss){const url=rss.getAttribute('data-rss-open');try{const u=new URL(url);if(u.protocol==='https:'&&u.hostname.endsWith('.iso.org'))root.open(u.href,'_blank','noopener,noreferrer');}catch(_){/* invalid url */}}});
    let isoSearchDebounce=null;search.addEventListener('input',()=>{if(isDocumentary()){documentOffset=0;selected=null;}if(isoSearchDebounce)clearTimeout(isoSearchDebounce);if(mode!=='iso-list'){isoSearchDebounce=setTimeout(()=>{isoSearchDebounce=null;refresh();},180);return;}isoSearchDebounce=setTimeout(()=>{isoSearchDebounce=null;refresh();},180);});reload.addEventListener('click',()=>{if(mode==='ics')loadIcs(true);loadIsoCache();});
    add.addEventListener('click',()=>{
      if(mode!=='references'){status.textContent=tr('addFromReferences');return;}
@@ -1566,8 +1595,8 @@
  function resetWorkspace(){
    root.__radarStandardRegistry?.close?.();
    root.__radarStandardSourceDialog?.close?.();
+   if(activeDetailRecord||root.w2ui?.standardsDocumentDetail)root.w2popup?.close?.();
    activeDetailCleanup?.();
-   if(root.w2ui?.standardsDocumentDetail)root.w2popup?.close?.();
    activeDetailRecord=null;
    selected=null;documentToken++;documentBusy=false;documentOffset=0;documentSeries=null;documentOmgFamily=null;documentMessage='';windowToken++;windowHistory=[null];windowPosition=0;windowBasePosition=0;windowNext=null;
    if(search)search.value='';
