@@ -11,7 +11,7 @@ const start=detail.indexOf('   const relationIds=');
 const stop=detail.indexOf('   let recordData=',start);
 const definitions=detail.slice(start,stop);
 const later=detail.indexOf('   const relationSource=root.__radarIsoWindowed;');
-const laterEnd=detail.indexOf("   dialog.addEventListener('close'",later);
+const laterEnd=detail.lastIndexOf('\n }');
 const update=detail.slice(later,laterEnd);
 
 function prepare({item,cache={},initial={},nativeReference=false}){

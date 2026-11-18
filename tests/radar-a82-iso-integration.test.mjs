@@ -38,12 +38,15 @@ test('published and global ISO details use distinct translated labels and source
   assert.ok(start>=0&&end>start);
   const created=[],forms=[];
   function elem(tag){const e={tag,children:[],style:{},attrs:{},appendChild(x){this.children.push(x);},setAttribute(k,v){this.attrs[k]=v;},addEventListener(){},showModal(){},remove(){}};created.push(e);return e;}
-  const root={document:{createElement:elem,getElementById:()=>null,body:elem('body')},__radarApplicationProfile:{viewer:true,allows:()=>false},w2form:function(o){forms.push(o);this.render=()=>{};},i18next:{language:'en'}};
+  // Model the w2popup lifecycle, not the removed native <dialog> path.
+  // The popup's onOpen completion must really mount the read-only w2form.
+  const popupHost=elem('div');let popup=null;
+  const root={document:{createElement:elem,getElementById:id=>id==='iso-standard-detail-popup-body'?popupHost:null,body:elem('body')},__radarApplicationProfile:{viewer:true,allows:()=>false},w2form:function(o){forms.push(o);this.render=()=>{};this.destroy=()=>{};},i18next:{language:'en'},w2popup:{open(config){popup=config;const event={};config.onOpen?.(event);event.onComplete?.();},close(){if(!popup)return;const closing=popup;popup=null;const event={};closing.onClose?.(event);event.onComplete?.();}}};
   // Reuse actual translation definitions and resolver, not hardcoded test labels.
   const i18nStart=panel.indexOf('const isoStrings='),i18nEnd=panel.indexOf('registerI18n();',i18nStart);
   assert.ok(i18nStart>=0&&i18nEnd>i18nStart);
   let lookups=0;
-  const ctx=vm.createContext({root,activeDetailRecord:null,activeDetailCleanup:null,status:null,windowedActive:true,findDeliverable(){lookups++;if(root.__radarApplicationProfile.viewer)throw Error('Unexpected global lookup');return {reference:'ISO previous'};},findCommittee(){throw Error('Unexpected global lookup');}});
+  const ctx=vm.createContext({root,activeDetailRecord:null,activeDetailCleanup:null,status:null,windowedActive:true,escapeHtml:v=>String(v),findDeliverable(){lookups++;if(root.__radarApplicationProfile.viewer)throw Error('Unexpected global lookup');return {reference:'ISO previous'};},findCommittee(){throw Error('Unexpected global lookup');}});
   vm.runInContext(panel.slice(i18nStart,i18nEnd)+panel.slice(start,end)+'\nthis.show=showDetail;',ctx);
   for(const language of ['en','fr']){
     root.i18next.language=language;

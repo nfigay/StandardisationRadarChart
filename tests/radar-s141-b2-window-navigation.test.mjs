@@ -55,6 +55,9 @@ function harness({count=8,size=2}={}){
     windowHistory:[null],
     windowSize:size,
     grid,
+    // S17 refreshes the shared toolbar after a navigation update.
+    // This isolated pagination harness has no toolbar, so stub only that UI side effect.
+    updateToolbar(){},
     mount:{querySelector:()=>scroller},
     status:{textContent:''},
     windowIndicator:{textContent:''},

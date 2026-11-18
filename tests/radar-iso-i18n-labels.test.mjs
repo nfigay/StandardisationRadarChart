@@ -28,8 +28,8 @@ test('w2form fields, tabs and columns are resolved through i18n keys',()=>{
  assert.match(source,/text:tr\('rawTab'\)/);
  assert.match(source,/text:tr\('colTitle'\)/);
  assert.match(source,/text:tr\('colEnglishTitle'\)/);
- assert.match(source,/text:tr\('detailColumn'\)/);
- assert.match(source,/escapeHtml\(tr\('detail'\)\)/);
+ assert.match(source,/resourceDetails:'Fiche documentaire'/);
+ assert.match(source,/resourceDetails:'Document details'/);
 });
 test('no ellipsis on generated form field labels, while grid stays compact',()=>{
  assert.match(source,/text-overflow:clip!important/);

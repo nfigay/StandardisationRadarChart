@@ -9,7 +9,7 @@ const end=panel.indexOf('\n function ',start+10);
 assert.ok(start>=0&&end>start,'detail function located');
 const detail=panel.slice(start,end);
 const definitions=detail.slice(detail.indexOf('   const relationIds='),detail.indexOf('   let recordData='));
-const update=detail.slice(detail.indexOf('   const relationSource=root.__radarIsoWindowed;'),detail.indexOf("   dialog.addEventListener('close'"));
+const update=detail.slice(detail.indexOf('   const relationSource=root.__radarIsoWindowed;'),detail.lastIndexOf('\n }'));
 
 function context(nativeReference){
   let globalLookups=0,cacheLookups=0;

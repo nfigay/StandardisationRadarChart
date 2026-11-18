@@ -59,9 +59,23 @@ function environment({viewer=false,published=false,initial=null,activeGroup='g1'
     __radarCatalogAdapter:{getRevision:g=>model.radarRevisions[Number(String(g).slice(1))]},
     __radarIsoWindowed:{async current(){reads.iso++;return {generation:'g1',summary:{release:'2026-11-09',datasets:{deliverables:{count:1}}}};},async page(){reads.iso++;return {records:[],next:null};},async get(){reads.iso++;return plain(isoItem);}},
     fetch:async()=>{reads.fetch++;return {ok:false};},setTimeout,clearTimeout};
+  root.w2popup={
+    open(o){
+      if(this.options)this.close();
+      this.options=o;
+      const id=o.body.match(/id="([^"]+)"/)?.[1];
+      if(id){this.host=new Element('div');this.host.id=id;body.appendChild(this.host);}
+      const event={};o.onOpen?.(event);event.onComplete?.();
+    },
+    close(){
+      const options=this.options;this.options=null;
+      const event={};options?.onClose?.(event);
+      this.host?.remove();this.host=null;
+      event.onComplete?.();
+    }
+  };
   if(withToolbar){
     root.w2toolbar=function(o){Object.assign(this,o);this.render=()=>{};this.set=(id,patch)=>{const item=this.items.find(r=>r.id===id);assert.ok(item,'unknown toolbar item '+id);Object.assign(item,patch);};this.destroy=()=>{};root.w2ui[o.name]=this;};
-    root.w2popup={open(o){this.options=o;const id=o.body.match(/id="([^"]+)"/)?.[1];if(id){const el=new Element('div');el.id=id;body.appendChild(el);}const event={};o.onOpen?.(event);event.onComplete?.();},close(){this.options?.onClose?.();}};
     root.confirm=()=>true;root.open=(url)=>{root.lastOpened=url;};
   }
   const ctx=createContext({window:root,URL,console,setTimeout,clearTimeout,AbortSignal,TextDecoder,TextEncoder});
@@ -72,7 +86,16 @@ function environment({viewer=false,published=false,initial=null,activeGroup='g1'
   function selectGroup(g){group=g;panel.refresh();}
   async function initialize(){panel.initialize(mount,()=>graph);await new Promise(resolve=>setImmediate(resolve));if(!viewer)panel.openReferences();}
   function query(sel){const n=body.querySelector(sel);assert.ok(n,'missing '+sel);return n;}
-  function detail(id){const btn=new Element('button');btn.dataset.nativeIsoDetail=id;query('#standard-references-grid').emit('click',{target:btn});return forms.at(-1);}
+  async function detail(id){
+    if(root.__radarApplicationProfile?.viewer){grid.onDblClick({recid:id});}
+    else {
+      assert.ok(root.w2ui.standardsToolbar,'missing Creator documentary toolbar');
+      grid.select(id);grid.onClick({recid:id});
+      root.w2ui.standardsToolbar.onClick({target:'details'});
+    }
+    await new Promise(resolve=>setImmediate(resolve));
+    return forms.at(-1);
+  }
   return {root,ctx,store,registry,panel,body,mount,graph,graphNodes,forms,alerts,reads,open,selectGroup,initialize,query,detail,get grid(){return grid;}};
 }
 function fillDeclaration(x,values=manualFields){const dialog=x.query('#standard-reference-register');for(const [k,v] of Object.entries(values))dialog.querySelectorAll('input').find(n=>n.name===k).value=v;return dialog;}
@@ -126,21 +149,21 @@ test('S15-A filter and search combine origins with issuer, edition and source UR
   x.panel.resetWorkspace();assert.equal(filter.value,'all');assert.equal(x.grid.records.length,3);
 });
 test('S15-A native detail uses shared read-only W2Form for manual and legacy; ISO retains rich snapshot',async()=>{
-  const x=environment();const a=x.registry.declare(manualFields),b=await x.store.importIsoReference('62085');await x.initialize();
-  const manual=x.detail(a.standardId);assert.equal(manual.record.nativeIssuer,'IETF');assert.equal(manual.record.nativeSource,manualFields.sourceName);assert.equal(manual.record.nativeUrl,manualFields.sourceUrl);assert.equal(manual.record.edition,'1');assert.equal(manual.record.colProvenance,'Non vérifiée');assert.deepEqual(plain(manual.actions),{});assert.ok(manual.fields.every(f=>f.html.attr.includes('readonly')));
+  const x=environment({withToolbar:true});const a=x.registry.declare(manualFields),b=await x.store.importIsoReference('62085');await x.initialize();
+  const manual=await x.detail(a.standardId);assert.equal(manual.record.nativeIssuer,'IETF');assert.equal(manual.record.nativeSource,manualFields.sourceName);assert.equal(manual.record.nativeUrl,manualFields.sourceUrl);assert.equal(manual.record.edition,'1');assert.equal(manual.record.colProvenance,'Non vérifiée');assert.deepEqual(plain(manual.actions),{});assert.ok(manual.fields.every(f=>f.html.attr.includes('readonly')));
   x.root.i18next.switch('en');assert.equal(x.forms.at(-1).record.colProvenance,'Unverified');x.root.i18next.switch('fr');assert.equal(x.forms.at(-1).record.colProvenance,'Non vérifiée');
-  const legacy=x.detail('legacy');assert.equal(legacy.record.nativeOrigin,'Historique');assert.equal(legacy.record.colProvenance,'Inconnu');assert.equal(legacy.record.nativeIssuer,'');
-  const iso=x.detail(b.standardId);assert.equal(iso.record.titleEn,'Quality management');assert.equal(iso.tabs[1].text,'Métadonnées conservées');assert.equal(JSON.parse(iso.record.sourceData).release,'2026-11-09');
+  const legacy=await x.detail('legacy');assert.equal(legacy.record.nativeOrigin,'Historique');assert.equal(legacy.record.colProvenance,'Inconnu');assert.equal(legacy.record.nativeIssuer,'');
+  const iso=await x.detail(b.standardId);assert.equal(iso.record.titleEn,'Quality management');assert.equal(iso.tabs[1].text,'Métadonnées conservées');assert.equal(JSON.parse(iso.record.sourceData).release,'2026-11-09');
 });
 test('S15-A published and generic Viewer native grid: no author commands, no ISO access, no out-of-scope detail',async()=>{
   const creator=environment(),a=creator.registry.declare(manualFields),b=await creator.store.importIsoReference('62085'),data=plain(creator.store.build(null));
   data.radarRevisions=data.radarRevisions.filter(r=>r.status==='published');data.radarRevisions[0].blips=[{blipId:'b',standardId:a.standardId,label:'Manual',ring:'Adopted',quadrant:'Available',position:{x:1,y:2}}];
   const x=environment({viewer:true,initial:data,activeGroup:'g0'});await x.initialize();assert.deepEqual(ids(x.grid),['legacy',a.standardId,b.standardId]);
   assert.equal(x.body.querySelector('[data-native-declare]'),null);assert.equal(x.body.querySelector('[data-iso-manage-sources]'),null);assert.equal(x.reads.iso,0);assert.equal(x.reads.fetch,0);
-  assert.equal(x.detail(a.standardId).record.nativeIssuer,'IETF');assert.throws(()=>x.registry.open(x.graph,{declaration:true}),/capability denied/);assert.throws(()=>x.registry.declare(manualFields),/capability denied/);
+  assert.equal((await x.detail(a.standardId)).record.nativeIssuer,'IETF');assert.throws(()=>x.registry.open(x.graph,{declaration:true}),/capability denied/);assert.throws(()=>x.registry.declare(manualFields),/capability denied/);
   // A published profile is bootstrapped by the existing publication payload contract.
   const p=environment({viewer:true,published:true,initial:data,activeGroup:'g0'});await p.initialize();assert.deepEqual(ids(p.grid),[a.standardId]);
-  p.detail(b.standardId);assert.equal(p.forms.length,0);p.query('[data-native-origin-filter]').value='iso-open-data';p.query('[data-native-origin-filter]').emit('change');assert.deepEqual(ids(p.grid),[]);assert.equal(p.reads.iso,0);
+  await p.detail(b.standardId);assert.equal(p.forms.length,0);p.query('[data-native-origin-filter]').value='iso-open-data';p.query('[data-native-origin-filter]').emit('change');assert.deepEqual(ids(p.grid),[]);assert.equal(p.reads.iso,0);
 });
 test('S15-A native declaration remains available on a published radar, but creating its blip requires a draft',async()=>{
   const x=environment({activeGroup:'g0'});await x.initialize();x.query('[data-native-declare]').click();fillDeclaration(x).querySelector('form').emit('submit');x.query('[data-iso-translation="add"]').click();assert.match(x.mount.querySelectorAll('[role="status"]').at(-1).textContent,/brouillon/);assert.equal(x.root.document.getElementById('catalog-create-dialog'),null);assert.equal(x.graphNodes.length,0);assert.equal(x.store.build(null).radarRevisions[0].blips.length,0);
@@ -345,4 +368,21 @@ test('S16-R31 prepared local corpus is available through the source menu without
  const html=omgHtml+omgHtml.slice(0,omgHtml.indexOf('</table>')+8),snapshot=api.omg.parseOmgCatalog(html,{acquiredAt:r2stamp,sha256:'a'.repeat(64)});
  x.root.fetch=async url=>{assert.match(String(url),/\/__radar-omg\/catalog\/current$/);return new Response(JSON.stringify({operation:'S16-OMG-LOCAL-RELAY',ok:true,snapshot}),{headers:{'Content-Type':'application/json'}});};
  await toolClick(x,'source:omg-specifications');assert.ok(toolItem(x,'acquisition').items.some(r=>r.id==='omgPrepared'));await toolClick(x,'acquisition:omgPrepared');assert.equal(x.grid.records.length,2);assert.equal(api.omgStatus().origin,'local-prepared');assert.deepEqual(plain(x.store.build(null)),before);
+});
+
+test('S17-R4 ISO popup: close cleans up read-only form without changing native catalog',async()=>{
+  const x=environment({withToolbar:true});
+  const a=x.registry.declare(manualFields),before=plain(x.store.build(null));
+  await x.initialize();
+  const form=await x.detail(a.standardId);
+  assert.equal(form.record.nativeIssuer,'IETF');
+  assert.match(x.root.w2popup.options.body,/iso-standard-detail-popup-body/);
+  assert.ok(x.query('#iso-standard-detail-popup-body'));
+  x.root.w2popup.close();
+  assert.equal(x.body.querySelector('#iso-standard-detail-popup-body'),null);
+  assert.deepEqual(plain(x.store.build(null)),before);
+  const next=await x.detail('legacy');
+  assert.equal(next.record.nativeOrigin,'Historique');
+  x.panel.resetWorkspace();
+  assert.equal(x.root.w2popup.options,null);
 });
