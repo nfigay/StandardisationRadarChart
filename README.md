@@ -23,6 +23,10 @@ La dernière livraison fonctionnelle S16 est le commit `c92fbe5a9120b93051407b1c
 - `npm run project -- verify` : vérification des sources existante (sans build).
 - `npm run project -- build` : délégation à `npm run build` ; **refuse** une sortie locale déjà présente, sans nettoyage automatique.
 
+- `npm run pipeline -- qualify --audit-dir /chemin/absolu` : tests Node + vérification source, état de reprise persistant.
+- `npm run pipeline -- build-local --audit-dir /chemin/absolu` : qualification puis build local, sans nettoyage automatique ; `--resume` reprend les phases prouvées du même SHA.
+- [Contrats du pipeline P2](docs/architecture/120-P2-PIPELINE-PERMANENT-QUALIFICATION-REPRISE.md)
+
 Les scripts spécialisés et procédures de publication restent disponibles mais ne sont **pas** lancés automatiquement par la façade. Tout commit, push et déploiement requiert une autorisation humaine distincte. La qualification navigateur et la recette utilisateur ne sont pas remplacées par les tests Node.
 
 ## Archives et versions antérieures
