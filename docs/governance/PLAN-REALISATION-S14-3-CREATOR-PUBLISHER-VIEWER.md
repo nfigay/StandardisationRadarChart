@@ -1,4 +1,20 @@
-# Plan de réalisation — S14.3 Creator/Publisher et Viewers
+# Plan de réalisation — entrée courante et trajectoire historique
+
+## État de référence et méthode de lecture (18 novembre 2026)
+
+**Référence fonctionnelle S16 :** `c92fbe5a9120b93051407b1c5ec9c3590db7efa2`. Qualification finale transmise : 764 tests Node, Creator/Viewer, sources ISO/OMG/RFC-IETF/W3C et export HTML hors ligne validés. **Référence documentaire publiée :** `cf370ade6a872c6e4bc7320456e33a138c5ab46b`. Sources de traçabilité : [117](../architecture/117-S16-REX-LIVRAISON-ET-CONTRATS-S17.md), [118](../architecture/118-S16-PAGES-VIEWER-HTML-EXPORT-HOTFIX.md), [119](../architecture/119-S16-ARCHITECTURE-REALISEE-ET-RECONCILIATION.md).
+
+**Priorités proposées, non encore réalisées :** (1) rationaliser accès documentaire et commandes opérateur ; (2) vérifier les dialogues et les invariants de suppression groupes/blips avant migration w2UI ; (3) industrialiser la reprise du pipeline et ses audits. Les cibles historiques A9/A10 (composition/distributions et qualification intégrée) restent ouvertes tant qu'une preuve propre à chacune n'est pas établie. Workspace persistant et convergence SPM restent reportés.
+
+**Numérotation :** A8.x, A9/A10 et S15/S16/S17 désignent les jalons tels qu'ils figurent dans les documents historiques. Leur coexistence est constatée ; ce plan ne leur attribue pas une origine lexicale non prouvée et ne remplace aucun identifiant.
+
+**Règle de preuve :** distinguer code, tests Node, artefacts, publication Git, ressources HTTP et recette utilisateur. Les historiques ci-dessous sont conservés, y compris les mentions de « prochaine étape » qui ne s'appliquent qu'à leur date. Aucun objectif n'est déclaré terminé par la seule mise à jour du plan.
+
+---
+
+## Trajectoire et journal historiques conservés
+
+## Plan de réalisation — S14.3 Creator/Publisher et Viewers (historique)
 
 ## 0. Décision de clôture A8.6 — 15 novembre 2026
 

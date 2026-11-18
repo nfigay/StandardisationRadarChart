@@ -1,4 +1,20 @@
-# START HERE — Référentiel courant du projet
+# START HERE — accès à l'état courant
+
+## État de référence après S16 (18 novembre 2026)
+
+La livraison fonctionnelle S16 (`c92fbe5a9120b93051407b1c5ec9c3590db7efa2`) et sa qualification de 764 tests Node, la recette Creator/Viewer et l'export HTML autonome sont consignés dans [117](../architecture/117-S16-REX-LIVRAISON-ET-CONTRATS-S17.md) et [118](../architecture/118-S16-PAGES-VIEWER-HTML-EXPORT-HOTFIX.md). La réconciliation documentaire est publiée dans le commit `cf370ade6a872c6e4bc7320456e33a138c5ab46b`. Ne pas confondre ces preuves passées avec une qualification du HEAD actuel.
+
+**Ordre de lecture canonique :** [architecture réalisée 119](../architecture/119-S16-ARCHITECTURE-REALISEE-ET-RECONCILIATION.md) → [plan de réalisation](PLAN-REALISATION-S14-3-CREATOR-PUBLISHER-VIEWER.md) → [index complet](../DOCUMENTATION-INDEX.md) → décisions et preuves historiques.
+
+**Pour contribuer :** [README racine](../../README.md), `npm run project -- status`, `npm test`, `npm run project -- verify`. Les commandes de build peuvent refuser une destination déjà présente : aucune suppression automatisée n'est autorisée. Publication GitHub et GitHub Pages exigent des autorisations séparées.
+
+A8.x, A9/A10 et Sxx sont des identifiants historiques conservés. Leur étymologie et une correspondance systématique ne sont pas démontrées ici ; aucune renumérotation n'est décidée. Les questions juridiques relèvent exclusivement de la gouvernance humaine ([115](../architecture/115-S16-C6-R3-GOUVERNANCE-HORS-LOGICIEL.md)).
+
+---
+
+## Historique conservé (états datés)
+
+## START HERE — référentiel historique
 
 <!-- S14.3-A8.5-CURRENT -->
 

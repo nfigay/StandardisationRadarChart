@@ -18,7 +18,9 @@
     "build:dist": "node scripts/build-web-distribution.mjs build",
     "verify:dist": "node scripts/build-web-distribution.mjs verify",
     "verify:client:variants": "node scripts/build-client-variants.mjs verify",
-    "publish:dist": "bash scripts/publish-web-distribution.sh"
+    "publish:dist": "bash scripts/publish-web-distribution.sh",
+    "project": "node scripts/project-cli.mjs",
+    "test": "node scripts/project-cli.mjs test"
   },
   "devDependencies": {
     "vite": "^7.3.0"

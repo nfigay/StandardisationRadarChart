@@ -1,4 +1,21 @@
-# Index documentaire — A8.6 publiée
+# Index documentaire — entrée courante après S16
+
+**Lire ici en priorité**, puis utiliser le répertoire historique qui suit. Cette entrée décrit les livraisons S16 documentées ; elle ne certifie pas une nouvelle exécution de tests.
+
+- [START HERE : état courant et conventions](governance/00-START-HERE.md)
+- [119 — architecture réalisée, limites et liens](architecture/119-S16-ARCHITECTURE-REALISEE-ET-RECONCILIATION.md)
+- [117 — REX livraison et exigences S17](architecture/117-S16-REX-LIVRAISON-ET-CONTRATS-S17.md)
+- [118 — correctif export HTML](architecture/118-S16-PAGES-VIEWER-HTML-EXPORT-HOTFIX.md)
+- [115 — gouvernance humaine hors logiciel](architecture/115-S16-C6-R3-GOUVERNANCE-HORS-LOGICIEL.md)
+- [Plan de réalisation : état courant et historiques A/S](governance/PLAN-REALISATION-S14-3-CREATOR-PUBLISHER-VIEWER.md)
+
+**Repères de provenance :** S16 fonctionnelle `c92fbe5a` ; consolidation documentaire sur `main` `cf370ade`. Les mentions A8.6/A8.7 et les états de candidats ci-dessous sont historiques. Les labels A et S sont conservés tels quels, sans étymologie supposée.
+
+---
+
+## Inventaire historique (contenu conservé)
+
+## Index documentaire — A8.6 publiée (historique)
 
 Entrée : [START HERE](governance/00-START-HERE.md). Pour l’état effectivement réalisé, lire [AS-IS](architecture/ARCHITECTURE-AS-IS-A86.md), [distribution](architecture/87-A86-DISTRIBUTION-RELEASES-PAGES.md), [preuve de publication](evidence/10-A86-PUBLICATION.md) et [revue exigences](requirements/A86-RECONCILIATION.md). La [spécification cible](architecture/02-SPECIFICATION-CIBLE.md) et les décisions adoptées définissent les objectifs ; les documents de lots restent des traces datées. Une référence historique n’est pas une instruction actuelle. Cet inventaire recense les fichiers présents dans la reconstruction de la baseline et le delta documentaire ; il ne prétend pas avoir réécrit ou requalifié chaque document historique.
 
