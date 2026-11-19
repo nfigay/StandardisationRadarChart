@@ -46,6 +46,8 @@
     <script src="./js/radar-standards-panel.js"></script>
     <script src="./js/radar-iso-toolbar.js"></script>
     <script src="./js/radar-workspace-explorer.js"></script>
+    <script src="./js/radar-geometry.js"></script>
+    <script src="./js/radar-geometry-editor.js"></script>
     <script src="./js/radar.js"></script>
     <script type="module" src="./src/bootstrap/radar-zone-entry.mjs"></script>
     <script src="./js/cytoscape/RadarStyle.js"></script>
@@ -197,7 +199,7 @@
                         exportclientroadmap: "Export published roadmap for client",
                         archivecatalogrevision: "Archive published revision",
                         selectcatalogrevision: "Select revision",
-                        renameradar: "Rename radar",
+                        renameradar: "Rename radar", geometryeditor: "Configure radar geometry",
                         renamerevision: "Name revision",
                         standardregistry: "Standard references",
                         createcatalogblip: "Add blip",
@@ -329,7 +331,7 @@
                         exportclientroadmap: "Exporter la roadmap publiée pour le Client",
                         archivecatalogrevision: "Archiver la révision publiée",
                         selectcatalogrevision: "Sélectionner une révision",
-                        renameradar: "Renommer le radar",
+                        renameradar: "Renommer le radar", geometryeditor: "Configurer la géométrie du radar",
                         renamerevision: "Nommer la révision",
                         standardregistry: "Références normatives",
                         createcatalogblip: "Ajouter un blip",
@@ -723,6 +725,7 @@
                         {id:'archivecatalogrevision',text:i18next.t('menu.archivecatalogrevision')},
                         {id:'selectcatalogrevision',text:i18next.t('menu.selectcatalogrevision')},
                         {id:'renameradar',text:i18next.t('menu.renameradar')},
+                        {id:'geometryeditor',text:i18next.t('menu.geometryeditor')},
                         {id:'renamerevision',text:i18next.t('menu.renamerevision')},
                         {id:'standardregistry',text:i18next.t('menu.standardregistry')},
                         {id:'createcatalogblip',text:i18next.t('menu.createcatalogblip')},
@@ -1326,6 +1329,10 @@
                 case 'radartools:renamerevision':
                     try { window.__radarRadarAdmin.open(event.target.endsWith('renamerevision')?'revision':'radar'); }
                     catch(error) { console.error('Radar administrative edit rejected:',error); w2alert(error.message); }
+                    break;
+                case 'radartools:geometryeditor':
+                    try { window.__radarGeometryEditor.open(cy); }
+                    catch(error) { console.error('Geometry editing rejected:',error); w2alert(error.message); }
                     break;
                 case 'radartools:standardregistry':
                     try { window.__radarStandardsPanel.openReferences(); }
@@ -2183,7 +2190,12 @@
         cy.on('grab', 'node', function (evt) {
             let node = evt.target;
             let pos = node.position();
-            let { zone, quadrant } = getZone(pos.x, pos.y, radii);
+            const geometry = window.__radarGeometry;
+            const custom = geometry?.isCustomActive() === true;
+            const classification = custom ? geometry.locate(pos.x, pos.y) : null;
+            let { zone, quadrant } = custom
+                ? {zone: classification?.zoneId, quadrant: classification?.quarterId}
+                : getZone(pos.x, pos.y, radii);
 
             console.log(`GRAB: Node ${node.id()} -> Zone: ${zone}, Quadrant: ${quadrant}`);
 
@@ -2195,8 +2207,8 @@
 
             // Stocker la position et les attributs initiaux
             node.scratch('_initialPosition', { x: pos.x, y: pos.y });
-            node.scratch('_initialZone', zoneRingMapping[zone]); // Stocke la valeur en texte ("Track", "Candidate", ...)
-            node.scratch('_initialQuadrant', quadrantMapping[quadrant]); // Stocke en texte ("Monitored", "Available", ...)
+            node.scratch('_initialZone', custom ? node.data('ring') : zoneRingMapping[zone]); // Identifiant métier de la catégorie active
+            node.scratch('_initialQuadrant', custom ? node.data('quadrant') : quadrantMapping[quadrant]); // Identifiant métier du quartier actif
         });
 
         cy.on('free', 'node', function (evt) {
@@ -2209,7 +2221,12 @@
 
 
             //  alert ("x:"+ pos.x + " y;"+ pos.y + " raddi:"+ radii)
-            let { zone, quadrant } = getZone(pos.x, pos.y, radii);
+            const geometry = window.__radarGeometry;
+            const custom = geometry?.isCustomActive() === true;
+            const classification = custom ? geometry.locate(pos.x, pos.y) : null;
+            let { zone, quadrant } = custom
+                ? {zone: classification?.zoneId, quadrant: classification?.quarterId}
+                : getZone(pos.x, pos.y, radii);
             //  alert ("zone:"+ zone+ " quadrant:"+ quadrant)
             if (zone === undefined || quadrant === undefined) {
                 console.log(`⚠️ ATTENTION: getZone() a retourné undefined pour le noeud ${node.id()}`);
@@ -2217,8 +2234,8 @@
             }
             else {
                 backToInitialPosition = false
-                let newZone = zoneRingMapping[zone]; // Convertir la zone en son label
-                let newQuadrant = quadrantMapping[quadrant]; // Convertir le quadrant en son label
+                let newZone = custom ? zone : zoneRingMapping[zone]; // Identifiant de la zone configurée
+                let newQuadrant = custom ? quadrant : quadrantMapping[quadrant]; // Identifiant du quartier configuré
                 console.log(`FREE: Node ${node.id()} -> New Zone: ${newZone}, New Quadrant: ${newQuadrant}`);
                 console.log(`Initial Zone: ${initialZone}, Initial Quadrant: ${initialQuadrant}`);
 

@@ -282,12 +282,12 @@ test('S16-R2 W2UI source selector and contextual menu replace visible shortcuts;
  const before=plain(x.store.build(null));const calls=x.reads.fetch;
  await toolClick(x,'source:resources');assert.equal(x.grid.records.length,29);assert.ok(x.grid.records.some(r=>r.recid==='omg-specifications'));assert.equal(toolItem(x,'isoView').hidden,true);assert.equal(toolItem(x,'acquisition').hidden,true);assert.equal(x.reads.fetch,calls);assert.deepEqual(plain(x.store.build(null)),before);
  await selectRow(x,'omg-specifications');await toolClick(x,'details');assert.ok(x.forms.at(-1).fields.length>10);await toolClick(x,'openSource');assert.equal(x.root.lastOpened,'https://www.omg.org/spec/');
- x.root.__radarIsoFullGrid={project:()=>[]};await toolClick(x,'source:iso-open-data');assert.equal(toolItem(x,'isoView').hidden,false);assert.equal(toolItem(x,'isoView').selected,'iso-list');assert.equal(toolItem(x,'acquisition').hidden,false);assert.equal(toolItem(x,'integrate').hidden,true);
+ x.root.__radarIsoFullGrid={project:()=>[]};await toolClick(x,'source:iso-open-data');assert.equal(toolItem(x,'isoView').hidden,false);assert.equal(toolItem(x,'isoView').selected,'iso-list');assert.equal(toolItem(x,'acquisition').hidden,false);assert.equal(toolItem(x,'integrate').hidden,false);
 });
 test('S16-R2 W3C consultation without a catalog, dated publication integration only after opening catalog',async()=>{
  const x=environment({withToolbar:true});await x.initialize();x.store.closeCatalog();x.panel.refresh();w3cFixture(x);
  await toolClick(x,'source:w3c');assert.equal(x.grid.records.length,0);assert.equal(toolItem(x,'isoView').hidden,true);
- await toolClick(x,'acquisition:load');assert.equal(x.grid.records[0].recid,'spec0');assert.equal(toolItem(x,'integrate').hidden,true);
+ await toolClick(x,'acquisition:load');assert.equal(x.grid.records[0].recid,'spec0');assert.equal(toolItem(x,'integrate').hidden,false);
  await selectRow(x,'spec0');await toolClick(x,'versions');assert.equal(x.grid.records[0].recid,'spec0:20200716');await selectRow(x,'spec0:20200716');assert.equal(toolItem(x,'integrate').disabled,true);
  await toolClick(x,'integrate');assert.equal(x.store.status().importedCatalogs,0);
  x.open(catalog());x.panel.refresh();await selectRow(x,'spec0:20200716');assert.equal(toolItem(x,'integrate').disabled,false);
@@ -385,4 +385,29 @@ test('S17-R4 ISO popup: close cleans up read-only form without changing native c
   assert.equal(next.record.nativeOrigin,'Historique');
   x.panel.resetWorkspace();
   assert.equal(x.root.w2popup.options,null);
+});
+
+
+test('S18-A4: W3C integration shows catalogue then returns to dated publication and query',async()=>{
+ const x=environment({withToolbar:true});await x.initialize();w3cFixture(x);
+ await toolClick(x,'source:w3c');await toolClick(x,'acquisition:load');
+ await selectRow(x,'spec0');await toolClick(x,'versions');await selectRow(x,'spec0:20200716');
+ const search=x.query('input[type="search"]');search.value='Specification 0';search.emit('input');await new Promise(r=>setTimeout(r,220));
+ await selectRow(x,'spec0:20200716');await toolClick(x,'integrate');
+ assert.equal(toolItem(x,'source').selected,'references');assert.equal(x.grid.selection,'w3c-tr:spec0:20200716');
+ assert.equal(toolItem(x,'returnSource').hidden,false);assert.match(toolItem(x,'returnSource').text,/W3C/);
+ await toolClick(x,'returnSource');assert.equal(toolItem(x,'source').selected,'w3c');
+ assert.equal(search.value,'Specification 0');assert.equal(x.grid.selection,'spec0:20200716');
+ assert.equal(toolItem(x,'back').hidden,false);assert.equal(toolItem(x,'returnSource').hidden,true);
+});
+
+test('S18-A4: no return for cancelled integration; explicit source navigation clears return',async()=>{
+ const x=environment({withToolbar:true});await x.initialize();w3cFixture(x);
+ await toolClick(x,'source:w3c');await toolClick(x,'acquisition:load');
+ assert.equal(toolItem(x,'returnSource').hidden,true);
+ await selectRow(x,'spec0');await toolClick(x,'integrate');
+ assert.equal(toolItem(x,'source').selected,'w3c');assert.equal(toolItem(x,'returnSource').hidden,true);
+ await toolClick(x,'versions');await selectRow(x,'spec0:20200716');await toolClick(x,'integrate');
+ assert.equal(toolItem(x,'source').selected,'references');await toolClick(x,'source:resources');await toolClick(x,'source:references');
+ assert.equal(toolItem(x,'returnSource').hidden,true);
 });

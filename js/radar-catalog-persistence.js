@@ -790,11 +790,27 @@
     var release=await recordPublicationReleaseWithIdentity(graph,plan,result.evidence,identity);
     return {release,manifest:clone(result.manifest),filename:result.filename,blob};
   }
+   function setDraftGeometry(group,revisionId,config,positions){
+     root.__radarApplicationProfile?.require('radar.rename');
+     root.__radarGeometry.verify(config);
+     var target=activeTarget(group,revisionId),next=clone(target.revision);
+     var byId=new Map(positions.map(item=>[item.id,item.p]));
+     if(byId.size!==next.blips.length||positions.length!==next.blips.length)fail('incomplete geometry positions');
+     for(var b of next.blips){
+       var p=byId.get(b.blipId);
+       if(!p||!Number.isFinite(p.x)||!Number.isFinite(p.y))fail('invalid geometry position');
+       root.__radarGeometry.sector(b.ring,b.quadrant,config);
+       b.position={x:p.x,y:p.y};
+     }
+     next.extensions=Object.assign({},next.extensions,{radarGeometry:clone(config)});
+     target.imported.source.radarRevisions[target.at]=next;
+     return {group,revisionId};
+   }
   root.__radarCatalogPersistence=Object.freeze({
     generateStandalonePublication:generateStandalonePublication,preparePublicationProjection:preparePublicationProjection,downloadPublicationProjection:downloadPublicationProjection,
     publicationState:publicationState,createPublicationDefinition:createPublicationDefinition,updatePublicationDefinition:updatePublicationDefinition,removePublicationDefinition:removePublicationDefinition,resolvePublicationDefinition:resolvePublicationDefinition,preparePublicationRelease:preparePublicationRelease,recordPublicationRelease:recordPublicationRelease,assertCanRemoveGroups:assertCanRemoveGroups,
     isDirty:isDirty,markNew:markNew,closeCatalog:closeCatalog,importIsoReference:importIsoReference,importSourceReference:importSourceReference,importOmgReference:importOmgReference,renameRadar:renameRadar,renameRevisionLabel:renameRevisionLabel,getRadarName:getRadarName,getRevisionLabel:getRevisionLabel,remember:remember,build:build,buildArtifact:buildArtifact,download:download,
-    registerDraft:registerDraft,removeGroup:removeGroup, ownsRevision:ownsRevision, transitionRevision:transitionRevision,
+    registerDraft:registerDraft,setDraftGeometry:setDraftGeometry,removeGroup:removeGroup, ownsRevision:ownsRevision, transitionRevision:transitionRevision,
     validateCreation:validateCreation,commitCreation:commitCreation,
     referenceImpact:referenceImpact,removeUnusedReference:removeUnusedReference,sourceLifecyclePlan:sourceLifecyclePlan,applySourceLifecycle:applySourceLifecycle,
     listStandardsForDraft:listStandardsForDraft, listReferenceRecords:listReferenceRecords, declareLocalReference:declareLocalReference, status:function(){return {importedCatalogs:imports.length,
