@@ -1,0 +1,14 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { runInNewContext } from 'node:vm';
+const env={window:{}};
+runInNewContext(readFileSync(new URL('../js/radar-rationale-renderer.js',import.meta.url),'utf8'),env);
+const renderer=env.window.__radarRationaleRenderer;
+const sample={standard:{designation:'ArchiMate'},organization:{name:'ASD SSG'},sections:{businessJustification:{type:'doc',content:[{type:'paragraph',content:[{type:'text',text:'Cartography of standards'}]}]},businessBenefits:{type:'doc',content:[{type:'bulletList',content:[{type:'listItem',content:[{type:'paragraph',content:[{type:'text',text:'Interoperability'}]}]}]}]}}};
+test('S19 R6 HTML renderer works without a browser or Tiptap',()=>{const html=renderer.renderDocument(sample,{lang:'en'});assert.match(html,/Business justification/);assert.match(html,/Business benefits/);assert.match(html,/<ul>/);assert.match(html,/Cartography of standards/);assert.doesNotMatch(html,/tiptap|cdn\.|<script/i);});
+test('S19 R6 HTML renderer translates interface headings only',()=>{const html=renderer.renderDocument(sample,{lang:'fr'});assert.match(html,/Justification métier/);assert.match(html,/Cartography of standards/);});
+test('S19 R6 HTML renderer escapes untrusted text',()=>{const html=renderer.renderDocument({standard:{title:'<svg onload=alert(1)>'},sections:{abstract:{type:'doc',content:[{type:'paragraph',content:[{type:'text',text:'<img src=x onerror=alert(1)>'}]}]}}});assert.match(html,/&lt;svg/);assert.doesNotMatch(html,/<svg|<img/i);});
+test('S19 R6 HTML renderer rejects unsafe links',()=>{const h=renderer.renderNode({type:'text',text:'URL',marks:[{type:'link',attrs:{href:'javascript:alert(1)'}}]});assert.equal(h,'URL');});
+test('S19 R6 HTML renderer preserves safe links',()=>{const h=renderer.renderNode({type:'text',text:'Reference',marks:[{type:'link',attrs:{href:'https://example.org/standard'}}]});assert.match(h,/noopener noreferrer/);assert.match(h,/https:\/\/example.org/);});
+test('S19 R6 HTML renderer ignores unknown rich nodes safely',()=>{assert.equal(renderer.renderNode({type:'mystery',content:[{type:'text',text:'ok'}]}),'ok');});

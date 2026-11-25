@@ -159,6 +159,13 @@ function generateFormFromCytoscapeElement(ele) {
     window.__radarApplicationProfile.readonlyFields(formFields);
     formConfig.actions={};
   }
+  // S19-R25: one W2UI form registry entry at a time. A form's toolbar
+  // and tabs are separately registered by W2UI and may outlive its DOM.
+  // Close the parent first, then any remaining registered children.
+  const registry = window.w2ui || {};
+  registry.blipForm?.destroy?.();
+  registry.blipForm_toolbar?.destroy?.();
+  registry.blipForm_tabs?.destroy?.();
   return new w2form(formConfig);
 }
 
@@ -290,7 +297,7 @@ function drawSVG() {
   let svg = container.append("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("viewBox", "0 0 800 800")
+    .attr("viewBox", "0 -120 800 920")
     .attr("preserveAspectRatio", "xMidYMid meet");
 
   const radarDrawing = svg.append("g")
@@ -302,10 +309,12 @@ function drawSVG() {
   radarDrawing.append("text")
     .attr("id", "svgTitle") // ✅ ID ajouté pour modification dynamique
     .style("font-size", "25px")
-    .text(`Standards Radar Chart ` + new Date().toLocaleDateString())
+    .text('Strategic Standard Chart')
     .attr("x", -200)
     .attr("y", -370)
     .attr("fill", "black");
+
+  window.__radarTitle?.refresh?.();
 
   // ---------------------------//
   //       RINGS (CERCLES)      //

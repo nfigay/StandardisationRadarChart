@@ -81,8 +81,19 @@
     registered[group]=next;
     return {group,revisionId};
   }
+  function setDraftRationale(group,revisionId,record,replace){
+    root.__radarApplicationProfile?.require('radar.rename');
+    if(!own(registered,group)||registered[group].revisionId!==revisionId||registered[group].status!=='draft')fail('draft revision required');
+    const api=root.__radarRationaleRevision;
+    if(!api?.put)fail('rationale model unavailable');
+    const next=api.put(registered[group],record,{draft:true,replace:replace===true});
+    if(record.organization.id!==next.ownerOrganizationId)fail('wrong owner organization');
+    if(!next.blips.some(b=>b.standardId===record.standard.id))fail('standard not present in revision');
+    registered[group]=next;
+    return {group,revisionId,rationaleId:record.rationaleId};
+  }
   root.__radarCatalogAdapter = Object.freeze({
-    releaseCatalog:releaseCatalog, setDraftGeometry:setDraftGeometry,
+    releaseCatalog:releaseCatalog, setDraftGeometry:setDraftGeometry,setDraftRationale:setDraftRationale,
     register: register, unregister:function(g) {
     root.__radarApplicationProfile?.require("workspace.remove");
       if(!own(registered,g))fail('cannot remove unknown group: '+g);

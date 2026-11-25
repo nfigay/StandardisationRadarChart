@@ -442,5 +442,6 @@ test('creator: draft import and historical revision policy preserved',()=>{
     })
   });
 
-  assert.equal(editable,true);
+  assert.equal(editable,false);
+  assert.equal(ui.isReadOnly(),false);
 });

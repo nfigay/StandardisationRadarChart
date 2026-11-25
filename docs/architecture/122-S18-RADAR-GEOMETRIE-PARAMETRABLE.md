@@ -56,3 +56,11 @@ Tests de géométries 4×3, 5×4, 6×5 ; frontières radiales ; continuité angu
 - La commande « Ajouter au catalogue » est exposée pour les normes ISO sélectionnées et les documents W3C. Pour une série W3C sans édition datée sélectionnée, la commande ouvre d'abord le choix des publications plutôt que d'importer un objet imprécis.
 - Les contrôles métier de permissions et d'unicité du catalogue restent sous la responsabilité de `radar-catalog-persistence` ; les révisions publiées restent non modifiables.
 - La recette S18-A3 doit inclure un changement de secteur autorisé et interdit, l'export/réimport du catalogue de travail, ainsi qu'un test ISO et W3C sur leurs modes documentaires.
+
+## S18-B1 — Placement contraint D3
+
+La commande explicite « Optimiser le placement des blips (D3) » utilise
+`forceSimulation`, `forceCollide`, `forceX` et `forceY` pour les brouillons
+à géométrie personnalisée. Les positions sont projetées dans leur secteur ;
+les collisions résiduelles bloquent l'enregistrement. Aucun déplacement
+n'est effectué automatiquement au chargement. Le Viewer demeure en lecture seule.

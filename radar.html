@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Radar Chart Builder</title>
     <link rel="stylesheet" type="text/css" href="css/w2ui.min.css">
+    <link rel="stylesheet" href="./css/radar-rationale.css">
+    <link rel="stylesheet" href="./css/radar-rationale-fullscreen.css">
     <link rel="stylesheet" href="css/backdrop.css">
     <link rel="stylesheet" href="css/all.min.css" />
     <script src="./js/radar-application-profile.js"></script>
@@ -47,7 +49,15 @@
     <script src="./js/radar-iso-toolbar.js"></script>
     <script src="./js/radar-workspace-explorer.js"></script>
     <script src="./js/radar-geometry.js"></script>
+    <script src="./js/radar-title.js"></script>
     <script src="./js/radar-geometry-editor.js"></script>
+    <script src="./js/radar-placement.js"></script>
+    <script src="./js/radar-rationale-tiptap.js"></script>
+    <script src="./js/radar-rationale-styles.js"></script>
+    <script src="./js/radar-rationale-renderer.js"></script>
+    <script src="./js/radar-rationale-links.js"></script>
+<script src="js/radar-rationale-revision.js"></script>
+<script src="./js/radar-rationale-panel.js"></script>
     <script src="./js/radar.js"></script>
     <script type="module" src="./src/bootstrap/radar-zone-entry.mjs"></script>
     <script src="./js/cytoscape/RadarStyle.js"></script>
@@ -199,7 +209,7 @@
                         exportclientroadmap: "Export published roadmap for client",
                         archivecatalogrevision: "Archive published revision",
                         selectcatalogrevision: "Select revision",
-                        renameradar: "Rename radar", geometryeditor: "Configure radar geometry",
+                        renameradar: "Rename radar", geometryeditor: "Configure radar geometry", optimizeplacement: "Optimize blip positions (D3)",
                         renamerevision: "Name revision",
                         standardregistry: "Standard references",
                         createcatalogblip: "Add blip",
@@ -331,7 +341,7 @@
                         exportclientroadmap: "Exporter la roadmap publiée pour le Client",
                         archivecatalogrevision: "Archiver la révision publiée",
                         selectcatalogrevision: "Sélectionner une révision",
-                        renameradar: "Renommer le radar", geometryeditor: "Configurer la géométrie du radar",
+                        renameradar: "Renommer le radar", geometryeditor: "Configurer la géométrie du radar", optimizeplacement: "Optimiser le placement des blips (D3)",
                         renamerevision: "Nommer la révision",
                         standardregistry: "Références normatives",
                         createcatalogblip: "Ajouter un blip",
@@ -726,6 +736,7 @@
                         {id:'selectcatalogrevision',text:i18next.t('menu.selectcatalogrevision')},
                         {id:'renameradar',text:i18next.t('menu.renameradar')},
                         {id:'geometryeditor',text:i18next.t('menu.geometryeditor')},
+                        {id:'optimizeplacement',text:i18next.t('menu.optimizeplacement')},
                         {id:'renamerevision',text:i18next.t('menu.renamerevision')},
                         {id:'standardregistry',text:i18next.t('menu.standardregistry')},
                         {id:'createcatalogblip',text:i18next.t('menu.createcatalogblip')},
@@ -1329,6 +1340,10 @@
                 case 'radartools:renamerevision':
                     try { window.__radarRadarAdmin.open(event.target.endsWith('renamerevision')?'revision':'radar'); }
                     catch(error) { console.error('Radar administrative edit rejected:',error); w2alert(error.message); }
+                    break;
+                case 'radartools:optimizeplacement':
+                    try { const r=window.__radarPlacement.optimize(cy,window); w2alert('Placement D3 terminé : '+r.count+' blips. Exportez le catalogue pour conserver les positions.'); }
+                    catch(error) { console.error(error); w2alert(error.message); }
                     break;
                 case 'radartools:geometryeditor':
                     try { window.__radarGeometryEditor.open(cy); }
@@ -2277,22 +2292,34 @@
                 console.log(node.data())
             }
 
-            let form = generateFormFromCytoscapeElement(node);
-
-            // Render form inside the right panel of w2ui layout
-            w2ui.mainLayout.html('right', '<div id="form"></div>');
-            form.render('#form');
+            // S19-R25: the dossier panel validates switching BEFORE constructing a
+            // W2UI form. A rejected dossier save must not replace the current form.
+            if (window.__radarRationalePanel?.showNode) {
+                window.__radarRationalePanel.showNode(node);
+            } else {
+                const form = generateFormFromCytoscapeElement(node);
+                if (form) {
+                    w2ui.mainLayout.html('right', '<div id="form"></div>');
+                    form.render('#form');
+                }
+            }
         });
 
 
         // === CYTOSCAPE EVENT TO DISPLAY FORM IN RIGHT PANEL ===
         cy.on('tap', 'node', function (evt) {
             let node = evt.target;
-            let form = generateFormFromCytoscapeElement(node);
-
-            // Render form inside the right panel of w2ui layout
-            w2ui.mainLayout.html('right', '<div id="form"></div>');
-            form.render('#form');
+            // S19-R25: the dossier panel validates switching BEFORE constructing a
+            // W2UI form. A rejected dossier save must not replace the current form.
+            if (window.__radarRationalePanel?.showNode) {
+                window.__radarRationalePanel.showNode(node);
+            } else {
+                const form = generateFormFromCytoscapeElement(node);
+                if (form) {
+                    w2ui.mainLayout.html('right', '<div id="form"></div>');
+                    form.render('#form');
+                }
+            }
         });
 
 
@@ -2324,6 +2351,44 @@
       };
 
       window.__radarViewportSync();
+      // S19-R24: keep the Cytoscape hit surface synchronized with the
+      // W2UI-managed radar viewport after panel/tab and window resizes.
+      // Node positions and graph data are never changed by this observer.
+      (() => {
+        const main = document.getElementById('main-container');
+        const radar = document.getElementById('radar-container');
+        let scheduled = false;
+        let pendingReason = 'startup';
+        const snapshot = () => {
+          const box = id => {
+            const el = document.getElementById(id);
+            if (!el) return null;
+            const rect = el.getBoundingClientRect();
+            return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+          };
+          return { radar: box('radar-container'), cytoscape: box('cy-container'), svg: box('svg-container'), pendingReason };
+        };
+        const run = () => {
+          scheduled = false;
+          if (!document.getElementById('radar-container')) return;
+          window.__radarViewportSync?.();
+        };
+        const request = reason => {
+          pendingReason = reason || 'layout';
+          if (scheduled) return;
+          scheduled = true;
+          (window.requestAnimationFrame || (fn => window.setTimeout(fn, 0)))(run);
+        };
+        window.__radarInputSync = Object.freeze({request, snapshot});
+        if (typeof ResizeObserver !== 'undefined') {
+          const observer = new ResizeObserver(() => request('resize-observer'));
+          if (main) observer.observe(main);
+          if (radar) observer.observe(radar);
+        }
+        window.addEventListener('resize', () => request('window-resize'));
+        request('initial');
+      })();
+
     </script>
 
 <!-- ISO streaming engine loaded before panel initialization -->

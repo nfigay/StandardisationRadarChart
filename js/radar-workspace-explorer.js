@@ -95,7 +95,7 @@
       // Browser-native event is used only to position the context menu.
       showRemovalMenu(node.workspaceSource,node.workspaceGroup||null,original);
     }});
-    root.i18next?.on?.('languageChanged',updateWorkspaceLabels);
+    root.i18next?.on?.('languageChanged',()=>{updateWorkspaceLabels();root.__radarTitle?.refresh?.();});
     refresh();return tree;
   }
   function renderPublishedPanel(){
@@ -123,7 +123,7 @@
     const r=root.__radarCatalogAdapter.getRevision(hit.radar.group);
     const radarName=name(hit.radar);
     const svgTitle=d.getElementById('svgTitle');
-    if(svgTitle){svgTitle.textContent=radarName;svgTitle.setAttribute('x','0');svgTitle.setAttribute('text-anchor','middle');}
+    if(svgTitle)root.__radarTitle?.refresh?.();
     const heading=add(publishedPanel,'h2',radarName);Object.assign(heading.style,{fontSize:'17px',margin:'10px 0'});
     const dl=add(publishedPanel,'dl');
     function field(label,value){if(value==null||value==='')return;const dt=add(dl,'dt',label);dt.style.fontWeight='600';const dd=add(dl,'dd',value);Object.assign(dd.style,{margin:'3px 0 12px',whiteSpace:'pre-wrap'});}
@@ -261,6 +261,7 @@
     const changed=active!==group;
     hooks.select(group);
     active=group;
+    root.__radarTitle?.refresh?.();
     if(root.__radarApplicationProfile?.published){
       renderPublishedPanel();
       if(changed){
@@ -273,6 +274,52 @@
     }
     else if(tree){var selected=tree.get('radar_'+hit.radar.key);if(selected)tree.select(selected.id);}
     return {group:group};
+  }
+  // S19-R75-R5: exact navigation for currently loaded catalog objects only.
+  // Never infer a version from a label, or silently choose between revisions.
+  function navigateRelatedObject(ref) {
+    if (!ref || !['radar','revision','organization'].includes(ref.type) ||
+        typeof ref.id!=='string' || !ref.id.trim()) return {ok:false,reason:'invalid-reference'};
+    const candidates=[];
+    for (const source of sources) {
+      if(source.kind!=='catalog')continue;
+      for(const radar of source.radars) {
+        const revision=root.__radarCatalogAdapter?.getRevision?.(radar.group);
+        if(!revision)continue;
+        const match=ref.type==='radar'?revision.radarId===ref.id:
+          ref.type==='revision'?revision.revisionId===ref.id&&revision.radarId===ref.radarId:
+          revision.ownerOrganizationId===ref.id;
+        if(match)candidates.push({source,radar,revision});
+      }
+    }
+    if(!candidates.length)return {ok:false,reason:'not-loaded'};
+    const nodeMatches=(property,value)=>{
+      const found=[];
+      function scan(nodes){for(const n of nodes||[]){if(n[property]===value)found.push(n);scan(n.nodes);}}
+      scan(tree?.nodes);return found;
+    };
+    const choose=()=>{
+      if(ref.type==='revision')return candidates.length===1?candidates[0]:null;
+      const activeCandidate=candidates.find(c=>c.radar.group===active);
+      return activeCandidate || (candidates.length===1?candidates[0]:null);
+    };
+    const selected=choose();
+    if(ref.type==='organization') {
+      const orgNodes=nodeMatches('orgId',ref.id);
+      if(orgNodes.length!==1)return {ok:false,reason:'ambiguous-organization'};
+      if(selected)activate(selected.radar.group);
+      tree?.select?.(orgNodes[0].id);
+      return selected?{ok:true,group:selected.radar.group,selectedType:'organization',radarActivated:true}:
+        {ok:false,reason:'organization-selected-radar-ambiguous',selectedType:'organization'};
+    }
+    if(!selected)return {ok:false,reason:'ambiguous-revision'};
+    activate(selected.radar.group); // Existing selection hook refreshes the SVG radar.
+    if(ref.type==='radar') {
+      const radarNodes=nodeMatches('workspaceRadarId',ref.id);
+      if(radarNodes.length!==1)return {ok:false,reason:'radar-activated-tree-ambiguous',group:selected.radar.group};
+      tree?.select?.(radarNodes[0].id);
+    }
+    return {ok:true,group:selected.radar.group,selectedType:ref.type,radarActivated:true};
   }
   function showRemovalMenu(sourceId,group,mouse) {
     if(root.__radarApplicationProfile?.allows('workspace.remove')===false)return;
@@ -342,6 +389,7 @@
     refresh();
   }
   root.__radarWorkspaceExplorer=Object.freeze({
-    graph:function(){return hooks?.graph?.()||null;},releaseCatalog:releaseCatalog,initialize,loadASD,addCatalog,draftAdded,activate,remove,refresh,
+    describeActive:function(){const hit=find(active);if(!hit)return null;return {organization:hit.radar.orgLabel||null,radar:hit.radar.label||null,group:active};},
+    graph:function(){return hooks?.graph?.()||null;},releaseCatalog:releaseCatalog,initialize,loadASD,addCatalog,draftAdded,activate,navigateRelatedObject,remove,refresh,
     status:function(){return {activeGroup:active,sources:sources.map(s=>({id:s.id,kind:s.kind,groups:s.radars.map(r=>r.group),unassignedCount:s.unassignedCount||0}))};}});
 })(window);

@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync,existsSync} from 'node:fs';
+import {runInNewContext} from 'node:vm';
+const candidates=['../js/','../payload/js/','./payload/js/'].map(p=>new URL(p,import.meta.url));
+const dir=candidates.find(p=>existsSync(new URL('radar-rationale-renderer.js',p)));
+const env={window:{}};runInNewContext(readFileSync(new URL('radar-rationale-renderer.js',dir),'utf8'),env);const r=env.window.__radarRationaleRenderer;
+const text=(text,marks=[])=>({type:'text',text,marks});const p=(...content)=>({type:'paragraph',content});
+const ref={blipId:'b1',standardId:'s1',label:'Alpha'};
+test('extended marks and safe HTML',()=>assert.equal(r.renderNode(text('<x>',[{type:'underline'},{type:'highlight'}])),'<mark><u>&lt;x&gt;</u></mark>'));
+test('checked and unchecked tasks',()=>{const h=r.renderNode({type:'taskList',content:[{type:'taskItem',attrs:{checked:true},content:[p(text('One'))]},{type:'taskItem',attrs:{checked:false},content:[p(text('Two'))]}]});assert.match(h,/☑/);assert.match(h,/☐/);});
+test('tables retain validated spans and escape cell text',()=>{const h=r.renderNode({type:'table',content:[{type:'tableRow',content:[{type:'tableHeader',attrs:{colspan:2,rowspan:'2" onclick="x'},content:[p(text('<script>'))]}]}]});assert.match(h,/<th colspan="2">/);assert.match(h,/&lt;script&gt;/);assert.doesNotMatch(h,/onclick|<script>/);});
+test('reference markup escapes ID and label',()=>{const h=r.renderNode({type:'radarReference',attrs:{...ref,blipId:'x" onclick="x',label:'<img>'}});assert.match(h,/data-blip-id="x&quot; onclick=&quot;x"/);assert.match(h,/&lt;img&gt;/);assert.doesNotMatch(h,/<img/);});
+test('resolution is exact, local and rejects ambiguous matches',()=>{const b={blipId:'b1',standardId:'s1'};assert.equal(r.resolveReference(ref,{blips:[b]}),b);assert.equal(r.resolveReference(ref,{blips:[{...b,standardId:'s2'}]}),null);assert.equal(r.resolveReference(ref,{blips:[b,b]}),null);assert.equal(r.resolveReference(ref,null),null);});
+test('separate IDs and full document CSP',()=>{assert.equal(r.renderNode({type:'radarReference',attrs:{label:'missing'}}),'missing');assert.match(r.renderDocument({}),/Content-Security-Policy/);});
+test('ordered lists preserve start and fractional headings are normalized',()=>{assert.equal(r.renderNode({type:'orderedList',attrs:{start:4}}),'<ol start="4"></ol>');assert.equal(r.renderNode({type:'heading',attrs:{level:2.5}}),'<h2></h2>');});

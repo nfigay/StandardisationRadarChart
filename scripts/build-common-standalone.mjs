@@ -1,5 +1,6 @@
 import {execFileSync} from 'node:child_process';
-const sourceCommit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+const intermediateSource=process.env.RADAR_INTERMEDIATE_SOURCE_DIR||null;
+const sourceCommit=intermediateSource?'local-intermediate-uncommitted':execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 import assert from 'node:assert/strict';
 import {assertPagesProvenance} from './pages-build-provenance.mjs';
 
@@ -27,14 +28,12 @@ import {
   build
 } from 'esbuild';
 
-const root=resolve(
-  '.radarchart-build/pages'
-);
+const root=resolve(intermediateSource||'.radarchart-build/pages');
 
 const output=process.env.PILOT_DIR;
 
 // A complete commit claim requires the actual fresh committed Pages bytes.
-if(/^[a-f0-9]{40}$/.test(sourceCommit))assertPagesProvenance(process.cwd(),sourceCommit);
+if(!intermediateSource&&/^[a-f0-9]{40}$/.test(sourceCommit))assertPagesProvenance(process.cwd(),sourceCommit);
 
 assert.ok(output);
 

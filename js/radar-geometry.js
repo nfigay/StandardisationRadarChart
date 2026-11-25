@@ -113,9 +113,10 @@
     if(container.empty()) throw Error('Missing #svg-container');
     const el=container.node();
     container.select('svg').remove();
-    const svg=container.append('svg').attr('width',el.clientWidth).attr('height',el.clientHeight).attr('viewBox','0 0 800 800').attr('preserveAspectRatio','xMidYMid meet');
+    const svg=container.append('svg').attr('width',el.clientWidth).attr('height',el.clientHeight).attr('viewBox','0 -120 800 920').attr('preserveAspectRatio','xMidYMid meet');
     const group=svg.append('g').attr('transform','translate('+config.center.x+','+config.center.y+')');
-    group.append('text').attr('id','svgTitle').attr('x',-200).attr('y',-370).attr('font-size','25px').attr('fill','black').text('Standards Radar Chart '+new Date().toLocaleDateString());
+    group.append('text').attr('id','svgTitle').attr('x',-200).attr('y',-370).attr('font-size','25px').attr('fill','black').text('Strategic Standard Chart');
+    window.__radarTitle?.refresh?.();
     config.zones.slice().reverse().forEach(z=>group.append('circle').attr('r',z.maxRadius).attr('fill','white').attr('stroke','black').attr('stroke-width',2));
     const radius=config.zones[config.zones.length-1].maxRadius;
     config.quarters.forEach(q=>{

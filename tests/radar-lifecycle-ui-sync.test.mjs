@@ -43,13 +43,13 @@ test('transition refreshes workspace projection and toolbar from published adapt
   assert.equal(x.w.__radarCatalogUI.isReadOnly(),true);
 });
 
-test('switching from published to draft restores editing mode, without changing published status',()=>{
+test('switching from published to draft permits editing but keeps dragging locked',()=>{
   const x=model();
   x.w.__radarCatalogUI.transitionActiveRevision('publish',x.toolbar,x.graph);
   const draft=x.w.__radarCatalogUI.createOrOpenDraft(x.toolbar,x.graph,(g)=>x.w.__radarRevisionSession.select(x.graph,g,()=>{}));
   x.w.__radarCatalogUI.afterSelect(draft.group,x.graph);
-  assert.equal(x.toolbar.mode,'grabon');
-  assert.equal(x.grabbable(),true);
+  assert.equal(x.toolbar.mode,'locked');
+  assert.equal(x.grabbable(),false);
   assert.equal(x.w.__radarCatalogUI.isReadOnly(),false);
   assert.equal(x.w.__radarCatalogAdapter.getRevision('CATALOG_REVISION_0').status,'published');
 });
