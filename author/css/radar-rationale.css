@@ -1,0 +1,258 @@
+/* S19-R74-R75-R11: move workspace tabs above scrollable dossier/properties panes. */
+/* S19-A4-R4: W2UI tabs & toolbar, native compact section selector, Tiptap editor. */
+#s19-shell{position:relative;height:100%;overflow:hidden;background:#fff;font:13px/1.45 Arial,sans-serif;color:#263245}
+#s19-tabs{position:absolute;top:0;left:0;right:0;height:30px;min-height:30px;z-index:3;background:#fff;border-bottom:1px solid #e2e6ec}
+#s19-body-properties{padding:0;height:calc(100% - 31px);margin-top:31px;overflow:auto}
+#s19-body-rationale{box-sizing:border-box;padding:8px;height:calc(100% - 31px);margin-top:31px;overflow:auto}
+#s19-body-rationale[hidden],#s19-body-properties[hidden],#s19-editor-tools[hidden]{display:none!important}
+.s19-document-head{display:flex;align-items:center;gap:6px;justify-content:space-between}
+#s19-title{min-width:0;overflow-wrap:anywhere;font-size:14px}
+#s19-full{min-width:27px;height:25px;background:transparent;border:1px solid #d9dfe6;border-radius:4px;cursor:pointer;font-size:16px}
+#s19-selected{font-size:11px;color:#647186;overflow-wrap:anywhere;margin:3px 0 6px}
+#s19-toolbar{min-height:30px;margin-bottom:9px}
+#s19-section-label{display:block;font-weight:600;font-size:11px;margin-bottom:3px}
+#s19-sections{box-sizing:border-box;display:block;width:100%;height:31px;padding:4px 6px;border:1px solid #c6ccd4;border-radius:4px;background:#fff;color:#273342;margin-bottom:9px}
+#s19-content{min-height:130px;padding:8px;border:1px solid #dce1e8;border-radius:5px;overflow-wrap:anywhere}
+#s19-content p{margin:7px 0}#s19-content ul,#s19-content ol{padding-left:20px}
+.s19-editor-tools{display:flex;gap:3px;margin-bottom:5px}
+.s19-editor-tools button{min-width:28px;background:#f3f5f8;border:1px solid #c6ccd4;border-radius:4px;padding:4px;cursor:pointer}
+.s19-editor .tiptap{outline:0;min-height:160px}.s19-hint{font-size:11px;color:#667085}
+#s19-shell.s19-fullscreen{position:fixed;z-index:9999;inset:0;width:100vw;height:100vh;background:#fff;overflow:auto;box-shadow:0 0 0 100vmax rgba(0,0,0,.25)}
+#s19-shell.s19-fullscreen #s19-body-rationale{max-width:1100px;margin:0 auto;padding:16px 24px}
+#s19-shell.s19-fullscreen #s19-content{min-height:55vh}
+
+/* S19-A4-R6: compact visible dossier controls and full HTML publication preview. */
+#s19-toolbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:33px}
+.s19-mode-switch{display:inline-flex;align-items:stretch;gap:0;margin-right:auto}
+#s19-toolbar .s19-command,#s19-toolbar .s19-more summary{font:inherit;border:1px solid #c6ccd4;background:#f8f9fc;color:#263245;border-radius:4px;padding:6px 10px;cursor:pointer}
+#s19-toolbar .s19-command:disabled{opacity:.45;cursor:not-allowed}
+.s19-mode-switch .s19-command:first-child{border-radius:4px 0 0 4px}
+.s19-mode-switch .s19-command:last-child{border-radius:0 4px 4px 0;margin-left:-1px}
+#s19-toolbar .s19-command.s19-active{background:#e4effc;border-color:#4380b6;color:#135397}
+.s19-more{position:relative}.s19-more summary{list-style:none;user-select:none}.s19-more summary::-webkit-details-marker{display:none}
+.s19-more-menu{position:absolute;right:0;top:100%;min-width:190px;z-index:30;display:flex;flex-direction:column;padding:5px;background:#fff;border:1px solid #c6ccd4;box-shadow:0 4px 12px #0002;border-radius:4px}
+.s19-more-menu .s19-command{width:100%;text-align:left;white-space:nowrap}
+#s19-section-container[hidden]{display:none!important}
+#s19-content:has(.s19-preview-frame){padding:0;border:0;min-height:0}
+.s19-preview-frame{display:block;box-sizing:border-box;width:100%;min-height:580px;height:65vh;border:1px solid #dce1e8;border-radius:5px;background:#fff}
+#s19-shell.s19-fullscreen .s19-preview-frame{height:calc(100vh - 155px);min-height:500px}
+
+/* S19 R74/R75 */
+.s19-editor-tools{flex-wrap:wrap}.s19-editor-tools select{max-width:100%;min-width:140px}.s19-editor .tiptap table{border-collapse:collapse;width:100%}.s19-editor .tiptap td,.s19-editor .tiptap th{border:1px solid #aeb9c8;padding:5px;min-width:40px}.s19-editor .tiptap th{background:#edf1f5}.s19-editor .tiptap .selectedCell{background:#e2edff}.s19-editor .tiptap ul[data-type=taskList]{list-style:none;padding-left:0}.s19-editor .tiptap li[data-type=taskItem]{display:flex;gap:6px}.s19-editor .tiptap [data-type=radarReference]{background:#edf4ff;color:#1864ab;border:1px solid #a8c5e8;border-radius:4px;padding:1px 4px}.s19-navigation-marker{position:fixed;transform:translate(-50%,-50%);border:3px solid #e69100;border-radius:50%;pointer-events:none;z-index:99999;box-shadow:0 0 0 3px #fff8;box-sizing:border-box}
+
+/* S19-R74-R75-UI-R2: compact reference picker */
+/* Explicit local dimensions defeat global W2UI/native select sizing. */
+#s19-editor-tools {
+  display: flex;
+  align-items: center;
+  align-content: flex-start;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin: 0 0 8px;
+  padding: 0;
+  background: transparent;
+}
+#s19-editor-tools > button {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 34px;
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  line-height: 20px;
+  padding: 4px 7px;
+  white-space: nowrap;
+}
+#s19-editor-tools > #s19-reference-select {
+  display: inline-block;
+  position: static;
+  box-sizing: border-box;
+  flex: 0 1 260px;
+  width: 260px;
+  min-width: 190px;
+  max-width: 100%;
+  height: 34px;
+  min-height: 34px;
+  max-height: 34px;
+  line-height: normal;
+  margin: 2px 0;
+  padding: 4px 28px 4px 9px;
+  border: 1px solid #b8c3d0;
+  border-radius: 5px;
+  background: #fff;
+  color: #263245;
+  font: 13px Arial, sans-serif;
+  appearance: auto;
+  -webkit-appearance: menulist;
+  box-shadow: none;
+  vertical-align: middle;
+  align-self: center;
+}
+#s19-editor-tools > #s19-reference-select:focus-visible {
+  outline: 2px solid #4380b6;
+  outline-offset: 2px;
+}
+
+/* S19-R74/R75 R3 — grouped, compact documentary ribbon and structured references */
+#s19-editor-tools.s19-editor-tools{display:flex;flex-wrap:wrap;align-items:stretch;align-content:flex-start;gap:7px;min-height:0;height:auto;max-height:none;padding:8px;margin:0 0 10px;background:#f8fafc;border:1px solid #d7dfe8;border-radius:6px}
+#s19-editor-tools .s19-ribbon-group{display:flex;flex-direction:column;justify-content:space-between;gap:6px;padding:2px 9px 0 0;border-right:1px solid #d4dce6;min-width:0}
+#s19-editor-tools .s19-ribbon-group:last-child{border:0}
+#s19-editor-tools .s19-ribbon-items{display:flex;flex-wrap:wrap;gap:3px;align-items:center}
+#s19-editor-tools button{box-sizing:border-box;flex:0 0 auto;min-width:33px;width:auto;height:32px;min-height:32px;max-height:32px;padding:4px 7px;line-height:20px;white-space:nowrap;background:#fff}
+#s19-editor-tools button:focus-visible,#s19-related button:focus-visible{outline:2px solid #2472ba;outline-offset:1px}
+#s19-editor-tools button.s19-command-active{background:#dceeff;border-color:#2f7bc1}
+.s19-ribbon-caption{text-align:center;color:#58697e;font-size:11px}
+#s19-related{margin:12px 0 18px;padding:12px;border:1px solid #d7dfe8;border-radius:6px;background:#fafbfd}
+#s19-related .s19-related-title{font-size:14px;margin:0 0 8px}
+#s19-related .s19-related-form{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+#s19-related .s19-related-form select,#s19-related .s19-related-form input{box-sizing:border-box;display:inline-block;flex:1 1 160px;width:auto;min-width:120px;max-width:320px;height:33px;min-height:33px;max-height:33px;padding:5px 8px;background:#fff;border:1px solid #b7c4d3;border-radius:4px;appearance:auto;-webkit-appearance:auto}
+#s19-related [hidden]{display:none!important}
+#s19-related button{font:inherit;border:1px solid #c7d1dc;border-radius:4px;background:#fff;padding:6px 9px;cursor:pointer}
+#s19-related .s19-related-list{list-style:none;padding:0;margin:0}
+#s19-related li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;border-bottom:1px solid #e4eaf0;padding:6px 0}
+#s19-related li small{min-width:90px;color:#5c6b7e}
+#s19-related .s19-related-link{color:#155d98;text-align:left;flex:1}
+#s19-reference-notice{color:#815b18;min-height:1em;font-size:12px}
+
+/* S19-R74-R75-R4: compact documentary editor and associated references */
+#s19-editor-tools.s19-editor-tools{display:block;padding:0;margin:0 0 12px;background:transparent;border:0;min-height:0}
+#s19-editor-tools .s19-compact-bar{display:flex;gap:2px;align-items:center;flex-wrap:wrap;background:#292929;border-radius:5px;padding:6px 8px;color:#e8e8e8}
+#s19-editor-tools .s19-icon-command{font:700 19px/1.2 system-ui,sans-serif;min-width:34px;width:34px;height:34px;min-height:34px;max-height:34px;border:0;border-radius:4px;padding:2px;color:#e4e4e4;background:transparent;cursor:pointer}
+#s19-editor-tools .s19-icon-command:hover,#s19-editor-tools .s19-icon-command.s19-command-active{background:#505050;color:white}
+#s19-editor-tools .s19-advanced-commands{margin-left:auto;position:relative}
+#s19-editor-tools .s19-advanced-commands summary{list-style:none;cursor:pointer;font:bold 23px/34px system-ui;color:#eee;min-width:36px;text-align:center}
+#s19-editor-tools .s19-advanced-commands summary::-webkit-details-marker{display:none}
+#s19-editor-tools .s19-advanced-menu{position:absolute;z-index:200;right:0;top:100%;display:grid;grid-template-columns:repeat(2,minmax(135px,1fr));gap:4px;background:#fff;border:1px solid #cad2dc;border-radius:5px;padding:8px;max-height:300px;overflow:auto;box-shadow:0 6px 16px #0002;min-width:min(330px,85vw)}
+#s19-editor-tools .s19-advanced-menu button{display:block;text-align:left;font:13px/1.3 system-ui,sans-serif;color:#253044;background:#fff;min-height:32px;max-height:none;width:100%;height:auto;padding:6px 9px;border:1px solid #d9e0e8}
+#s19-editor-tools .s19-advanced-menu button:hover{background:#eaf3fe}
+#s19-related .s19-related-add{margin:8px 0}
+#s19-related .s19-related-add summary{display:inline-block;cursor:pointer;color:#17619b;border:1px solid #a9c2d8;border-radius:5px;background:#f0f7ff;padding:6px 10px;font:13px/1.4 system-ui}
+#s19-related .s19-related-add .s19-related-form{margin-top:9px}
+#s19-related .s19-related-list{display:block}
+#s19-related li{align-items:baseline}
+#s19-related li small{order:0;min-width:100px}
+#s19-related li .s19-related-link{order:1}
+#s19-related li button[data-action=removeReference]{order:2}
+
+/* S19-R74-R9: align task items according to observed Tiptap DOM. */
+/* S19-R74-R7: scoped Tiptap document blocks; no global W2UI overrides. */
+#s19-content .s19-editor .tiptap ul[data-type="taskList"] {
+  list-style: none !important;
+  margin: 0.7em 0;
+  padding: 0 !important;
+}
+#s19-content .s19-editor .tiptap ul[data-type="taskList"] > li[data-checked] {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 0.65em;
+  margin: 0.35em 0;
+  padding: 0;
+  list-style: none !important;
+}
+#s19-content .s19-editor .tiptap li[data-checked] > label {
+  display: inline-flex !important;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  margin: 0.1em 0 0;
+  padding: 0;
+  cursor: pointer;
+  min-width: 1.2em;
+}
+#s19-content .s19-editor .tiptap li[data-checked] > label input[type="checkbox"] {
+  position: static !important;
+  display: inline-block !important;
+  appearance: auto;
+  opacity: 1 !important;
+  width: 1.1em;
+  height: 1.1em;
+  margin: 0;
+  vertical-align: middle;
+  pointer-events: auto;
+}
+#s19-content .s19-editor .tiptap li[data-checked] > div {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: block;
+}
+#s19-content .s19-editor .tiptap li[data-checked] > div > p {
+  margin: 0 !important;
+  min-height: 1.4em;
+  white-space: pre-wrap;
+}
+#s19-content .s19-editor .tiptap blockquote {
+  margin: 0.9em 0;
+  padding: 0.4em 0.9em;
+  border-left: 4px solid #71839c;
+  border-radius: 0 4px 4px 0;
+  background: #f2f5f9;
+  color: #38485e;
+}
+#s19-content .s19-editor .tiptap blockquote p { margin: 0.25em 0 !important; }
+#s19-content .s19-editor .tiptap pre {
+  display: block;
+  margin: 0.9em 0;
+  padding: 0.9em 1em;
+  border: 1px solid #d7dee8;
+  border-radius: 6px;
+  background: #f1f4f8;
+  color: #243247;
+  font: 13px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre;
+  overflow-x: auto;
+  tab-size: 2;
+}
+#s19-content .s19-editor .tiptap pre code {
+  background: transparent;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  white-space: inherit;
+}
+#s19-content .s19-editor .tiptap :not(pre) > code {
+  background: #edf1f5;
+  border-radius: 3px;
+  padding: 0.1em 0.3em;
+  font: 0.92em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+/* Do not style W2UI forms, other task lists, or other application panels. */
+
+/* S19-R74-R75-R12: W2UI document ribbon, scoped to S19. */
+#s19-editor-tools.s19-w2ui-ribbon{display:block;min-height:34px;overflow:visible}
+#s19-editor-tools.s19-w2ui-ribbon .w2ui-toolbar{min-height:32px}
+#s19-body-rationale .s19-editor-tools .w2ui-toolbar button{min-width:auto}
+
+/* S19-R74-R75-R13: document colors stay within the S19 editor. */
+#s19-body-rationale .s19-editor .tiptap p[style*="background-color"]{
+  padding:5px 8px;border-radius:3px;
+}
+#s19-body-rationale .s19-editor .tiptap mark{
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+#s19-editor-tools .s19-color-command{min-width:0}
+
+/* S19-R17 — list markers and cell dimensions, scoped to editor. */
+#s19-content .tiptap ul:not([data-type="taskList"]),
+#s19-content .tiptap ol { list-style-position:outside; padding-inline-start:2.1em; }
+#s19-content .tiptap ul:not([data-type="taskList"]) > li,
+#s19-content .tiptap ol > li { padding-inline-start:.15em; }
+#s19-content .tiptap li > p { margin:0; }
+#s19-content .tiptap li > ul,#s19-content .tiptap li > ol { margin-top:5px;margin-bottom:5px; }
+#s19-content .tiptap .tableWrapper{overflow-x:auto;}
+#s19-content .tiptap table{border-collapse:collapse;table-layout:fixed;max-width:none;}
+#s19-content .tiptap table td,#s19-content .tiptap table th{min-width:45px;vertical-align:top;}
+
+/* S19-R17-R1: Respect fixed Tiptap column widths and row heights. */
+#s19-content .tiptap .tableWrapper{overflow-x:auto;}
+#s19-content .tiptap table{width:auto;min-width:0;max-width:none;table-layout:fixed;}
+#s19-content .tiptap table colgroup col{min-width:45px;}
+#s19-content .tiptap table tr[style*="--s19-row-height"] > td,
+#s19-content .tiptap table tr[style*="--s19-row-height"] > th{height:var(--s19-row-height);box-sizing:border-box;}
+
+/* S19-R18: Tiptap native column resize handles; scoped to dossier only. */
+#s19-content .tiptap .tableWrapper{max-width:100%;overflow-x:auto;}
+#s19-content .tiptap table:not([style*="width:"]){width:100%;}
+#s19-content .tiptap td,#s19-content .tiptap th{position:relative;box-sizing:border-box;}
+#s19-content .tiptap .column-resize-handle{position:absolute;right:-2px;top:0;bottom:0;width:4px;background:#6b98ce;pointer-events:none;}
+#s19-content .tiptap.resize-cursor{cursor:col-resize;}

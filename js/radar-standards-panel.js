@@ -13,6 +13,7 @@
  const WINDOW_SIZES=[100,250,500];let windowSize=100,windowSortField='reference',windowSortDirection='asc',autoLoading=false,windowBasePosition=0;
  let advancedExpression=null,advancedRevision=0,advancedButton=null,advancedDialog=null;
  let nativeOriginFilter=null;
+ let sourceReturn=null,pendingWindowRestore=null,pendingSourceSelection=null; // S18-A4: return after successful integration.
  let standardsToolbar=null,toolbarState=new Map(),documentOffset=0,documentSeries=null,documentOmgAdoptions=false,documentOmgFamily=null,documentResult=null,documentBusy=false,documentMessage='',documentToken=0,omgFile=null;
  let mode='ics',icsRows=null,icsError=null,loading=false,isoDeliverables=[],isoCommittees=[],isoSync=[],isoLoading=false,localSyncBusy=false,localSyncMessage='',rssRows=[],rssMessage='',changeRows=[],changeMessage='',changeRelease='';
  /* S14-L2 INCREMENTAL TREES */
@@ -58,6 +59,8 @@
  Object.assign(isoStrings.en,{resourceOmgHistoryImport:'Import OMG edition history (JSON)',resourceOmgHistoryExport:'Export this history (JSON)',resourceOmgHistoryImported:'Private history imported',resourceOmgPublished:'Load OMG references online (Pages)',resourceOmgPublic:'Public link index, OMG source'});
  Object.assign(isoStrings.fr,{resourceOmgHistory:'Historique des éditions',resourceOmgHistoryView:'Historique OMG',resourceOmgApplicability:'Une ancienne édition peut rester applicable en exploitation ; vérifier le contexte contractuel ou technique.',resourceOmgHistoryBack:'Retour au catalogue OMG',resourceOmgHistoryRefresh:'Actualiser cet historique',resourceOmgHistoryUnavailable:'Historique non encore acquis'});
  Object.assign(isoStrings.en,{resourceOmgHistory:'Edition history',resourceOmgHistoryView:'OMG history',resourceOmgApplicability:'An earlier edition may remain applicable in operation; verify contractual or technical context.',resourceOmgHistoryBack:'Back to OMG catalog',resourceOmgHistoryRefresh:'Refresh this history',resourceOmgHistoryUnavailable:'History not yet acquired'});
+ Object.assign(isoStrings.fr,{returnIso:'Retour aux normes ISO',returnRfc:'Retour aux RFC',returnW3c:'Retour aux spécifications W3C',returnOmg:'Retour aux spécifications OMG'});
+ Object.assign(isoStrings.en,{returnIso:'Back to ISO standards',returnRfc:'Back to RFCs',returnW3c:'Back to W3C specifications',returnOmg:'Back to OMG specifications'});
  registerI18n();
  let activeDetailRecord=null,activeDetailCleanup=null;
  let localeSubscribed=false;
@@ -731,11 +734,53 @@
  const sourceApi=()=>root.__radarStandardSources;
  const canIntegrate=()=>!root.__radarApplicationProfile?.viewer&&root.__radarApplicationProfile?.allows('catalog.declareReference')===true&&root.__radarCatalogPersistence?.status?.().importedCatalogs===1;
  function currentSource(){return isoModes.includes(mode)?'iso-open-data':mode;}
- function navigateMode(id){
+ // Preserve the exact documentary context only after a successful integration.
+ // A deliberate source switch or independent catalogue navigation invalidates the return.
+ function captureSourceContext(){
+   return {mode,query:search?.value||'',selected:grid?.getSelection?.()[0]||selected,
+     documentSeries,documentOffset,documentOmgFamily,documentOmgAdoptions,
+     nativeOrigin:nativeOriginFilter?.value||'all',
+     isoFacet:icsFacet?.value||'',committeeFacet:committeeFacet?.value||'',
+     windowSize,windowSortField,windowSortDirection,
+     windowBasePosition,windowHistory:windowHistory.slice(),windowPosition,windowNext,
+     sidebarSelection:{...sidebarSelection}};
+ }
+ function navigateMode(id,{retainReturn=false,restore=null}={}){
    if(root.__radarApplicationProfile?.viewer&&id!=='references')return;
    if(!isoModes.includes(id)&&!documentaryModes.includes(id)&&id!=='references')return;
-   toolbarState.clear();windowToken++;documentToken++;documentBusy=false;documentMessage='';documentOffset=0;documentSeries=null;documentOmgAdoptions=false;documentOmgFamily=null;documentResult=null;mode=id;selected=null;if(search)search.value='';refresh();if(mode==='ics')void loadIcs();if(mode==='omg-specifications'&&!sourceApi()?.omgStatus())void documentaryAction(sourceApi()?.omgHasLocalRelay?.()?'omgRestore':'omgPublished');
+   if(!retainReturn)sourceReturn=null;
+   pendingWindowRestore=null;pendingSourceSelection=null;
+   toolbarState.clear();windowToken++;documentToken++;documentBusy=false;documentMessage='';documentOffset=0;documentSeries=null;documentOmgAdoptions=false;documentOmgFamily=null;documentResult=null;mode=id;selected=null;if(search)search.value='';
+   if(restore){
+     if(search)search.value=restore.query;
+     if(icsFacet)icsFacet.value=restore.isoFacet;
+     if(committeeFacet)committeeFacet.value=restore.committeeFacet;
+     windowSize=restore.windowSize;windowSortField=restore.windowSortField;windowSortDirection=restore.windowSortDirection;
+     sidebarSelection={...restore.sidebarSelection};
+     documentSeries=restore.documentSeries;documentOffset=restore.documentOffset;
+     documentOmgFamily=restore.documentOmgFamily;documentOmgAdoptions=restore.documentOmgAdoptions;
+     selected=restore.selected;
+     pendingSourceSelection=restore.selected;
+     if(isoModes.includes(id))pendingWindowRestore=restore;
+   }
+   refresh();if(mode==='ics')void loadIcs();if(mode==='omg-specifications'&&!sourceApi()?.omgStatus())void documentaryAction(sourceApi()?.omgHasLocalRelay?.()?'omgRestore':'omgPublished');
  }
+ function showIntegratedReference(result,context,feedback){
+   sourceReturn=context;
+   navigateMode('references',{retainReturn:true});
+   if(nativeOriginFilter)nativeOriginFilter.value='all';
+   refresh();grid?.select?.(result.standardId);selected=result.standardId;updateToolbar();
+   if(status)status.textContent=tr(feedback);
+ }
+ function returnToSource(){
+   if(mode!=='references'||!sourceReturn||root.__radarApplicationProfile?.viewer)return;
+   const context=sourceReturn;sourceReturn=null;
+   // One navigation restores filters, page, edition and selection before rendering.
+   navigateMode(context.mode,{restore:context});
+   if(context.selected&&grid?.records?.some(r=>r.recid===context.selected))grid.select?.(context.selected);
+   updateToolbar();
+ }
+ function returnSourceLabel(){return tr(({'iso-list':'returnIso','rfc-editor':'returnRfc',w3c:'returnW3c','omg-specifications':'returnOmg'})[sourceReturn?.mode]||'resourceBack');}
  function sourceItems(){
    const entries=(sourceApi()?.listResources?.()||[]).filter(r=>['iso-open-data','rfc-editor','w3c','omg-specifications'].includes(r.id));
    return [...entries.map(r=>({id:r.id,text:r.id==='omg-specifications'?'OMG':r.label})),{id:'references',text:tr('modeReferences')},{id:'resources',text:tr('resourceInventory')}];
@@ -749,7 +794,7 @@
    {type:'menu-radio',id:'isoView',text:tr('modeIsoList'),selected:mode,items:isoViewItems(),hidden:true},
    {type:'menu-radio',id:'omgView',text:tr('resourceOmgSpecs'),selected:'specifications',items:omgViewItems(),hidden:true},
    {type:'menu',id:'acquisition',text:tr('standardSources'),items:[],hidden:true},
-   ...[['advanced','advancedSearch'],['history','resourceOmgHistory'],['versions','resourceVersions'],['back','resourceBack'],['previous','resourcePrevious'],['next','resourceNext'],['details','resourceDetails'],['context','resourceContext'],['integrate','addToCatalog'],['openSource','resourceOpen'],['declare','declareLocal'],['lifecycle','referenceLifecycle'],['addRadar','add'],['sourceDialog','standardSources']].map(([id,label])=>({type:'button',id,text:tr(label),hidden:true}))
+   ...[['advanced','advancedSearch'],['history','resourceOmgHistory'],['versions','resourceVersions'],['back','resourceBack'],['returnSource','resourceBack'],['previous','resourcePrevious'],['next','resourceNext'],['details','resourceDetails'],['context','resourceContext'],['integrate','addToCatalog'],['openSource','resourceOpen'],['declare','declareLocal'],['lifecycle','referenceLifecycle'],['addRadar','add'],['sourceDialog','standardSources']].map(([id,label])=>({type:'button',id,text:tr(label),hidden:true}))
  ];}
  function selectedDocument(){return grid?.records?.find(r=>r.recid===(grid.getSelection?.()[0]||selected))||null;}
  // S17: one toolbar command for records from every supported documentary source.
@@ -779,13 +824,14 @@
    const source=currentSource(),doc=isDocumentary(),row=selectedDocument(),ext=mode==='rfc-editor'||mode==='w3c',omg=mode==='omg-specifications',inventory=mode==='resources',native=mode==='references',iso=isoModes.includes(mode);
    const item=sourceItems().find(x=>x.id===source);
    setToolbarItem('source',{text:tr('resourceSelector')+' : '+(item?.text||source),selected:source,items:sourceItems()});
-   const visible=new Set(iso?['advanced',...(['ics','committees','iso-list'].includes(mode)?['details']:[])]:native?['details','declare','lifecycle','addRadar','sourceDialog']:ext?['details','openSource','previous','next',...(mode==='rfc-editor'?['integrate','context']:documentSeries?['back','integrate']:['versions'])]:omg?['details','openSource','previous','next','integrate',...(documentOmgFamily?['back']:['history'])]:inventory?['details','openSource']:[]);
+   const visible=new Set(iso?['advanced',...(['ics','committees','iso-list'].includes(mode)?['details']:[]),...(mode==='iso-list'?['integrate']:[])]:native?['details','declare','lifecycle','addRadar','sourceDialog',...(sourceReturn?['returnSource']:[])]:ext?['details','openSource','previous','next',...(mode==='rfc-editor'?['integrate','context']:documentSeries?['back','integrate']:['versions','integrate'])]:omg?['details','openSource','previous','next','integrate',...(documentOmgFamily?['back']:['history'])]:inventory?['details','openSource']:[]);
    setToolbarItem('isoView',{text:isoViewItems().find(x=>x.id===mode)?.text||tr('modeIsoList'),selected:mode,items:isoViewItems(),hidden:!iso});
    setToolbarItem('omgView',{text:tr(documentOmgAdoptions?'resourceOmgAdoptions':'resourceOmgSpecs'),selected:documentOmgAdoptions?'adoptions':'specifications',items:omgViewItems(),hidden:!omg||!!documentOmgFamily});
    setToolbarItem('acquisition',{text:tr('standardSources'),items:acquisitionItems(),hidden:!iso&&!ext&&!omg,disabled:documentBusy});
-   for(const def of toolbarItems().slice(5))setToolbarItem(def.id,{text:def.text,hidden:!visible.has(def.id)});
+   for(const def of toolbarItems().slice(5))setToolbarItem(def.id,{text:def.id==='returnSource'?returnSourceLabel():def.text,hidden:!visible.has(def.id)});
    const disabled=new Set();
    if(!row){for(const id of ['details','context','versions','history','integrate'])disabled.add(id);}
+   if(mode==='iso-list'&&row?.kind!=='standard')disabled.add('integrate');
    if(!canIntegrate()){for(const id of ['integrate','declare','lifecycle','sourceDialog','addRadar'])disabled.add(id);}
    if(native&&!row){disabled.add('lifecycle');disabled.add('addRadar');}
    if(!doc||documentOffset===0)disabled.add('previous');
@@ -861,8 +907,16 @@
      if(action==='omgClear'){documentBusy=true;started=true;token=++documentToken;documentMessage='';updateToolbar();const cleared=await api.clearOmg();if(token===documentToken&&mode===view){selected=null;documentOffset=0;if(root.indexedDB&&!cleared)documentMessage=tr('resourceCacheClearFailed');}return;}
      if(action==='details'){if(!row)throw Error(tr('resourceSelect'));showDocumentaryDetail(row);return;}
      if(action==='integrate'){
-       if(!canIntegrate())throw Error(tr('resourceNoCatalog'));if(!row||!documentResult?.generation||(view==='w3c'&&!documentSeries)||!['rfc-editor','w3c','omg-specifications'].includes(view))throw Error(tr('resourceVersionRequired'));
-       const result=view==='omg-specifications'?root.__radarCatalogPersistence.importOmgReference(row.key,documentResult.generation,{family:documentOmgFamily}):root.__radarCatalogPersistence.importSourceReference(view,row.key,documentResult.generation);navigateMode('references');nativeOriginFilter.value='all';refresh();grid.select?.(result.standardId);selected=result.standardId;updateToolbar();if(status)status.textContent=tr(result.action==='existing'?'externalExisting':'externalAdded');return;
+       if(!canIntegrate())throw Error(tr('resourceNoCatalog'));
+       if(view==='w3c'&&!documentSeries){
+         // A W3C series needs a specific dated publication before integration.
+         if(!row?.key)throw Error(tr('resourceSelect'));
+         await documentaryAction('versions');return;
+       }
+       if(!row||!documentResult?.generation||!['rfc-editor','w3c','omg-specifications'].includes(view))throw Error(tr('resourceVersionRequired'));
+       const context=captureSourceContext();
+       const result=view==='omg-specifications'?root.__radarCatalogPersistence.importOmgReference(row.key,documentResult.generation,{family:documentOmgFamily}):root.__radarCatalogPersistence.importSourceReference(view,row.key,documentResult.generation);
+       showIntegratedReference(result,context,result.action==='existing'?'externalExisting':'externalAdded');return;
      }
      if(documentBusy)return;
      if(action==='context'){
@@ -895,7 +949,18 @@
      if(target.startsWith('isoView:')){navigateMode(target.slice(8));return;}
      if(target.startsWith('omgView:')&&mode==='omg-specifications'&&!documentOmgFamily){documentOmgAdoptions=target==='omgView:adoptions';documentOffset=0;selected=null;search.value='';renderDocumentary();return;}
      const action=target.startsWith('acquisition:')?target.slice(12):target;
+     if(action==='returnSource'){returnToSource();return;}
      if(isDocumentary()){void documentaryAction(action);return;}
+     if(action==='integrate'&&mode==='iso-list'){
+       const row=selectedDocument();
+       if(!canIntegrate()||row?.kind!=='standard'||!row.isoId)return;
+       try{
+         const context=captureSourceContext();
+         const result=root.__radarCatalogPersistence.importIsoReference(String(row.isoId));
+         showIntegratedReference(result,context,result.action==='existing'?'referenceAlreadyPresent':'referenceIntegrated');
+       }catch(error){if(status)status.textContent=String(error?.message||error);}
+       return;
+     }
      if(action==='details'){void openSelectedDocumentaryRecord();return;}
      if(action==='advanced'){advancedButton?.click();return;}
      if(action==='manageIso'){if(root.__radarApplicationProfile?.allows('catalog.admin')===true)root.__radarS14Z?.open?.();return;}
@@ -928,7 +993,12 @@
    const query=search?.value||'';
    const group=sidebarSelection[view];
    const key=view+'|'+(group||'')+'|'+query+'|advanced:'+advancedRevision+'|'+windowSortField+'|'+windowSortDirection+'|'+windowSize+'|'+(icsFacet?.value||'')+'|'+(committeeFacet?.value||'');
-   if(direction==='reset'||direction==='first'||windowMode!==key){
+   const restoring=direction==='reset'&&pendingWindowRestore?.mode===view;
+   if(restoring){
+     const saved=pendingWindowRestore;pendingWindowRestore=null;
+     windowHistory=saved.windowHistory.slice();windowPosition=saved.windowPosition;
+     windowBasePosition=saved.windowBasePosition;windowSearch=query;windowNext=saved.windowNext;windowMode=key;
+   }else if(direction==='reset'||direction==='first'||windowMode!==key){
      windowHistory=[null];windowPosition=0;windowBasePosition=0;windowSearch=query;windowNext=null;windowMode=key;
    }else if(direction==='next'&&windowNext){
      windowHistory=windowHistory.slice(0,windowPosition+1);windowHistory.push(windowNext);windowPosition++;
@@ -995,7 +1065,9 @@
      if(token!==windowToken||mode!==view)return;
      windowNext=result.next;
      const projected=root.__radarIsoFullGrid.project(result.records,'');
-     grid.clear(true);grid.records=projected;grid.total=projected.length;grid.buffered=projected.length;selected=null;grid.refresh();updateToolbar();
+     grid.clear(true);grid.records=projected;grid.total=projected.length;grid.buffered=projected.length;selected=null;grid.refresh();
+     if(pendingSourceSelection){const wanted=pendingSourceSelection;pendingSourceSelection=null;if(projected.some(r=>r.recid===wanted)){grid.select?.(wanted);selected=wanted;}}
+     updateToolbar();
      if(status&&isoModes.includes(mode))status.textContent='ISO '+result.release+' · '+scopeLabel()+' · '+
        (projected.length?tr('windowRange',{from:windowPosition*windowSize+1,to:windowPosition*windowSize+projected.length}):tr('windowEmpty'))+
        (windowNext?' · '+tr('windowMore'):' · '+tr('windowEnd'));

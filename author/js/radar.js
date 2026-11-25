@@ -12,6 +12,12 @@ function drawSelectedWorkgroup(workgroup) {
   window.__radarRevisionSession.select(cy, workgroup, function (group) {
     // Phase 10A: explicit catalog revisions opt in synchronously; legacy remains default.
     if (window.__radarCatalogAdapter && window.__radarCatalogAdapter.has(group)) {
+      const stored = window.__radarCatalogAdapter.getRevision(group);
+      if (window.__radarGeometry) {
+        if (stored.extensions?.radarGeometry) window.__radarGeometry.setActive(stored.extensions.radarGeometry);
+        else window.__radarGeometry.reset();
+        drawSVG();
+      }
       const projected = window.__radarCatalogAdapter.project(group);
       cy.elements().remove();
       cy.add(projected.nodes.concat(projected.edges));
@@ -19,6 +25,8 @@ function drawSelectedWorkgroup(workgroup) {
       return;
     }
     // Clone legacy records: plotData mutates x/y/radius during initial plotting.
+    window.__radarGeometry?.reset();
+    drawSVG();
     const RadarInputs = ASD_SSG_Blips.filter(blip => blip.working_group === group);
     const filteredBlips = RadarInputs.filter(d => validRings.includes(d.ring) && validQuadrants.includes(d.quadrant));
     plotData(JSON.parse(JSON.stringify(filteredBlips)));
@@ -30,11 +38,21 @@ function generateFormFromCytoscapeElement(ele) {
   if (!ele || !ele.isNode()) return;
 
   const viewer=window.__radarApplicationProfile?.viewer===true;
-  let data = viewer
-    ?JSON.parse(JSON.stringify(ele.data()))
-    :ele.data();
+  // A detached form record avoids altering the Cytoscape model during rendering.
+  let data = JSON.parse(JSON.stringify(ele.data()));
   let position = ele.position(); // Get position separately
   let formFields = {};
+  const activeGeometry = window.__radarGeometry?.activeConfig?.();
+  const ringItems = activeGeometry?.zones?.map(z => ({ id:z.id, text:z.label || z.id }))
+    || validRings.map(id => ({id,text:id}));
+  const quadrantItems = activeGeometry?.quarters?.map(q => ({ id:q.id, text:q.label || q.id }))
+    || validQuadrants.filter(Boolean).map(id => ({id,text:id}));
+
+  // Text fields display user-facing labels; node data retains stable category IDs.
+  const displayRing = ringItems.find(item => item.id === data.ring)?.text || data.ring || '';
+  const displayQuadrant = quadrantItems.find(item => item.id === data.quadrant)?.text || data.quadrant || '';
+  data.ring = displayRing;
+  data.quadrant = displayQuadrant;
 
   // === BLIP TAB ===
   formFields["Blip"] = {
@@ -46,16 +64,10 @@ function generateFormFromCytoscapeElement(ele) {
           "id": { type: 'text', label: 'ID', disabled: true, value: data.id || '' },
           "label": { type: 'text', label: 'Label', value: data.label || '' },
           "ring": {
-            type: 'list', label: 'Ring',
-            options: { items: validRings },
-            value: data.ring || '',
-            disabled:true
+            type: 'text', label: 'Ring', value: displayRing, disabled: true
           },
           "quadrant": {
-            type: 'list', label: 'Quadrant',
-            options: { items: validQuadrants },
-            value: data.quadrant || '',
-            disabled:true
+            type: 'text', label: 'Quadrant', value: displayQuadrant, disabled: true
           }
         }
       }
@@ -130,15 +142,9 @@ function generateFormFromCytoscapeElement(ele) {
           let updatedData = this.record; // Use this.record instead of this.getValues()
   
           Object.keys(updatedData).forEach(key => {
-              if (!key.startsWith("position.")) {
-                  let value = updatedData[key]; // Extract value
-  
-                  // Extract selected value for list fields
-                  if (key === 'ring' || key === 'quadrant') {
-                      value = value?.id || value; // Get `id` if it's an object, otherwise keep value
-                  }
-  
-                  ele.data(key, value); // Update node data with extracted value  
+              if (!key.startsWith("position.") && key !== 'ring' && key !== 'quadrant') {
+                  // Classification is controlled by sector positioning, not read-only labels.
+                  ele.data(key, updatedData[key]);
               }
           });
   
@@ -153,6 +159,13 @@ function generateFormFromCytoscapeElement(ele) {
     window.__radarApplicationProfile.readonlyFields(formFields);
     formConfig.actions={};
   }
+  // S19-R25: one W2UI form registry entry at a time. A form's toolbar
+  // and tabs are separately registered by W2UI and may outlive its DOM.
+  // Close the parent first, then any remaining registered children.
+  const registry = window.w2ui || {};
+  registry.blipForm?.destroy?.();
+  registry.blipForm_toolbar?.destroy?.();
+  registry.blipForm_tabs?.destroy?.();
   return new w2form(formConfig);
 }
 
@@ -253,6 +266,9 @@ function filterBlipsByRadarType(radarType) {
 
 //createRadarSVG("PLM",800,800)
 function drawSVG() {
+  if (window.__radarGeometry?.isCustomActive()) {
+    return window.__radarGeometry.drawSVG(d3, document);
+  }
   // Définition des tailles et couleurs des cercles
   ringSizes = [
     { ringSize: 350, ringColor: "white" },  // Cercle extérieur
@@ -281,7 +297,7 @@ function drawSVG() {
   let svg = container.append("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("viewBox", "0 0 800 800")
+    .attr("viewBox", "0 -120 800 920")
     .attr("preserveAspectRatio", "xMidYMid meet");
 
   const radarDrawing = svg.append("g")
@@ -293,10 +309,12 @@ function drawSVG() {
   radarDrawing.append("text")
     .attr("id", "svgTitle") // ✅ ID ajouté pour modification dynamique
     .style("font-size", "25px")
-    .text(`Standards Radar Chart ` + new Date().toLocaleDateString())
+    .text('Strategic Standard Chart')
     .attr("x", -200)
     .attr("y", -370)
     .attr("fill", "black");
+
+  window.__radarTitle?.refresh?.();
 
   // ---------------------------//
   //       RINGS (CERCLES)      //
@@ -408,14 +426,23 @@ function plotData(RadarInputs) {
   window.__radarApplicationProfile?.require('workspace.loadLegacy');
   cy.elements().remove();
 
-  const validRings = ["Adopted", "Candidate", "Track"];
-  const validQuadrants = ["Available", "Monitored", "Participated", "Developed"];
+  const geometry = window.__radarGeometry;
+  const customGeometry = geometry?.isCustomActive() === true;
+  const validRings = customGeometry ? geometry.activeConfig().zones.map(zone => zone.id) : ["Adopted", "Candidate", "Track"];
+  const validQuadrants = customGeometry ? geometry.activeConfig().quarters.map(quarter => quarter.id) : ["Available", "Monitored", "Participated", "Developed"];
 
   var filteredBlips = RadarInputs.filter(d =>
     validRings.includes(d.ring) && validQuadrants.includes(d.quadrant)
   );
 
   filteredBlips.forEach(d => {
+    if (customGeometry) {
+      const p = geometry.position(d);
+      d.radius = p.radius;
+      d.x = p.x;
+      d.y = p.y;
+      return;
+    }
     // Assign radius based on ring category
     if (d.ring === "Adopted") d.radius = d3.randomUniform(30, 130)();
     if (d.ring === "Candidate") d.radius = d3.randomUniform(180, 230)();

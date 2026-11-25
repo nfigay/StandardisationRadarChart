@@ -47,6 +47,49 @@
     if(Object.keys(ext).length)out.extensions=ext;
     return out;
   }
+  // S19-R34: export the *selected revision's* strategic dossiers only.
+  // The allowlist deliberately excludes governance, internal contacts, document
+  // provenance, arbitrary extensions and unknown fields from the public payload.
+  function rationales(revision,visibleBlips){
+    const extension=revision.extensions?.radarRationales;
+    if(extension===undefined)return null;
+    if(!object(extension)||extension.schemaVersion!=='s19-revision-rationales-v1'||!Array.isArray(extension.items))fail('invalid strategic dossiers extension');
+    const allowed=new Set(visibleBlips.map(b=>b.standardId));
+    const ids=new Set(),pairs=new Set(),items=[];
+    for(const record of extension.items){
+      if(!object(record))fail('invalid strategic dossier');
+      const id=text(record.rationaleId,'rationaleId');
+      const standardId=text(record.standard?.id,'rationale standard.id');
+      const organizationId=text(record.organization?.id,'rationale organization.id');
+      if(organizationId!==revision.ownerOrganizationId)fail('rationale organization mismatch');
+      if(!allowed.has(standardId))continue; // Only dossiers associated with projected blips.
+      const pair=organizationId+'\0'+standardId;
+      if(ids.has(id)||pairs.has(pair))fail('duplicate published strategic dossier');
+      ids.add(id);pairs.add(pair);
+      if(!object(record.sections))fail('invalid rationale sections');
+      const sections={};
+      for(const key of ['abstract','businessJustification','businessBenefits','stakeholders','activities','actionPlan','adoptionStatement','recommendation','supportingMaterial']){
+        if(!own(record.sections,key))continue;
+        const value=record.sections[key];
+        if(!object(value)||value.type!=='doc'||(value.content!==undefined&&!Array.isArray(value.content)))fail('invalid rationale section '+key);
+        // JSON clone strips no unknown keys inside Tiptap; those keys are data
+        // rendered by the existing S19 safe renderer, never executable HTML.
+        sections[key]=JSON.parse(JSON.stringify(value));
+      }
+      const out={rationaleId:id,organization:{id:organizationId,name:typeof record.organization.name==='string'?record.organization.name:organizationId},standard:{id:standardId,designation:typeof record.standard.designation==='string'?record.standard.designation:standardId,title:typeof record.standard.title==='string'?record.standard.title:standardId},sections};
+      if(Array.isArray(record.relatedReferences)){
+        out.relatedReferences=record.relatedReferences.filter(ref=>object(ref)&&['blip','standard','source','url'].includes(ref.type)&&typeof ref.id==='string'&&typeof ref.label==='string').filter(ref=>{
+          if(ref.type==='blip')return visibleBlips.some(b=>b.blipId===ref.id&&(!ref.standardId||b.standardId===ref.standardId));
+          if(ref.type==='standard')return allowed.has(ref.id);
+          if(ref.type==='url')return /^https?:\/\/[^\s<>"']+$/i.test(ref.id);
+          if(ref.type==='source')return typeof ref.provider==='string'&&!!ref.provider.trim();
+          return false;
+        }).slice(0,100).map(ref=>({type:ref.type,id:ref.id,label:ref.label,...(ref.type==='blip'&&typeof ref.standardId==='string'?{standardId:ref.standardId}:{}),...(ref.type==='source'?{provider:ref.provider}:{})}));
+      }
+      items.push(out);
+    }
+    return {schemaVersion:'s19-revision-rationales-v1',items};
+  }
   const sorted=map=>[...map.keys()].sort().map(id=>map.get(id));
   function project(source,configuration){
     const model=root.__radarPublicationModel;
@@ -85,8 +128,11 @@
         if(b.extensions!=null)omittedBlipExtensions++;
         return out;
       });
+      const dossiers=rationales(r,projected.blips);
+      if(dossiers?.items.length)projected.extensions={radarRationales:dossiers};
       return projected;
     });
+    const rationaleCount=revisions.reduce((sum,r)=>sum+(r.extensions?.radarRationales?.items.length||0),0);
     const catalog={schemaVersion:'1.0.0',title:c.presentation.title,organizations:sorted(orgs),portfolios:sorted(ports),standards:sorted(standards),assessments:sorted(assessments),radarRevisions:revisions};
     // Preserve only the public display labels of selected radars/revisions,
     // never the authoring name history or other administration properties.
@@ -100,7 +146,7 @@
       }
     }
     if(Object.keys(labels).length)catalog.extensions={administration:labels};
-    const report={revisionIds:ids,radarCount:radars.size,organizationCount:orgs.size,portfolioCount:ports.size,standardCount:standards.size,assessmentCount:assessments.size,blipCount:revisions.reduce((n,r)=>n+r.blips.length,0),isoDocumentCount:catalog.standards.filter(s=>s.extensions?.isoDocument).length,detachedAssessments,omittedContexts,omittedBlipExtensions,policy:'native-v1-positive-allowlist',limitations:['free-context-and-unknown-extensions-excluded','no-native-relationship-contract','assessment-summary-only','presentation-and-packaging-not-applied']};
+    const report={revisionIds:ids,radarCount:radars.size,organizationCount:orgs.size,portfolioCount:ports.size,standardCount:standards.size,assessmentCount:assessments.size,blipCount:revisions.reduce((n,r)=>n+r.blips.length,0),rationaleCount,isoDocumentCount:catalog.standards.filter(s=>s.extensions?.isoDocument).length,detachedAssessments,omittedContexts,omittedBlipExtensions,policy:'native-v1-positive-allowlist',limitations:['free-context-and-unknown-extensions-excluded','no-native-relationship-contract','assessment-summary-only','presentation-and-packaging-not-applied']};
     return {catalog,report};
   }
   function verify(source,configuration,candidate){

@@ -64,8 +64,36 @@
     for(var group of groups)delete registered[group];
     return {released:groups.length};
   }
+  function setDraftGeometry(group,revisionId,config,positions) {
+    root.__radarApplicationProfile?.require('radar.rename');
+    if(!own(registered,group)||registered[group].revisionId!==revisionId||registered[group].status!=='draft')fail('draft revision required');
+    root.__radarGeometry.verify(config);
+    var next=clone(registered[group]);
+    var byId=new Map(positions.map(item=>[item.id,item.p]));
+    if(byId.size!==next.blips.length||positions.length!==next.blips.length)fail('incomplete geometry positions');
+    for(var blip of next.blips){
+      var pos=byId.get(blip.blipId);
+      if(!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))fail('invalid blip position');
+      root.__radarGeometry.sector(blip.ring,blip.quadrant,config);
+      blip.position={x:pos.x,y:pos.y};
+    }
+    next.extensions=Object.assign({},next.extensions,{radarGeometry:clone(config)});
+    registered[group]=next;
+    return {group,revisionId};
+  }
+  function setDraftRationale(group,revisionId,record,replace){
+    root.__radarApplicationProfile?.require('radar.rename');
+    if(!own(registered,group)||registered[group].revisionId!==revisionId||registered[group].status!=='draft')fail('draft revision required');
+    const api=root.__radarRationaleRevision;
+    if(!api?.put)fail('rationale model unavailable');
+    const next=api.put(registered[group],record,{draft:true,replace:replace===true});
+    if(record.organization.id!==next.ownerOrganizationId)fail('wrong owner organization');
+    if(!next.blips.some(b=>b.standardId===record.standard.id))fail('standard not present in revision');
+    registered[group]=next;
+    return {group,revisionId,rationaleId:record.rationaleId};
+  }
   root.__radarCatalogAdapter = Object.freeze({
-    releaseCatalog:releaseCatalog,
+    releaseCatalog:releaseCatalog, setDraftGeometry:setDraftGeometry,setDraftRationale:setDraftRationale,
     register: register, unregister:function(g) {
     root.__radarApplicationProfile?.require("workspace.remove");
       if(!own(registered,g))fail('cannot remove unknown group: '+g);

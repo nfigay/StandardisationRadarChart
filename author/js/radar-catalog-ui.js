@@ -95,10 +95,11 @@
       graph.nodes().ungrabify();
       if (mode) { root.w2ui.toolbar.set('item4',{selected:'locked'}); root.w2ui.toolbar.refresh('item4'); }
     } else {
-      // A prior published revision leaves the toolbar in locked mode and nodes
-      // ungrabbable. On entering a catalog draft, restore its editable mode.
-      graph.nodes().grabify();
-      if (mode) { root.w2ui.toolbar.set('item4',{selected:'grabon'}); root.w2ui.toolbar.refresh('item4'); }
+      // S19-R10: entering a draft must never enable dragging implicitly.
+      // Selection and dossier editing stay available; user can explicitly
+      // activate 'grabon' later using the existing W2UI toolbar.
+      graph.nodes().ungrabify();
+      if (mode) { root.w2ui.toolbar.set('item4',{selected:'locked'}); root.w2ui.toolbar.refresh('item4'); }
     }
   }
   function createOrOpenDraft(toolbar, graph, selectGroup) {

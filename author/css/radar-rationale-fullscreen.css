@@ -1,0 +1,44 @@
+/* S19-R19 — W2UI-owned fullscreen workspace, not a fixed-position dossier shell. */
+#s19-document-fullscreen-root {
+  position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;
+  z-index:1500;background:#fff;overflow:hidden;
+  /* W2UI portals (.w2ui-popup:1600, .w2ui-overlay:1700) must remain above this document. */
+  box-sizing:border-box;isolation:isolate;
+}
+#s19-document-fullscreen-root .w2ui-layout,
+#s19-document-fullscreen-root .w2ui-panel {box-sizing:border-box;}
+#s19-document-fullscreen-root .s19-fullscreen-header {
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  height:100%;box-sizing:border-box;padding:6px 18px;
+  background:#fff;border-bottom:1px solid #dce2eb;
+  font:14px/1.4 Arial,sans-serif;color:#263245;
+}
+#s19-document-fullscreen-root .s19-fullscreen-header strong {
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+#s19-document-fullscreen-root #s19-fullscreen-document-host {
+  width:100%;height:100%;overflow:hidden;box-sizing:border-box;background:#fff;
+}
+#s19-document-fullscreen-root #s19-shell {
+  position:relative;inset:auto;width:100%;height:100%;
+  overflow:hidden;box-shadow:none;max-width:none;background:#fff;
+}
+#s19-document-fullscreen-root #s19-tabs {z-index:2;}
+#s19-document-fullscreen-root #s19-body-rationale,
+#s19-document-fullscreen-root #s19-body-properties {
+  width:100%;max-width:none;box-sizing:border-box;overflow-y:auto;overflow-x:hidden;
+  overscroll-behavior:contain;
+}
+#s19-document-fullscreen-root #s19-body-rationale {
+  padding:14px clamp(18px,5vw,72px) 36px;
+}
+#s19-document-fullscreen-root #s19-content {
+  width:100%;box-sizing:border-box;min-width:0;
+}
+#s19-document-fullscreen-root #s19-editor-tools {
+  position:sticky;top:0;z-index:2;background:#fff;
+}
+#s19-document-fullscreen-root .s19-table-wrap {max-width:100%;overflow-x:auto;}
+#s19-document-fullscreen-root .s19-preview-frame {
+  width:100%;height:min(72vh,900px);min-height:400px;
+}
